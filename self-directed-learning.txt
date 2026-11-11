@@ -1,0 +1,246 @@
+<!-- 四維高中自主學習專區｜SWSH 校園 IP 手帳風 v2（可直接貼入校網 HTML 編輯器，全部為行內樣式，不需 CSS/JS） -->
+<div id="swsh-top" style="font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif; color: #2D3748; line-height: 1.65; max-width: 1080px; margin: 0 auto; background: #FCFDF9; padding: 12px 6px; box-sizing: border-box;">
+
+  <!-- ================= 1. 迎賓橫幅 ================= -->
+  <div style="background: linear-gradient(135deg, #ECFDF5 0%, #FEF9C3 55%, #F0FDF4 100%); border: 2.5px solid #86EFAC; border-radius: 24px; padding: 24px 20px 18px; margin-bottom: 14px; box-shadow: 0 6px 18px rgba(91,179,52,0.14);">
+
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px;">
+      <span style="background: #5BB334; color: #ffffff; font-size: 12.5px; font-weight: bold; padding: 4px 12px; border-radius: 999px;">🌱 108 課綱・彈性學習時間</span>
+      <span style="background: #ffffff; color: #166534; font-size: 12.5px; font-weight: bold; padding: 3px 11px; border-radius: 999px; border: 1.5px dashed #86EFAC;">四維圖資中心 製作</span>
+    </div>
+
+    <h2 style="font-size: 26px; font-weight: 900; color: #166534; margin: 0 0 8px 0; letter-spacing: 1px; line-height: 1.35;">🎒 自主學習專區</h2>
+    <p style="font-size: 15px; font-weight: bold; color: #854D0E; margin: 0 0 8px 0;">自主探索・踏實啟航 —— 由你掌舵的學習冒險！</p>
+    <p style="font-size: 14px; color: #374151; margin: 0;">自主學習不是自習喔！這裡整理了<strong style="color:#166534;">時程、表件、學長姐成果與自學資源</strong>，跟著下面的步驟一步一步來，就能完成一份很棒的自學計畫 ✨</p>
+
+    <!-- 角色夥伴 -->
+    <div style="margin-top: 16px; padding-top: 14px; border-top: 1.5px dashed #BBF7D0;">
+      <div style="font-size: 12.5px; font-weight: bold; color: #166534; margin-bottom: 8px;">🐾 你的自學夥伴們</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <span style="background: #ffffff; border: 1.5px solid #FBCFE8; color: #9D174D; font-size: 12.5px; padding: 5px 11px; border-radius: 999px;">❤️ <strong>心兒</strong>・熱情動力</span>
+        <span style="background: #ffffff; border: 1.5px solid #FDE68A; color: #92400E; font-size: 12.5px; padding: 5px 11px; border-radius: 999px;">⭐ <strong>小四</strong>・明確目標</span>
+        <span style="background: #ffffff; border: 1.5px solid #BFDBFE; color: #1E40AF; font-size: 12.5px; padding: 5px 11px; border-radius: 999px;">💭 <strong>思思</strong>・深度反思</span>
+        <span style="background: #ffffff; border: 1.5px solid #DDD6FE; color: #6D28D9; font-size: 12.5px; padding: 5px 11px; border-radius: 999px;">🌀 <strong>捲毛</strong>・跨界創意</span>
+        <span style="background: #ffffff; border: 1.5px solid #BBF7D0; color: #166534; font-size: 12.5px; padding: 5px 11px; border-radius: 999px;">🐾 <strong>PijBo</strong>・腳踏實地</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 2. 快速選單（學生最常用的 4 個入口） ================= -->
+  <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 14px; margin-bottom: 26px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+    <div style="font-size: 13.5px; font-weight: 800; color: #334155; margin-bottom: 10px;">👉 我想要⋯（點一下直接前往）</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 10px;">
+      <a href="#swsh-steps" style="display: block; text-align: center; text-decoration: none; background: #F0FDF4; border: 2px solid #86EFAC; border-radius: 14px; padding: 12px 8px; color: #166534;">
+        <span style="display: block; font-size: 24px; line-height: 1.2;">📋</span>
+        <strong style="display: block; font-size: 14px; margin-top: 4px;">看學期時程</strong>
+        <span style="display: block; font-size: 11.5px; color: #4B5563;">什麼時候要做什麼</span>
+      </a>
+      <a href="#swsh-forms" style="display: block; text-align: center; text-decoration: none; background: #FEF9C3; border: 2px solid #FDE047; border-radius: 14px; padding: 12px 8px; color: #854D0E;">
+        <span style="display: block; font-size: 24px; line-height: 1.2;">📥</span>
+        <strong style="display: block; font-size: 14px; margin-top: 4px;">下載申請表</strong>
+        <span style="display: block; font-size: 11.5px; color: #4B5563;">第 1-2 週要交喔</span>
+      </a>
+      <a href="#swsh-works" style="display: block; text-align: center; text-decoration: none; background: #FFF7ED; border: 2px solid #FDBA74; border-radius: 14px; padding: 12px 8px; color: #9A3412;">
+        <span style="display: block; font-size: 24px; line-height: 1.2;">🏆</span>
+        <strong style="display: block; font-size: 14px; margin-top: 4px;">看學長姐成果</strong>
+        <span style="display: block; font-size: 11.5px; color: #4B5563;">找主題靈感</span>
+      </a>
+      <a href="#swsh-resources" style="display: block; text-align: center; text-decoration: none; background: #EFF6FF; border: 2px solid #93C5FD; border-radius: 14px; padding: 12px 8px; color: #1E40AF;">
+        <span style="display: block; font-size: 24px; line-height: 1.2;">💡</span>
+        <strong style="display: block; font-size: 14px; margin-top: 4px;">找自學資源</strong>
+        <span style="display: block; font-size: 11.5px; color: #4B5563;">課程・資料庫・館藏</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ================= 3. 學期實施時程 ================= -->
+  <div id="swsh-steps" style="margin-bottom: 28px;">
+    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
+      <span style="background: #5BB334; color: #ffffff; font-size: 13px; font-weight: 900; width: 26px; height: 26px; line-height: 26px; text-align: center; border-radius: 50%; display: inline-block;">1</span>
+      <h3 style="font-size: 18px; font-weight: 900; color: #166534; margin: 0;">學期實施時程</h3>
+      <span style="font-size: 11.5px; background: #DCFCE7; color: #15803D; font-weight: bold; padding: 2px 8px; border-radius: 6px;">4 關闖關地圖</span>
+    </div>
+    <p style="font-size: 12.5px; color: #92400E; background: #FFFBEB; display: inline-block; padding: 4px 12px; border-radius: 999px; border: 1px solid #FDE68A; margin: 0 0 12px 0;">⭐ 小四：先訂好目標，後面就會很順利唷！</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 12px;">
+
+      <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-top: 5px solid #5BB334; border-radius: 16px; padding: 14px 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+        <div style="font-size: 11.5px; font-weight: bold; color: #ffffff; background: #5BB334; display: inline-block; padding: 1px 9px; border-radius: 999px;">第 1 關｜第 1-2 週</div>
+        <div style="font-size: 16px; font-weight: 900; color: #166534; margin: 8px 0 4px;">✏️ 擬定計畫</div>
+        <p style="font-size: 13px; color: #475569; margin: 0;">確立自學主題與 18 週進度，填好<strong>計畫申請表</strong>並請指導老師簽名。</p>
+        <div style="font-size: 12px; color: #166534; background: #F0FDF4; border-radius: 8px; padding: 5px 9px; margin-top: 10px;">☑ 要交：計畫申請表（含老師簽名）</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-top: 5px solid #F59E0B; border-radius: 16px; padding: 14px 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+        <div style="font-size: 11.5px; font-weight: bold; color: #ffffff; background: #F59E0B; display: inline-block; padding: 1px 9px; border-radius: 999px;">第 2 關｜第 3 週</div>
+        <div style="font-size: 16px; font-weight: 900; color: #B45309; margin: 8px 0 4px;">🔍 審核核定</div>
+        <p style="font-size: 13px; color: #475569; margin: 0;">推動小組審查計畫內容，通過後依核定地點到圖資中心或專科教室研習。</p>
+        <div style="font-size: 12px; color: #92400E; background: #FFFBEB; border-radius: 8px; padding: 5px 9px; margin-top: 10px;">☑ 確認：核定結果與研習地點</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-top: 5px solid #0EA5E9; border-radius: 16px; padding: 14px 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+        <div style="font-size: 11.5px; font-weight: bold; color: #ffffff; background: #0284C7; display: inline-block; padding: 1px 9px; border-radius: 999px;">第 3 關｜第 4-16 週</div>
+        <div style="font-size: 16px; font-weight: 900; color: #0369A1; margin: 8px 0 4px;">🏃 落實執行</div>
+        <p style="font-size: 13px; color: #475569; margin: 0;">每週帶著紀錄表，寫下收穫與困惑，下課前請現場老師核章。</p>
+        <div style="font-size: 12px; color: #075985; background: #F0F9FF; border-radius: 8px; padding: 5px 9px; margin-top: 10px;">☑ 每週：紀錄表＋老師核章</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1.5px solid #E2E8F0; border-top: 5px solid #8B5CF6; border-radius: 16px; padding: 14px 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+        <div style="font-size: 11.5px; font-weight: bold; color: #ffffff; background: #7C3AED; display: inline-block; padding: 1px 9px; border-radius: 999px;">第 4 關｜第 17-18 週</div>
+        <div style="font-size: 16px; font-weight: 900; color: #6D28D9; margin: 8px 0 4px;">🎉 成果發表</div>
+        <p style="font-size: 13px; color: #475569; margin: 0;">整理成果作品與自我反思，參加成果分享，並上傳到學習歷程平台！</p>
+        <div style="font-size: 12px; color: #5B21B6; background: #F5F3FF; border-radius: 8px; padding: 5px 9px; margin-top: 10px;">☑ 上傳：成果＋反思至學習歷程</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= 4. 表件下載 ================= -->
+  <div id="swsh-forms" style="margin-bottom: 28px;">
+    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+      <span style="background: #5BB334; color: #ffffff; font-size: 13px; font-weight: 900; width: 26px; height: 26px; line-height: 26px; text-align: center; border-radius: 50%; display: inline-block;">2</span>
+      <h3 style="font-size: 18px; font-weight: 900; color: #166534; margin: 0;">表件下載專區</h3>
+    </div>
+
+    <div style="background: #F0FDF4; border: 2px dashed #86EFAC; border-radius: 18px; padding: 14px;">
+      <div style="background: #ffffff; border: 1.5px solid #BBF7D0; border-radius: 14px; padding: 14px 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px; flex: 1 1 260px; min-width: 0;">
+          <span style="flex: 0 0 44px; width: 44px; height: 44px; line-height: 44px; text-align: center; border-radius: 12px; background: #FEF9C3; font-size: 22px;">📄</span>
+          <div style="min-width: 0;">
+            <strong style="font-size: 15px; color: #1E293B; display: block;">學生自主學習計畫申請表</strong>
+            <span style="font-size: 12.5px; color: #64748B;">內容：自學動機・18 週進度規劃・設備場地需求</span>
+          </div>
+        </div>
+        <a href="https://www.swsh.hlc.edu.tw/ischool/rfile/9a3f5bcee556c351c7bd3a55caab7102?fd=1" target="_blank" rel="noopener noreferrer" style="flex: 0 0 auto; background: #5BB334; color: #ffffff; padding: 11px 22px; border-radius: 999px; font-size: 14px; text-decoration: none; font-weight: bold; box-shadow: 0 3px 8px rgba(91,179,52,0.35); white-space: nowrap;">⬇️ 下載申請表</a>
+      </div>
+      <p style="font-size: 12.5px; color: #166534; margin: 10px 4px 0;">🐾 PijBo 小提醒：填完記得請指導老師簽名，再交回圖資中心喔！</p>
+    </div>
+  </div>
+
+  <!-- ================= 5. 學生成果作品 ================= -->
+  <div id="swsh-works" style="margin-bottom: 28px;">
+    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+      <span style="background: #5BB334; color: #ffffff; font-size: 13px; font-weight: 900; width: 26px; height: 26px; line-height: 26px; text-align: center; border-radius: 50%; display: inline-block;">3</span>
+      <h3 style="font-size: 18px; font-weight: 900; color: #166534; margin: 0;">學生成果作品專區</h3>
+      <span style="font-size: 11.5px; font-weight: bold; background: #FEF08A; color: #713F12; padding: 2px 9px; border-radius: 999px;">✨ 典範與靈感庫</span>
+    </div>
+
+    <div style="background: linear-gradient(135deg, #FEFCE8 0%, #FFF7ED 100%); border: 2.5px solid #FDE047; border-radius: 18px; padding: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px;">
+      <div style="flex: 1 1 300px; min-width: 0;">
+        <p style="font-size: 13px; color: #92400E; font-weight: bold; margin: 0 0 6px 0;">🌀 捲毛：不知道主題怎麼選？先看看學長姐做了什麼！</p>
+        <p style="font-size: 13.5px; color: #475569; margin: 0 0 10px 0;">收錄歷屆優良作品，可參考簡報架構、研究方法與成果呈現方式。</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <span style="font-size: 12px; background: #ffffff; border: 1px solid #FDE68A; color: #92400E; padding: 2px 9px; border-radius: 999px;">🔬 自然科普</span>
+          <span style="font-size: 12px; background: #ffffff; border: 1px solid #FDE68A; color: #92400E; padding: 2px 9px; border-radius: 999px;">📜 人文社會</span>
+          <span style="font-size: 12px; background: #ffffff; border: 1px solid #FDE68A; color: #92400E; padding: 2px 9px; border-radius: 999px;">🎨 藝術創作</span>
+          <span style="font-size: 12px; background: #ffffff; border: 1px solid #FDE68A; color: #92400E; padding: 2px 9px; border-radius: 999px;">💻 科技程式</span>
+        </div>
+      </div>
+      <a href="https://www.swsh.hlc.edu.tw/ischool/resource/folder/47378c964e822f1065c8228405b16e4f" target="_blank" rel="noopener noreferrer" style="flex: 0 0 auto; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: #ffffff; padding: 12px 24px; border-radius: 999px; font-size: 14px; text-decoration: none; font-weight: 900; box-shadow: 0 3px 8px rgba(217,119,6,0.35); white-space: nowrap;">📁 進入成果作品資料夾 →</a>
+    </div>
+  </div>
+
+  <!-- ================= 6. 推薦自學資源 ================= -->
+  <div id="swsh-resources" style="margin-bottom: 28px;">
+    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
+      <span style="background: #5BB334; color: #ffffff; font-size: 13px; font-weight: 900; width: 26px; height: 26px; line-height: 26px; text-align: center; border-radius: 50%; display: inline-block;">4</span>
+      <h3 style="font-size: 18px; font-weight: 900; color: #166534; margin: 0;">推薦自學數位資源</h3>
+    </div>
+    <p style="font-size: 12.5px; color: #1E40AF; background: #EFF6FF; display: inline-block; padding: 4px 12px; border-radius: 999px; border: 1px solid #BFDBFE; margin: 0 0 12px 0;">💭 思思：找資料先從校內館藏開始，再延伸到線上課程～</p>
+
+    <!-- 校內重點 -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; margin-bottom: 14px;">
+      <a href="http://opac.swsh.hlc.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; background: #ffffff; border: 2px solid #93C5FD; border-radius: 16px; padding: 15px; box-shadow: 0 2px 8px rgba(59,130,246,0.08);">
+        <span style="background: #DBEAFE; color: #1E40AF; font-size: 11.5px; padding: 2px 8px; border-radius: 6px; font-weight: bold;">🏫 校內館藏・首選</span>
+        <strong style="display: block; font-size: 15px; color: #0F172A; margin: 8px 0 4px;">四維高中 WebPAC 館藏查詢</strong>
+        <span style="display: block; font-size: 12.5px; color: #64748B;">查詢校內圖書、期刊與主題書單，找文獻的好幫手！</span>
+        <span style="display: inline-block; margin-top: 10px; font-size: 13px; color: #ffffff; background: #2563EB; font-weight: bold; padding: 6px 14px; border-radius: 999px;">進入查詢 →</span>
+      </a>
+      <a href="https://www.shs.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; background: #ffffff; border: 2px solid #DDD6FE; border-radius: 16px; padding: 15px; box-shadow: 0 2px 8px rgba(139,92,246,0.08);">
+        <span style="background: #EDE9FE; color: #6B21A8; font-size: 11.5px; padding: 2px 8px; border-radius: 6px; font-weight: bold;">🏆 全國競賽・成果展現</span>
+        <strong style="display: block; font-size: 15px; color: #0F172A; margin: 8px 0 4px;">中學生網站（小論文／讀書心得）</strong>
+        <span style="display: block; font-size: 12.5px; color: #64748B;">教育部小論文與讀書心得比賽平台，自學成果也能拿來投稿！</span>
+        <span style="display: inline-block; margin-top: 10px; font-size: 13px; color: #ffffff; background: #7C3AED; font-weight: bold; padding: 6px 14px; border-radius: 999px;">前往網站 →</span>
+      </a>
+    </div>
+
+    <!-- 分類 1：高中課程 -->
+    <div style="background: #ffffff; border: 1.5px solid #FED7AA; border-radius: 16px; margin-bottom: 12px; overflow: hidden;">
+      <div style="background: #FFF7ED; padding: 10px 15px; font-size: 14px; font-weight: 800; color: #9A3412; border-bottom: 1px solid #FED7AA;">📘 學科學習平台 <span style="font-size: 12px; font-weight: normal; color: #9A3412;">｜補強高中課程・預習複習</span></div>
+      <div style="padding: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); gap: 8px;">
+        <a href="https://adl.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FFFBF5; border: 1px solid #FED7AA; border-radius: 10px; color: #9A3412; font-size: 13px; text-decoration: none; font-weight: bold;">因材網</a>
+        <a href="https://www.junyiacademy.org/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FFFBF5; border: 1px solid #FED7AA; border-radius: 10px; color: #9A3412; font-size: 13px; text-decoration: none; font-weight: bold;">均一教育平台</a>
+        <a href="https://cooc.tp.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FFFBF5; border: 1px solid #FED7AA; border-radius: 10px; color: #9A3412; font-size: 13px; text-decoration: none; font-weight: bold;">臺北酷課雲</a>
+        <a href="http://fun.hcc.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FFFBF5; border: 1px solid #FED7AA; border-radius: 10px; color: #9A3412; font-size: 13px; text-decoration: none; font-weight: bold;">Fun 學王</a>
+        <a href="https://www.ewant.org/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FFFBF5; border: 1px solid #FED7AA; border-radius: 10px; color: #9A3412; font-size: 13px; text-decoration: none; font-weight: bold;">eWant 自主學習</a>
+        <a href="https://www.learnmode.net/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FFFBF5; border: 1px solid #FED7AA; border-radius: 10px; color: #9A3412; font-size: 13px; text-decoration: none; font-weight: bold;">學習吧 LearnMode</a>
+      </div>
+    </div>
+
+    <!-- 分類 2：大學多元課程 -->
+    <div style="background: #ffffff; border: 1.5px solid #FBCFE8; border-radius: 16px; margin-bottom: 12px; overflow: hidden;">
+      <div style="background: #FDF2F8; padding: 10px 15px; font-size: 14px; font-weight: 800; color: #9D174D; border-bottom: 1px solid #FBCFE8;">🎓 大學多元課程 <span style="font-size: 12px; font-weight: normal; color: #9D174D;">｜探索興趣・提早接觸大學</span></div>
+      <div style="padding: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 8px;">
+        <a href="https://taiwanmooc.org/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">磨課師 MOOCs</a>
+        <a href="http://case.ntu.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">臺大科教中心</a>
+        <a href="https://apc.cloud.ncnu.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">大學先修課程認證</a>
+        <a href="http://taaed.org.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">TAAED 中文文化課程</a>
+        <a href="http://www.tocwc.org.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">台灣開放式課程聯盟</a>
+        <a href="http://www.sharecourse.net/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">ShareCourse 學聯網</a>
+        <a href="http://moocs.pu.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">靜宜大學免費課程</a>
+        <a href="https://www.edx.org/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">edX <span style="font-size: 11px; font-weight: normal;">（英）</span></a>
+        <a href="https://www.coursera.org/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">Coursera <span style="font-size: 11px; font-weight: normal;">（英）</span></a>
+        <a href="https://tedxtaipei.com/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">TEDxTaipei</a>
+        <a href="https://www.youtube.com/education" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">YouTube EDU</a>
+        <a href="https://tw.voicetube.com/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FDF4F8; border: 1px solid #FBCFE8; border-radius: 10px; color: #9D174D; font-size: 13px; text-decoration: none; font-weight: bold;">VoiceTube 英聽</a>
+      </div>
+    </div>
+
+    <!-- 分類 3 & 4：藝術音樂、程式設計（並排） -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; margin-bottom: 12px;">
+      <div style="background: #ffffff; border: 1.5px solid #BFDBFE; border-radius: 16px; overflow: hidden;">
+        <div style="background: #EFF6FF; padding: 10px 15px; font-size: 14px; font-weight: 800; color: #1E40AF; border-bottom: 1px solid #BFDBFE;">🎨 藝術與音樂</div>
+        <div style="padding: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr)); gap: 8px;">
+          <a href="https://www.youtube.com/@MissGa" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #F8FAFC; border: 1px solid #BFDBFE; border-radius: 10px; color: #1E40AF; font-size: 13px; text-decoration: none; font-weight: bold;">嘎老師 Miss Ga</a>
+          <a href="https://www.daveconservatoire.org/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #F8FAFC; border: 1px solid #BFDBFE; border-radius: 10px; color: #1E40AF; font-size: 13px; text-decoration: none; font-weight: bold;">Dave Conservatoire</a>
+          <a href="https://www.kadenze.com/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #F8FAFC; border: 1px solid #BFDBFE; border-radius: 10px; color: #1E40AF; font-size: 13px; text-decoration: none; font-weight: bold;">Kadenze</a>
+        </div>
+      </div>
+      <div style="background: #ffffff; border: 1.5px solid #BBF7D0; border-radius: 16px; overflow: hidden;">
+        <div style="background: #F0FDF4; padding: 10px 15px; font-size: 14px; font-weight: 800; color: #166534; border-bottom: 1px solid #BBF7D0;">💻 程式設計</div>
+        <div style="padding: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr)); gap: 8px;">
+          <a href="https://code.org/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FAFCF8; border: 1px solid #BBF7D0; border-radius: 10px; color: #166534; font-size: 13px; text-decoration: none; font-weight: bold;">Code.org</a>
+          <a href="https://www.codecademy.com/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FAFCF8; border: 1px solid #BBF7D0; border-radius: 10px; color: #166534; font-size: 13px; text-decoration: none; font-weight: bold;">Codecademy</a>
+          <a href="https://scratch.mit.edu/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #FAFCF8; border: 1px solid #BBF7D0; border-radius: 10px; color: #166534; font-size: 13px; text-decoration: none; font-weight: bold;">Scratch</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 分類 5：線上資料庫 -->
+    <div style="background: #ffffff; border: 1.5px solid #CBD5E1; border-radius: 16px; overflow: hidden;">
+      <div style="background: #F8FAFC; padding: 10px 15px; font-size: 14px; font-weight: 800; color: #334155; border-bottom: 1px solid #CBD5E1;">📚 線上資料庫 <span style="font-size: 12px; font-weight: normal; color: #475569;">｜查文獻・找圖文影音素材</span></div>
+      <div style="padding: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 8px;">
+        <a href="https://ebook.nlpi.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; color: #1E3A8A; font-size: 13px; text-decoration: none; font-weight: bold;">電子書服務平台</a>
+        <a href="https://www.nlpi.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; color: #1E3A8A; font-size: 13px; text-decoration: none; font-weight: bold;">國立公共資訊圖書館</a>
+        <a href="http://hanchi.ihp.sinica.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; color: #1E3A8A; font-size: 13px; text-decoration: none; font-weight: bold;">漢籍全文資料庫</a>
+        <a href="https://tm.ncl.edu.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; color: #1E3A8A; font-size: 13px; text-decoration: none; font-weight: bold;">國圖臺灣鄉土文獻</a>
+        <a href="https://taiwancinema.bamid.gov.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; color: #1E3A8A; font-size: 13px; text-decoration: none; font-weight: bold;">電影與文學資料庫</a>
+        <a href="https://children.moc.gov.tw/" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; padding: 10px 6px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; color: #1E3A8A; font-size: 13px; text-decoration: none; font-weight: bold;">圓夢繪本資料庫</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 7. 聯絡資訊 ================= -->
+  <div style="background: #FEFCE8; border: 2px dashed #FACC15; border-radius: 18px; padding: 16px 18px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center;">
+    <span style="flex: 0 0 52px; width: 52px; height: 52px; line-height: 52px; text-align: center; border-radius: 50%; background: #ffffff; border: 2px solid #FDE047; font-size: 26px;">❤️</span>
+    <div style="flex: 1 1 260px; min-width: 0; font-size: 13.5px; color: #78350F;">
+      <strong style="display: block; font-size: 15px; color: #854D0E; margin-bottom: 4px;">有問題？來圖資中心找我們！</strong>
+      <span style="display: block;">心兒說：申請、想主題、填表卡關都可以來諮詢，老師們很樂意幫忙 💛</span>
+      <span style="display: block; margin-top: 6px;">🏫 花蓮縣私立四維高級中學 圖書資訊中心</span>
+      <span style="display: block;">📍 970 花蓮市中山路一段 200 號</span>
+      <span style="display: block;">☎️ <a href="tel:+88638561455" style="color: #92400E; font-weight: bold;">(03) 856-1455</a> 轉 517</span>
+    </div>
+    <a href="#swsh-top" style="flex: 0 0 auto; font-size: 12.5px; color: #166534; background: #ffffff; border: 1.5px solid #86EFAC; padding: 7px 14px; border-radius: 999px; text-decoration: none; font-weight: bold;">⬆ 回到頂端</a>
+  </div>
+
+</div>
