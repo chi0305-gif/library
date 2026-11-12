@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SWSH AI 自學指令島</title>
+<meta name="description" content="花蓮縣私立四維高級中學 圖書資訊中心｜在 3D 小島上和 SWSH 夥伴一起逛 8 座指令館，學會用 AI 輔助自主學習。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<!-- 角色插畫 © Ming chi｜SWSH 校園 IP。3D 引擎：three.js（MIT License） -->
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #334155; --muted: #64748B; --green: #5BB334; --green-ink: #166534;
+    --glass: rgba(255,255,255,.86); --glass-line: rgba(255,255,255,.95);
+    --shadow: 0 6px 20px rgba(51,65,85,.14);
+    --round: 'Huninn', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    --sans: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #DCEFFB; font-family: var(--sans); color: var(--ink); }
+  button { font: inherit; cursor: pointer; color: inherit; }
+  #scene { position: fixed; inset: 0; touch-action: none; }
+  #scene canvas { display: block; width: 100%; height: 100%; outline: none; }
+  .glass { background: var(--glass); border: 1.5px solid var(--glass-line); box-shadow: var(--shadow); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+
+  /* 標題 */
+  .brand { position: fixed; left: 16px; top: 14px; z-index: 20; border-radius: 22px; padding: 12px 20px 12px; max-width: calc(100vw - 32px); pointer-events: none; }
+  .brand h1 { margin: 0; font-family: var(--round); font-weight: 400; font-size: clamp(20px, 3vw, 34px); letter-spacing: 1px; line-height: 1.2; color: #475569; }
+  .brand h1 .g { background: linear-gradient(90deg, #5BB334, #0EA5E9 55%, #8B5CF6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .brand p { margin: 4px 0 0; font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .brand .by { background: #FCE7F3; color: #BE185D; font-family: var(--round); padding: 0 9px; border-radius: 999px; transform: rotate(-3deg); display: inline-block; }
+
+  /* 右上工具列 */
+  .tools { position: fixed; right: 14px; top: 14px; z-index: 20; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; max-width: 60vw; }
+  .tool { height: 44px; min-width: 44px; padding: 0 14px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 700; border: 1.5px solid var(--glass-line); background: var(--glass); box-shadow: var(--shadow); }
+  .tool:hover { background: #fff; }
+  .tool[aria-pressed="true"] { background: #FEF9C3; border-color: #FDE047; }
+  .tool .t { white-space: nowrap; }
+
+  /* 3D 標籤 */
+  #labels { position: fixed; inset: 0; pointer-events: none; z-index: 10; overflow: hidden; }
+  .plabel { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; pointer-events: auto; border: 0; text-align: left; transform-origin: 50% 100%; will-change: transform; white-space: nowrap; }
+  .plabel .ic { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; flex: 0 0 auto; }
+  .plabel b { display: block; font-size: 15px; color: #334155; line-height: 1.2; }
+  .plabel small { display: block; font-size: 11.5px; color: var(--muted); }
+  .plabel:hover { background: #fff; }
+  .ctag { position: absolute; left: 0; top: 0; font-size: 11.5px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: rgba(255,255,255,.92); border: 1.5px solid var(--c, #CBD5E1); color: #334155; white-space: nowrap; pointer-events: none; }
+  .ctag.me { background: #FEF08A; border-color: #FACC15; }
+  .say { position: absolute; left: 0; top: 0; max-width: 220px; font-size: 12.5px; padding: 6px 10px; border-radius: 12px; background: #fff; border: 2px solid var(--c, #CBD5E1); box-shadow: var(--shadow); pointer-events: none; white-space: normal; transition: opacity .3s; }
+
+  /* 靠近提示 */
+  #near { position: fixed; left: 50%; bottom: 112px; transform: translateX(-50%); z-index: 25; display: none; align-items: center; gap: 10px; padding: 8px 8px 8px 16px; border-radius: 999px; font-weight: 700; }
+  #near.show { display: flex; }
+  #near button { border: 0; background: var(--c, #5BB334); color: #fff; font-weight: 900; padding: 8px 16px; border-radius: 999px; box-shadow: 0 3px 0 rgba(0,0,0,.18); }
+  #near kbd { font-family: var(--sans); background: rgba(255,255,255,.3); border-radius: 6px; padding: 0 6px; margin-left: 4px; font-size: 12px; }
+
+  /* 底部快捷列 */
+  #dock { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 20; display: flex; gap: 6px; padding: 8px 10px; border-radius: 24px; max-width: calc(100vw - 24px); overflow-x: auto; scrollbar-width: none; }
+  #dock::-webkit-scrollbar { display: none; }
+  #dock button { flex: 0 0 auto; width: 74px; border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 2px 0; border-radius: 14px; }
+  #dock button:hover { background: rgba(255,255,255,.7); }
+  #dock .ic { width: 50px; height: 50px; border-radius: 15px; display: grid; place-items: center; font-size: 26px; box-shadow: inset 0 -4px 0 rgba(0,0,0,.12), 0 3px 6px rgba(0,0,0,.08); transition: transform .15s; }
+  #dock button:hover .ic { transform: translateY(-3px); }
+  #dock .nm { font-size: 12px; font-weight: 700; color: #475569; white-space: nowrap; }
+  #dock .ic { position: relative; }
+  #dock .visited .ic::after { content: "✓"; position: absolute; right: -4px; top: -4px; width: 18px; height: 18px; border-radius: 50%; background: #FACC15; color: #713F12; font-size: 11px; font-weight: 900; display: grid; place-items: center; border: 2px solid #fff; }
+
+  /* 搖桿 */
+  #joy { position: fixed; left: 18px; bottom: 18px; z-index: 21; width: 130px; height: 130px; border-radius: 50%; touch-action: none; display: grid; place-items: center; }
+  #joy .knob { width: 70px; height: 70px; border-radius: 50%; background: #fff; border: 3px solid var(--c, #86EFAC); overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,.15); transition: transform .12s ease-out; }
+  #joy .knob img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #joy.active .knob { transition: none; }
+  #joy .lb { position: absolute; bottom: 6px; font-size: 11px; color: var(--muted); font-weight: 700; }
+  #joy .ar { position: absolute; top: 6px; font-size: 11px; color: #94A3B8; }
+
+  /* 小地圖 */
+  #mini { position: fixed; right: 16px; bottom: 16px; z-index: 20; border-radius: 20px; padding: 6px; }
+  #mini canvas { display: block; width: 190px; height: 150px; border-radius: 14px; cursor: crosshair; }
+  #mini .zoom { position: absolute; right: 8px; top: -50px; display: flex; gap: 8px; }
+  #mini .zoom button { width: 40px; height: 40px; border-radius: 50%; font-size: 20px; }
+
+  /* 點地面標記 */
+  #toast { position: fixed; left: 50%; top: 92px; transform: translateX(-50%) translateY(-20px); opacity: 0; z-index: 60; background: #166534; color: #fff; font-weight: 700; padding: 10px 18px; border-radius: 999px; transition: all .25s; pointer-events: none; box-shadow: var(--shadow); white-space: nowrap; }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* 開場 */
+  #intro { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgba(220, 239, 251, .55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); overflow-y: auto; }
+  #intro[hidden] { display: none; }
+  .intro-card { width: min(860px, 100%); border-radius: 30px; padding: 26px 24px 24px; background: rgba(255,255,255,.95); box-shadow: 0 20px 50px rgba(51,65,85,.25); text-align: center; border: 3px solid #fff; margin: auto; }
+  .intro-card h2 { font-family: var(--round); font-weight: 400; font-size: clamp(24px, 4vw, 36px); margin: 4px 0 2px; color: #334155; }
+  .intro-card h2 .g { background: linear-gradient(90deg, #5BB334, #0EA5E9 55%, #8B5CF6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .intro-card .sub { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+  .pick { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr)); gap: 12px; margin-bottom: 18px; }
+  .pick button { border: 3px solid var(--c); background: #fff; border-radius: 22px; padding: 12px 6px 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 5px 0 var(--c); transition: transform .12s; }
+  .pick button:hover { transform: translateY(-3px); }
+  .pick button[aria-pressed="true"] { background: var(--s); outline: 3px solid var(--i); outline-offset: 2px; }
+  .pick img { width: 78px; height: 78px; border-radius: 50%; border: 3px solid var(--c); object-fit: cover; background: #fff; }
+  .pick b { font-family: var(--round); font-weight: 400; font-size: 18px; color: var(--i); margin-top: 4px; }
+  .pick span { font-size: 12px; color: var(--muted); }
+  .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 8px; text-align: left; margin: 0 0 16px; }
+  .rules div { background: #F8FAFC; border: 2px dashed #CBD5E1; border-radius: 14px; padding: 8px 12px; font-size: 13px; color: #475569; }
+  .rules b { display: block; color: #334155; font-size: 14px; }
+  .how { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+  .how kbd { font-family: var(--sans); background: #F1F5F9; border: 1px solid #CBD5E1; border-bottom-width: 3px; border-radius: 6px; padding: 0 6px; font-size: 12px; }
+  .go { border: 0; background: var(--green); color: #fff; font-weight: 900; font-size: 18px; padding: 13px 34px; border-radius: 999px; box-shadow: 0 5px 0 #3F8A22; }
+  .go:hover { filter: brightness(1.05); }
+  .go:active { transform: translateY(3px); box-shadow: 0 2px 0 #3F8A22; }
+
+  /* 指令館視窗 */
+  dialog#panel { width: min(820px, calc(100vw - 20px)); max-height: calc(100dvh - 24px); padding: 0; border: 0; border-radius: 28px; background: transparent; overflow: visible; }
+  dialog#panel::backdrop { background: rgba(51, 65, 85, .35); backdrop-filter: blur(3px); }
+  .pc { background: #FFFEFA; border-radius: 28px; border: 4px solid var(--c); box-shadow: 0 10px 0 var(--c), 0 20px 50px rgba(0,0,0,.2); max-height: calc(100dvh - 40px); display: flex; flex-direction: column; overflow: hidden; }
+  .ph { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--s); border-bottom: 2px dashed var(--c); }
+  .ph .ic { width: 54px; height: 54px; border-radius: 18px; display: grid; place-items: center; font-size: 30px; background: #fff; border: 3px solid var(--c); flex: 0 0 auto; }
+  .ph h2 { margin: 0; font-family: var(--round); font-weight: 400; font-size: 24px; color: var(--i); line-height: 1.2; }
+  .ph small { font-size: 12.5px; color: var(--i); font-weight: 700; opacity: .8; }
+  .ph .x { margin-left: auto; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 2px solid var(--c); font-size: 18px; color: var(--i); flex: 0 0 auto; }
+  .pb { padding: 16px 18px 8px; overflow-y: auto; }
+  .pf { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; padding: 10px 16px 14px; border-top: 2px dashed #E2E8F0; background: #fff; }
+  .guide { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+  .guide img { width: 58px; height: 58px; border-radius: 50%; border: 3px solid var(--gc); object-fit: cover; background: #fff; flex: 0 0 auto; }
+  .guide .bub { position: relative; background: #fff; border: 2px solid var(--gc); border-radius: 16px; padding: 8px 14px; font-size: 14.5px; }
+  .guide .bub::before { content: ""; position: absolute; left: -8px; top: 20px; width: 12px; height: 12px; background: #fff; border-left: 2px solid var(--gc); border-bottom: 2px solid var(--gc); transform: rotate(45deg); }
+  .guide .bub b { font-family: var(--round); font-weight: 400; color: var(--gi); }
+  .steps { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; font-size: 13px; }
+  .steps span { background: var(--s); color: var(--i); font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .card { background: #fff; border: 2px solid #E2E8F0; border-radius: 20px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 3px 0 #E2E8F0; }
+  .card h3 { margin: 0; font-size: 17px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card h3 .n { width: 26px; height: 26px; border-radius: 50%; background: var(--c); color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 900; flex: 0 0 auto; }
+  .card .use { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .prompt { background: #F8FAFC; border: 2px dashed var(--c); border-radius: 14px; padding: 12px 14px; font-size: 14.5px; line-height: 2; white-space: pre-wrap; word-break: break-word; }
+  .prompt input { font: inherit; font-size: 14px; border: 0; border-bottom: 2.5px solid var(--c); background: var(--s); color: var(--i); font-weight: 700; padding: 1px 6px; border-radius: 6px 6px 0 0; max-width: 100%; min-width: 4em; }
+  .prompt input::placeholder { color: var(--i); opacity: .55; font-weight: 400; }
+  .prompt input:focus { outline: 2px solid var(--c); outline-offset: 1px; }
+  .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+  .btn { border: 0; border-radius: 999px; padding: 9px 18px; font-weight: 900; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+  .btn.copy { background: var(--c); color: #fff; box-shadow: 0 3px 0 rgba(0,0,0,.18); }
+  .btn.copy.ok { background: #16A34A; }
+  .btn.ghost { background: #fff; border: 2px solid #E2E8F0; color: #475569; padding: 7px 14px; }
+  .btn.ai { background: linear-gradient(135deg, #4285F4, #9B72CB 60%, #D96570); color: #fff; box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+  .btn.next { background: var(--i); color: #fff; box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+  .extra { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 10px; margin: 4px 0 12px; }
+  .extra a { display: flex; gap: 10px; align-items: center; text-decoration: none; background: #fff; border: 2.5px solid var(--c); border-radius: 16px; padding: 10px 12px; color: #334155; box-shadow: 0 3px 0 var(--c); }
+  .extra a span:first-child { font-size: 26px; }
+  .extra b { display: block; font-size: 14.5px; }
+  .extra small { color: var(--muted); font-size: 12px; }
+  .warn { background: #FFFBEB; border: 2px solid #FDE68A; color: #92400E; border-radius: 14px; padding: 8px 12px; font-size: 13px; margin-bottom: 12px; }
+  .rulelist { display: grid; gap: 10px; margin: 0 0 12px; padding: 0; list-style: none; }
+  .rulelist li { background: #fff; border: 2px solid #E2E8F0; border-radius: 16px; padding: 10px 14px; font-size: 14.5px; }
+  .rulelist b { color: #0F172A; }
+
+  /* 無 3D 時 */
+  #fallback { display: none; position: fixed; inset: 110px 16px 110px; z-index: 5; overflow-y: auto; }
+  body.no3d #fallback { display: block; }
+  body.no3d #joy, body.no3d #mini, body.no3d [data-3d] { display: none !important; }
+  #fallback .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px; max-width: 900px; margin: 0 auto; }
+  #fallback button { border: 3px solid var(--c); background: #fff; border-radius: 20px; padding: 16px; font-size: 16px; font-weight: 700; box-shadow: 0 4px 0 var(--c); display: flex; gap: 10px; align-items: center; }
+  #fallback button span { font-size: 30px; }
+  #fallback p { text-align: center; color: var(--muted); }
+
+  @media (max-width: 700px) {
+    .brand { padding: 8px 12px; border-radius: 16px; left: 10px; top: 10px; max-width: calc(100vw - 72px); }
+    .brand h1 { font-size: 19px; }
+    .brand p { font-size: 11px; }
+    .brand p .hide-s, .brand .by { display: none; }
+    .tools { right: 10px; top: 10px; gap: 6px; flex-direction: column; max-width: none; }
+    .tool { height: 40px; width: 40px; min-width: 40px; padding: 0; font-size: 16px; }
+    .tool .t { display: none; }
+    #mini { display: none; }
+    #dock { bottom: 8px; padding: 6px; gap: 2px; }
+    #dock button { width: 62px; }
+    #dock .ic { width: 42px; height: 42px; font-size: 22px; border-radius: 13px; }
+    #dock .nm { font-size: 11px; }
+    #joy { left: 10px; bottom: 100px; width: 112px; height: 112px; }
+    #joy .knob { width: 58px; height: 58px; }
+    #near { bottom: 96px; left: auto; right: 10px; transform: none; font-size: 13px; }
+    .plabel { padding: 4px 10px 4px 4px; }
+    .plabel .ic { width: 30px; height: 30px; font-size: 16px; }
+    .plabel b { font-size: 13px; }
+    .plabel small { display: none; }
+    .prompt { font-size: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="scene" aria-label="3D 小島場景：拖曳旋轉視角、點地面移動、點建築進入指令館"></div>
+<div id="labels" aria-hidden="false"></div>
+
+<header class="brand glass">
+  <h1><span class="g">SWSH</span> AI 自學指令島</h1>
+  <p><span class="hide-s">高中自主學習 × AI 指令包・</span>四維高中圖資中心 <span class="by">with 心兒・小四・思思・捲毛・PijBo</span></p>
+</header>
+
+<nav class="tools" aria-label="場景工具">
+  <button class="tool" id="t-music" aria-pressed="false" title="背景音樂">🎵<span class="t">音樂</span></button>
+  <button class="tool" id="t-night" aria-pressed="false" title="切換白天／夜晚" data-3d>🌙<span class="t">夜晚</span></button>
+  <button class="tool" id="t-view" aria-pressed="false" title="切換鳥瞰／跟隨視角" data-3d>🦅<span class="t">鳥瞰</span></button>
+  <button class="tool" id="t-rules" title="AI 使用公約">📜<span class="t">公約</span></button>
+  <button class="tool" id="t-char" title="換角色">👤<span class="t">換角色</span></button>
+  <button class="tool" id="t-full" title="全螢幕">⛶</button>
+</nav>
+
+<div id="near" class="glass" role="status"><span id="near-t"></span><button id="near-go" type="button">進入<kbd>E</kbd></button></div>
+
+<nav id="dock" class="glass" aria-label="指令館快捷列"></nav>
+
+<div id="joy" class="glass" data-3d aria-label="移動搖桿"><span class="ar">▲</span><div class="knob"><img id="joy-img" alt=""></div><span class="lb">移動</span></div>
+
+<div id="mini" class="glass" data-3d>
+  <div class="zoom"><button class="tool" id="z-in" aria-label="拉近">＋</button><button class="tool" id="z-out" aria-label="拉遠">－</button></div>
+  <canvas id="mini-c" width="380" height="300" aria-label="小地圖：點一下就會走過去"></canvas>
+</div>
+
+<div id="fallback"><p>你的裝置無法顯示 3D 場景，沒關係！直接點選下面的指令館 👇</p><div class="grid" id="fb-grid"></div></div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div id="intro">
+  <div class="intro-card">
+    <h2>歡迎來到 <span class="g">SWSH</span> AI 自學指令島</h2>
+    <p class="sub">島上有 8 座指令館，收藏了自主學習每個階段都用得到的 AI 指令。<br>先選一位夥伴，陪你一起逛！</p>
+    <div class="pick" id="pick"></div>
+    <div class="rules">
+      <div><b>🤝 AI 是學伴，不是代筆</b>用 AI 幫你思考，作品要自己完成</div>
+      <div><b>🔍 查證再使用</b>AI 可能說錯或編造資料</div>
+      <div><b>🏷️ 誠實標註</b>說明哪裡用了 AI、怎麼用</div>
+      <div><b>🔒 保護個資</b>不輸入姓名、電話等個人資料</div>
+    </div>
+    <p class="how">操作：<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / 方向鍵 或 搖桿移動・點地面走過去・拖曳旋轉視角・靠近建築按 <kbd>E</kbd> 進入</p>
+    <button class="go" id="go" type="button">出發，進入小島！</button>
+  </div>
+</div>
+
+<dialog id="panel" aria-labelledby="p-title"><div class="pc" id="pc"></div></dialog>
+
+<script>__THREE_JS__</script>
+<script>
+(() => {
+'use strict';
+const IMG = { xiaosi: '__IMG_xiaosi__', pijbo: '__IMG_pijbo__', juanmao: '__IMG_juanmao__', sisi: '__IMG_sisi__', xiner: '__IMG_xiner__' };
+const CHARS = {
+  xiaosi:  { name: '小四',  trait: '明確目標', c: '#FCD34D', s: '#FEF3C7', i: '#B45309', body: 0xF8F4E8 },
+  pijbo:   { name: 'PijBo', trait: '腳踏實地', c: '#86EFAC', s: '#DCFCE7', i: '#15803D', body: 0xE9C99A },
+  juanmao: { name: '捲毛',  trait: '跨界創意', c: '#C4B5FD', s: '#EDE9FE', i: '#6D28D9', body: 0xF8F4E8 },
+  sisi:    { name: '思思',  trait: '深度反思', c: '#93C5FD', s: '#DBEAFE', i: '#1D4ED8', body: 0xF8F4E8 },
+  xiner:   { name: '心兒',  trait: '熱情動力', c: '#F9A8D4', s: '#FCE7F3', i: '#BE185D', body: 0xF8F4E8 }
+};
+const GEMINI = 'https://gemini.google.com/app';
+const FORM = 'https://www.swsh.hlc.edu.tw/ischool/rfile/9a3f5bcee556c351c7bd3a55caab7102?fd=1';
+const FOLDER = 'https://www.swsh.hlc.edu.tw/ischool/resource/folder/47378c964e822f1065c8228405b16e4f';
+
+// ===================== 8 座指令館 =====================
+const PAV = [
+  { id: 'idea', name: '靈感館', ride: '主題摩天輪', emoji: '💡', type: 'ferris', c: '#F472B6', s: '#FDF2F8', i: '#BE185D', hex: 0xF9A8D4, guide: 'juanmao',
+    line: '主題不用很大，夠有趣、做得完，就是好主題。來，坐上摩天輪換個角度看看！',
+    intro: '不知道要學什麼？讓 AI 陪你從興趣出發，發想、混搭、再幫主題做健康檢查。',
+    prompts: [
+      { t: '興趣挖掘機', use: '還沒有主題、只知道自己喜歡什麼時', p: '你是一位高中自主學習指導老師。我是高中生，我的興趣是【興趣1】、【興趣2】、【興趣3】。\n請幫我發想 8 個可以在 18 週內完成的自主學習主題。每個主題請用一句話說明要做什麼、最後可以產出什麼成果，並標示難度（★1～3）。請用表格呈現。' },
+      { t: '跨界混搭', use: '想做出跟別人不一樣的主題時', p: '請把【領域A，例如：音樂】和【領域B，例如：程式設計】結合，提出 5 個適合高中生的跨領域自學題目。\n每個題目請附上：一個有趣的探究問題、需要的資源、可能的成果形式。' },
+      { t: '主題健康檢查', use: '已經有初步主題，想確認可不可行時', p: '我想做的自主學習主題是【我的主題】。請從以下角度幫我檢查：\n1. 範圍會不會太大或太小\n2. 18 週內做不做得完\n3. 學校資源夠不夠\n4. 成果是否具體\n最後請給我一個修正後、更聚焦的版本，並說明修改理由。' }
+    ] },
+  { id: 'plan', name: '計畫城堡', ride: '目標城堡', emoji: '🏰', type: 'castle', c: '#A78BFA', s: '#F5F3FF', i: '#6D28D9', hex: 0xC4B5FD, guide: 'xiaosi',
+    line: '目標清楚，路就不會走歪！我們把 18 週切成一個一個小關卡。',
+    intro: '把主題變成可以執行的計畫：18 週進度表、SMART 目標，還有幫你把學習動機想清楚。',
+    extra: [{ e: '📄', t: '下載自主學習計畫申請表', d: '第 1-2 週要繳交', href: FORM }],
+    prompts: [
+      { t: '18 週進度表', use: '第 1-2 週擬定計畫時', p: '我的自主學習主題是【我的主題】，每週有【2】節課可以使用。\n請幫我規劃 18 週進度表：第 1-2 週擬定計畫、第 3 週審核、第 4-16 週執行、第 17-18 週成果發表。\n請用表格列出每週的「目標、要做的事、要留下的紀錄」。' },
+      { t: 'SMART 目標改寫', use: '覺得自己的目標太模糊時', p: '請用 SMART 原則（具體、可衡量、可達成、相關、有時限）幫我把這個目標改寫得更清楚：【我的目標】。\n請給我 2 個版本，並說明修改的原因。' },
+      { t: '動機深挖器', use: '寫申請表的「學習動機」卡住時', p: '我要寫自主學習計畫申請表的「學習動機」，以下是我目前的想法：【條列你的想法】。\n請「不要」直接幫我寫完，而是問我 5 個問題，一次問一題，幫助我把動機想得更深入、更具體。' }
+    ] },
+  { id: 'search', name: '資料圖書塔', ride: '知識高塔', emoji: '📚', type: 'tower', c: '#60A5FA', s: '#EFF6FF', i: '#1D4ED8', hex: 0x93C5FD, guide: 'sisi',
+    line: '找資料先查校內館藏，再延伸到線上。AI 給的書名一定要再確認喔！',
+    intro: '學會找關鍵字、判斷資料可不可信，再搭配學校的館藏查詢，讓研究有憑有據。',
+    extra: [{ e: '📖', t: '四維高中 WebPAC 館藏查詢', d: '查校內圖書、期刊', href: 'http://opac.swsh.hlc.edu.tw/' }, { e: '📱', t: '國資圖電子書服務平台', d: '免費借閱電子書', href: 'https://ebook.nlpi.edu.tw/' }],
+    prompts: [
+      { t: '關鍵字產生器', use: '不知道要用什麼詞搜尋時', p: '我的研究主題是【我的主題】。\n請幫我列出中文和英文的搜尋關鍵字各 10 個（含同義詞與相關詞），並建議可以到哪些類型的資料來源查找，例如：圖書館館藏、期刊論文、政府開放資料。' },
+      { t: '資料可信度檢查', use: '找到一份資料，不確定能不能引用時', p: '以下是我找到的一份資料：【貼上標題、作者、網址或摘要】。\n請用「誰寫的、什麼時候寫的、證據是什麼、寫作目的為何」四個面向，幫我評估它的可信度，並提醒我還需要交叉查證哪些地方。' },
+      { t: '入門書單方向', use: '想先讀幾本書打底時', p: '我想研究【我的主題】，請推薦適合高中生的入門閱讀方向：可以讀哪些類型的書或文章、該從哪些子題開始，以及到圖書館可以用哪些分類號或關鍵字查找。\n（若你推薦具體書名，請提醒我自行查證是否真的存在。）' }
+    ] },
+  { id: 'note', name: '筆記旋轉木馬', ride: '重點木馬', emoji: '🎠', type: 'carousel', c: '#FB923C', s: '#FFF7ED', i: '#C2410C', hex: 0xFDBA74, guide: 'xiner',
+    line: '讀完之後用自己的話說一遍，知識才會真的變成你的！',
+    intro: '讀了很多資料卻記不住？讓 AI 陪你整理重點、畫心智圖，還能檢查你是不是真的懂了。',
+    prompts: [
+      { t: '重點筆記整理', use: '讀完一篇文章或一個章節後', p: '請幫我把以下內容整理成重點筆記：\n【貼上文章或段落】\n格式：3 個核心概念、每個概念用簡單的話解釋、1 個生活中的例子、1 個我可以繼續追問的問題。' },
+      { t: '心智圖大綱', use: '想看清楚概念之間的關係時', p: '請把【主題或章節名稱】整理成心智圖的文字大綱，最多三層，每個節點不超過 10 個字，讓我可以照著自己畫出來。' },
+      { t: '費曼檢查站', use: '想確認自己是不是真的懂了', p: '我剛學了【概念名稱】，以下是我用自己的話寫的解釋：\n【你的解釋】\n請像老師一樣，指出我理解錯誤或不完整的地方，再用一個簡單的比喻幫我釐清。請不要直接給我標準答案。' }
+    ] },
+  { id: 'log', name: '紀錄小火車', ride: '每週列車', emoji: '🚂', type: 'train', c: '#34D399', s: '#ECFDF5', i: '#047857', hex: 0x6EE7B7, guide: 'pijbo',
+    line: '汪！每週報到、寫紀錄、請老師蓋章，一站一站穩穩前進～',
+    intro: '第 4-16 週的每週紀錄、進度落後時的補救、時間管理，都在這班列車上。',
+    prompts: [
+      { t: '每週紀錄引導', use: '每週寫學習紀錄表時', p: '我這週的自主學習做了：【這週做了什麼】，遇到的困難是：【遇到的困難】。\n請用 3 個問題引導我寫出本週紀錄：學到了什麼、困難怎麼處理、下週要怎麼調整。一次問一題。' },
+      { t: '進度救援計畫', use: '發現進度落後時', p: '我的自主學習進度落後了，原因是【落後原因】。目前已完成【已完成的部分】，還剩下【剩餘週數】週。\n請幫我重新排列優先順序，提出一個可行的追趕計畫，並告訴我哪些部分可以縮小範圍。' },
+      { t: '專注力小幫手', use: '常常拖延或分心時', p: '我每週大約有【可用時數】可以自學，但常常會【拖延、分心等問題】。\n請給我 5 個具體可行的小方法，並幫我設計一張每週自我檢核表（勾選式）。' }
+    ] },
+  { id: 'tutor', name: 'AI 家教館', ride: '問答碰碰車', emoji: '🤖', type: 'bumper', c: '#22D3EE', s: '#ECFEFF', i: '#0E7490', hex: 0x67E8F9, guide: 'xiaosi',
+    line: '把 AI 當成會出題、會追問的家教，比直接要答案有用多了！',
+    intro: '讓 AI 出題考你、一步一步引導你思考，或陪你讀英文資料。',
+    prompts: [
+      { t: '出題考考我', use: '想檢查自己學得怎麼樣時', p: '請針對【主題或範圍】出 5 題選擇題考我，難度由淺入深。\n先只給題目，等我全部作答後，再公布答案並逐題解釋。' },
+      { t: '蘇格拉底引導', use: '有一個概念怎麼想都想不通時', p: '我想弄懂【概念或問題】。\n請不要直接告訴我答案，而是一步一步問我問題，引導我自己想出來。如果我答錯了，請給我提示再讓我試一次。' },
+      { t: '英文資料小幫手', use: '找到英文資料但讀得很吃力時', p: '以下是一段英文資料：\n【貼上英文段落】\n請先用中文摘要重點（3～5 點），再列出 5 個關鍵單字，附上詞性、中文意思和一個例句。' }
+    ] },
+  { id: 'show', name: '成果雲霄飛車', ride: '發表飛車', emoji: '🎢', type: 'coaster', c: '#F87171', s: '#FEF2F2', i: '#B91C1C', hex: 0xFCA5A5, guide: 'juanmao',
+    line: '成果不一定只能做簡報，影片、作品、展演都很酷。準備好衝刺了嗎？',
+    intro: '第 17-18 週成果發表：規劃簡報、發想成果形式，還能讓 AI 扮評審先模擬提問。',
+    extra: [{ e: '🏆', t: '學長姐成果作品資料夾', d: '看看別人怎麼呈現', href: FOLDER }],
+    prompts: [
+      { t: '簡報大綱', use: '要準備成果發表簡報時', p: '我的自主學習主題是【我的主題】，成果包含【成果內容】。\n請幫我規劃 5 分鐘成果發表簡報的大綱（約 8 頁），每頁寫出標題與重點，並建議適合放的圖表或照片。' },
+      { t: '成果形式發想', use: '想讓成果更有創意時', p: '除了簡報之外，我的主題【我的主題】還可以用哪些方式呈現成果？\n請提出 6 種形式（例如：影片、海報、網站、實作作品、展演），並說明各自的優點與需要的工具。' },
+      { t: '評審模擬提問', use: '發表前想先練習答問時', p: '請扮演成果發表會的評審老師。我的主題是【我的主題】，成果摘要是：【成果摘要】。\n請提出 5 個可能會問的問題，等我回答後，再給我回饋與改進建議。' }
+    ] },
+  { id: 'reflect', name: '反思星空館', ride: '星空觀測站', emoji: '🔭', type: 'observatory', c: '#818CF8', s: '#EEF2FF', i: '#4338CA', hex: 0xA5B4FC, guide: 'sisi',
+    line: '最後的反思，是學習歷程裡最動人的一段。抬頭看看，你走了好遠呢。',
+    intro: '把這學期的經驗寫成學習歷程：引導反思、修飾文字，並連結到未來的方向。',
+    prompts: [
+      { t: '反思引導訪談', use: '要寫學習歷程反思，卻不知道從何下筆時', p: '請用「做了什麼 → 學到什麼 → 遇到什麼困難 → 怎麼解決 → 未來怎麼應用」的架構，訪問我這學期的自主學習經驗。\n一次只問一題，等我回答後再問下一題。最後幫我整理成條列重點，讓我自己改寫成文章。' },
+      { t: '文字修飾建議', use: '寫完初稿，想讓它更好時', p: '這是我寫的學習歷程反思（約【字數】字）：\n【貼上你的文字】\n請給我 3 個具體的修改建議，保留我的原意和語氣，不要整篇重寫。' },
+      { t: '連結未來方向', use: '想讓自主學習和升學、生涯連在一起時', p: '我這學期的自主學習主題是【我的主題】，過程中我做了【主要做的事】。\n請幫我想想它可以連結到哪些大學學群或未來職業，並說明這次經驗展現了哪些能力。' }
+    ] }
+];
+const byId = Object.fromEntries(PAV.map(p => [p.id, p]));
+
+const NPC_LINES = {
+  xiaosi: ['先訂目標再出發！', '18 週其實過得很快喔', '計畫城堡在那邊～'],
+  pijbo: ['汪！一起去紀錄小火車！', '汪汪～每週都要寫紀錄', '我聞到靈感的味道了！'],
+  juanmao: ['混搭一下會更有趣。', '摩天輪上看得比較遠。', '失敗也是素材啦。'],
+  sisi: ['AI 說的要查證喔', '圖書塔有好多書～', '想想「為什麼」吧'],
+  xiner: ['加油！你一定可以 💖', '累了就休息一下喔', '卡關了就來找我們！']
+};
+
+// ===================== 狀態 =====================
+const KEY = 'swsh-ai-island-v1';
+let state = { char: 'xiaosi', visited: [], seen: false };
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && CHARS[s.char]) state = Object.assign(state, s); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ===================== 介面：快捷列 / 開場 =====================
+const dock = $('#dock');
+PAV.forEach(p => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.dataset.id = p.id; b.setAttribute('aria-label', `${p.name}（${p.ride}）`);
+  b.innerHTML = `<span class="ic" style="background:${p.s};border:2px solid ${p.c}">${p.emoji}</span><span class="nm">${p.name}</span>`;
+  b.addEventListener('click', () => goTo(p.id));
+  dock.appendChild(b);
+  const f = document.createElement('button');
+  f.type = 'button'; f.style.setProperty('--c', p.c);
+  f.innerHTML = `<span>${p.emoji}</span>${p.name}`;
+  f.addEventListener('click', () => openPanel(p.id));
+  $('#fb-grid').appendChild(f);
+});
+function markVisited() { dock.querySelectorAll('button').forEach(b => b.classList.toggle('visited', state.visited.includes(b.dataset.id))); }
+markVisited();
+
+const pick = $('#pick');
+Object.entries(CHARS).forEach(([id, c]) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.dataset.id = id;
+  b.style.setProperty('--c', c.c); b.style.setProperty('--s', c.s); b.style.setProperty('--i', c.i);
+  b.innerHTML = `<img src="${IMG[id]}" alt=""><b>${c.name}</b><span>${c.trait}</span>`;
+  b.setAttribute('aria-label', `選擇 ${c.name}（${c.trait}）`);
+  b.addEventListener('click', () => { state.char = id; save(); refreshPick(); applyChar(); });
+  pick.appendChild(b);
+});
+function refreshPick() { pick.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === state.char)); }
+refreshPick();
+$('#go').addEventListener('click', () => { $('#intro').hidden = true; state.seen = true; save(); toast(`和 ${CHARS[state.char].name} 一起出發！`); });
+$('#t-char').addEventListener('click', () => { $('#intro').hidden = false; });
+if (state.seen) $('#intro').hidden = true;
+
+// ===================== 指令館視窗 =====================
+const panel = $('#panel'), pc = $('#pc');
+function renderPrompt(text) {
+  return esc(text).replace(/【([^】]+)】/g, (m, label) => {
+    const w = Math.min(Math.max(label.length * 1.1 + 2, 5), 26);
+    return `<input type="text" data-label="${label}" placeholder="${label}" style="width:${w}em" aria-label="${label}">`;
+  });
+}
+function promptText(box) {
+  let out = '';
+  box.childNodes.forEach(n => {
+    if (n.nodeType === 3) out += n.textContent;
+    else if (n.tagName === 'INPUT') out += n.value.trim() ? n.value.trim() : `【${n.dataset.label}】`;
+    else out += n.textContent;
+  });
+  return out;
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {}
+    ta.remove(); return ok;
+  }
+}
+function openPanel(id) {
+  if (id === 'rules') return openRules();
+  const p = byId[id], g = CHARS[p.guide];
+  const idx = PAV.indexOf(p), next = PAV[(idx + 1) % PAV.length];
+  pc.style.setProperty('--c', p.c); pc.style.setProperty('--s', p.s); pc.style.setProperty('--i', p.i);
+  pc.innerHTML = `
+    <div class="ph"><span class="ic">${p.emoji}</span><div><small>${p.ride}・館長 ${g.name}</small><h2 id="p-title">${p.name}</h2></div><button class="x" type="button" aria-label="關閉">✕</button></div>
+    <div class="pb">
+      <div class="guide" style="--gc:${g.c};--gi:${g.i}"><img src="${IMG[p.guide]}" alt="${g.name}"><div class="bub"><b>${g.name}：</b>${p.line}</div></div>
+      <p style="margin:0 0 10px;font-size:14.5px">${p.intro}</p>
+      <div class="steps"><span>① 填入框框</span><span>② 複製指令</span><span>③ 貼到 Gemini 或其他 AI</span></div>
+      ${p.extra ? `<div class="extra">${p.extra.map(x => `<a href="${x.href}" target="_blank" rel="noopener noreferrer"><span>${x.e}</span><span><b>${x.t}</b><small>${x.d}</small></span></a>`).join('')}</div>` : ''}
+      ${p.prompts.map((q, i) => `
+        <div class="card">
+          <h3><span class="n">${i + 1}</span>${q.t}</h3>
+          <div class="use">🕐 適合：${q.use}</div>
+          <div class="prompt">${renderPrompt(q.p)}</div>
+          <div class="acts"><button class="btn copy" type="button">📋 複製指令</button><button class="btn ghost clr" type="button">↺ 清空</button></div>
+        </div>`).join('')}
+      <div class="warn">⚠️ AI 的回答可能出錯，請查證後再使用；繳交的作品要是你自己完成的，並註明哪裡用了 AI。</div>
+    </div>
+    <div class="pf"><a class="btn ai" href="${GEMINI}" target="_blank" rel="noopener noreferrer">✨ 開啟 Gemini</a><button class="btn next" type="button">下一館：${next.emoji} ${next.name} →</button></div>`;
+  pc.querySelector('.x').addEventListener('click', closePanel);
+  pc.querySelector('.next').addEventListener('click', () => { closePanel(); setTimeout(() => goTo(next.id), 150); });
+  pc.querySelectorAll('.card').forEach(card => {
+    const box = card.querySelector('.prompt');
+    card.querySelector('.copy').addEventListener('click', async e => {
+      const btn = e.currentTarget;
+      const empty = [...box.querySelectorAll('input')].filter(x => !x.value.trim()).length;
+      const ok = await copyText(promptText(box));
+      if (ok) {
+        btn.classList.add('ok'); btn.textContent = '✅ 已複製！';
+        setTimeout(() => { btn.classList.remove('ok'); btn.textContent = '📋 複製指令'; }, 1800);
+        toast(empty ? `已複製！還有 ${empty} 個【】可以貼上後再補` : '已複製！貼到 Gemini 就能用 ✨');
+      } else toast('複製失敗，請手動選取文字');
+    });
+    card.querySelector('.clr').addEventListener('click', () => box.querySelectorAll('input').forEach(x => (x.value = '')));
+  });
+  if (!state.visited.includes(id)) { state.visited.push(id); save(); markVisited(); }
+  if (!panel.open) panel.showModal();
+  pc.querySelector('.pb').scrollTop = 0;
+}
+function openRules() {
+  pc.style.setProperty('--c', '#5BB334'); pc.style.setProperty('--s', '#F0FDF4'); pc.style.setProperty('--i', '#166534');
+  pc.innerHTML = `
+    <div class="ph"><span class="ic">📜</span><div><small>進島前請先讀一讀</small><h2 id="p-title">AI 使用公約</h2></div><button class="x" type="button" aria-label="關閉">✕</button></div>
+    <div class="pb">
+      <ul class="rulelist">
+        <li>🤝 <b>AI 是學伴，不是代筆</b>：用 AI 幫你發想、整理、檢查，但計畫、紀錄與成果要自己完成，不直接繳交 AI 產生的內容。</li>
+        <li>🔍 <b>查證再使用</b>：AI 可能說錯，甚至編造不存在的書名、數據或網址。重要資訊請到 WebPAC、圖書館或可信網站確認。</li>
+        <li>🏷️ <b>誠實標註</b>：在計畫、紀錄或成果中說明哪裡用了 AI、用了哪個工具、怎麼使用。</li>
+        <li>🔒 <b>保護個資</b>：不要輸入自己或他人的姓名、電話、地址、照片等個人資料。</li>
+        <li>📏 <b>遵守規定</b>：請依學校規範與各 AI 平台的使用條款（含年齡限制）使用。</li>
+      </ul>
+      <div class="warn">有疑問嗎？歡迎到圖書資訊中心找老師聊聊：(03) 856-1455 轉 517</div>
+    </div>
+    <div class="pf"><span></span><button class="btn next" type="button">我知道了 👍</button></div>`;
+  pc.querySelector('.x').addEventListener('click', closePanel);
+  pc.querySelector('.next').addEventListener('click', closePanel);
+  if (!panel.open) panel.showModal();
+}
+function closePanel() { if (panel.open) panel.close(); }
+panel.addEventListener('click', e => { if (e.target === panel) closePanel(); });
+$('#t-rules').addEventListener('click', () => openPanel('rules'));
+
+// ===================== 音樂（WebAudio 音樂盒） =====================
+let audio = null, musicOn = false, musicTimer = null;
+const MELODY = [72, 76, 79, 76, 74, 77, 81, 77, 72, 76, 79, 84, 83, 79, 76, 74];
+const BASS = [48, 53, 48, 55];
+function startMusic() {
+  audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+  audio.resume();
+  let step = 0; const beat = 0.32;
+  const note = (m, t, len, vol, type) => {
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.type = type; o.frequency.value = 440 * Math.pow(2, (m - 69) / 12);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    o.connect(g).connect(audio.destination); o.start(t); o.stop(t + len + 0.05);
+  };
+  let next = audio.currentTime + 0.05;
+  musicTimer = setInterval(() => {
+    while (next < audio.currentTime + 0.4) {
+      note(MELODY[step % MELODY.length], next, beat * 1.8, 0.07, 'triangle');
+      if (step % 4 === 0) note(BASS[(step / 4) % BASS.length], next, beat * 4, 0.05, 'sine');
+      step++; next += beat;
+    }
+  }, 100);
+}
+$('#t-music').addEventListener('click', e => {
+  musicOn = !musicOn; e.currentTarget.setAttribute('aria-pressed', musicOn);
+  if (musicOn) startMusic(); else { clearInterval(musicTimer); if (audio) audio.suspend(); }
+});
+$('#t-full').addEventListener('click', () => {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {});
+  else document.exitFullscreen && document.exitFullscreen();
+});
+
+// ===================== 3D 場景 =====================
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+} catch (e) { renderer = null; }
+let goTo = id => openPanel(id);
+let applyChar = () => { $('#joy-img').src = IMG[state.char]; };
+applyChar();
+if (!renderer || typeof THREE === 'undefined') { document.body.classList.add('no3d'); return; }
+
+const host = $('#scene');
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+host.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const DAY = { sky: 0xDCEFFB, fog: 0xE6F3FB }, NIGHT = { sky: 0x1E2650, fog: 0x232C5C };
+scene.background = new THREE.Color(DAY.sky);
+scene.fog = new THREE.Fog(DAY.fog, 120, 260);
+const narrow = () => innerWidth < innerHeight;
+const camera = new THREE.PerspectiveCamera(narrow() ? 60 : 48, innerWidth / innerHeight, 1, 600);
+
+const hemi = new THREE.HemisphereLight(0xffffff, 0x9CC98A, 0.52); scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xFFF6E5, 0.62);
+sun.position.set(40, 70, 30); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -75, right: 75, top: 75, bottom: -75, near: 10, far: 200 });
+sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.06;
+scene.add(sun);
+
+const M = (color, opt = {}) => new THREE.MeshLambertMaterial(Object.assign({ color }, opt));
+function mesh(geo, mat, x = 0, y = 0, z = 0, cast = true) {
+  const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = cast; m.receiveShadow = true; return m;
+}
+const animators = [];
+const put = (parent, child) => { parent.add(child); return child; };
+
+// --- 地形 ---
+const ocean = mesh(new THREE.CircleGeometry(400, 64), M(0xA9DCF2), 0, -0.8, 0, false); ocean.rotation.x = -Math.PI / 2; scene.add(ocean);
+scene.add(mesh(new THREE.CylinderGeometry(66, 68, 1.2, 72), M(0xF6E5B8), 0, -0.85, 0, false));
+const island = mesh(new THREE.CylinderGeometry(61, 63, 1.4, 72), M(0xC5E8A7), 0, -0.7, 0, false); scene.add(island);
+const pathMat = M(0xF7E8CB, { polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 });
+const ring = mesh(new THREE.RingGeometry(19, 24.5, 72), pathMat, 0, 0.08, 0, false); ring.rotation.x = -Math.PI / 2; scene.add(ring);
+const plaza = mesh(new THREE.CircleGeometry(11, 48), pathMat, 0, 0.1, 0, false); plaza.rotation.x = -Math.PI / 2; scene.add(plaza);
+const gateRoad = mesh(new THREE.PlaneGeometry(6, 36), pathMat, 0, 0.12, 41, false); gateRoad.rotation.x = -Math.PI / 2; scene.add(gateRoad);
+for (let a = 0; a < 4; a++) { const sp = mesh(new THREE.PlaneGeometry(4, 9), pathMat, 0, 0.022, 0, false); sp.rotation.x = -Math.PI / 2; sp.rotation.z = a * Math.PI / 2; sp.position.set(Math.sin(a * Math.PI / 2) * 15, 0.09, Math.cos(a * Math.PI / 2) * 15); scene.add(sp); }
+
+// --- 指令館位置 ---
+const R = 37;
+PAV.forEach((p, i) => {
+  const a = (-150 + i * 300 / (PAV.length - 1)) * Math.PI / 180;
+  p.pos = new THREE.Vector3(Math.sin(a) * R, 0, -Math.cos(a) * R);
+  p.door = new THREE.Vector3(Math.sin(a) * (R - 10.5), 0, -Math.cos(a) * (R - 10.5));
+  p.angle = a;
+  const sp = mesh(new THREE.PlaneGeometry(4.5, 10), pathMat, Math.sin(a) * 28.5, 0.07, -Math.cos(a) * 28.5, false);
+  sp.rotation.x = -Math.PI / 2; sp.rotation.z = -a; scene.add(sp);
+});
+
+// --- 建築 ---
+const white = M(0xFFFBF5), wood = M(0xC89B6D), metal = M(0xD6DDE8);
+const windowMat = new THREE.MeshLambertMaterial({ color: 0x8FA6C8, emissive: 0xFFD27A, emissiveIntensity: 0 });
+function pad(g, hex) { g.add(mesh(new THREE.CylinderGeometry(8.2, 8.6, 0.5, 40), M(0xFFF8EC), 0, 0.25, 0, false)); g.add(mesh(new THREE.CylinderGeometry(7.6, 7.6, 0.56, 40), M(hex), 0, 0.28, 0, false)); }
+const B = {
+  ferris(p) {
+    const g = new THREE.Group(); pad(g, p.hex);
+    [-1.6, 1.6].forEach(z => {
+      [-1, 1].forEach(s => { const leg = mesh(new THREE.BoxGeometry(0.5, 11, 0.5), metal, s * 2.6, 5.6, z); leg.rotation.z = s * 0.24; g.add(leg); });
+    });
+    const wheel = new THREE.Group(); wheel.position.y = 10.4; g.add(wheel);
+    const rim = M(0xF472B6);
+    [-1.5, 1.5].forEach(z => { const t = mesh(new THREE.TorusGeometry(6.4, 0.22, 8, 48), rim, 0, 0, z); wheel.add(t); });
+    put(wheel, mesh(new THREE.CylinderGeometry(0.7, 0.7, 3.6, 16), M(0xFACC15), 0, 0, 0)).rotation.x = Math.PI / 2;
+    const cabins = [];
+    const cols = [0xF9A8D4, 0x93C5FD, 0xFDE68A, 0x86EFAC, 0xC4B5FD, 0xFDBA74, 0x67E8F9, 0xFCA5A5];
+    for (let k = 0; k < 8; k++) {
+      const a = k / 8 * Math.PI * 2;
+      const sp = mesh(new THREE.BoxGeometry(0.18, 6.4, 0.18), metal, Math.cos(a) * 3.2, Math.sin(a) * 3.2, 0); sp.rotation.z = a - Math.PI / 2; wheel.add(sp);
+      const cab = new THREE.Group(); cab.position.set(Math.cos(a) * 6.4, Math.sin(a) * 6.4, 0);
+      cab.add(mesh(new THREE.CylinderGeometry(0.95, 0.75, 1.3, 12), M(cols[k]), 0, -1.1, 0));
+      cab.add(mesh(new THREE.ConeGeometry(1.05, 0.7, 12), white, 0, -0.1, 0));
+      wheel.add(cab); cabins.push(cab);
+    }
+    animators.push(dt => { wheel.rotation.z += dt * 0.25; cabins.forEach(c => (c.rotation.z = -wheel.rotation.z)); });
+    p.h = 19; return g;
+  },
+  castle(p) {
+    const g = new THREE.Group(); pad(g, p.hex);
+    const wall = M(0xFFF4F7), roofA = M(0xA78BFA), roofB = M(0xF9A8D4);
+    g.add(mesh(new THREE.BoxGeometry(9, 7, 6), wall, 0, 3.8, 0));
+    for (let k = -3; k <= 3; k += 1.5) g.add(mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), wall, k, 7.7, 2.6));
+    [[-4.5, -3], [4.5, -3], [-4.5, 3], [4.5, 3]].forEach(([x, z], k) => {
+      g.add(mesh(new THREE.CylinderGeometry(1.3, 1.4, 9.5, 20), wall, x, 5, z));
+      g.add(mesh(new THREE.ConeGeometry(1.8, 3.6, 20), k % 2 ? roofB : roofA, x, 11.5, z));
+    });
+    g.add(mesh(new THREE.CylinderGeometry(2, 2.2, 13, 24), wall, 0, 7, -0.5));
+    g.add(mesh(new THREE.ConeGeometry(2.8, 5.5, 24), roofA, 0, 16.2, -0.5));
+    const flag = mesh(new THREE.BoxGeometry(1.6, 0.9, 0.08), M(0xFACC15), 0.85, 19.6, -0.5); g.add(flag);
+    g.add(mesh(new THREE.CylinderGeometry(0.06, 0.06, 2.4, 6), metal, 0, 19.4, -0.5));
+    g.add(mesh(new THREE.BoxGeometry(2.4, 3.6, 0.3), M(0xA16207), 0, 2.3, 3.05));
+    put(g, mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.3, 20, 1, false, 0, Math.PI), M(0xA16207), 0, 4.1, 3.05)).rotation.set(Math.PI / 2, 0, Math.PI / 2);
+    [[-2.6, 5.2], [2.6, 5.2], [0, 9.8], [-1, 12.5], [1, 12.5]].forEach(([x, y]) => g.add(mesh(new THREE.BoxGeometry(0.8, 1.2, 0.2), windowMat, x, y, y > 9 ? 1.5 : 3.02)));
+    animators.push((dt, t) => { flag.rotation.y = Math.sin(t * 3) * 0.25; });
+    p.h = 22; return g;
+  },
+  tower(p) {
+    const g = new THREE.Group(); pad(g, p.hex);
+    const bands = [0xF9A8D4, 0x93C5FD, 0xFDE68A, 0x86EFAC, 0xC4B5FD];
+    g.add(mesh(new THREE.CylinderGeometry(3.4, 3.8, 3, 28), white, 0, 1.5, 0));
+    for (let k = 0; k < 5; k++) {
+      const y = 3 + k * 2.4;
+      g.add(mesh(new THREE.CylinderGeometry(3.0 - k * 0.15, 3.1 - k * 0.15, 2.0, 28), M(bands[k]), 0, y + 1, 0));
+      g.add(mesh(new THREE.CylinderGeometry(3.2 - k * 0.15, 3.2 - k * 0.15, 0.4, 28), white, 0, y + 2.2, 0));
+    }
+    put(g, mesh(new THREE.TorusGeometry(3.4, 0.18, 6, 32), wood, 0, 9.8, 0)).rotation.x = Math.PI / 2;
+    g.add(mesh(new THREE.ConeGeometry(3.6, 5, 28), M(0x60A5FA), 0, 17.4, 0));
+    const book = new THREE.Group(); book.position.y = 21.6; g.add(book);
+    put(book, mesh(new THREE.BoxGeometry(2.2, 0.35, 1.6), M(0xF87171), -0.55, 0, 0)).rotation.z = 0.35;
+    put(book, mesh(new THREE.BoxGeometry(2.2, 0.35, 1.6), M(0x60A5FA), 0.55, 0, 0)).rotation.z = -0.35;
+    for (let k = 0; k < 6; k++) { const a = k / 6 * Math.PI * 2; put(g, mesh(new THREE.BoxGeometry(0.9, 1.3, 0.2), windowMat, Math.sin(a) * 2.95, 6.2 + (k % 2) * 4.8, Math.cos(a) * 2.95)).rotation.y = a; }
+    animators.push((dt, t) => { book.rotation.y += dt * 0.8; book.position.y = 21.6 + Math.sin(t * 2) * 0.3; });
+    p.h = 25; return g;
+  },
+  carousel(p) {
+    const g = new THREE.Group(); pad(g, p.hex);
+    const spin = new THREE.Group(); g.add(spin);
+    spin.add(mesh(new THREE.CylinderGeometry(6, 6.2, 0.7, 36), M(0xFFF1E0), 0, 0.9, 0));
+    spin.add(mesh(new THREE.CylinderGeometry(0.7, 0.7, 7, 16), M(0xFACC15), 0, 4.5, 0));
+    const cols = [0xFB923C, 0xFFFFFF];
+    for (let k = 0; k < 16; k++) put(spin, mesh(new THREE.ConeGeometry(6.8, 3.2, 1, 1, false, k / 16 * Math.PI * 2, Math.PI * 2 / 16), M(cols[k % 2]), 0, 9.6, 0)).geometry;
+    spin.add(mesh(new THREE.CylinderGeometry(6.8, 6.8, 0.8, 32), M(0xFDBA74), 0, 7.6, 0));
+    spin.add(mesh(new THREE.SphereGeometry(0.6, 12, 12), M(0xFACC15), 0, 11.5, 0));
+    const horses = [];
+    const hc = [0xFFFFFF, 0xF9A8D4, 0x93C5FD, 0xFDE68A, 0xC4B5FD, 0x86EFAC];
+    for (let k = 0; k < 6; k++) {
+      const a = k / 6 * Math.PI * 2, x = Math.cos(a) * 4.3, z = Math.sin(a) * 4.3;
+      spin.add(mesh(new THREE.CylinderGeometry(0.1, 0.1, 6.4, 6), M(0xFACC15), x, 4.4, z));
+      const h = new THREE.Group(); h.position.set(x, 3, z); h.rotation.y = -a;
+      h.add(mesh(new THREE.BoxGeometry(0.9, 0.9, 2), M(hc[k]), 0, 0, 0));
+      h.add(mesh(new THREE.BoxGeometry(0.7, 1.2, 0.7), M(hc[k]), 0, 0.7, 1));
+      h.add(mesh(new THREE.BoxGeometry(0.25, 0.8, 0.25), M(hc[k]), 0.3, -0.7, 0.7));
+      h.add(mesh(new THREE.BoxGeometry(0.25, 0.8, 0.25), M(hc[k]), -0.3, -0.7, -0.7));
+      spin.add(h); horses.push(h);
+    }
+    animators.push((dt, t) => { spin.rotation.y += dt * 0.45; horses.forEach((h, k) => (h.position.y = 3 + Math.sin(t * 2.5 + k) * 0.5)); });
+    p.h = 15; return g;
+  },
+  train(p) {
+    const g = new THREE.Group(); pad(g, p.hex);
+    const track = mesh(new THREE.TorusGeometry(5.6, 0.2, 6, 48), wood, 0, 0.75, 0, false); track.rotation.x = Math.PI / 2; g.add(track);
+    const st = new THREE.Group(); g.add(st);
+    st.add(mesh(new THREE.BoxGeometry(3.6, 0.4, 2.6), white, 0, 0.8, 0));
+    [[-1.5, -1], [1.5, -1], [-1.5, 1], [1.5, 1]].forEach(([x, z]) => st.add(mesh(new THREE.CylinderGeometry(0.15, 0.15, 3.2, 8), white, x, 2.4, z)));
+    put(st, mesh(new THREE.ConeGeometry(2.8, 1.6, 4), M(0x34D399), 0, 4.8, 0)).rotation.y = Math.PI / 4;
+    const cars = [], cc = [0xF87171, 0xFACC15, 0x60A5FA, 0xC4B5FD];
+    for (let k = 0; k < 4; k++) {
+      const car = new THREE.Group();
+      if (k === 0) {
+        car.add(mesh(new THREE.BoxGeometry(1.4, 1.2, 2.2), M(0x34D399), 0, 1.6, 0));
+        put(car, mesh(new THREE.CylinderGeometry(0.6, 0.6, 1.6, 12), M(0x10B981), 0, 1.7, 1.2)).rotation.x = Math.PI / 2;
+        car.add(mesh(new THREE.CylinderGeometry(0.22, 0.32, 0.9, 10), M(0x334155), 0, 2.7, 1.6));
+        car.add(mesh(new THREE.BoxGeometry(1.5, 0.3, 1.2), M(0xF87171), 0, 2.4, -0.4));
+      } else {
+        car.add(mesh(new THREE.BoxGeometry(1.4, 1, 1.9), M(cc[k]), 0, 1.5, 0));
+      }
+      [-0.7, 0.7].forEach(z => [-0.75, 0.75].forEach(x => put(car, mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.2, 10), M(0x334155), x, 0.95, z)).rotation.z = Math.PI / 2));
+      g.add(car); cars.push(car);
+    }
+    let ang = 0;
+    animators.push(dt => {
+      ang += dt * 0.5;
+      cars.forEach((c, k) => { const a = ang - k * 0.42; c.position.set(Math.cos(a) * 5.6, 0, Math.sin(a) * 5.6); c.rotation.y = -a; });
+    });
+    p.h = 11; return g;
+  },
+  bumper(p) {
+    const g = new THREE.Group(); pad(g, p.hex);
+    g.add(mesh(new THREE.BoxGeometry(12, 0.3, 10), M(0xE0F2FE), 0, 0.7, 0, false));
+    const rail = M(0x22D3EE);
+    [[0, 5], [0, -5]].forEach(([x, z]) => g.add(mesh(new THREE.BoxGeometry(12, 0.8, 0.3), rail, x, 1.1, z)));
+    [[6, 0], [-6, 0]].forEach(([x, z]) => g.add(mesh(new THREE.BoxGeometry(0.3, 0.8, 10), rail, x, 1.1, z)));
+    [[-5.8, -4.8], [5.8, -4.8], [-5.8, 4.8], [5.8, 4.8]].forEach(([x, z]) => g.add(mesh(new THREE.CylinderGeometry(0.2, 0.2, 7, 8), white, x, 4.2, z)));
+    const roof = mesh(new THREE.BoxGeometry(13, 0.5, 11), M(0x67E8F9), 0, 7.8, 0); g.add(roof);
+    for (let k = -5; k <= 5; k += 2.5) put(g, mesh(new THREE.ConeGeometry(0.9, 1.2, 4), M(k % 5 === 0 ? 0xFACC15 : 0xF472B6), k, 7, 5.6)).rotation.x = Math.PI;
+    const sign = mesh(new THREE.BoxGeometry(5, 1.6, 0.3), white, 0, 9, 0); g.add(sign);
+    g.add(mesh(new THREE.SphereGeometry(0.5, 12, 12), M(0x22D3EE), -1.2, 9, 0.2)); g.add(mesh(new THREE.SphereGeometry(0.5, 12, 12), M(0x22D3EE), 1.2, 9, 0.2));
+    const cars = [], cc = [0xF87171, 0xFACC15, 0x60A5FA, 0xA78BFA];
+    for (let k = 0; k < 4; k++) {
+      const car = new THREE.Group();
+      car.add(mesh(new THREE.CylinderGeometry(1.1, 1.1, 0.6, 18), M(0x334155), 0, 1.1, 0));
+      car.add(mesh(new THREE.BoxGeometry(1.4, 0.8, 1.6), M(cc[k]), 0, 1.6, 0));
+      car.add(mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.4, 6), metal, 0, 3, -0.5));
+      car.userData.v = new THREE.Vector2(Math.cos(k * 1.7) * 2.2, Math.sin(k * 1.7) * 2.2);
+      car.position.set((k - 1.5) * 2.4, 0, (k % 2 ? 1 : -1) * 1.5);
+      g.add(car); cars.push(car);
+    }
+    animators.push(dt => cars.forEach(c => {
+      const v = c.userData.v; c.position.x += v.x * dt; c.position.z += v.y * dt;
+      if (Math.abs(c.position.x) > 4.6) { v.x *= -1; c.position.x = Math.sign(c.position.x) * 4.6; }
+      if (Math.abs(c.position.z) > 3.6) { v.y *= -1; c.position.z = Math.sign(c.position.z) * 3.6; }
+      c.rotation.y = Math.atan2(v.x, v.y);
+    }));
+    p.h = 13; return g;
+  },
+  coaster(p) {
+    const g = new THREE.Group(); pad(g, p.hex);
+    const pts = [];
+    for (let k = 0; k < 12; k++) {
+      const a = k / 12 * Math.PI * 2;
+      const r = 5.6 + Math.sin(a * 2) * 1.2;
+      pts.push(new THREE.Vector3(Math.cos(a) * r, 3 + Math.max(0, Math.sin(a * 2 + 0.6)) * 7 + (k === 3 ? 3 : 0), Math.sin(a) * r));
+    }
+    const curve = new THREE.CatmullRomCurve3(pts, true);
+    g.add(mesh(new THREE.TubeGeometry(curve, 160, 0.32, 8, true), M(0xF87171)));
+    const off = new THREE.CatmullRomCurve3(pts.map(v => new THREE.Vector3(v.x * 1.12, v.y, v.z * 1.12)), true);
+    g.add(mesh(new THREE.TubeGeometry(off, 160, 0.18, 6, true), M(0xFCA5A5)));
+    for (let k = 0; k < 24; k++) {
+      const v = curve.getPointAt(k / 24);
+      g.add(mesh(new THREE.CylinderGeometry(0.15, 0.15, v.y, 6), white, v.x, v.y / 2, v.z));
+    }
+    const cart = new THREE.Group(); g.add(cart);
+    const cc = [0xFACC15, 0x60A5FA, 0x34D399];
+    const carts = cc.map(col => { const c = new THREE.Group(); c.add(mesh(new THREE.BoxGeometry(1.2, 0.8, 1.5), M(col), 0, 0.6, 0)); g.add(c); return c; });
+    let u = 0;
+    animators.push(dt => {
+      u = (u + dt * 0.07) % 1;
+      carts.forEach((c, k) => {
+        const t = (u - k * 0.022 + 1) % 1; const pos = curve.getPointAt(t), tan = curve.getTangentAt(t);
+        c.position.copy(pos); c.lookAt(pos.clone().add(tan));
+      });
+    });
+    p.h = 18; return g;
+  },
+  observatory(p) {
+    const g = new THREE.Group(); pad(g, p.hex);
+    g.add(mesh(new THREE.CylinderGeometry(4.2, 4.6, 5, 32), M(0xEEF2FF), 0, 3, 0));
+    g.add(mesh(new THREE.SphereGeometry(4.3, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), M(0x818CF8), 0, 5.5, 0));
+    put(g, mesh(new THREE.BoxGeometry(1.2, 4.6, 8.8), M(0x4338CA), 0, 7.2, 0)).scale.set(1, 1, 0.98);
+    const scope = mesh(new THREE.CylinderGeometry(0.6, 0.9, 5, 16), M(0xFACC15), 0, 9.4, 1.4); scope.rotation.x = -0.7; g.add(scope);
+    for (let k = 0; k < 6; k++) { const a = k / 6 * Math.PI * 2; put(g, mesh(new THREE.BoxGeometry(0.9, 1.2, 0.2), windowMat, Math.sin(a) * 4.25, 3.2, Math.cos(a) * 4.25)).rotation.y = a; }
+    const star = mesh(new THREE.OctahedronGeometry(1.3), new THREE.MeshLambertMaterial({ color: 0xFDE047, emissive: 0xFACC15, emissiveIntensity: 0.4 }), 0, 15, 0);
+    g.add(star);
+    animators.push((dt, t) => { star.rotation.y += dt * 1.2; star.position.y = 15 + Math.sin(t * 1.6) * 0.6; });
+    p.h = 19; return g;
+  }
+};
+const pavGroups = [];
+PAV.forEach(p => {
+  const g = B[p.type](p);
+  g.position.copy(p.pos);
+  g.rotation.y = Math.atan2(-p.pos.x, -p.pos.z);
+  g.traverse(o => { o.userData.pav = p.id; });
+  scene.add(g); pavGroups.push(g);
+});
+
+// --- 入口大門 ---
+function textTexture(lines, opt = {}) {
+  const c = document.createElement('canvas'); c.width = opt.w || 1024; c.height = opt.h || 256;
+  const x = c.getContext('2d');
+  x.fillStyle = opt.bg || '#FFFBF0'; x.fillRect(0, 0, c.width, c.height);
+  x.strokeStyle = opt.border || '#5BB334'; x.lineWidth = 18; x.strokeRect(9, 9, c.width - 18, c.height - 18);
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  lines.forEach((l, k) => { x.fillStyle = l.c; x.font = `${l.w || 900} ${l.s}px "Huninn","Noto Sans TC","Microsoft JhengHei",sans-serif`; x.fillText(l.t, c.width / 2, l.y); });
+  const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t;
+}
+const gate = new THREE.Group(); gate.position.set(0, 0, 57); scene.add(gate);
+[-5.5, 5.5].forEach((x, k) => {
+  gate.add(mesh(new THREE.CylinderGeometry(0.8, 0.9, 9, 16), M(k ? 0xF9A8D4 : 0x93C5FD), x, 4.5, 0));
+  gate.add(mesh(new THREE.SphereGeometry(1.1, 16, 16), M(0xFACC15), x, 9.6, 0));
+});
+let gateTex = textTexture([{ t: 'SWSH AI 自學指令島', s: 96, y: 112, c: '#166534' }, { t: '四維高中 圖書資訊中心', s: 48, y: 196, c: '#B45309', w: 700 }]);
+const gateSign = mesh(new THREE.BoxGeometry(12, 3, 0.5), [white, white, white, white, new THREE.MeshLambertMaterial({ map: gateTex }), white], 0, 8, 0);
+gate.add(gateSign);
+document.fonts && document.fonts.ready.then(() => {
+  gateTex = textTexture([{ t: 'SWSH AI 自學指令島', s: 96, y: 112, c: '#166534' }, { t: '四維高中 圖書資訊中心', s: 48, y: 196, c: '#B45309', w: 700 }]);
+  gateSign.material[4].map = gateTex; gateSign.material[4].needsUpdate = true;
+});
+
+// --- 中央噴泉 ---
+const fountain = new THREE.Group(); scene.add(fountain);
+fountain.add(mesh(new THREE.CylinderGeometry(4.2, 4.5, 1, 32), white, 0, 0.5, 0));
+fountain.add(mesh(new THREE.CylinderGeometry(3.7, 3.7, 0.4, 32), M(0x93D8F2), 0, 0.85, 0, false));
+fountain.add(mesh(new THREE.CylinderGeometry(0.5, 0.7, 3, 12), white, 0, 2, 0));
+fountain.add(mesh(new THREE.CylinderGeometry(1.8, 0.9, 0.6, 24), white, 0, 3.6, 0));
+const spray = mesh(new THREE.ConeGeometry(1.4, 2.4, 16, 1, true), new THREE.MeshLambertMaterial({ color: 0xBAE6FD, transparent: true, opacity: 0.7, side: THREE.DoubleSide }), 0, 5.1, 0, false);
+spray.rotation.x = Math.PI; fountain.add(spray);
+animators.push((dt, t) => { spray.scale.y = 1 + Math.sin(t * 4) * 0.15; });
+
+// --- 彩虹、雲、熱氣球 ---
+const rbCols = [0xF87171, 0xFB923C, 0xFDE047, 0x86EFAC, 0x7DD3FC, 0x818CF8, 0xC4B5FD];
+const rainbow = new THREE.Group(); rainbow.position.set(0, -2, -92); scene.add(rainbow);
+rbCols.forEach((c, k) => rainbow.add(new THREE.Mesh(new THREE.TorusGeometry(58 - k * 2.1, 1.05, 8, 80, Math.PI), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.75, fog: false }))));
+const clouds = [];
+const cloudMat = new THREE.MeshLambertMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.95 });
+for (let k = 0; k < 9; k++) {
+  const c = new THREE.Group();
+  for (let j = 0; j < 4; j++) c.add(mesh(new THREE.SphereGeometry(2.6 + Math.random() * 1.6, 14, 12), cloudMat, j * 2.6 - 4, Math.random(), Math.random() * 1.5, false));
+  const a = Math.random() * Math.PI * 2, r = 60 + Math.random() * 60;
+  c.position.set(Math.cos(a) * r, 42 + Math.random() * 14, Math.sin(a) * r - 10);
+  c.userData.s = 0.6 + Math.random();
+  scene.add(c); clouds.push(c);
+}
+const balloon = new THREE.Group(); balloon.position.set(-44, 30, 6); scene.add(balloon);
+for (let k = 0; k < 8; k++) balloon.add(mesh(new THREE.SphereGeometry(4, 16, 16, k / 8 * Math.PI * 2, Math.PI / 4), M(k % 2 ? 0xF9A8D4 : 0xFDE68A), 0, 0, 0, false));
+balloon.add(mesh(new THREE.BoxGeometry(1.6, 1.2, 1.6), wood, 0, -6, 0, false));
+animators.push((dt, t) => {
+  balloon.position.y = 30 + Math.sin(t * 0.6) * 2; balloon.position.x = -44 + Math.sin(t * 0.15) * 6;
+  clouds.forEach(c => { c.position.x += dt * c.userData.s; if (c.position.x > 110) c.position.x = -110; });
+});
+
+// --- 樹、花、路燈 ---
+const treeCols = [0x86EFAC, 0x6EE7B7, 0xBBF7D0, 0xF9A8D4, 0xC4B5FD, 0xFDE68A, 0xA7F3D0];
+const trunk = M(0xB98B5E);
+const okSpot = (x, z, minPav) => {
+  const r = Math.hypot(x, z);
+  if (r > 58 || r < 26.5) return false;
+  if (z > 22 && Math.abs(x) < 6) return false;
+  if (PAV.some(p => Math.hypot(p.pos.x - x, p.pos.z - z) < minPav)) return false;
+  if (PAV.some(p => { const d = new THREE.Vector2(x, z); const a = new THREE.Vector2(p.door.x, p.door.z), b = new THREE.Vector2(p.pos.x * 0.7, p.pos.z * 0.7); return d.distanceTo(a) < 4 || d.distanceTo(b) < 4; })) return false;
+  return true;
+};
+let placed = 0, tries = 0;
+while (placed < 90 && tries < 2000) {
+  tries++;
+  const a = Math.random() * Math.PI * 2, r = 26 + Math.random() * 33, x = Math.cos(a) * r, z = Math.sin(a) * r;
+  if (!okSpot(x, z, 11)) continue;
+  const s = 0.7 + Math.random() * 0.8, col = M(treeCols[placed % treeCols.length]);
+  const t = new THREE.Group(); t.position.set(x, 0, z); t.scale.setScalar(s);
+  t.add(mesh(new THREE.CylinderGeometry(0.35, 0.45, 2, 8), trunk, 0, 1, 0));
+  if (placed % 3) t.add(mesh(new THREE.ConeGeometry(1.9, 4.2, 10), col, 0, 4, 0));
+  else t.add(mesh(new THREE.SphereGeometry(1.9, 12, 10), col, 0, 3.6, 0));
+  scene.add(t); placed++;
+}
+const flowerGeo = new THREE.SphereGeometry(0.28, 6, 6);
+const flowers = new THREE.InstancedMesh(flowerGeo, new THREE.MeshLambertMaterial({ color: 0xffffff }), 260);
+const fcol = [0xF472B6, 0xFACC15, 0xFFFFFF, 0xA78BFA, 0xFB923C], dummy = new THREE.Object3D(), tmpC = new THREE.Color();
+for (let k = 0, n = 0; n < 260 && k < 3000; k++) {
+  const a = Math.random() * Math.PI * 2, r = 12 + Math.random() * 47, x = Math.cos(a) * r, z = Math.sin(a) * r;
+  if ((r > 18.5 && r < 25) || (z > 22 && Math.abs(x) < 4) || PAV.some(p => Math.hypot(p.pos.x - x, p.pos.z - z) < 9)) continue;
+  dummy.position.set(x, 0.25, z); dummy.updateMatrix(); flowers.setMatrixAt(n, dummy.matrix); flowers.setColorAt(n, tmpC.set(fcol[n % 5])); n++;
+}
+scene.add(flowers);
+const lampMat = new THREE.MeshLambertMaterial({ color: 0xFFF7D6, emissive: 0xFFD27A, emissiveIntensity: 0.15 });
+const lampLights = [];
+for (let k = 0; k < 12; k++) {
+  const a = k / 12 * Math.PI * 2 + 0.13, x = Math.cos(a) * 25.6, z = Math.sin(a) * 25.6;
+  scene.add(mesh(new THREE.CylinderGeometry(0.15, 0.2, 4.2, 8), M(0x6B5BA6), x, 2.1, z));
+  scene.add(mesh(new THREE.SphereGeometry(0.55, 12, 12), lampMat, x, 4.5, z, false));
+  if (k % 2 === 0) { const L = new THREE.PointLight(0xFFD27A, 0, 22, 2); L.position.set(x, 4.6, z); scene.add(L); lampLights.push(L); }
+}
+const starGeo = new THREE.BufferGeometry(), sp = [];
+for (let k = 0; k < 500; k++) { const u = Math.random() * Math.PI * 2, v = Math.random() * 0.45 * Math.PI; sp.push(Math.cos(u) * Math.cos(v) * 300, 40 + Math.sin(v) * 260, Math.sin(u) * Math.cos(v) * 300); }
+starGeo.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 1.6, fog: false, transparent: true, opacity: 0 }));
+scene.add(stars);
+
+// ===================== 角色 =====================
+function avatarTexture(src, ring) {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const tex = new THREE.CanvasTexture(c);
+  const im = new Image();
+  im.onload = () => {
+    const x = c.getContext('2d');
+    x.clearRect(0, 0, 256, 256);
+    x.beginPath(); x.arc(128, 128, 124, 0, Math.PI * 2); x.fillStyle = ring; x.fill();
+    x.beginPath(); x.arc(128, 128, 112, 0, Math.PI * 2); x.fillStyle = '#fff'; x.fill();
+    x.save(); x.beginPath(); x.arc(128, 128, 106, 0, Math.PI * 2); x.clip(); x.drawImage(im, 22, 22, 212, 212); x.restore();
+    tex.needsUpdate = true;
+  };
+  im.src = src; return tex;
+}
+const shadowTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); const g = x.createRadialGradient(32, 32, 2, 32, 32, 30); g.addColorStop(0, 'rgba(30,41,59,.35)'); g.addColorStop(1, 'rgba(30,41,59,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })();
+function makeChar(id) {
+  const c = CHARS[id];
+  const g = new THREE.Group();
+  const sh = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 3.4), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false }));
+  sh.rotation.x = -Math.PI / 2; sh.position.y = 0.05; g.add(sh);
+  const body = new THREE.Group(); g.add(body);
+  body.add(mesh(new THREE.CylinderGeometry(0.55, 0.85, 1.7, 16), M(c.body), 0, 1.15, 0));
+  body.add(mesh(new THREE.SphereGeometry(0.55, 16, 12), M(c.body), 0, 2, 0));
+  body.add(mesh(new THREE.CylinderGeometry(0.86, 0.86, 0.35, 16), M(id === 'pijbo' ? 0xC08A55 : 0x334155), 0, 0.45, 0));
+  const head = new THREE.Sprite(new THREE.SpriteMaterial({ map: avatarTexture(IMG[id], c.c) }));
+  head.scale.set(3, 3, 1); head.position.y = 3.6; g.add(head);
+  g.userData = { id, head, body, phase: Math.random() * 10 };
+  return g;
+}
+let player = null;
+const npcs = [];
+function spawn() {
+  if (player) scene.remove(player);
+  npcs.splice(0).forEach(n => scene.remove(n.obj));
+  player = makeChar(state.char); player.position.set(0, 0, 30); scene.add(player);
+  Object.keys(CHARS).filter(k => k !== state.char).forEach((k, i) => {
+    const o = makeChar(k); const a = i * 1.6 + 0.4; o.position.set(Math.cos(a) * 15, 0, Math.sin(a) * 15); scene.add(o);
+    npcs.push({ obj: o, id: k, target: null, wait: Math.random() * 2, say: 0, sayText: '' });
+  });
+  buildTags();
+}
+applyChar = () => { $('#joy-img').src = IMG[state.char]; $('#joy').style.setProperty('--c', CHARS[state.char].c); if (scene) spawn(); };
+
+// ===================== HTML 標籤 =====================
+const labels = $('#labels');
+const plabels = PAV.map(p => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'plabel glass';
+  b.innerHTML = `<span class="ic" style="background:${p.s};border:2px solid ${p.c}">${p.emoji}</span><span><b>${p.name}</b><small>${p.ride}</small></span>`;
+  b.setAttribute('aria-label', `前往 ${p.name}`);
+  b.addEventListener('click', () => goTo(p.id));
+  labels.appendChild(b); return { el: b, p };
+});
+let ctags = [];
+function buildTags() {
+  ctags.forEach(t => { t.tag.remove(); t.say.remove(); });
+  ctags = [player, ...npcs.map(n => n.obj)].map((o, k) => {
+    const c = CHARS[o.userData.id];
+    const tag = document.createElement('div'); tag.className = 'ctag' + (k === 0 ? ' me' : ''); tag.style.setProperty('--c', c.c);
+    tag.textContent = k === 0 ? `⭐ 你・${c.name}` : c.name;
+    const say = document.createElement('div'); say.className = 'say'; say.style.setProperty('--c', c.c); say.style.opacity = 0;
+    labels.appendChild(tag); labels.appendChild(say);
+    return { o, tag, say };
+  });
+}
+spawn();
+
+// ===================== 輸入 =====================
+const keys = new Set();
+addEventListener('keydown', e => {
+  if (panel.open || !$('#intro').hidden || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+  const k = e.key.toLowerCase();
+  if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) { keys.add(k); moveTarget = null; e.preventDefault(); }
+  if ((k === 'e' || k === 'enter') && nearPav) openPanel(nearPav.id);
+});
+addEventListener('keyup', e => keys.delete(e.key.toLowerCase()));
+addEventListener('blur', () => keys.clear());
+
+const joy = $('#joy'), knob = joy.querySelector('.knob');
+const joyV = new THREE.Vector2();
+let joyId = null;
+joy.addEventListener('pointerdown', e => { joyId = e.pointerId; joy.setPointerCapture(e.pointerId); joy.classList.add('active'); moveTarget = null; joyMove(e); });
+joy.addEventListener('pointermove', e => { if (e.pointerId === joyId) joyMove(e); });
+const joyEnd = e => { if (e.pointerId !== joyId) return; joyId = null; joyV.set(0, 0); knob.style.transform = ''; joy.classList.remove('active'); };
+joy.addEventListener('pointerup', joyEnd); joy.addEventListener('pointercancel', joyEnd);
+function joyMove(e) {
+  const r = joy.getBoundingClientRect(), max = r.width * 0.32;
+  let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+  const d = Math.hypot(dx, dy); if (d > max) { dx *= max / d; dy *= max / d; }
+  knob.style.transform = `translate(${dx}px, ${dy}px)`;
+  joyV.set(dx / max, -dy / max);
+}
+
+let camMode = 'follow', yaw = 0, dist = narrow() ? 36 : 30, birdDist = 92;
+let moveTarget = null, onArrive = null;
+const marker = mesh(new THREE.RingGeometry(0.8, 1.2, 24), new THREE.MeshBasicMaterial({ color: 0xFACC15, transparent: true, opacity: 0.9 }), 0, 0.08, 0, false);
+marker.rotation.x = -Math.PI / 2; marker.visible = false; scene.add(marker);
+
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+let drag = null;
+const cvs = renderer.domElement;
+cvs.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, moved: false, id: e.pointerId }; cvs.setPointerCapture(e.pointerId); });
+cvs.addEventListener('pointermove', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const dx = e.clientX - drag.x;
+  if (!drag.moved && Math.abs(dx) + Math.abs(e.clientY - drag.y) > 6) drag.moved = true;
+  if (drag.moved) { yaw -= dx * 0.006; drag.x = e.clientX; drag.y = e.clientY; }
+});
+cvs.addEventListener('pointerup', e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const wasDrag = drag.moved; drag = null;
+  if (wasDrag) return;
+  ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObjects(pavGroups, true)[0];
+  if (hit && hit.object.userData.pav) return goTo(hit.object.userData.pav);
+  const g = ray.intersectObject(island)[0] || ray.intersectObject(ring)[0];
+  if (g) walkTo(g.point.x, g.point.z, null);
+});
+cvs.addEventListener('wheel', e => { e.preventDefault(); zoom(e.deltaY > 0 ? 1 : -1); }, { passive: false });
+function zoom(dir) { if (camMode === 'follow') dist = THREE.MathUtils.clamp(dist + dir * 3, 12, 54); else birdDist = THREE.MathUtils.clamp(birdDist + dir * 8, 50, 140); }
+$('#z-in').addEventListener('click', () => zoom(-1));
+$('#z-out').addEventListener('click', () => zoom(1));
+
+let route = [];
+function walkTo(x, z, cb) {
+  route = [];
+  const s = player.position, dx = x - s.x, dz = z - s.z, L2 = dx * dx + dz * dz;
+  const u = L2 ? THREE.MathUtils.clamp(-(s.x * dx + s.z * dz) / L2, 0, 1) : 0;
+  const cx = s.x + dx * u, cz = s.z + dz * u;
+  if (u > 0 && u < 1 && Math.hypot(cx, cz) < 7) {
+    let px = -dz, pz = dx; const pl = Math.hypot(px, pz) || 1; px /= pl; pz /= pl;
+    if (px * cx + pz * cz < 0) { px = -px; pz = -pz; }
+    route.push(new THREE.Vector3(px * 9, 0, pz * 9));
+  }
+  route.push(new THREE.Vector3(x, 0, z));
+  moveTarget = route.shift(); onArrive = cb;
+  marker.position.set(x, 0.08, z); marker.visible = true;
+}
+goTo = id => {
+  const p = byId[id];
+  if (!player) return openPanel(id);
+  if (player.position.distanceTo(p.door) < 3) return openPanel(id);
+  walkTo(p.door.x, p.door.z, () => openPanel(id));
+  toast(`${CHARS[state.char].name} 正前往 ${p.emoji} ${p.name}`);
+};
+
+$('#t-view').addEventListener('click', e => {
+  camMode = camMode === 'follow' ? 'bird' : 'follow';
+  const b = e.currentTarget; b.setAttribute('aria-pressed', camMode === 'bird');
+  b.innerHTML = camMode === 'bird' ? '🎥<span class="t">跟隨</span>' : '🦅<span class="t">鳥瞰</span>';
+});
+let night = false;
+$('#t-night').addEventListener('click', e => {
+  night = !night; const b = e.currentTarget; b.setAttribute('aria-pressed', night);
+  b.innerHTML = night ? '☀️<span class="t">白天</span>' : '🌙<span class="t">夜晚</span>';
+  const P = night ? NIGHT : DAY;
+  scene.background.set(P.sky); scene.fog.color.set(P.fog);
+  hemi.intensity = night ? 0.38 : 0.52; hemi.color.set(night ? 0x9AA8FF : 0xffffff); hemi.groundColor.set(night ? 0x334155 : 0x9CC98A);
+  sun.intensity = night ? 0.25 : 0.62; sun.color.set(night ? 0xA8B8FF : 0xFFF6E5);
+  lampMat.emissiveIntensity = night ? 1.4 : 0.15; windowMat.emissiveIntensity = night ? 1.1 : 0;
+  lampLights.forEach(L => (L.intensity = night ? 1.6 : 0));
+  stars.material.opacity = night ? 0.9 : 0; cloudMat.opacity = night ? 0.35 : 0.95;
+  rainbow.visible = !night;
+});
+
+// ===================== 小地圖 =====================
+const mini = $('#mini-c'), mx = mini.getContext('2d');
+const MW = mini.width, MH = mini.height, MS = MH / 2 / 66;
+const toMini = (x, z) => [MW / 2 + x * MS, MH / 2 + z * MS];
+function drawMini() {
+  mx.clearRect(0, 0, MW, MH);
+  mx.fillStyle = night ? '#2B3570' : '#BFE6F5'; mx.fillRect(0, 0, MW, MH);
+  mx.fillStyle = '#F6E5B8'; mx.beginPath(); mx.arc(MW / 2, MH / 2, 65 * MS, 0, 7); mx.fill();
+  mx.fillStyle = night ? '#6C8F63' : '#C5E8A7'; mx.beginPath(); mx.arc(MW / 2, MH / 2, 61 * MS, 0, 7); mx.fill();
+  mx.strokeStyle = '#F7E8CB'; mx.lineWidth = 5.5 * MS; mx.beginPath(); mx.arc(MW / 2, MH / 2, 21.7 * MS, 0, 7); mx.stroke();
+  mx.lineWidth = 6 * MS; mx.beginPath(); mx.moveTo(...toMini(0, 22)); mx.lineTo(...toMini(0, 56)); mx.stroke();
+  mx.font = '22px sans-serif'; mx.textAlign = 'center'; mx.textBaseline = 'middle';
+  PAV.forEach(p => {
+    mx.strokeStyle = '#F7E8CB'; mx.lineWidth = 4.5 * MS; mx.beginPath(); mx.moveTo(...toMini(p.door.x * 0.8, p.door.z * 0.8)); mx.lineTo(...toMini(p.pos.x, p.pos.z)); mx.stroke();
+    const [x, y] = toMini(p.pos.x, p.pos.z);
+    mx.fillStyle = state.visited.includes(p.id) ? '#FEF08A' : '#ffffff'; mx.beginPath(); mx.arc(x, y, 15, 0, 7); mx.fill();
+    mx.strokeStyle = p.c; mx.lineWidth = 3; mx.stroke();
+    mx.fillText(p.emoji, x, y + 1);
+  });
+  npcs.forEach(n => { const [x, y] = toMini(n.obj.position.x, n.obj.position.z); mx.fillStyle = CHARS[n.id].c; mx.beginPath(); mx.arc(x, y, 5, 0, 7); mx.fill(); });
+  if (player) {
+    const [x, y] = toMini(player.position.x, player.position.z);
+    mx.save(); mx.translate(x, y); mx.rotate(-yaw);
+    mx.fillStyle = CHARS[state.char].i; mx.strokeStyle = '#fff'; mx.lineWidth = 3;
+    mx.beginPath(); mx.moveTo(0, -12); mx.lineTo(9, 9); mx.lineTo(0, 4); mx.lineTo(-9, 9); mx.closePath(); mx.fill(); mx.stroke();
+    mx.restore();
+  }
+}
+mini.addEventListener('click', e => {
+  const r = mini.getBoundingClientRect();
+  const x = ((e.clientX - r.left) / r.width * MW - MW / 2) / MS, z = ((e.clientY - r.top) / r.height * MH - MH / 2) / MS;
+  const hitP = PAV.find(p => Math.hypot(p.pos.x - x, p.pos.z - z) < 9);
+  if (hitP) return goTo(hitP.id);
+  if (Math.hypot(x, z) < 57) walkTo(x, z, null);
+});
+
+// ===================== 迴圈 =====================
+const clock = new THREE.Clock();
+const camTarget = new THREE.Vector3(0, 2, 30);
+camera.position.set(0, 30, 80);
+let nearPav = null;
+const v3 = new THREE.Vector3();
+function collide(pos, rad) {
+  const r = Math.hypot(pos.x, pos.z);
+  if (r > 56) { pos.x *= 56 / r; pos.z *= 56 / r; }
+  if (r < 5) { const k = 5 / (r || 1); pos.x *= k; pos.z *= k; }
+  PAV.forEach(p => {
+    const dx = pos.x - p.pos.x, dz = pos.z - p.pos.z, d = Math.hypot(dx, dz), m = 8.2 + rad;
+    if (d < m) { pos.x = p.pos.x + dx / (d || 1) * m; pos.z = p.pos.z + dz / (d || 1) * m; }
+  });
+}
+function stepChar(o, dir, speed, dt, t) {
+  const moving = dir.lengthSq() > 0.0001;
+  if (moving) { o.position.x += dir.x * speed * dt; o.position.z += dir.y * speed * dt; collide(o.position, 0.8); }
+  const u = o.userData, ph = t * 11 + u.phase;
+  u.head.position.y = 3.6 + (moving ? Math.abs(Math.sin(ph)) * 0.35 : Math.sin(t * 2 + u.phase) * 0.08);
+  u.body.rotation.z = moving ? Math.sin(ph) * 0.08 : 0;
+  return moving;
+}
+function project(obj, yOff, el, dy = 0) {
+  v3.set(obj.x, obj.y + yOff, obj.z).project(camera);
+  if (v3.z > 1 || v3.z < -1) { el.style.display = 'none'; return false; }
+  el.style.display = '';
+  const x = (v3.x + 1) / 2 * innerWidth, y = (1 - v3.y) / 2 * innerHeight;
+  el.style.transform = `translate(${x - el.offsetWidth / 2}px, ${y - el.offsetHeight - dy}px)`;
+  return true;
+}
+let miniTick = 0;
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  animators.forEach(f => f(reduceMotion ? dt * 0.3 : dt, t));
+
+  // 玩家輸入
+  const fwd = new THREE.Vector2(-Math.sin(yaw), -Math.cos(yaw)), right = new THREE.Vector2(Math.cos(yaw), -Math.sin(yaw));
+  let ix = joyV.x, iy = joyV.y;
+  if (keys.has('w') || keys.has('arrowup')) iy += 1;
+  if (keys.has('s') || keys.has('arrowdown')) iy -= 1;
+  if (keys.has('a') || keys.has('arrowleft')) ix -= 1;
+  if (keys.has('d') || keys.has('arrowright')) ix += 1;
+  const dir = new THREE.Vector2();
+  if (ix || iy) { dir.addScaledVector(fwd, iy).addScaledVector(right, ix); if (dir.length() > 1) dir.normalize(); moveTarget = null; marker.visible = false; }
+  else if (moveTarget) {
+    const dx = moveTarget.x - player.position.x, dz = moveTarget.z - player.position.z, d = Math.hypot(dx, dz);
+    if (d < 0.6) { if (route.length) moveTarget = route.shift(); else { moveTarget = null; marker.visible = false; const cb = onArrive; onArrive = null; cb && cb(); } }
+    else dir.set(dx / d, dz / d);
+  }
+  const before = player.position.clone();
+  stepChar(player, dir, 13, dt, t);
+  if (moveTarget && player.position.distanceTo(before) < 13 * dt * 0.15 && dir.lengthSq() > 0) { moveTarget = null; marker.visible = false; onArrive = null; }
+  marker.scale.setScalar(1 + Math.sin(t * 6) * 0.15);
+
+  // NPC
+  npcs.forEach(n => {
+    const o = n.obj;
+    if (!n.target) { n.wait -= dt; if (n.wait <= 0) { const a = Math.random() * Math.PI * 2, r = 8 + Math.random() * 16; n.target = new THREE.Vector2(Math.cos(a) * r, Math.sin(a) * r); } }
+    const d2 = new THREE.Vector2();
+    if (n.target) {
+      const dx = n.target.x - o.position.x, dz = n.target.y - o.position.z, d = Math.hypot(dx, dz);
+      if (d < 0.5) { n.target = null; n.wait = 1.5 + Math.random() * 3; } else d2.set(dx / d, dz / d);
+    }
+    const prev = o.position.clone();
+    stepChar(o, d2, 3.6, dt, t);
+    if (n.target && o.position.distanceTo(prev) < 3.6 * dt * 0.3) { n.stuck = (n.stuck || 0) + dt; if (n.stuck > 1) { n.target = null; n.stuck = 0; n.wait = 0.5; } } else n.stuck = 0;
+    n.say -= dt;
+    if (n.say < -6 - Math.random() * 6 && o.position.distanceTo(player.position) < 16) { n.say = 3.2; n.sayText = NPC_LINES[n.id][Math.floor(Math.random() * 3)]; }
+  });
+
+  // 靠近指令館
+  let best = null, bd = 12;
+  PAV.forEach(p => { const d = Math.hypot(player.position.x - p.door.x, player.position.z - p.door.z); if (d < bd) { bd = d; best = p; } });
+  if (best !== nearPav) {
+    nearPav = best;
+    const nb = $('#near');
+    if (best) { $('#near-t').textContent = `${best.emoji} ${best.name}`; nb.style.setProperty('--c', best.c); nb.classList.add('show'); }
+    else nb.classList.remove('show');
+  }
+
+  // 相機
+  const k = 1 - Math.exp(-dt * 3.5);
+  let desired, look;
+  if (camMode === 'follow') {
+    desired = new THREE.Vector3(player.position.x + Math.sin(yaw) * dist, dist * 0.72 + 3, player.position.z + Math.cos(yaw) * dist);
+    look = new THREE.Vector3(player.position.x, 3, player.position.z);
+  } else {
+    desired = new THREE.Vector3(Math.sin(yaw) * birdDist * 0.75, birdDist * 0.85, Math.cos(yaw) * birdDist * 0.75);
+    look = new THREE.Vector3(0, 0, -2);
+  }
+  camera.position.lerp(desired, reduceMotion ? 1 : k);
+  camTarget.lerp(look, reduceMotion ? 1 : k);
+  camera.lookAt(camTarget);
+
+  renderer.render(scene, camera);
+
+  // 標籤
+  plabels.forEach(({ el, p }) => project(new THREE.Vector3(p.pos.x, 0, p.pos.z), p.h, el));
+  ctags.forEach(({ o, tag, say }, i) => {
+    const vis = project(o.position, 5.4, tag);
+    const n = i > 0 ? npcs[i - 1] : null;
+    if (n && n.say > 0 && vis) { say.textContent = n.sayText; say.style.opacity = 1; project(o.position, 5.4, say, 26); }
+    else say.style.opacity = 0;
+  });
+  if ((miniTick = (miniTick + 1) % 3) === 0) drawMini();
+  requestAnimationFrame(frame);
+}
+$('#near-go').addEventListener('click', () => nearPav && openPanel(nearPav.id));
+addEventListener('resize', () => { camera.fov = narrow() ? 60 : 48; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
