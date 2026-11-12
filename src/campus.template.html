@@ -1,0 +1,1289 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>四維自主學習校園</title>
+<meta name="description" content="花蓮縣私立四維高級中學 圖書資訊中心｜在 3D 校園裡走一圈，一站一站學會如何進行自主學習。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<!-- 3D 引擎：three.js（MIT License） -->
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #1E293B; --ink2: #334155; --muted: #64748B; --line: #E2E8F0;
+    --brand: #15803D; --brand-2: #22C55E; --brand-soft: #F0FDF4;
+    --glass: rgba(255,255,255,.88); --shadow: 0 8px 24px rgba(15,23,42,.12);
+    --sans: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #CFE6F5; font-family: var(--sans); color: var(--ink); }
+  button { font: inherit; cursor: pointer; color: inherit; }
+  #scene { position: fixed; inset: 0; touch-action: none; }
+  #scene canvas { display: block; width: 100%; height: 100%; outline: none; cursor: grab; }
+  #scene canvas:active { cursor: grabbing; }
+  .glass { background: var(--glass); border: 1px solid rgba(255,255,255,.9); box-shadow: var(--shadow); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+
+  /* 標題 */
+  .brand { position: fixed; left: 16px; top: 14px; z-index: 20; border-radius: 18px; padding: 12px 18px; display: flex; gap: 12px; align-items: center; max-width: calc(100vw - 32px); }
+  .brand .logo { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, #16A34A, #0EA5E9); color: #fff; display: grid; place-items: center; font-size: 24px; flex: 0 0 auto; box-shadow: inset 0 -3px 0 rgba(0,0,0,.15); }
+  .brand h1 { margin: 0; font-size: clamp(18px, 2.4vw, 26px); font-weight: 900; letter-spacing: 1px; line-height: 1.2; }
+  .brand p { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+  .prog { display: inline-flex; align-items: center; gap: 6px; margin-left: 4px; }
+  .prog .bar { width: 80px; height: 7px; border-radius: 999px; background: #E2E8F0; overflow: hidden; }
+  .prog .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #22C55E, #0EA5E9); transition: width .4s; }
+
+  /* 工具列 */
+  .tools { position: fixed; right: 14px; top: 14px; z-index: 20; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; max-width: 58vw; }
+  .tool { height: 42px; min-width: 42px; padding: 0 14px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 700; border: 1px solid rgba(255,255,255,.9); background: var(--glass); box-shadow: var(--shadow); backdrop-filter: blur(10px); }
+  .tool:hover { background: #fff; }
+  .tool[aria-pressed="true"] { background: #DCFCE7; border-color: #86EFAC; color: #166534; }
+  .tool.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+  /* 3D 標籤 */
+  #labels { position: fixed; inset: 0; pointer-events: none; z-index: 10; overflow: hidden; }
+  .plabel { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 8px; padding: 5px 14px 5px 5px; border-radius: 999px; pointer-events: auto; border: 0; text-align: left; white-space: nowrap; will-change: transform; }
+  .plabel .no { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 15px; font-weight: 900; color: #fff; flex: 0 0 auto; }
+  .plabel b { display: block; font-size: 14.5px; line-height: 1.2; }
+  .plabel small { display: block; font-size: 11.5px; color: var(--muted); }
+  .plabel .no { position: relative; }
+  .plabel.done .no::after { content: "✓"; position: absolute; right: -5px; top: -5px; width: 16px; height: 16px; border-radius: 50%; background: #FACC15; color: #713F12; font-size: 10px; display: grid; place-items: center; border: 2px solid #fff; }
+  .plabel:hover { background: #fff; }
+  .ptag { position: absolute; left: 0; top: 0; font-size: 12px; font-weight: 900; padding: 2px 10px; border-radius: 999px; background: #FACC15; color: #713F12; pointer-events: none; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+
+  #near { position: fixed; left: 50%; bottom: 120px; transform: translateX(-50%); z-index: 25; display: none; align-items: center; gap: 10px; padding: 8px 8px 8px 16px; border-radius: 999px; font-weight: 700; }
+  #near.show { display: flex; }
+  #near button { border: 0; background: var(--c, #15803D); color: #fff; font-weight: 900; padding: 8px 16px; border-radius: 999px; }
+  #near kbd { font-family: var(--sans); background: rgba(255,255,255,.25); border-radius: 6px; padding: 0 6px; margin-left: 4px; font-size: 12px; }
+
+  /* 底部導覽列 */
+  #dock { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 20; display: flex; gap: 4px; padding: 8px; border-radius: 22px; max-width: calc(100vw - 24px); overflow-x: auto; scrollbar-width: none; }
+  #dock::-webkit-scrollbar { display: none; }
+  #dock button { flex: 0 0 auto; width: 84px; border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 0; border-radius: 14px; position: relative; }
+  #dock button:hover { background: rgba(255,255,255,.8); }
+  #dock .ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; position: relative; }
+  #dock .ic em { position: absolute; left: -5px; top: -5px; width: 20px; height: 20px; border-radius: 50%; color: #fff; font-style: normal; font-size: 11px; font-weight: 900; display: grid; place-items: center; border: 2px solid #fff; }
+  #dock .nm { font-size: 12px; font-weight: 700; color: var(--ink2); white-space: nowrap; }
+  #dock .sb { font-size: 10.5px; color: var(--muted); white-space: nowrap; margin-top: -3px; }
+  #dock .visited .ic::after { content: "✓"; position: absolute; right: -5px; top: -5px; width: 18px; height: 18px; border-radius: 50%; background: #FACC15; color: #713F12; font-size: 11px; font-weight: 900; display: grid; place-items: center; border: 2px solid #fff; }
+
+  /* 搖桿與視角 */
+  #joy { position: fixed; left: 18px; bottom: 18px; z-index: 21; width: 124px; height: 124px; border-radius: 50%; touch-action: none; display: grid; place-items: center; }
+  #joy .knob { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(145deg, #fff, #E2E8F0); border: 3px solid #22C55E; box-shadow: 0 4px 10px rgba(0,0,0,.18); display: grid; place-items: center; font-size: 22px; transition: transform .12s ease-out; }
+  #joy.active .knob { transition: none; }
+  #joy .lb { position: absolute; bottom: 7px; font-size: 11px; color: var(--muted); font-weight: 700; }
+  .cam { position: fixed; right: 16px; bottom: 192px; z-index: 20; display: grid; grid-template-columns: repeat(2, 42px); gap: 6px; }
+  .cam .tool { padding: 0; width: 42px; font-size: 18px; }
+  #mini { position: fixed; right: 16px; bottom: 16px; z-index: 20; border-radius: 18px; padding: 6px; }
+  #mini canvas { display: block; width: 210px; height: 164px; border-radius: 12px; cursor: crosshair; }
+
+  #toast { position: fixed; left: 50%; top: 90px; transform: translateX(-50%) translateY(-16px); opacity: 0; z-index: 60; background: #14532D; color: #fff; font-weight: 700; padding: 10px 18px; border-radius: 999px; transition: all .25s; pointer-events: none; box-shadow: var(--shadow); white-space: nowrap; }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* 開場 */
+  #intro { position: fixed; inset: 0; z-index: 50; display: grid; padding: 16px; background: linear-gradient(180deg, rgba(207,230,245,.35), rgba(15,23,42,.35)); overflow-y: auto; }
+  #intro[hidden] { display: none; }
+  .intro-card { width: min(760px, 100%); margin: auto; border-radius: 28px; padding: 28px 26px 24px; background: rgba(255,255,255,.96); box-shadow: 0 24px 60px rgba(15,23,42,.3); }
+  .intro-card .kicker { display: inline-block; font-size: 12.5px; font-weight: 900; letter-spacing: 2px; color: #15803D; background: #DCFCE7; padding: 3px 12px; border-radius: 999px; }
+  .intro-card h2 { font-size: clamp(24px, 4vw, 34px); margin: 10px 0 6px; font-weight: 900; line-height: 1.25; }
+  .intro-card .sub { color: var(--muted); margin: 0 0 18px; font-size: 15px; line-height: 1.7; }
+  .route { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; counter-reset: r; }
+  .route li { background: #F8FAFC; border: 1px solid var(--line); border-radius: 14px; padding: 8px 10px; font-size: 13px; display: flex; gap: 8px; align-items: center; }
+  .route li b { width: 24px; height: 24px; border-radius: 50%; color: #fff; display: grid; place-items: center; font-size: 12px; flex: 0 0 auto; }
+  .setup { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px; margin-bottom: 18px; }
+  .setup fieldset { border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px 12px; margin: 0; }
+  .setup legend { font-size: 13px; font-weight: 900; color: var(--ink2); padding: 0 6px; }
+  .opts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .opt { border: 2px solid var(--line); background: #fff; border-radius: 14px; padding: 8px 16px; font-weight: 700; font-size: 15px; }
+  .opt[aria-pressed="true"] { border-color: #16A34A; background: #F0FDF4; color: #166534; }
+  .sw { width: 38px; height: 38px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--line); padding: 0; }
+  .sw[aria-pressed="true"] { box-shadow: 0 0 0 3px #16A34A; }
+  .how { font-size: 13px; color: var(--muted); margin: 0 0 18px; line-height: 1.9; }
+  .how kbd { font-family: var(--sans); background: #F1F5F9; border: 1px solid #CBD5E1; border-bottom-width: 3px; border-radius: 6px; padding: 0 6px; font-size: 12px; }
+  .go-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .go { border: 0; background: #16A34A; color: #fff; font-weight: 900; font-size: 17px; padding: 13px 28px; border-radius: 999px; box-shadow: 0 5px 0 #166534; }
+  .go.alt { background: #fff; color: #166534; border: 2px solid #BBF7D0; box-shadow: 0 5px 0 #BBF7D0; }
+  .go:active { transform: translateY(3px); box-shadow: 0 2px 0 #166534; }
+
+  /* 站點視窗 */
+  dialog#panel { width: min(860px, calc(100vw - 20px)); max-height: calc(100dvh - 24px); padding: 0; border: 0; border-radius: 26px; background: transparent; overflow: visible; }
+  dialog#panel::backdrop { background: rgba(15, 23, 42, .4); backdrop-filter: blur(3px); }
+  .pc { background: #FCFDFB; border-radius: 26px; box-shadow: 0 24px 60px rgba(0,0,0,.3); max-height: calc(100dvh - 32px); display: flex; flex-direction: column; overflow: hidden; border-top: 8px solid var(--c); }
+  .ph { display: flex; align-items: center; gap: 14px; padding: 16px 18px 14px; background: var(--s); }
+  .ph .no { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 28px; background: #fff; box-shadow: 0 0 0 2px var(--c); flex: 0 0 auto; }
+  .ph small { font-size: 12.5px; color: var(--i); font-weight: 900; letter-spacing: 1px; }
+  .ph h2 { margin: 0; font-size: 23px; font-weight: 900; color: var(--ink); line-height: 1.25; }
+  .ph .x { margin-left: auto; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1px solid var(--line); font-size: 18px; flex: 0 0 auto; }
+  .pb { padding: 18px 20px 6px; overflow-y: auto; line-height: 1.75; font-size: 15px; }
+  .pf { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; padding: 12px 18px 14px; border-top: 1px solid var(--line); background: #fff; }
+  .lead { font-size: 16px; color: var(--ink2); margin: 0 0 14px; }
+  .learn { background: var(--s); border-radius: 16px; padding: 10px 14px; margin: 0 0 16px; font-size: 14px; }
+  .learn b { color: var(--i); }
+  .sec { margin: 0 0 18px; }
+  .sec h3 { font-size: 17px; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+  .sec h3::before { content: ""; width: 6px; height: 20px; border-radius: 3px; background: var(--c); }
+  .sec p { margin: 0 0 8px; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 10px; }
+  .tile { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; font-size: 14px; }
+  .tile b { display: block; font-size: 15px; margin-bottom: 2px; }
+  .tile .e { font-size: 24px; display: block; margin-bottom: 2px; }
+  .flow { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; counter-reset: f; }
+  .flow li { counter-increment: f; display: flex; gap: 12px; align-items: flex-start; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; font-size: 14.5px; }
+  .flow li::before { content: counter(f); width: 28px; height: 28px; border-radius: 50%; background: var(--c); color: #fff; font-weight: 900; display: grid; place-items: center; flex: 0 0 auto; font-size: 13px; }
+  .flow li b { display: block; }
+  .check { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+  .check li { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+  .check input { width: 20px; height: 20px; accent-color: var(--c); margin-top: 3px; flex: 0 0 auto; }
+  .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 10px; }
+  .compare div { border-radius: 14px; padding: 10px 14px; font-size: 14px; }
+  .compare .bad { background: #FEF2F2; border: 1px solid #FECACA; }
+  .compare .good { background: #F0FDF4; border: 1px solid #BBF7D0; }
+  .note { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; border-radius: 14px; padding: 10px 14px; font-size: 13.5px; margin: 0 0 16px; }
+  .warn { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; border-radius: 14px; padding: 10px 14px; font-size: 14px; margin: 0 0 16px; }
+  .btn { border: 0; border-radius: 999px; padding: 10px 20px; font-weight: 900; font-size: 14.5px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+  .btn.main { background: var(--c); color: #fff; box-shadow: 0 3px 0 rgba(0,0,0,.18); }
+  .btn.ghost { background: #fff; border: 1px solid var(--line); color: var(--ink2); }
+  .btn.next { background: var(--ink); color: #fff; }
+  .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 8px; margin-bottom: 14px; }
+  .links a { display: block; text-align: center; text-decoration: none; padding: 9px 6px; border-radius: 12px; font-size: 13.5px; font-weight: 700; border: 1px solid var(--line); background: #fff; color: var(--ink2); }
+  .links a:hover { border-color: var(--c); color: var(--i); }
+  .cat { font-size: 14.5px; font-weight: 900; margin: 6px 0 6px; color: var(--ink2); }
+  .feature { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 10px; margin-bottom: 14px; }
+  .feature a { display: flex; gap: 12px; align-items: center; text-decoration: none; background: #fff; border: 2px solid var(--c); border-radius: 16px; padding: 12px 14px; color: var(--ink); }
+  .feature a span:first-child { font-size: 28px; }
+  .feature b { display: block; font-size: 15px; }
+  .feature small { color: var(--muted); font-size: 12.5px; }
+  .track { position: relative; display: grid; gap: 0; margin: 4px 0 6px; padding-left: 18px; }
+  .track::before { content: ""; position: absolute; left: 30px; top: 16px; bottom: 16px; border-left: 4px dashed #FCA5A5; }
+  .track div { position: relative; display: flex; gap: 14px; align-items: flex-start; padding: 6px 0; }
+  .track .dot { width: 28px; height: 28px; border-radius: 50%; background: var(--d); color: #fff; font-size: 12px; font-weight: 900; display: grid; place-items: center; flex: 0 0 auto; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--d); z-index: 1; }
+  .track .tc { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 8px 12px; flex: 1; font-size: 14px; }
+  .track .tc b { display: block; font-size: 15px; }
+  .track .tc span { font-size: 12.5px; font-weight: 900; color: var(--d); }
+  .faq details { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; margin-bottom: 8px; }
+  .faq summary { font-weight: 700; cursor: pointer; }
+  .faq p { margin: 8px 0 0; font-size: 14.5px; color: var(--ink2); }
+  .ai { border: 1px dashed #A5B4FC; background: #F8FAFF; border-radius: 16px; padding: 12px 14px; margin: 0 0 16px; }
+  .ai h4 { margin: 0 0 4px; font-size: 15px; color: #4338CA; }
+  .ai .use { font-size: 12.5px; color: var(--muted); margin-bottom: 8px; }
+  .prompt { background: #fff; border: 1px solid #E0E7FF; border-radius: 12px; padding: 10px 12px; font-size: 14px; line-height: 2; white-space: pre-wrap; word-break: break-word; }
+  .prompt input { font: inherit; font-size: 13.5px; border: 0; border-bottom: 2px solid #818CF8; background: #EEF2FF; color: #3730A3; font-weight: 700; padding: 1px 6px; border-radius: 6px 6px 0 0; max-width: 100%; min-width: 4em; }
+  .prompt input::placeholder { color: #6366F1; opacity: .6; font-weight: 400; }
+  .ai .acts { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .ai .copy { background: #4F46E5; color: #fff; }
+  .ai .copy.ok { background: #16A34A; }
+
+  #fallback { display: none; position: fixed; inset: 100px 16px 120px; z-index: 5; overflow-y: auto; }
+  body.no3d #fallback { display: block; }
+  body.no3d #joy, body.no3d #mini, body.no3d .cam, body.no3d [data-3d] { display: none !important; }
+  #fallback .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; max-width: 900px; margin: 0 auto; }
+  #fallback button { border: 0; border-left: 6px solid var(--c); background: #fff; border-radius: 16px; padding: 14px 16px; font-size: 15px; font-weight: 700; box-shadow: var(--shadow); text-align: left; }
+  #fallback p { text-align: center; color: var(--ink2); font-weight: 700; }
+
+  @media (max-width: 760px) {
+    .brand { padding: 8px 10px; border-radius: 14px; left: 10px; top: 10px; max-width: calc(100vw - 72px); gap: 8px; }
+    .brand .logo { width: 36px; height: 36px; font-size: 18px; border-radius: 10px; }
+    .brand h1 { font-size: 17px; }
+    .brand p { font-size: 11.5px; }
+    .brand .hide-s { display: none; }
+    .tools { right: 10px; top: 10px; gap: 6px; flex-direction: column; max-width: none; }
+    .tool { height: 40px; width: 40px; min-width: 40px; padding: 0; font-size: 16px; }
+    .tool .t { display: none; }
+    #mini { display: none; }
+    .cam { right: 10px; bottom: 112px; grid-template-columns: 40px; }
+    .cam .tool { width: 40px; }
+    .cam .hide-s { display: none; }
+    #dock { bottom: 8px; padding: 6px; gap: 0; }
+    #dock button { width: 66px; }
+    #dock .ic { width: 40px; height: 40px; font-size: 20px; border-radius: 12px; }
+    #dock .nm { font-size: 11px; }
+    #dock .sb { display: none; }
+    #joy { left: 10px; bottom: 104px; width: 108px; height: 108px; }
+    #near { bottom: 104px; left: auto; right: 60px; transform: none; font-size: 13px; }
+    .plabel { padding: 3px 10px 3px 3px; }
+    .plabel .no { width: 26px; height: 26px; font-size: 12px; }
+    .plabel b { font-size: 12.5px; }
+    .plabel small { display: none; }
+    .pb { padding: 14px 14px 6px; font-size: 14.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="scene" aria-label="3D 校園：拖曳旋轉視角、滾輪或雙指縮放、點地面走過去、點建築進入"></div>
+<div id="labels"></div>
+
+<header class="brand glass">
+  <span class="logo" aria-hidden="true">🧭</span>
+  <div>
+    <h1>四維自主學習校園</h1>
+    <p><span class="hide-s">走一圈校園，學會自主學習・</span>導覽進度 <span class="prog"><span class="bar"><i id="prog-bar"></i></span><b id="prog-t">0/8</b></span></p>
+  </div>
+</header>
+
+<nav class="tools" aria-label="工具">
+  <button class="tool primary" id="t-auto" title="帶我去下一站">🚶<span class="t">下一站</span></button>
+  <button class="tool" id="t-view" aria-pressed="false" title="切換全景／跟隨" data-3d>🗺️<span class="t">全景</span></button>
+  <button class="tool" id="t-night" aria-pressed="false" title="白天／夜晚" data-3d>🌙<span class="t">夜晚</span></button>
+  <button class="tool" id="t-faq" title="常見問題與聯絡">❓<span class="t">常見問題</span></button>
+  <button class="tool" id="t-setup" title="開場說明與角色設定">👤<span class="t">角色</span></button>
+  <button class="tool" id="t-full" title="全螢幕">⛶</button>
+</nav>
+
+<div id="near" class="glass" role="status"><span id="near-t"></span><button id="near-go" type="button">進入<kbd>Enter</kbd></button></div>
+<nav id="dock" class="glass" aria-label="八個學習站"></nav>
+<div id="joy" class="glass" data-3d aria-label="移動搖桿"><div class="knob">🎒</div><span class="lb">移動</span></div>
+<div class="cam" data-3d aria-label="視角控制">
+  <button class="tool" id="c-in" aria-label="拉近">＋</button>
+  <button class="tool hide-s" id="c-left" aria-label="向左旋轉">⟲</button>
+  <button class="tool" id="c-out" aria-label="拉遠">－</button>
+  <button class="tool hide-s" id="c-right" aria-label="向右旋轉">⟳</button>
+</div>
+<div id="mini" class="glass" data-3d><canvas id="mini-c" width="420" height="328" aria-label="校園平面圖：點一下就會走過去"></canvas></div>
+<div id="fallback"><p>這台裝置無法顯示 3D 校園，沒關係！直接點選下面的學習站 👇</p><div class="grid" id="fb-grid"></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div id="intro">
+  <div class="intro-card">
+    <span class="kicker">四維高中 圖書資訊中心</span>
+    <h2>歡迎來到四維自主學習校園 🧭</h2>
+    <p class="sub">自主學習不是自習，而是一場由你掌舵的學習旅程。<br>沿著校園走一圈，<b>8 個學習站</b>會一步步告訴你：怎麼找主題、寫計畫、送審、執行、發表成果。</p>
+    <ol class="route" id="route"></ol>
+    <div class="setup">
+      <fieldset><legend>你的學生角色</legend><div class="opts" id="opt-g"></div></fieldset>
+      <fieldset><legend>書包顏色</legend><div class="opts" id="opt-c"></div></fieldset>
+    </div>
+    <p class="how">🖱️ 拖曳：360° 旋轉視角・滾輪／雙指：縮放・點地面：走過去・點建築：進入學習站<br>⌨️ <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 或方向鍵移動・<kbd>Enter</kbd> 進入・📱 手機可用左下搖桿</p>
+    <div class="go-row"><button class="go" id="go" type="button">開始導覽：前往第 1 站 →</button><button class="go alt" id="go-free" type="button">自由逛校園</button></div>
+  </div>
+</div>
+
+<dialog id="panel" aria-labelledby="p-title"><div class="pc" id="pc"></div></dialog>
+
+<script>__THREE_JS__</script>
+<script>
+(() => {
+'use strict';
+const FORM = 'https://www.swsh.hlc.edu.tw/ischool/rfile/9a3f5bcee556c351c7bd3a55caab7102?fd=1';
+const FOLDER = 'https://www.swsh.hlc.edu.tw/ischool/resource/folder/47378c964e822f1065c8228405b16e4f';
+const GEMINI = 'https://gemini.google.com/app';
+const L = (href, t) => `<a href="${href}" target="_blank" rel="noopener noreferrer">${t}</a>`;
+const aiBox = (title, use, p) => `<div class="ai"><h4>🤖 AI 小幫手（選用）：${title}</h4><div class="use">${use}｜填入框框 → 複製 → 貼到 AI。AI 的回答要查證，作品要自己完成。</div><div class="prompt" data-prompt="${encodeURIComponent(p)}"></div><div class="acts"><button class="btn copy" type="button">📋 複製指令</button><a class="btn ghost" href="${GEMINI}" target="_blank" rel="noopener noreferrer">開啟 Gemini ↗</a></div></div>`;
+
+// ===================== 八個學習站 =====================
+const STATIONS = [
+  { id: 'jiena', no: 1, name: '接納樓', sub: '普通科教室', topic: '認識自主學習', emoji: '🏫', c: '#16A34A', s: '#F0FDF4', i: '#166534',
+    html: () => `
+      <p class="lead">自主學習是 108 課綱「彈性學習時間」的一種：<b>由你自己決定學什麼、規劃怎麼學、按進度執行，最後發表成果。</b></p>
+      <div class="learn">📍 這一站你會知道：<b>自主學習是什麼、為什麼要做、可以學什麼、要遵守哪些規定</b></div>
+      <div class="sec"><h3>自主學習 ≠ 自習</h3>
+        <div class="compare"><div class="bad"><b>❌ 自習</b>寫作業、讀考試範圍、補進度，內容由課表或考試決定。</div><div class="good"><b>✅ 自主學習</b>選一個你真心好奇的主題，自己訂目標與 18 週進度，最後產出看得見的成果。</div></div>
+      </div>
+      <div class="sec"><h3>為什麼要自主學習？</h3>
+        <div class="grid2">
+          <div class="tile"><span class="e">🧭</span><b>學會規劃</b>練習訂目標、排進度、管理時間。</div>
+          <div class="tile"><span class="e">🔍</span><b>探索興趣</b>課本以外的世界，找到想深入的方向。</div>
+          <div class="tile"><span class="e">📁</span><b>累積歷程</b>成果與反思可以上傳學習歷程檔案。</div>
+        </div>
+      </div>
+      <div class="sec"><h3>可以學什麼？（主題舉例）</h3>
+        <div class="grid2">
+          <div class="tile"><b>📘 學科延伸</b>把課堂內容學得更深，例如：生活中的統計。</div>
+          <div class="tile"><b>🛠️ 技能學習</b>程式設計、攝影剪輯、烹飪、外語⋯</div>
+          <div class="tile"><b>🔬 專題探究</b>例如：花蓮在地文化、海洋環境調查。</div>
+          <div class="tile"><b>🎨 創作展演</b>繪畫、音樂、寫作、影像作品。</div>
+        </div>
+        <p style="font-size:13.5px;color:#64748B;margin-top:8px">主題需經學生自主學習小組審核通過才能實施。</p>
+      </div>
+      <div class="sec"><h3>一定要知道的規定</h3>
+        <ul class="check">
+          <li>✅ 計畫要經過 <b>家長、指導老師與相關處室簽核</b>，再由 <b>學生自主學習小組審核</b>。</li>
+          <li>✅ 執行期間 <b>每週攜帶自主學習紀錄表</b>，由指導教師認證。</li>
+          <li>⚠️ 未依規定認證，或未到核定的地點，<b>依校規處理</b>。</li>
+        </ul>
+      </div>
+      <div class="note">📌 實際申請時間、表件與規定，以學校公告的當學年度「學生自主學習實施辦法」及圖資中心公告為準。</div>` },
+  { id: 'track', no: 2, name: '操場', sub: '18 週跑道', topic: '學期時程總覽', emoji: '🏃', c: '#DC2626', s: '#FEF2F2', i: '#B91C1C',
+    html: () => `
+      <p class="lead">自主學習就像跑一圈 <b>18 週的跑道</b>：起跑前先報名，跑完還要衝過終點線！</p>
+      <div class="learn">📍 這一站你會知道：<b>整個學期每個階段要做什麼、什麼時候做</b></div>
+      <div class="sec"><h3>跑道地圖</h3>
+        <div class="track">
+          <div style="--d:#64748B"><span class="dot">0</span><div class="tc"><span>起跑前・前一學期</span><b>📣 提出申請</b>注意學校公告的申請期限，填寫自主學習計畫並完成簽核。</div></div>
+          <div style="--d:#16A34A"><span class="dot">1</span><div class="tc"><span>第 1-2 週</span><b>✏️ 擬定計畫</b>確立主題與 18 週進度規劃，填妥計畫申請表並請指導老師簽名指導。</div></div>
+          <div style="--d:#D97706"><span class="dot">2</span><div class="tc"><span>第 3 週</span><b>🔍 審核核定</b>自主學習推動小組審查，通過後依核定地點前往圖資中心或專科教室研習。</div></div>
+          <div style="--d:#0284C7"><span class="dot">3</span><div class="tc"><span>第 4-16 週</span><b>🔧 落實執行</b>每週攜帶紀錄表記錄收穫與困惑，課堂結束前由現場指導老師核章。</div></div>
+          <div style="--d:#7C3AED"><span class="dot">4</span><div class="tc"><span>第 17-18 週</span><b>🎉 成果發表</b>彙整成果作品與自我反思，參與成果分享。</div></div>
+          <div style="--d:#CA8A04"><span class="dot">🏁</span><div class="tc"><span>終點</span><b>📁 上傳學習歷程</b>把成果與反思上傳到高中學習歷程平台！</div></div>
+        </div>
+      </div>
+      <div class="sec"><h3>我的進度檢查表（可以勾勾看）</h3>
+        <ul class="check">
+          <li><input type="checkbox" aria-label="已決定主題"> 我已經決定好主題</li>
+          <li><input type="checkbox" aria-label="已找指導老師"> 我已經找到指導老師</li>
+          <li><input type="checkbox" aria-label="已完成申請表"> 我已經填好申請表並完成簽核</li>
+          <li><input type="checkbox" aria-label="已確認核定地點"> 我知道核定的研習地點</li>
+          <li><input type="checkbox" aria-label="每週紀錄"> 我每週都有寫紀錄表並請老師核章</li>
+          <li><input type="checkbox" aria-label="準備成果"> 我已開始準備成果發表</li>
+        </ul>
+      </div>
+      <div class="note">📌 各階段實際日期以圖資中心當學期公告為準。</div>` },
+  { id: 'basket', no: 3, name: '籃球場', sub: '瞄準目標', topic: '找主題、定目標', emoji: '🏀', c: '#EA580C', s: '#FFF7ED', i: '#C2410C',
+    html: () => `
+      <p class="lead">投籃要先看準籃框。自主學習也一樣：<b>主題選得好、目標訂得清楚</b>，後面就順了。</p>
+      <div class="learn">📍 這一站你會知道：<b>怎麼找到好主題、怎麼檢查主題、怎麼寫出清楚的目標</b></div>
+      <div class="sec"><h3>三個找主題的方法</h3>
+        <div class="grid2">
+          <div class="tile"><span class="e">❤️</span><b>從興趣出發</b>你平常最常花時間做什麼？想變得更厲害的是什麼？</div>
+          <div class="tile"><span class="e">📖</span><b>從課堂延伸</b>上課時哪個內容讓你想「再多知道一點」？</div>
+          <div class="tile"><span class="e">🌏</span><b>從生活問題出發</b>家裡、社區、花蓮有什麼現象值得調查或改善？</div>
+        </div>
+      </div>
+      <div class="sec"><h3>主題健康檢查</h3>
+        <ul class="check">
+          <li><input type="checkbox" aria-label="真心有興趣"> 我真的有興趣，願意花 18 週投入</li>
+          <li><input type="checkbox" aria-label="範圍剛好"> 範圍不會太大，18 週內做得完</li>
+          <li><input type="checkbox" aria-label="有資源"> 學校或網路上找得到需要的資源與設備</li>
+          <li><input type="checkbox" aria-label="成果具體"> 最後能產出具體成果（作品、報告、影片⋯）</li>
+          <li><input type="checkbox" aria-label="指導老師"> 有適合的老師可以指導</li>
+        </ul>
+      </div>
+      <div class="sec"><h3>把目標寫清楚（SMART 原則）</h3>
+        <p>具體 Specific・可衡量 Measurable・可達成 Achievable・相關 Relevant・有時限 Time-bound</p>
+        <div class="compare"><div class="bad"><b>❌ 模糊的目標</b>「我想學攝影。」</div><div class="good"><b>✅ 清楚的目標</b>「在 18 週內學會手機攝影的構圖與光線技巧，完成 1 組 12 張的花蓮街景攝影作品並辦小型展覽。」</div></div>
+      </div>
+      ${aiBox('興趣變主題', '還沒有主題時', '你是一位高中自主學習指導老師。我是高中生，我的興趣是【興趣1】、【興趣2】。\n請幫我發想 6 個可以在 18 週內完成的自主學習主題，每個主題用一句話說明要做什麼、最後可以產出什麼成果。')}` },
+  { id: 'library', no: 4, name: '圖書館', sub: '圖書資訊中心', topic: '找資源、找資料', short: '找資源', emoji: '📚', c: '#2563EB', s: '#EFF6FF', i: '#1D4ED8',
+    html: () => `
+      <p class="lead">圖書資訊中心是你的<b>資源補給站</b>：館藏、電子書、線上課程、資料庫都在這裡，有問題也可以直接來找老師。</p>
+      <div class="learn">📍 這一站你會知道：<b>去哪裡找資料、怎麼判斷資料可不可信</b></div>
+      <div class="feature">
+        <a href="http://opac.swsh.hlc.edu.tw/" target="_blank" rel="noopener noreferrer"><span>📖</span><span><b>四維高中 WebPAC 館藏查詢</b><small>查詢校內圖書、期刊與主題書單</small></span></a>
+        <a href="https://www.shs.edu.tw/" target="_blank" rel="noopener noreferrer"><span>🏆</span><span><b>中學生網站（小論文／讀書心得）</b><small>自學成果也能投稿參賽</small></span></a>
+      </div>
+      <div class="sec"><h3>找資料三步驟</h3>
+        <ol class="flow">
+          <li><span><b>列出關鍵字</b>把主題拆成 3～5 個關鍵詞，再想同義詞與英文。</span></li>
+          <li><span><b>先查館藏，再上網</b>書與期刊經過編輯審查，是最可靠的起點。</span></li>
+          <li><span><b>查證來源</b>看看：誰寫的？什麼時候寫的？有沒有證據？目的是什麼？</span></li>
+        </ol>
+      </div>
+      <div class="sec"><h3>推薦自學資源</h3>
+        <div class="cat">📘 學科學習平台（高中課程）</div>
+        <div class="links">${L('https://adl.edu.tw/', '因材網')}${L('https://www.junyiacademy.org/', '均一教育平台')}${L('https://cooc.tp.edu.tw/', '臺北酷課雲')}${L('http://fun.hcc.edu.tw/', 'Fun 學王')}${L('https://www.ewant.org/', 'eWant 自主學習')}${L('https://www.learnmode.net/', '學習吧 LearnMode')}</div>
+        <div class="cat">🎓 大學多元課程</div>
+        <div class="links">${L('https://taiwanmooc.org/', '磨課師 MOOCs')}${L('http://case.ntu.edu.tw/', '臺大科教中心')}${L('https://apc.cloud.ncnu.edu.tw/', '大學先修課程認證')}${L('http://taaed.org.tw/', 'TAAED 中文文化課程')}${L('http://www.tocwc.org.tw/', '台灣開放式課程聯盟')}${L('http://www.sharecourse.net/', 'ShareCourse 學聯網')}${L('http://moocs.pu.edu.tw/', '靜宜大學免費課程')}${L('https://www.edx.org/', 'edX（英）')}${L('https://www.coursera.org/', 'Coursera（英）')}${L('https://tedxtaipei.com/', 'TEDxTaipei')}${L('https://www.youtube.com/education', 'YouTube EDU')}${L('https://tw.voicetube.com/', 'VoiceTube')}</div>
+        <div class="cat">🎨 藝術與音樂</div>
+        <div class="links">${L('https://www.youtube.com/@MissGa', '嘎老師 Miss Ga')}${L('https://www.daveconservatoire.org/', 'Dave Conservatoire')}${L('https://www.kadenze.com/', 'Kadenze')}</div>
+        <div class="cat">💻 程式設計</div>
+        <div class="links">${L('https://code.org/', 'Code.org')}${L('https://www.codecademy.com/', 'Codecademy')}${L('https://scratch.mit.edu/', 'Scratch')}</div>
+        <div class="cat">📚 線上資料庫</div>
+        <div class="links">${L('https://ebook.nlpi.edu.tw/', '電子書服務平台')}${L('https://www.nlpi.edu.tw/', '國立公共資訊圖書館')}${L('http://hanchi.ihp.sinica.edu.tw/', '漢籍全文資料庫')}${L('https://tm.ncl.edu.tw/', '國圖臺灣鄉土文獻')}${L('https://taiwancinema.bamid.gov.tw/', '電影與文學資料庫')}${L('https://children.moc.gov.tw/', '圓夢繪本資料庫')}</div>
+      </div>
+      <div class="sec"><h3>聯絡圖書資訊中心</h3>
+        <div class="grid2"><div class="tile">📍 970 花蓮市中山路一段 200 號</div><a class="tile" href="tel:+88638561455" style="text-decoration:none;color:inherit">☎️ (03) 856-1455 轉 517（點我撥打）</a></div>
+        <p style="margin-top:8px">申請、主題發想或填表時有任何疑問，歡迎隨時到圖資中心找老師諮詢！</p>
+      </div>` },
+  { id: 'ganen', no: 5, name: '感恩樓', sub: '商科實習大樓', topic: '寫計畫、送申請', emoji: '📝', c: '#0891B2', s: '#ECFEFF', i: '#0E7490',
+    html: () => `
+      <p class="lead">主題和目標都有了，接下來把想法寫成一份<b>自主學習計畫申請表</b>，完成簽核後送出。</p>
+      <div class="learn">📍 這一站你會知道：<b>申請表要寫什麼、送件流程、怎麼把計畫寫好</b></div>
+      <div class="feature"><a href="${FORM}" target="_blank" rel="noopener noreferrer"><span>📄</span><span><b>下載：學生自主學習計畫申請表</b><small>包含自學動機、18 週進度時程規劃、設備場地需求申請</small></span></a></div>
+      <div class="sec"><h3>申請流程</h3>
+        <ol class="flow">
+          <li><span><b>下載並填寫申請表</b>寫下自學動機、目標、18 週進度與需要的設備場地。</span></li>
+          <li><span><b>找指導老師討論並簽名</b>請老師看過你的計畫，給你建議。</span></li>
+          <li><span><b>請家長簽名</b>讓家人知道你這學期要學什麼。</span></li>
+          <li><span><b>相關處室簽核</b>依申請表上的欄位完成簽核。</span></li>
+          <li><span><b>在期限內繳交</b>交由學生自主學習小組審核（期限依學校公告）。</span></li>
+        </ol>
+      </div>
+      <div class="sec"><h3>把計畫寫好的小技巧</h3>
+        <div class="grid2">
+          <div class="tile"><b>💭 動機要真誠</b>寫「為什麼」想學，連結你的經驗或未來方向。</div>
+          <div class="tile"><b>🗓️ 進度要具體</b>每週寫出要完成的小任務，而不是只寫「學習」。</div>
+          <div class="tile"><b>🧰 資源要寫清楚</b>需要哪些書、網站、設備或教室。</div>
+          <div class="tile"><b>🎯 成果要看得見</b>說明最後會產出什麼、如何發表。</div>
+        </div>
+      </div>
+      ${aiBox('18 週進度草稿', '寫進度表沒有頭緒時', '我的自主學習主題是【我的主題】，目標是【我的目標】。\n請幫我規劃 18 週進度表草稿：第 1-2 週擬定計畫、第 3 週審核、第 4-16 週執行、第 17-18 週成果發表。請用表格列出每週的小目標與要留下的紀錄。我會再自己修改並和指導老師討論。')}` },
+  { id: 'volley', no: 6, name: '排球場', sub: '把球傳好', topic: '審核核定', emoji: '🏐', c: '#D97706', s: '#FFFBEB', i: '#B45309',
+    html: () => `
+      <p class="lead">把計畫「傳」給審核小組！<b>第 3 週</b>由自主學習推動小組審查計畫，通過後就能正式開始。</p>
+      <div class="learn">📍 這一站你會知道：<b>審核在做什麼、送審前怎麼自我檢查、通過後要做什麼</b></div>
+      <div class="sec"><h3>送審前自我檢查</h3>
+        <ul class="check">
+          <li><input type="checkbox" aria-label="主題明確"> 主題明確，看得出要學什麼</li>
+          <li><input type="checkbox" aria-label="進度可行"> 18 週進度合理、做得到</li>
+          <li><input type="checkbox" aria-label="地點設備"> 需要的地點、設備寫清楚了</li>
+          <li><input type="checkbox" aria-label="成果具體"> 預期成果具體</li>
+          <li><input type="checkbox" aria-label="簽名齊全"> 家長、指導老師與處室簽核都完成了</li>
+        </ul>
+      </div>
+      <div class="sec"><h3>審核之後</h3>
+        <div class="compare"><div class="good"><b>✅ 審核通過</b>確認核定結果與研習地點，依核定地點前往圖資中心或專科教室研習。</div><div class="bad" style="background:#FFFBEB;border-color:#FDE68A"><b>✏️ 需要修改</b>依審核意見和指導老師討論修正，有問題可以到圖資中心詢問。</div></div>
+      </div>
+      <div class="note">🏐 就像排球需要隊友合作：和指導老師保持溝通，是計畫順利進行的關鍵。</div>` },
+  { id: 'tech', no: 7, name: '科技樓', sub: '工科實習工場', topic: '動手執行・每週紀錄', short: '執行與紀錄', emoji: '🔧', c: '#475569', s: '#F1F5F9', i: '#334155',
+    html: () => `
+      <p class="lead">第 4-16 週是最長的一段：<b>按進度動手做，每週留下紀錄</b>。一點一點累積，成果就會出現。</p>
+      <div class="learn">📍 這一站你會知道：<b>每週上課的流程、紀錄表怎麼寫、卡關怎麼辦</b></div>
+      <div class="sec"><h3>每週的自主學習時間</h3>
+        <ol class="flow">
+          <li><span><b>帶紀錄表到核定地點報到</b>準時到核定的研習地點。</span></li>
+          <li><span><b>依進度學習與實作</b>對照計畫，完成本週的小目標。</span></li>
+          <li><span><b>填寫紀錄表</b>寫下本週的收穫與困惑。</span></li>
+          <li><span><b>請指導老師核章</b>課堂結束前，由現場指導老師核章認證。</span></li>
+        </ol>
+      </div>
+      <div class="warn">⚠️ 未依規定認證，或未到核定的地點，依校規處理。請記得每週攜帶紀錄表！</div>
+      <div class="sec"><h3>紀錄表這樣寫</h3>
+        <div class="compare"><div class="bad"><b>❌ 太簡單</b>「今天看影片學程式。」</div><div class="good"><b>✅ 具體有反思</b>「看完迴圈單元並寫出九九乘法表；卡在巢狀迴圈縮排，下週先複習再做練習題。」</div></div>
+      </div>
+      <div class="sec"><h3>卡關了怎麼辦？</h3>
+        <div class="grid2">
+          <div class="tile"><b>🔁 縮小範圍</b>先完成最核心的部分。</div>
+          <div class="tile"><b>🙋 問指導老師</b>越早說，越容易調整。</div>
+          <div class="tile"><b>📚 回圖書館找資源</b>換一本書或一門課試試。</div>
+        </div>
+      </div>
+      ${aiBox('每週紀錄引導', '不知道紀錄表怎麼寫時', '我這週的自主學習做了：【這週做了什麼】，遇到的困難是：【遇到的困難】。\n請用 3 個問題引導我自己寫出本週紀錄：學到什麼、困難怎麼處理、下週要怎麼調整。一次只問一題。')}` },
+  { id: 'wuhe', no: 8, name: '五和樓', sub: '觀光餐飲大樓', topic: '成果發表・上傳歷程', short: '成果發表', emoji: '🎉', c: '#7C3AED', s: '#F5F3FF', i: '#6D28D9',
+    html: () => `
+      <p class="lead">就像餐飲科把料理端上桌，第 17-18 週要把你的<b>學習成果「端出來」</b>，和大家分享！</p>
+      <div class="learn">📍 這一站你會知道：<b>成果怎麼整理、可以怎麼呈現、反思怎麼寫、去哪裡看學長姐的作品</b></div>
+      <div class="sec"><h3>完成成果三步驟</h3>
+        <ol class="flow">
+          <li><span><b>彙整成果作品</b>整理作品、紀錄表、過程照片。</span></li>
+          <li><span><b>寫下自我反思</b>做了什麼 → 學到什麼 → 遇到什麼困難 → 怎麼解決 → 未來怎麼應用。</span></li>
+          <li><span><b>參與成果分享並上傳</b>參加成果發表，並上傳到高中學習歷程平台。</span></li>
+        </ol>
+      </div>
+      <div class="sec"><h3>成果可以這樣呈現</h3>
+        <div class="grid2">
+          <div class="tile"><span class="e">📊</span><b>簡報發表</b>5 分鐘說清楚過程與收穫。</div>
+          <div class="tile"><span class="e">🎬</span><b>影片紀錄</b>適合技能、實作類主題。</div>
+          <div class="tile"><span class="e">🖼️</span><b>作品展示</b>海報、模型、畫作、料理。</div>
+          <div class="tile"><span class="e">📝</span><b>小論文</b>可投稿中學生網站。</div>
+        </div>
+      </div>
+      <div class="feature"><a href="${FOLDER}" target="_blank" rel="noopener noreferrer"><span>🏆</span><span><b>學生成果作品專區</b><small>瀏覽歷屆學長姐的自然科普、人文社會、藝術創作與科技程式作品</small></span></a></div>
+      ${aiBox('發表前模擬提問', '準備成果發表時', '請扮演成果發表會的評審老師。我的主題是【我的主題】，成果摘要是：【成果摘要】。\n請提出 5 個可能會問的問題，等我回答後再給我回饋。')}` }
+];
+const byId = Object.fromEntries(STATIONS.map(s => [s.id, s]));
+
+// ===================== 狀態 =====================
+const KEY = 'swsh-campus-v1';
+let state = { gender: 'boy', bag: '#2563EB', visited: [], seen: false };
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) state = Object.assign(state, s); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2200); }
+
+// ===================== 介面 =====================
+const dock = $('#dock');
+STATIONS.forEach(s => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.dataset.id = s.id; b.setAttribute('aria-label', `第 ${s.no} 站 ${s.name}：${s.topic}`);
+  b.innerHTML = `<span class="ic" style="background:${s.s};box-shadow:inset 0 0 0 2px ${s.c}">${s.emoji}<em style="background:${s.c}">${s.no}</em></span><span class="nm">${s.name}</span><span class="sb">${s.short || s.topic}</span>`;
+  b.addEventListener('click', () => goTo(s.id));
+  dock.appendChild(b);
+  const li = document.createElement('li');
+  li.innerHTML = `<b style="background:${s.c}">${s.no}</b><span>${s.emoji} <strong>${s.name}</strong><br><small>${s.topic}</small></span>`;
+  $('#route').appendChild(li);
+  const f = document.createElement('button'); f.type = 'button'; f.style.setProperty('--c', s.c);
+  f.innerHTML = `${s.no}. ${s.emoji} ${s.name}<br><small style="font-weight:400">${s.topic}</small>`;
+  f.addEventListener('click', () => openPanel(s.id));
+  $('#fb-grid').appendChild(f);
+});
+function refreshProgress() {
+  const n = state.visited.length;
+  $('#prog-t').textContent = `${n}/8`; $('#prog-bar').style.width = (n / 8 * 100) + '%';
+  dock.querySelectorAll('button').forEach(b => b.classList.toggle('visited', state.visited.includes(b.dataset.id)));
+  if (window.__labels) window.__labels.forEach(({ el, s }) => el.classList.toggle('done', state.visited.includes(s.id)));
+}
+refreshProgress();
+
+const GENDERS = [['boy', '👦 男生'], ['girl', '👧 女生']];
+const BAGS = ['#2563EB', '#DC2626', '#16A34A', '#F59E0B', '#DB2777', '#334155'];
+GENDERS.forEach(([v, t]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.dataset.v = v; b.textContent = t; b.addEventListener('click', () => { state.gender = v; save(); refreshSetup(); rebuildPlayer(); }); $('#opt-g').appendChild(b); });
+BAGS.forEach(v => { const b = document.createElement('button'); b.type = 'button'; b.className = 'sw'; b.dataset.v = v; b.style.background = v; b.setAttribute('aria-label', '書包顏色'); b.addEventListener('click', () => { state.bag = v; save(); refreshSetup(); rebuildPlayer(); }); $('#opt-c').appendChild(b); });
+function refreshSetup() {
+  $('#opt-g').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === state.gender));
+  $('#opt-c').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === state.bag));
+}
+refreshSetup();
+let rebuildPlayer = () => {};
+const nextUnvisited = () => (STATIONS.find(s => !state.visited.includes(s.id)) || STATIONS[0]).id;
+$('#go').addEventListener('click', () => { $('#intro').hidden = true; state.seen = true; save(); goTo(nextUnvisited()); });
+$('#go-free').addEventListener('click', () => { $('#intro').hidden = true; state.seen = true; save(); toast('拖曳可以 360° 旋轉視角喔！'); });
+$('#t-setup').addEventListener('click', () => { $('#intro').hidden = false; });
+$('#t-auto').addEventListener('click', () => goTo(nextUnvisited()));
+if (state.seen) $('#intro').hidden = true;
+
+// ===================== 學習站視窗 =====================
+const panel = $('#panel'), pc = $('#pc');
+function renderPrompt(text) {
+  return esc(text).replace(/【([^】]+)】/g, (m, label) => `<input type="text" data-label="${label}" placeholder="${label}" style="width:${Math.min(Math.max(label.length * 1.1 + 2, 5), 24)}em" aria-label="${label}">`);
+}
+function promptText(box) { let out = ''; box.childNodes.forEach(n => { out += n.tagName === 'INPUT' ? (n.value.trim() || `【${n.dataset.label}】`) : n.textContent; }); return out; }
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {} ta.remove(); return ok;
+  }
+}
+function setTheme(s) { pc.style.setProperty('--c', s.c); pc.style.setProperty('--s', s.s); pc.style.setProperty('--i', s.i); }
+function openPanel(id) {
+  if (id === 'faq') return openFaq();
+  const s = byId[id], idx = STATIONS.indexOf(s), prev = STATIONS[idx - 1], next = STATIONS[idx + 1];
+  setTheme(s);
+  pc.innerHTML = `
+    <div class="ph"><span class="no">${s.emoji}</span><div><small>第 ${s.no} 站・${s.name}（${s.sub}）</small><h2 id="p-title">${s.topic}</h2></div><button class="x" type="button" aria-label="關閉">✕</button></div>
+    <div class="pb">${s.html()}</div>
+    <div class="pf"><span>${prev ? `<button class="btn ghost prev" type="button">← ${prev.no}. ${prev.name}</button>` : ''}</span>
+      ${next ? `<button class="btn next" type="button">下一站：${next.no}. ${next.name}・${next.topic} →</button>` : `<button class="btn main done" type="button">🎓 完成導覽！</button>`}</div>`;
+  pc.querySelector('.x').addEventListener('click', closePanel);
+  const pb = pc.querySelector('.prev'); if (pb) pb.addEventListener('click', () => { closePanel(); setTimeout(() => goTo(prev.id), 120); });
+  const nb = pc.querySelector('.next'); if (nb) nb.addEventListener('click', () => { closePanel(); setTimeout(() => goTo(next.id), 120); });
+  const db = pc.querySelector('.done'); if (db) db.addEventListener('click', () => { closePanel(); toast(state.visited.length === 8 ? '🎓 8 站都走完了！去下載申請表開始吧' : `還有 ${8 - state.visited.length} 站沒去過喔`); });
+  pc.querySelectorAll('.ai').forEach(box => {
+    const pr = box.querySelector('.prompt'); pr.innerHTML = renderPrompt(decodeURIComponent(pr.dataset.prompt));
+    box.querySelector('.copy').addEventListener('click', async e => {
+      const btn = e.currentTarget, ok = await copyText(promptText(pr));
+      if (ok) { btn.classList.add('ok'); btn.textContent = '✅ 已複製'; setTimeout(() => { btn.classList.remove('ok'); btn.textContent = '📋 複製指令'; }, 1800); toast('已複製！貼到 AI 就能用'); }
+      else toast('複製失敗，請手動選取文字');
+    });
+  });
+  if (!state.visited.includes(id)) { state.visited.push(id); save(); refreshProgress(); }
+  if (!panel.open) panel.showModal();
+  pc.querySelector('.pb').scrollTop = 0;
+}
+function openFaq() {
+  setTheme({ c: '#15803D', s: '#F0FDF4', i: '#166534' });
+  pc.innerHTML = `
+    <div class="ph"><span class="no">❓</span><div><small>圖書資訊中心服務台</small><h2 id="p-title">常見問題與聯絡方式</h2></div><button class="x" type="button" aria-label="關閉">✕</button></div>
+    <div class="pb faq">
+      <details open><summary>自主學習和自習有什麼不同？</summary><p>自習是做作業、讀考試範圍；自主學習是你自己選主題、訂目標、規劃 18 週進度，最後發表成果。詳見第 1 站接納樓。</p></details>
+      <details><summary>什麼時候要申請？</summary><p>依學校公告的申請期限提出（通常在前一學期）。請留意圖資中心公告，詳見第 2 站操場。</p></details>
+      <details><summary>申請表要誰簽名？</summary><p>需經家長、指導老師與相關處室簽核，再由學生自主學習小組審核。詳見第 5 站感恩樓。</p></details>
+      <details><summary>忘記帶紀錄表或沒有核章怎麼辦？</summary><p>每週都要攜帶紀錄表並由指導教師認證；未依規定認證或未到指定地點，依校規處理。若有特殊狀況，請盡快和指導老師聯繫。</p></details>
+      <details><summary>進度落後了怎麼辦？</summary><p>先縮小範圍、完成最核心的部分，並盡早和指導老師討論調整。詳見第 7 站科技樓。</p></details>
+      <details><summary>成果要放在哪裡？</summary><p>參加成果分享後，把成果與自我反思上傳到高中學習歷程平台。詳見第 8 站五和樓。</p></details>
+      <details><summary>可以用 AI 嗎？</summary><p>可以把 AI 當成學伴，幫你發想、整理、提問，但要查證內容、誠實標註，作品要自己完成，並遵守學校規定。</p></details>
+      <div class="grid2" style="margin:12px 0 14px"><div class="tile">🏫 花蓮縣私立四維高級中學 圖書資訊中心<br>📍 970 花蓮市中山路一段 200 號</div><a class="tile" href="tel:+88638561455" style="text-decoration:none;color:inherit">☎️ (03) 856-1455 轉 517<br><small>點我撥打</small></a></div>
+    </div>
+    <div class="pf"><span></span><button class="btn main x2" type="button">關閉</button></div>`;
+  pc.querySelectorAll('.x, .x2').forEach(b => b.addEventListener('click', closePanel));
+  if (!panel.open) panel.showModal();
+}
+function closePanel() { if (panel.open) panel.close(); }
+panel.addEventListener('click', e => { if (e.target === panel) closePanel(); });
+$('#t-faq').addEventListener('click', () => openPanel('faq'));
+$('#t-full').addEventListener('click', () => {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {});
+  else document.exitFullscreen && document.exitFullscreen();
+});
+
+let goTo = id => openPanel(id);
+
+// ===================== 3D =====================
+let renderer = null;
+try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch (e) {}
+if (!renderer || typeof THREE === 'undefined') { document.body.classList.add('no3d'); return; }
+const fontsReady = Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 1500))]);
+fontsReady.then(init);
+
+function init() {
+const host = $('#scene');
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+host.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const DAY = { fog: 0xDCEBF5 }, NIGHT = { fog: 0x1A2340 };
+scene.fog = new THREE.Fog(DAY.fog, 380, 1600);
+const narrow = () => innerWidth < innerHeight;
+const camera = new THREE.PerspectiveCamera(narrow() ? 58 : 45, innerWidth / innerHeight, 1, 2500);
+
+// 天空漸層
+const skyGeo = new THREE.SphereGeometry(1400, 32, 16);
+const skyCols = []; const skyTop = new THREE.Color(0x7DB7E8), skyBot = new THREE.Color(0xE6F1F8);
+const nTop = new THREE.Color(0x0B1230), nBot = new THREE.Color(0x2A3566);
+for (let i = 0; i < skyGeo.attributes.position.count; i++) { const y = skyGeo.attributes.position.getY(i) / 1400; skyCols.push(...skyBot.clone().lerp(skyTop, Math.max(0, y) ** 0.6).toArray()); }
+skyGeo.setAttribute('color', new THREE.Float32BufferAttribute(skyCols, 3));
+const sky = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false }));
+scene.add(sky);
+function paintSky(night) {
+  const a = skyGeo.attributes.color, p = skyGeo.attributes.position;
+  for (let i = 0; i < p.count; i++) { const y = Math.max(0, p.getY(i) / 1400) ** 0.6; const c = (night ? nBot : skyBot).clone().lerp(night ? nTop : skyTop, y); a.setXYZ(i, c.r, c.g, c.b); }
+  a.needsUpdate = true;
+}
+
+const hemi = new THREE.HemisphereLight(0xffffff, 0x8DB27A, 0.55); scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xFFF3DD, 0.72);
+sun.position.set(80, 140, 60); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -120, right: 120, top: 120, bottom: -120, near: 20, far: 400 });
+sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.05;
+scene.add(sun);
+
+const M = (color, opt = {}) => new THREE.MeshLambertMaterial(Object.assign({ color }, opt));
+const mesh = (geo, mat, x = 0, y = 0, z = 0, cast = true, recv = true) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = cast; m.receiveShadow = recv; return m; };
+const put = (p, c) => { p.add(c); return c; };
+const anim = [];
+const flat = (geo, mat, x, y, z, rz = 0) => { const m = mesh(geo, mat, x, y, z, false, true); m.rotation.x = -Math.PI / 2; m.rotation.z = rz; return m; };
+const canvasTex = (w, h, draw, rep) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.anisotropy = renderer.capabilities.getMaxAnisotropy(); if (rep) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep[0], rep[1]); } return t; };
+const FONT = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
+
+// ---------- 地面 ----------
+const grassTex = canvasTex(256, 256, (x, w, h) => {
+  x.fillStyle = '#9CCB7B'; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 2500; i++) { x.fillStyle = `rgba(${60 + Math.random() * 60},${130 + Math.random() * 60},${50 + Math.random() * 40},.25)`; x.fillRect(Math.random() * w, Math.random() * h, 2, 3); }
+}, [60, 60]);
+scene.add(flat(new THREE.PlaneGeometry(2400, 2400), M(0xA9CF8A, { map: grassTex }), 0, -0.05, 0));
+const campusTex = canvasTex(256, 256, (x, w, h) => {
+  x.fillStyle = '#8CC36A'; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 3000; i++) { x.fillStyle = `rgba(${50 + Math.random() * 50},${120 + Math.random() * 70},${40 + Math.random() * 30},.3)`; x.fillRect(Math.random() * w, Math.random() * h, 2, 3); }
+}, [20, 16]);
+const CW = 180, CD = 140;
+scene.add(flat(new THREE.PlaneGeometry(CW, CD), M(0xffffff, { map: campusTex }), 0, 0.01, 0));
+// 海（東）
+const sea = flat(new THREE.PlaneGeometry(900, 2400), M(0x6FB7D9), 720, 0.02, 0); scene.add(sea);
+const shore = flat(new THREE.PlaneGeometry(40, 2400), M(0xE9D9B0), 260, 0.03, 0); scene.add(shore);
+
+// 道路
+const roadMat = M(0xE7E2D6, { polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+const asphalt = M(0x9AA0A8, { polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+const road = (w, d, x, z, mat = roadMat) => scene.add(flat(new THREE.PlaneGeometry(w, d), mat, x, 0.04, z));
+road(10, 62, 0, 40);      // 校門大道
+road(150, 8, 0, 22);      // 東西主走廊
+road(8, 40, -18, 2);      // 往感恩樓
+road(8, 40, 18, 2);       // 往五和樓
+road(60, 7, -40, -24);    // 往科技樓
+road(8, 22, -18, 36);     // 往圖書館
+scene.add(flat(new THREE.CircleGeometry(11, 40), roadMat, 0, 0.045, 22)); // 升旗廣場
+road(2400, 14, 0, 96, asphalt); // 校外馬路（中山路）
+for (let x = -1100; x < 1100; x += 12) road(5, 0.5, x, 96, M(0xffffff, { polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }));
+
+// ---------- 建築外牆貼圖 ----------
+function facade(o) {
+  const fw = o.w, fh = o.floors * o.fh + (o.sign ? 3.2 : 0.8);
+  const PX = 22, W = Math.min(2048, Math.round(fw * PX)), H = Math.min(1024, Math.round(fh * PX));
+  const sx = W / fw, sy = H / fh;
+  const draw = (x, lit) => {
+    x.fillStyle = lit ? '#000' : o.wall; x.fillRect(0, 0, W, H);
+    if (!lit) { x.fillStyle = o.trim; x.fillRect(0, 0, W, (o.sign ? 3.2 : 0.8) * sy); }
+    const top = (o.sign ? 3.2 : 0.8);
+    if (o.sign && !lit) { x.fillStyle = '#fff'; x.font = `900 ${Math.round(1.9 * sy)}px ${FONT}`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(o.sign, W / 2, top * sy / 2 + 1); }
+    for (let f = 0; f < o.floors; f++) {
+      const y0 = (top + (o.floors - 1 - f) * o.fh) * sy;
+      if (!lit && o.balcony) { x.fillStyle = o.band || '#FFFFFF'; x.fillRect(0, y0 + o.fh * sy - 1.1 * sy, W, 1.1 * sy); x.fillStyle = 'rgba(0,0,0,.12)'; x.fillRect(0, y0 + o.fh * sy - 1.1 * sy, W, 2); }
+      const n = o.cols;
+      for (let c = 0; c < n; c++) {
+        const cw = fw / n, wx = (c * cw + cw * 0.18) * sx, ww = cw * 0.64 * sx, wy = y0 + o.fh * 0.2 * sy, wh = o.fh * (o.balcony ? 0.42 : 0.55) * sy;
+        if (f === 0 && o.door && Math.abs(c - (n - 1) / 2) < 0.6) {
+          if (!lit) { x.fillStyle = '#4B5563'; x.fillRect(wx, y0 + o.fh * 0.15 * sy, ww, o.fh * 0.85 * sy); x.fillStyle = '#A5C8E4'; x.fillRect(wx + 3, y0 + o.fh * 0.2 * sy, ww - 6, o.fh * 0.75 * sy); }
+          else { x.fillStyle = '#FFD889'; x.fillRect(wx, y0 + o.fh * 0.15 * sy, ww, o.fh * 0.85 * sy); }
+          continue;
+        }
+        if (lit) { if (Math.random() < 0.75) { x.fillStyle = Math.random() < .5 ? '#FFE3A3' : '#FFF1C9'; x.fillRect(wx, wy, ww, wh); } continue; }
+        x.fillStyle = o.frame || '#5B6B7F'; x.fillRect(wx - 2, wy - 2, ww + 4, wh + 4);
+        const g = x.createLinearGradient(0, wy, 0, wy + wh); g.addColorStop(0, o.glass || '#BFDDF2'); g.addColorStop(1, '#8EB7D6');
+        x.fillStyle = g; x.fillRect(wx, wy, ww, wh);
+        x.fillStyle = 'rgba(255,255,255,.35)'; x.fillRect(wx + ww * 0.5 - 1, wy, 2, wh);
+      }
+    }
+    if (!lit) { x.fillStyle = 'rgba(0,0,0,.08)'; x.fillRect(0, H - 0.5 * sy, W, 0.5 * sy); }
+  };
+  const map = canvasTex(W, H, x => draw(x, false));
+  const emap = canvasTex(W, H, x => draw(x, true));
+  return { map, emap, h: fh };
+}
+const winLit = [];
+function building(o) {
+  const g = new THREE.Group();
+  const front = facade(o), side = facade(Object.assign({}, o, { w: o.d, cols: Math.max(2, Math.round(o.cols * o.d / o.w)), sign: o.sideSign || null, door: false }));
+  const back = facade(Object.assign({}, o, { sign: null, door: false }));
+  const H = front.h;
+  const mk = f => { const m = new THREE.MeshLambertMaterial({ map: f.map, emissive: 0xffffff, emissiveMap: f.emap, emissiveIntensity: 0 }); winLit.push(m); return m; };
+  const roof = M(o.roof || 0xB9BDC4);
+  const body = mesh(new THREE.BoxGeometry(o.w, H, o.d), [mk(side), mk(side), roof, roof, mk(front), mk(back)], 0, H / 2, 0);
+  g.add(body);
+  // 女兒牆與屋頂設備
+  const par = M(o.parapet || 0xE5E7EB);
+  g.add(mesh(new THREE.BoxGeometry(o.w + 0.6, 1, 0.5), par, 0, H + 0.5, o.d / 2));
+  g.add(mesh(new THREE.BoxGeometry(o.w + 0.6, 1, 0.5), par, 0, H + 0.5, -o.d / 2));
+  g.add(mesh(new THREE.BoxGeometry(0.5, 1, o.d), par, o.w / 2, H + 0.5, 0));
+  g.add(mesh(new THREE.BoxGeometry(0.5, 1, o.d), par, -o.w / 2, H + 0.5, 0));
+  if (!o.noTank) { g.add(mesh(new THREE.BoxGeometry(4, 2.6, 3), M(0xD1D5DB), o.w / 2 - 4, H + 1.3, 0)); g.add(mesh(new THREE.CylinderGeometry(1.2, 1.2, 2, 16), M(0x93C5FD), o.w / 2 - 4, H + 3.6, 0)); }
+  // 入口雨遮
+  if (o.door) { g.add(mesh(new THREE.BoxGeometry(7, 0.4, 3.2), M(o.canopy || 0x94A3B8), 0, 3.4, o.d / 2 + 1.6)); [-3, 3].forEach(x => g.add(mesh(new THREE.CylinderGeometry(0.15, 0.15, 3.4, 8), M(0xE5E7EB), x, 1.7, o.d / 2 + 3))); }
+  g.userData.h = H;
+  return g;
+}
+
+// ---------- 建築配置 ----------
+const LOC = {}; // 學習站位置
+const solids = []; // 碰撞矩形 {x0,x1,z0,z1}
+function place(g, x, z, rotY, w, d, id, door) {
+  g.position.set(x, 0, z); g.rotation.y = rotY; scene.add(g);
+  const sw = Math.abs(Math.cos(rotY)) > 0.5 ? w : d, sd = Math.abs(Math.cos(rotY)) > 0.5 ? d : w;
+  solids.push({ x0: x - sw / 2 - 0.8, x1: x + sw / 2 + 0.8, z0: z - sd / 2 - 0.8, z1: z + sd / 2 + 0.8 });
+  if (id) g.traverse(o => (o.userData.st = id));
+  return g;
+}
+function setLoc(id, x, z, dx, dz, h) { LOC[id] = { pos: new THREE.Vector3(x, 0, z), door: new THREE.Vector3(dx, 0, dz), h }; }
+
+// 接納樓（普通科教室）：北側，面向南方升旗廣場
+{ const o = { w: 46, d: 13, floors: 4, fh: 3.8, cols: 14, wall: '#F3EBDD', trim: '#B45309', sign: '接納樓', balcony: true, band: '#FFFFFF', door: true, roof: 0xA8A29E, canopy: 0xB45309 };
+  const g = place(building(o), -4, -8, 0, o.w, o.d, 'jiena'); setLoc('jiena', -4, -8, -4, 3.5, g.userData.h + 6); }
+// 感恩樓（商科實習大樓）：西側，面向東
+{ const o = { w: 34, d: 12, floors: 4, fh: 3.7, cols: 10, wall: '#F6DFC6', trim: '#0E7490', sign: '感恩樓', sideSign: '商科實習大樓', balcony: true, band: '#FFF7ED', door: true, roof: 0xA8A29E, canopy: 0x0E7490 };
+  const g = place(building(o), -38, 2, Math.PI / 2, o.w, o.d, 'ganen'); setLoc('ganen', -38, 2, -26.5, 2, g.userData.h + 6); }
+// 五和樓（觀光餐飲大樓）：東側，面向西
+{ const o = { w: 34, d: 13, floors: 5, fh: 3.6, cols: 10, wall: '#E7EEF6', trim: '#6D28D9', sign: '五和樓', sideSign: '觀光餐飲大樓', balcony: true, band: '#F5F3FF', door: true, roof: 0xA8A29E, canopy: 0x6D28D9 };
+  const g = place(building(o), 34, 2, -Math.PI / 2, o.w, o.d, 'wuhe'); setLoc('wuhe', 34, 2, 22, 2, g.userData.h + 6);
+  // 餐飲大樓：一樓戶外用餐區
+  for (let k = 0; k < 3; k++) { const t = new THREE.Group(); t.position.set(24, 0, -10 + k * 8); t.add(mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.15, 16), M(0xffffff), 0, 1.1, 0)); t.add(mesh(new THREE.CylinderGeometry(0.1, 0.1, 1.1, 8), M(0x94A3B8), 0, 0.55, 0)); t.add(mesh(new THREE.ConeGeometry(2.2, 1, 12), M(k % 2 ? 0xF472B6 : 0xA78BFA), 0, 3.1, 0)); t.add(mesh(new THREE.CylinderGeometry(0.06, 0.06, 2.6, 6), M(0xE5E7EB), 0, 1.9, 0)); scene.add(t); } }
+// 圖書館：西南，面向東（校門大道）
+{ const g = new THREE.Group();
+  const o = { w: 22, d: 18, floors: 3, fh: 4.2, cols: 6, wall: '#EEF2F7', trim: '#1D4ED8', sign: '圖書館', sideSign: '圖書資訊中心', balcony: false, door: true, glass: '#CFE7F7', frame: '#334155', roof: 0x94A3B8, canopy: 0x1D4ED8 };
+  const b = building(o); g.add(b);
+  const H = b.userData.h;
+  // 玻璃帷幕與柱廊
+  g.add(mesh(new THREE.BoxGeometry(10, H - 3.4, 0.3), M(0x9EC9E8, { transparent: true, opacity: 0.75 }), 7, (H - 3.4) / 2, o.d / 2 + 0.2));
+  for (let k = -2; k <= 2; k++) g.add(mesh(new THREE.CylinderGeometry(0.45, 0.45, H - 3.2, 12), M(0xffffff), k * 4.6, (H - 3.2) / 2, o.d / 2 + 2.4));
+  g.add(mesh(new THREE.BoxGeometry(22, 0.6, 5.4), M(0xF8FAFC), 0, H - 3.2, o.d / 2 + 2.2));
+  // 屋頂書本造型
+  const book = new THREE.Group(); book.position.set(-4, H + 2.2, 0); g.add(book);
+  put(book, mesh(new THREE.BoxGeometry(5, 0.6, 4), M(0x2563EB), -2.1, 0, 0)).rotation.z = 0.35;
+  put(book, mesh(new THREE.BoxGeometry(5, 0.6, 4), M(0xDC2626), 2.1, 0, 0)).rotation.z = -0.35;
+  g.userData.h = H;
+  place(g, -38, 38, Math.PI / 2, o.w, o.d + 5, 'library'); setLoc('library', -38, 38, -24, 38, H + 7); }
+// 科技樓（工科實習工場）：西北，鋸齒屋頂
+{ const g = new THREE.Group();
+  const o = { w: 40, d: 18, floors: 2, fh: 5, cols: 10, wall: '#D9DEE5', trim: '#334155', sign: '科技樓', sideSign: '工科實習工場', balcony: false, door: true, frame: '#334155', roof: 0x9CA3AF, noTank: true, canopy: 0xF59E0B };
+  const b = building(o); g.add(b); const H = b.userData.h;
+  for (let k = 0; k < 6; k++) {
+    const s = new THREE.Shape(); s.moveTo(0, 0); s.lineTo(6.6, 0); s.lineTo(0, 3.6); s.lineTo(0, 0);
+    const tooth = mesh(new THREE.ExtrudeGeometry(s, { depth: o.d - 1, bevelEnabled: false }), M(k % 2 ? 0x94A3B8 : 0xA3ACB9), -o.w / 2 + 0.3 + k * 6.6, H, -o.d / 2 + 0.5);
+    g.add(tooth);
+    g.add(mesh(new THREE.BoxGeometry(0.2, 3.2, o.d - 2), M(0x9EC9E8), -o.w / 2 + 0.5 + k * 6.6, H + 1.7, 0));
+  }
+  // 鐵捲門與實習設備
+  [-14, 14].forEach(x => { g.add(mesh(new THREE.BoxGeometry(5, 4.2, 0.3), M(0x64748B), x, 2.1, o.d / 2 + 0.1)); for (let y = 0.4; y < 4.2; y += 0.5) g.add(mesh(new THREE.BoxGeometry(5, 0.06, 0.35), M(0x475569), x, y, o.d / 2 + 0.12)); });
+  g.add(mesh(new THREE.CylinderGeometry(0.6, 0.6, 6, 12), M(0x9CA3AF), o.w / 2 - 3, H + 3, -o.d / 2 + 3));
+  g.userData.h = H;
+  place(g, -48, -40, 0, o.w, o.d, 'tech'); setLoc('tech', -48, -40, -48, -27.5, H + 8); }
+
+// ---------- 運動場地貼圖 ----------
+function trackTexture() {
+  return canvasTex(1600, 800, (x, W, H) => {
+    const s = W / 100; // 100 x 50 單位
+    x.fillStyle = '#8CC36A'; x.fillRect(0, 0, W, H);
+    const cx = W / 2, cy = H / 2, half = 18 * s;
+    const lane = (r, col) => { x.beginPath(); x.moveTo(cx - half, cy - r); x.lineTo(cx + half, cy - r); x.arc(cx + half, cy, r, -Math.PI / 2, Math.PI / 2); x.lineTo(cx - half, cy + r); x.arc(cx - half, cy, r, Math.PI / 2, Math.PI * 1.5); x.closePath(); x.fillStyle = col; x.fill(); };
+    lane(24 * s, '#C6573F');
+    lane(16 * s, '#5DAA4A');
+    // 草皮條紋
+    x.save(); lane(16 * s, 'rgba(0,0,0,0)'); x.clip();
+    for (let i = -20; i < 20; i++) { x.fillStyle = i % 2 ? '#62B04E' : '#55A043'; x.fillRect(cx + i * 4 * s, 0, 4 * s, H); }
+    x.restore();
+    x.strokeStyle = '#fff'; x.lineWidth = 3;
+    for (let r = 16; r <= 24.01; r += 1.6) { x.beginPath(); x.moveTo(cx - half, cy - r * s); x.lineTo(cx + half, cy - r * s); x.arc(cx + half, cy, r * s, -Math.PI / 2, Math.PI / 2); x.lineTo(cx - half, cy + r * s); x.arc(cx - half, cy, r * s, Math.PI / 2, Math.PI * 1.5); x.stroke(); }
+    // 足球場線
+    x.lineWidth = 4; x.strokeRect(cx - 26 * s, cy - 12 * s, 52 * s, 24 * s);
+    x.beginPath(); x.moveTo(cx, cy - 12 * s); x.lineTo(cx, cy + 12 * s); x.stroke();
+    x.beginPath(); x.arc(cx, cy, 4 * s, 0, Math.PI * 2); x.stroke();
+    x.strokeRect(cx - 26 * s, cy - 6 * s, 6 * s, 12 * s); x.strokeRect(cx + 20 * s, cy - 6 * s, 6 * s, 12 * s);
+    // 起跑線與 18 週標記
+    x.fillStyle = '#fff'; x.fillRect(cx - 2, cy + 16 * s, 4, 8 * s);
+    x.font = `900 ${Math.round(2.4 * s)}px ${FONT}`; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText('START', cx - 6 * s, cy + 20 * s);
+    x.fillStyle = 'rgba(255,255,255,.95)'; x.font = `900 ${Math.round(3 * s)}px ${FONT}`; x.fillText('18 WEEKS', cx + 8 * s, cy - 20 * s);
+  });
+}
+function basketTexture() {
+  return canvasTex(1200, 1024, (x, W, H) => {
+    const s = W / 34;
+    x.fillStyle = '#3B7DB8'; x.fillRect(0, 0, W, H);
+    [[0.5, 0.5], [17.5, 0.5]].forEach(([ox, oy]) => {
+      const X = v => (ox + v) * s, Y = v => (oy + v) * s;
+      x.fillStyle = '#D9824A'; x.fillRect(X(0), Y(0), 16 * s, 28 * s);
+      x.fillStyle = '#3B7DB8'; x.fillRect(X(5.5), Y(0), 5 * s, 5.8 * s); x.fillRect(X(5.5), Y(22.2), 5 * s, 5.8 * s);
+      x.strokeStyle = '#fff'; x.lineWidth = 4;
+      x.strokeRect(X(0), Y(0), 16 * s, 28 * s);
+      x.beginPath(); x.moveTo(X(0), Y(14)); x.lineTo(X(16), Y(14)); x.stroke();
+      x.beginPath(); x.arc(X(8), Y(14), 1.8 * s, 0, Math.PI * 2); x.stroke();
+      x.strokeRect(X(5.5), Y(0), 5 * s, 5.8 * s); x.strokeRect(X(5.5), Y(22.2), 5 * s, 5.8 * s);
+      x.beginPath(); x.arc(X(8), Y(1.6), 6.75 * s, 0.1, Math.PI - 0.1); x.stroke();
+      x.beginPath(); x.arc(X(8), Y(26.4), 6.75 * s, Math.PI + 0.1, -0.1); x.stroke();
+    });
+  });
+}
+function volleyTexture() {
+  return canvasTex(1024, 640, (x, W, H) => {
+    const s = W / 24;
+    x.fillStyle = '#2F8F6B'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#E58C4B'; x.fillRect(3 * s, 3 * s, 18 * s, 9 * s);
+    x.strokeStyle = '#fff'; x.lineWidth = 5; x.strokeRect(3 * s, 3 * s, 18 * s, 9 * s);
+    x.beginPath(); x.moveTo(12 * s, 3 * s); x.lineTo(12 * s, 12 * s); x.stroke();
+    [9, 15].forEach(v => { x.beginPath(); x.moveTo(v * s, 3 * s); x.lineTo(v * s, 12 * s); x.stroke(); });
+  });
+}
+// 操場（東北）
+const TR = { x: 52, z: -36 };
+{ const p = flat(new THREE.PlaneGeometry(100, 50), M(0xffffff, { map: trackTexture(), polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }), TR.x, 0.03, TR.z); p.scale.set(0.74, 0.74, 1); scene.add(p);
+  // 足球門
+  [-1, 1].forEach(sx => { const gx = TR.x + sx * 19.2; const gm = M(0xffffff);
+    scene.add(mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.2, 8), gm, gx, 1.1, TR.z - 2.6)); scene.add(mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.2, 8), gm, gx, 1.1, TR.z + 2.6));
+    const bar = mesh(new THREE.CylinderGeometry(0.12, 0.12, 5.2, 8), gm, gx, 2.2, TR.z); bar.rotation.x = Math.PI / 2; scene.add(bar);
+    const net = mesh(new THREE.BoxGeometry(1.4, 2.2, 5.2), M(0xffffff, { transparent: true, opacity: 0.35 }), gx + sx * 0.7, 1.1, TR.z, false); scene.add(net); });
+  // 司令台與看台
+  const stand = new THREE.Group(); stand.position.set(TR.x, 0, TR.z - 22.5); scene.add(stand);
+  for (let k = 0; k < 4; k++) stand.add(mesh(new THREE.BoxGeometry(30, 0.8, 1.6), M(k % 2 ? 0xCBD5E1 : 0xE2E8F0), 0, 0.4 + k * 0.8, -k * 1.6));
+  stand.add(mesh(new THREE.BoxGeometry(32, 0.4, 8), M(0x16A34A), 0, 6.5, -2.4));
+  [-15, 15].forEach(x => stand.add(mesh(new THREE.CylinderGeometry(0.2, 0.2, 6.5, 8), M(0xE5E7EB), x, 3.25, 1)));
+  solids.push({ x0: TR.x - 16, x1: TR.x + 16, z0: TR.z - 29, z1: TR.z - 21.5 });
+  setLoc('track', TR.x, TR.z, TR.x - 4, TR.z + 20, 12); }
+// 籃球場（東南）
+const BK = { x: 58, z: 32 };
+{ const p = flat(new THREE.PlaneGeometry(34, 29), M(0xffffff, { map: basketTexture(), polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }), BK.x, 0.03, BK.z); scene.add(p);
+  [-8.5, 8.5].forEach(ox => [-1, 1].forEach(sz => {
+    const hz = BK.z + sz * 13.3, hx = BK.x + ox;
+    scene.add(mesh(new THREE.CylinderGeometry(0.18, 0.22, 4.2, 10), M(0x334155), hx, 2.1, hz + sz * 1.2));
+    const arm = mesh(new THREE.BoxGeometry(0.2, 0.2, 1.3), M(0x334155), hx, 4.1, hz + sz * 0.6); scene.add(arm);
+    scene.add(mesh(new THREE.BoxGeometry(2.2, 1.4, 0.1), M(0xffffff), hx, 4.4, hz));
+    scene.add(mesh(new THREE.BoxGeometry(0.7, 0.5, 0.12), M(0xDC2626), hx, 4.1, hz - sz * 0.01));
+    const rim = mesh(new THREE.TorusGeometry(0.38, 0.04, 6, 20), M(0xEA580C), hx, 3.85, hz - sz * 0.45); rim.rotation.x = Math.PI / 2; scene.add(rim);
+    const net = mesh(new THREE.CylinderGeometry(0.38, 0.24, 0.6, 12, 1, true), M(0xffffff, { wireframe: true }), hx, 3.55, hz - sz * 0.45, false); scene.add(net);
+  }));
+  setLoc('basket', BK.x, BK.z, BK.x - 18, BK.z, 9); }
+// 排球場（東南角）
+const VB = { x: 58, z: 57 };
+{ const p = flat(new THREE.PlaneGeometry(24, 15), M(0xffffff, { map: volleyTexture(), polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }), VB.x, 0.03, VB.z); scene.add(p);
+  [-5.4, 5.4].forEach(dz => scene.add(mesh(new THREE.CylinderGeometry(0.1, 0.1, 2.6, 8), M(0xE5E7EB), VB.x, 1.3, VB.z + dz)));
+  const netTex = canvasTex(256, 64, (x, W, H) => { x.clearRect(0, 0, W, H); x.strokeStyle = 'rgba(30,41,59,.85)'; x.lineWidth = 1.5; for (let i = 0; i <= W; i += 8) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, H); x.stroke(); } for (let j = 0; j <= H; j += 8) { x.beginPath(); x.moveTo(0, j); x.lineTo(W, j); x.stroke(); } x.fillStyle = '#fff'; x.fillRect(0, 0, W, 6); });
+  const net = mesh(new THREE.PlaneGeometry(10.8, 1), new THREE.MeshLambertMaterial({ map: netTex, transparent: true, side: THREE.DoubleSide, alphaTest: 0.1 }), VB.x, 2.0, VB.z, false); net.rotation.y = Math.PI / 2; scene.add(net);
+  setLoc('volley', VB.x, VB.z, VB.x - 15, VB.z, 7); }
+
+// ---------- 校門、圍牆、升旗台 ----------
+function signTex(lines, w, h, bg, col) {
+  return canvasTex(w, h, (x, W, H) => { x.fillStyle = bg; x.fillRect(0, 0, W, H); x.textAlign = 'center'; x.textBaseline = 'middle'; lines.forEach(l => { x.fillStyle = l.c || col; x.font = `${l.w || 900} ${l.s}px ${FONT}`; x.fillText(l.t, W / 2, l.y); }); });
+}
+{ const gate = new THREE.Group(); gate.position.set(0, 0, CD / 2); scene.add(gate);
+  const stone = M(0xD6CFC2), dark = M(0x475569);
+  [-9, 9].forEach(x => { gate.add(mesh(new THREE.BoxGeometry(2.4, 6, 2.4), stone, x, 3, 0)); gate.add(mesh(new THREE.BoxGeometry(2.8, 0.4, 2.8), M(0xB45309), x, 6.2, 0)); });
+  const st = signTex([{ t: '花蓮縣私立四維高級中學', s: 74, y: 82 }, { t: 'SZU-WEI SENIOR HIGH SCHOOL', s: 30, y: 150, w: 700 }], 1024, 200, '#14532D', '#FDE68A');
+  gate.add(mesh(new THREE.BoxGeometry(18, 2.4, 0.6), [stone, stone, stone, stone, new THREE.MeshLambertMaterial({ map: st }), new THREE.MeshLambertMaterial({ map: st })], 0, 7.4, 0));
+  gate.add(mesh(new THREE.BoxGeometry(1, 0.8, 0.4), dark, 0, 0.4, 2));
+  // 圍牆
+  const wallM = M(0xE7DFD2), capM = M(0xB45309);
+  const wall = (w, d, x, z) => { scene.add(mesh(new THREE.BoxGeometry(w, 2, d), wallM, x, 1, z)); scene.add(mesh(new THREE.BoxGeometry(w + 0.2, 0.3, d + 0.2), capM, x, 2.15, z)); };
+  wall(CW / 2 - 10, 0.6, -(CW / 4 + 5), CD / 2); wall(CW / 2 - 10, 0.6, CW / 4 + 5, CD / 2);
+  wall(CW, 0.6, 0, -CD / 2); wall(0.6, CD, -CW / 2, 0); wall(0.6, CD, CW / 2, 0);
+  // 升旗台
+  scene.add(mesh(new THREE.CylinderGeometry(3, 3.4, 0.8, 24), M(0xD6CFC2), 0, 0.4, 22));
+  const pole = mesh(new THREE.CylinderGeometry(0.12, 0.16, 14, 10), M(0xE5E7EB), 0, 7, 22); scene.add(pole);
+  const flag = mesh(new THREE.PlaneGeometry(3.4, 2.2, 8, 1), M(0x16A34A, { side: THREE.DoubleSide }), 1.8, 12.6, 22); scene.add(flag);
+  const fp = flag.geometry.attributes.position, fx = []; for (let i = 0; i < fp.count; i++) fx.push(fp.getX(i));
+  anim.push((dt, t) => { for (let i = 0; i < fp.count; i++) fp.setZ(i, Math.sin(t * 4 + fx[i] * 1.6) * 0.25 * (fx[i] + 1.7) / 3.4); fp.needsUpdate = true; });
+  solids.push({ x0: -3.6, x1: 3.6, z0: 18.4, z1: 25.6 });
+}
+
+// ---------- 樹木、路燈、長椅 ----------
+const trunkM = M(0x8B6A4E);
+const leafM = [M(0x4E9A3E), M(0x5FAE4A), M(0x3F8A36), M(0x6DBB57)];
+function tree(x, z, s = 1, kind = 0) {
+  const t = new THREE.Group(); t.position.set(x, 0, z); t.scale.setScalar(s); t.rotation.y = Math.random() * 6;
+  if (kind === 2) { // 椰子樹
+    const tr = mesh(new THREE.CylinderGeometry(0.25, 0.4, 8, 8), M(0xA68A64), 0, 4, 0); tr.rotation.z = 0.08; t.add(tr);
+    for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2, pv = new THREE.Group(); pv.position.set(0.3, 8, 0); pv.rotation.y = a; t.add(pv); const lf = mesh(new THREE.BoxGeometry(0.7, 0.06, 3.4), leafM[k % 4], 0, -0.5, 1.6); lf.rotation.x = 0.45; pv.add(lf); }
+    t.add(mesh(new THREE.SphereGeometry(0.45, 8, 6), M(0x7C5A3A), 0.3, 7.9, 0));
+  } else {
+    t.add(mesh(new THREE.CylinderGeometry(0.3, 0.45, 3, 8), trunkM, 0, 1.5, 0));
+    const lm = leafM[Math.floor(Math.random() * 4)];
+    if (kind === 1) { t.add(mesh(new THREE.ConeGeometry(2.2, 5, 9), lm, 0, 5, 0)); t.add(mesh(new THREE.ConeGeometry(1.6, 3.4, 9), lm, 0, 7, 0)); }
+    else { [[0, 4.4, 0, 2.3], [1.2, 4, 0.6, 1.6], [-1.1, 4.1, -0.5, 1.7], [0.2, 5.6, -0.3, 1.6]].forEach(([a, b, c, r]) => t.add(mesh(new THREE.IcosahedronGeometry(r, 1), lm, a, b, c))); }
+  }
+  scene.add(t); return t;
+}
+const freeAt = (x, z, pad = 3) => !solids.some(r => x > r.x0 - pad && x < r.x1 + pad && z > r.z0 - pad && z < r.z1 + pad)
+  && !(Math.abs(x) < 8 && z > 8) && !(Math.abs(z - 22) < 6) && !(Math.hypot(x - TR.x, (z - TR.z) * 1.9) < 34) && !(Math.abs(x - BK.x) < 20 && Math.abs(z - BK.z) < 17) && !(Math.abs(x - VB.x) < 15 && Math.abs(z - VB.z) < 11)
+  && !(Math.abs(x + 18) < 6 && z > -20 && z < 50) && !(Math.abs(x - 18) < 6 && z > -20 && z < 22) && !(z > -30 && z < -18 && x < -8);
+// 沿圍牆與道路的樹
+for (let x = -CW / 2 + 6; x < CW / 2 - 4; x += 9) { if (freeAt(x, -CD / 2 + 5)) tree(x, -CD / 2 + 5, 0.9 + Math.random() * 0.3, 1); }
+for (let z = -CD / 2 + 10; z < CD / 2 - 4; z += 9) { if (freeAt(-CW / 2 + 5, z)) tree(-CW / 2 + 5, z, 0.9 + Math.random() * 0.3); if (freeAt(CW / 2 - 5, z)) tree(CW / 2 - 5, z, 0.9 + Math.random() * 0.3, z % 2 ? 0 : 1); }
+for (let z = 30; z < CD / 2 - 3; z += 8) { tree(-7.5, z, 0.8, 2); tree(7.5, z, 0.8, 2); }
+let tries = 0, made = 0;
+while (made < 40 && tries < 900) { tries++; const x = (Math.random() - 0.5) * (CW - 16), z = (Math.random() - 0.5) * (CD - 16); if (freeAt(x, z, 4)) { tree(x, z, 0.8 + Math.random() * 0.5, Math.random() < 0.25 ? 1 : 0); made++; } }
+// 校外：樹林與房屋
+for (let k = 0; k < 140; k++) { const a = Math.random() * Math.PI * 2, r = 120 + Math.random() * 160; const x = Math.cos(a) * r, z = Math.sin(a) * r; if (x > 230 || (z > 88 && z < 104)) continue; tree(x, z, 1 + Math.random() * 0.8, Math.random() < .3 ? 1 : 0); }
+const houseCols = [0xF5F5F4, 0xE7E5E4, 0xFDE68A, 0xFECACA, 0xBFDBFE, 0xD9F99D];
+for (let k = 0; k < 40; k++) { const x = -200 + Math.random() * 400, z = 108 + Math.random() * 70, w = 8 + Math.random() * 10, h = 5 + Math.random() * 12; const hb = mesh(new THREE.BoxGeometry(w, h, 8 + Math.random() * 6), M(houseCols[k % 6]), x, h / 2, z); scene.add(hb); }
+
+const lampMat = new THREE.MeshLambertMaterial({ color: 0xFFF7D6, emissive: 0xFFD27A, emissiveIntensity: 0.1 });
+const lampLights = [];
+[[-6, 30], [6, 30], [-6, 48], [6, 48], [-30, 26], [30, 26], [-60, 26], [60, 26], [-22, -18], [22, 14]].forEach(([x, z], k) => {
+  scene.add(mesh(new THREE.CylinderGeometry(0.12, 0.18, 5, 8), M(0x334155), x, 2.5, z));
+  scene.add(mesh(new THREE.BoxGeometry(0.9, 0.3, 0.9), M(0x334155), x, 5.1, z));
+  scene.add(mesh(new THREE.SphereGeometry(0.4, 12, 10), lampMat, x, 4.75, z, false));
+  if (k % 2 === 0) { const Lt = new THREE.PointLight(0xFFD27A, 0, 26, 2); Lt.position.set(x, 4.6, z); scene.add(Lt); lampLights.push(Lt); }
+});
+[[-12, 18], [12, 18], [-12, 26], [12, 26]].forEach(([x, z]) => { const b = new THREE.Group(); b.position.set(x, 0, z); b.add(mesh(new THREE.BoxGeometry(3, 0.2, 0.9), M(0xB45309), 0, 0.8, 0)); b.add(mesh(new THREE.BoxGeometry(3, 0.8, 0.15), M(0xB45309), 0, 1.3, -0.4)); [-1.3, 1.3].forEach(dx => b.add(mesh(new THREE.BoxGeometry(0.15, 0.8, 0.8), M(0x334155), dx, 0.4, 0))); b.rotation.y = x < 0 ? Math.PI / 2 : -Math.PI / 2; scene.add(b); });
+
+// ---------- 山脈（西側中央山脈、北側） ----------
+function mountainRange(cx, cz, len, rot, base, peaks, col, hazeCol) {
+  const geo = new THREE.PlaneGeometry(len, 260, 120, 30);
+  const p = geo.attributes.position;
+  const seeds = Array.from({ length: peaks }, () => [(Math.random() - 0.5) * len, Math.random() * 60 - 30, base * (0.6 + Math.random() * 0.6), 60 + Math.random() * 80]);
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), y = p.getY(i); let h = 0;
+    seeds.forEach(([sx, sy, sh, sr]) => { const d = Math.hypot(x - sx, (y - sy) * 1.3); h = Math.max(h, sh * Math.exp(-(d * d) / (sr * sr))); });
+    h += Math.sin(x * 0.05) * 6 + Math.sin(x * 0.13 + y * 0.07) * 4 + (Math.random() - 0.5) * 2;
+    const edge = Math.min(1, (130 - Math.abs(y)) / 50);
+    p.setZ(i, Math.max(0, h * edge));
+  }
+  geo.computeVertexNormals();
+  const cols = []; const c1 = new THREE.Color(col), c2 = new THREE.Color(hazeCol), c3 = new THREE.Color(0x8FA88A);
+  for (let i = 0; i < p.count; i++) { const z = p.getZ(i) / (base * 1.2); const c = c3.clone().lerp(c1, Math.min(1, z * 1.4)).lerp(c2, Math.max(0, z - 0.6)); cols.push(c.r, c.g, c.b); }
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+  const m = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true }));
+  m.rotation.x = -Math.PI / 2; m.rotation.z = rot; m.position.set(cx, -0.5, cz); m.receiveShadow = false;
+  scene.add(m); return m;
+}
+mountainRange(-330, -40, 1600, Math.PI / 2, 170, 16, 0x5E8A5A, 0x9DB4C8);
+mountainRange(-540, 60, 1800, Math.PI / 2, 280, 12, 0x4F7656, 0xB8C9DA);
+mountainRange(-120, -380, 1100, 0, 130, 10, 0x648F5E, 0xA8BDD0);
+
+// 雲
+const cloudMat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.92 });
+const clouds = [];
+for (let k = 0; k < 14; k++) { const c = new THREE.Group(); for (let j = 0; j < 5; j++) c.add(mesh(new THREE.SphereGeometry(8 + Math.random() * 6, 12, 10), cloudMat, j * 9 - 18, Math.random() * 3, Math.random() * 6, false, false)); c.scale.y = 0.55; c.position.set(-600 + Math.random() * 1200, 120 + Math.random() * 60, -500 + Math.random() * 700); c.userData.s = 2 + Math.random() * 3; scene.add(c); clouds.push(c); }
+anim.push(dt => clouds.forEach(c => { c.position.x += c.userData.s * dt; if (c.position.x > 700) c.position.x = -700; }));
+// 星空
+const starGeo = new THREE.BufferGeometry(), sp = [];
+for (let k = 0; k < 900; k++) { const u = Math.random() * Math.PI * 2, v = Math.random() * 0.48 * Math.PI; sp.push(Math.cos(u) * Math.cos(v) * 1200, 100 + Math.sin(v) * 1100, Math.sin(u) * Math.cos(v) * 1200); }
+starGeo.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 2.2, fog: false, transparent: true, opacity: 0, sizeAttenuation: false }));
+scene.add(stars);
+
+// ===================== 3D 學生 =====================
+const SKIN = [0xF4D3B5, 0xEFC8A4, 0xE6B98F];
+const HAIR = [0x1F1A17, 0x2B211C, 0x3A2A20];
+function student(o = {}) {
+  const girl = o.gender === 'girl';
+  const skin = M(o.skin || SKIN[0]), hair = M(o.hair || HAIR[0]), shirt = M(0xFAFAFA), navy = M(0x1E2A44), shoe = M(0xF8FAFC), sole = M(0x334155);
+  const g = new THREE.Group();
+  const body = new THREE.Group(); g.add(body);
+  // 腿
+  const legs = [-0.17, 0.17].map(x => {
+    const pv = new THREE.Group(); pv.position.set(x, 1.0, 0); body.add(pv);
+    if (girl) { pv.add(mesh(new THREE.CylinderGeometry(0.09, 0.085, 0.55, 10), skin, 0, -0.38, 0)); pv.add(mesh(new THREE.CylinderGeometry(0.095, 0.09, 0.42, 10), shoe, 0, -0.78, 0)); }
+    else pv.add(mesh(new THREE.CylinderGeometry(0.12, 0.11, 0.9, 10), navy, 0, -0.45, 0));
+    const sh = mesh(new THREE.BoxGeometry(0.2, 0.12, 0.34), shoe, 0, -0.95, 0.05); pv.add(sh);
+    pv.add(mesh(new THREE.BoxGeometry(0.21, 0.04, 0.35), sole, 0, -1.0, 0.05));
+    return pv;
+  });
+  // 下身
+  if (girl) { const sk = mesh(new THREE.CylinderGeometry(0.28, 0.42, 0.45, 16), navy, 0, 0.98, 0); body.add(sk); }
+  else body.add(mesh(new THREE.CylinderGeometry(0.29, 0.29, 0.22, 14), navy, 0, 1.0, 0));
+  // 上身
+  const torso = mesh(new THREE.CylinderGeometry(0.3, 0.29, 0.7, 14), shirt, 0, 1.43, 0); body.add(torso);
+  body.add(mesh(new THREE.CylinderGeometry(0.295, 0.3, 0.05, 14), M(0xE5E7EB), 0, 1.1, 0));
+  // 領子、領帶／領結、校徽
+  [-1, 1].forEach(s => { const col = mesh(new THREE.BoxGeometry(0.14, 0.05, 0.12), shirt, s * 0.08, 1.78, 0.2); col.rotation.z = s * -0.4; body.add(col); });
+  if (girl) { body.add(mesh(new THREE.BoxGeometry(0.16, 0.08, 0.05), M(0x15803D), 0, 1.72, 0.29)); }
+  else body.add(mesh(new THREE.BoxGeometry(0.07, 0.3, 0.04), M(0x15803D), 0, 1.6, 0.3));
+  body.add(mesh(new THREE.BoxGeometry(0.08, 0.08, 0.02), M(0x16A34A), 0.15, 1.58, 0.29));
+  // 手
+  const arms = [-1, 1].map(s => {
+    const pv = new THREE.Group(); pv.position.set(s * 0.37, 1.72, 0); body.add(pv);
+    pv.add(mesh(new THREE.CylinderGeometry(0.1, 0.095, 0.3, 10), shirt, 0, -0.14, 0));
+    pv.add(mesh(new THREE.CylinderGeometry(0.075, 0.07, 0.36, 10), skin, 0, -0.45, 0));
+    pv.add(mesh(new THREE.SphereGeometry(0.08, 10, 8), skin, 0, -0.66, 0));
+    pv.rotation.z = s * 0.08; return pv;
+  });
+  // 頭
+  const head = new THREE.Group(); head.position.y = 2.07; body.add(head);
+  body.add(mesh(new THREE.CylinderGeometry(0.09, 0.1, 0.16, 10), skin, 0, 1.84, 0));
+  head.add(mesh(new THREE.SphereGeometry(0.3, 20, 16), skin, 0, 0, 0));
+  [-1, 1].forEach(s => { head.add(mesh(new THREE.SphereGeometry(0.06, 8, 6), skin, s * 0.29, -0.02, 0)); head.add(mesh(new THREE.SphereGeometry(0.035, 8, 6), M(0x111827), s * 0.1, 0.0, 0.27, false)); head.add(mesh(new THREE.CircleGeometry(0.045, 10), M(0xF9A8A8, { transparent: true, opacity: 0.6 }), s * 0.16, -0.08, 0.265, false)); });
+  const mouth = mesh(new THREE.TorusGeometry(0.035, 0.008, 4, 10, Math.PI), M(0x7F1D1D), 0, -0.1, 0.285, false); mouth.rotation.z = Math.PI; head.add(mouth);
+  // 頭髮
+  const cap = mesh(new THREE.SphereGeometry(0.32, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.55), hair, 0, 0.02, -0.01); head.add(cap);
+  const fringe = mesh(new THREE.SphereGeometry(0.315, 16, 8, -Math.PI * 0.42, Math.PI * 0.84, Math.PI * 0.18, Math.PI * 0.2), hair, 0, 0.03, 0.005); head.add(fringe);
+  if (girl) { head.add(mesh(new THREE.BoxGeometry(0.58, 0.55, 0.22), hair, 0, -0.2, -0.16)); if (o.pony) { const pt = mesh(new THREE.CylinderGeometry(0.07, 0.03, 0.4, 8), hair, 0, -0.05, -0.38); pt.rotation.x = 0.5; head.add(pt); } }
+  // 書包
+  if (o.bag) { body.add(mesh(new THREE.BoxGeometry(0.46, 0.5, 0.2), M(o.bag), 0, 1.45, -0.38)); body.add(mesh(new THREE.BoxGeometry(0.36, 0.2, 0.06), M(new THREE.Color(o.bag).multiplyScalar(0.8).getHex()), 0, 1.3, -0.5)); [-0.16, 0.16].forEach(x => body.add(mesh(new THREE.BoxGeometry(0.05, 0.6, 0.05), M(0x334155), x, 1.5, -0.27))); }
+  // 陰影
+  const shTex = window.__shTex || (window.__shTex = canvasTex(64, 64, (x) => { const gr = x.createRadialGradient(32, 32, 2, 32, 32, 30); gr.addColorStop(0, 'rgba(15,23,42,.35)'); gr.addColorStop(1, 'rgba(15,23,42,0)'); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); }));
+  const sh = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 1.4), new THREE.MeshBasicMaterial({ map: shTex, transparent: true, depthWrite: false })); sh.rotation.x = -Math.PI / 2; sh.position.y = 0.06; g.add(sh);
+  g.userData = { legs, arms, body, head, phase: Math.random() * 10 };
+  g.scale.setScalar(o.scale || 1.25);
+  return g;
+}
+function pose(o, moving, run, t) {
+  const u = o.userData, ph = t * (run ? 13 : 9) + u.phase, sw = moving ? (run ? 0.9 : 0.6) : 0;
+  u.legs[0].rotation.x = Math.sin(ph) * sw; u.legs[1].rotation.x = -Math.sin(ph) * sw;
+  u.arms[0].rotation.x = -Math.sin(ph) * sw * 0.9; u.arms[1].rotation.x = Math.sin(ph) * sw * 0.9;
+  u.body.position.y = moving ? Math.abs(Math.sin(ph)) * (run ? 0.12 : 0.06) : Math.sin(t * 2 + u.phase) * 0.01;
+  u.body.rotation.x = run && moving ? 0.15 : 0;
+}
+
+// 玩家
+let player = null;
+const ring = flat(new THREE.RingGeometry(0.75, 1.0, 32), new THREE.MeshBasicMaterial({ color: 0xFACC15, transparent: true, opacity: 0.9 }), 0, 0.08, 0);
+scene.add(ring);
+function makePlayer() {
+  const p = player ? player.position.clone() : new THREE.Vector3(0, 0, 44), r = player ? player.rotation.y : Math.PI;
+  if (player) scene.remove(player);
+  player = student({ gender: state.gender, bag: state.bag, pony: true, hair: HAIR[1], scale: 1.35 });
+  player.position.copy(p); player.rotation.y = r; scene.add(player);
+}
+makePlayer();
+rebuildPlayer = makePlayer;
+
+// NPC 學生
+const npcs = [];
+const WAY = [[0, 50], [0, 34], [-10, 22], [10, 22], [-30, 22], [30, 22], [-55, 22], [55, 14], [-18, 10], [18, 10], [-18, 40], [-30, -24], [-55, -24], [0, 8], [12, 2], [-12, 2]];
+for (let k = 0; k < 12; k++) {
+  const o = student({ gender: k % 2 ? 'girl' : 'boy', skin: SKIN[k % 3], hair: HAIR[k % 3], pony: k % 4 === 1, bag: k % 3 === 0 ? [0x1E3A8A, 0x7F1D1D, 0x14532D][k % 3] : null });
+  const w = WAY[k % WAY.length]; o.position.set(w[0] + Math.random() * 4, 0, w[1] + Math.random() * 4); scene.add(o);
+  npcs.push({ o, kind: 'walk', target: null, wait: Math.random() * 3 });
+}
+// 跑步的學生（操場跑道）
+const lapPt = (u, r) => { // 回傳跑道上的點（u: 0-1）
+  const half = 18 * 0.74, R = r * 0.74, straight = half * 2, arc = Math.PI * R, P = 2 * straight + 2 * arc; let d = u * P;
+  if (d < straight) return [TR.x - half + d, TR.z + R, 1, 0];
+  d -= straight; if (d < arc) { const a = Math.PI / 2 - d / R; return [TR.x + half + Math.cos(a) * R, TR.z + Math.sin(a) * R, 0, 0]; }
+  d -= arc; if (d < straight) return [TR.x + half - d, TR.z - R, -1, 0];
+  d -= straight; const a = -Math.PI / 2 - d / R; return [TR.x - half + Math.cos(a) * R, TR.z + Math.sin(a) * R, 0, 0];
+};
+for (let k = 0; k < 4; k++) { const o = student({ gender: k % 2 ? 'girl' : 'boy', skin: SKIN[k % 3], hair: HAIR[k % 3], pony: true }); scene.add(o); npcs.push({ o, kind: 'run', u: k * 0.23, lane: 17 + k * 1.6, speed: 0.022 + k * 0.004 }); }
+// 打籃球的學生
+const ballM = M(0xEA580C);
+const bball = mesh(new THREE.SphereGeometry(0.2, 14, 12), ballM, 0, 1, 0); scene.add(bball);
+const hoop = new THREE.Vector3(BK.x - 8.5, 3.85, BK.z - 13.3 + 0.45);
+const shooters = [[-11, -6], [-6, -7], [-8.5, -3]].map(([dx, dz], k) => { const o = student({ gender: k === 1 ? 'girl' : 'boy', skin: SKIN[k], hair: HAIR[k] }); o.position.set(BK.x + dx, 0, BK.z + dz); o.lookAt(hoop.x, 0, hoop.z); scene.add(o); return o; });
+let shot = 0;
+anim.push((dt, t) => {
+  shot = (shot + dt / 2.6) % 3; const who = shooters[Math.floor(shot)], f = shot % 1;
+  const hand = new THREE.Vector3(who.position.x, 2.6, who.position.z);
+  if (f < 0.35) { const b = f / 0.35; bball.position.set(hand.x + 0.3, 1.1 + Math.abs(Math.sin(b * Math.PI * 3)) * 1.2, hand.z + 0.3); }
+  else if (f < 0.75) { const b = (f - 0.35) / 0.4; bball.position.lerpVectors(hand, hoop, b); bball.position.y += Math.sin(b * Math.PI) * 3; }
+  else { const b = (f - 0.75) / 0.25; const nx = shooters[(Math.floor(shot) + 1) % 3].position; bball.position.set(THREE.MathUtils.lerp(hoop.x, nx.x, b), 3.85 * (1 - b) + 0.2 + Math.abs(Math.sin(b * Math.PI * 2)) * 1.2 * (1 - b), THREE.MathUtils.lerp(hoop.z, nx.z, b)); }
+  shooters.forEach((o, k) => pose(o, false, false, t));
+  shooters[Math.floor(shot)].userData.arms.forEach(a => (a.rotation.x = f > 0.3 && f < 0.45 ? -2.6 : -0.6));
+});
+// 排球
+const vball = mesh(new THREE.SphereGeometry(0.2, 14, 12), M(0xFDE047), 0, 2, 0); scene.add(vball);
+const vbs = [[-6, -1], [6, 1], [-5, 2.5], [5, -2.5]].map(([dx, dz], k) => { const o = student({ gender: k % 2 ? 'girl' : 'boy', skin: SKIN[k % 3], hair: HAIR[(k + 1) % 3], pony: true }); o.position.set(VB.x + dx, 0, VB.z + dz); o.lookAt(VB.x, 0, o.position.z); scene.add(o); return o; });
+let vt = 0;
+anim.push((dt, t) => {
+  vt = (vt + dt / 1.6) % 4; const i = Math.floor(vt), f = vt % 1; const order = [0, 1, 2, 3], a = vbs[order[i]].position, b = vbs[order[(i + 1) % 4]].position;
+  vball.position.set(THREE.MathUtils.lerp(a.x, b.x, f), 2.2 + Math.sin(f * Math.PI) * 4.5, THREE.MathUtils.lerp(a.z, b.z, f));
+  vbs.forEach((o, k) => { pose(o, false, false, t); o.userData.arms.forEach(r => (r.rotation.x = k === order[i] && f < 0.2 ? -2.4 : -0.9)); });
+});
+
+// ===================== 標籤 =====================
+const labels = $('#labels');
+const plabels = STATIONS.map(s => {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'plabel glass';
+  b.innerHTML = `<span class="no" style="background:${s.c}">${s.no}</span><span><b>${s.emoji} ${s.name}</b><small>${s.topic}</small></span>`;
+  b.setAttribute('aria-label', `前往第 ${s.no} 站 ${s.name}：${s.topic}`);
+  b.addEventListener('click', () => goTo(s.id)); labels.appendChild(b); return { el: b, s };
+});
+window.__labels = plabels; refreshProgress();
+const meTag = document.createElement('div'); meTag.className = 'ptag'; meTag.textContent = '⭐ 你'; labels.appendChild(meTag);
+
+// ===================== 視角（360° 旋轉 + 縮放） =====================
+let mode = 'follow';
+const cam = { yaw: 0, pitch: 0.62, dist: narrow() ? 46 : 38 };
+const over = { yaw: 0.95, pitch: 0.5, dist: narrow() ? 260 : 200 };
+const C = () => (mode === 'follow' ? cam : over);
+const camTarget = new THREE.Vector3(0, 2, 40);
+camera.position.set(80, 120, 220);
+function zoom(f) { const c = C(); c.dist = THREE.MathUtils.clamp(c.dist * f, mode === 'follow' ? 10 : 60, mode === 'follow' ? 140 : 420); }
+function rotate(a) { C().yaw += a; }
+$('#c-in').addEventListener('click', () => zoom(0.8)); $('#c-out').addEventListener('click', () => zoom(1.25));
+$('#c-left').addEventListener('click', () => rotate(Math.PI / 4)); $('#c-right').addEventListener('click', () => rotate(-Math.PI / 4));
+
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+const cvs = renderer.domElement;
+const ptrs = new Map(); let pinch0 = 0, dragMoved = false, downPos = null;
+cvs.addEventListener('pointerdown', e => { cvs.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (ptrs.size === 1) { dragMoved = false; downPos = { x: e.clientX, y: e.clientY }; } if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch0 = Math.hypot(a.x - b.x, a.y - b.y); dragMoved = true; } });
+cvs.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) return;
+  const prev = ptrs.get(e.pointerId); const dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+  ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch0) zoom(pinch0 / d); pinch0 = d; return; }
+  if (!dragMoved && downPos && Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y) > 6) dragMoved = true;
+  if (dragMoved) { const c = C(); c.yaw -= dx * 0.006; c.pitch = THREE.MathUtils.clamp(c.pitch + dy * 0.005, 0.12, 1.45); }
+});
+const ptrUp = e => {
+  if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch0 = 0;
+  if (ptrs.size === 0 && !dragMoved && e.type === 'pointerup') clickAt(e.clientX, e.clientY);
+};
+cvs.addEventListener('pointerup', ptrUp); cvs.addEventListener('pointercancel', ptrUp);
+cvs.addEventListener('wheel', e => { e.preventDefault(); zoom(e.deltaY > 0 ? 1.12 : 0.89); }, { passive: false });
+const pickables = []; scene.traverse(o => { if (o.isMesh && o.userData.st) pickables.push(o); });
+const ground = scene.children.find(o => o.isMesh && o.geometry.parameters && o.geometry.parameters.width === CW);
+function clickAt(x, y) {
+  ndc.set(x / innerWidth * 2 - 1, -(y / innerHeight) * 2 + 1); ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObjects(pickables, false)[0];
+  if (hit) return goTo(hit.object.userData.st);
+  const gh = ray.intersectObject(ground)[0];
+  if (gh) { const p = gh.point; const st = STATIONS.find(s => ['track', 'basket', 'volley'].includes(s.id) && LOC[s.id].pos.distanceTo(new THREE.Vector3(p.x, 0, p.z)) < (s.id === 'track' ? 16 : 9)); if (st) return goTo(st.id); walkTo(p.x, p.z, null); }
+}
+
+// ===================== 移動 =====================
+const keys = new Set();
+addEventListener('keydown', e => {
+  if (panel.open || !$('#intro').hidden || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+  const k = e.key.toLowerCase();
+  if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) { keys.add(k); route = []; moveTarget = null; e.preventDefault(); }
+  if (k === 'enter' && nearSt) openPanel(nearSt.id);
+  if (k === 'q') rotate(0.3); if (k === 'e') rotate(-0.3);
+});
+addEventListener('keyup', e => keys.delete(e.key.toLowerCase()));
+addEventListener('blur', () => keys.clear());
+const joy = $('#joy'), knob = joy.querySelector('.knob'), joyV = new THREE.Vector2(); let joyId = null;
+joy.addEventListener('pointerdown', e => { joyId = e.pointerId; joy.setPointerCapture(e.pointerId); joy.classList.add('active'); route = []; moveTarget = null; joyMove(e); });
+joy.addEventListener('pointermove', e => { if (e.pointerId === joyId) joyMove(e); });
+const joyEnd = e => { if (e.pointerId !== joyId) return; joyId = null; joyV.set(0, 0); knob.style.transform = ''; joy.classList.remove('active'); };
+joy.addEventListener('pointerup', joyEnd); joy.addEventListener('pointercancel', joyEnd);
+function joyMove(e) { const r = joy.getBoundingClientRect(), max = r.width * 0.32; let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2); const d = Math.hypot(dx, dy); if (d > max) { dx *= max / d; dy *= max / d; } knob.style.transform = `translate(${dx}px,${dy}px)`; joyV.set(dx / max, -dy / max); }
+
+const marker = flat(new THREE.RingGeometry(0.9, 1.3, 28), new THREE.MeshBasicMaterial({ color: 0x22C55E, transparent: true, opacity: 0.9 }), 0, 0.1, 0); marker.visible = false; scene.add(marker);
+let moveTarget = null, onArrive = null, route = [];
+// 走道節點：用來繞過建築
+const NODES = [[0, 58], [0, 40], [0, 22], [-18, 22], [18, 22], [-40, 22], [-60, 22], [40, 22], [60, 22], [-18, 2], [18, 2], [-18, 38], [-24, 38], [-22, -24], [-48, -24], [-6, 4], [40, -14], [36, 30], [36, 56], [70, 0], [-70, 0], [-70, -50], [70, 50], [0, -30], [20, -30]].map(([x, z]) => new THREE.Vector2(x, z));
+const segBlocked = (a, b) => { for (let t = 0.05; t < 1; t += 0.05) { const x = a.x + (b.x - a.x) * t, z = a.y + (b.y - a.y) * t; if (solids.some(r => x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1)) return true; } return false; };
+function findPath(from, to) {
+  if (!segBlocked(from, to)) return [to];
+  const all = [from, ...NODES, to], n = all.length, dist = Array(n).fill(Infinity), prev = Array(n).fill(-1), done = Array(n).fill(false); dist[0] = 0;
+  for (let it = 0; it < n; it++) { let u = -1; for (let i = 0; i < n; i++) if (!done[i] && (u < 0 || dist[i] < dist[u])) u = i; if (u < 0 || dist[u] === Infinity) break; done[u] = true; if (u === n - 1) break;
+    for (let v = 0; v < n; v++) if (!done[v] && v !== u) { const d = all[u].distanceTo(all[v]); if (dist[u] + d < dist[v] && !segBlocked(all[u], all[v])) { dist[v] = dist[u] + d; prev[v] = u; } } }
+  if (prev[n - 1] < 0) return [to];
+  const path = []; for (let v = n - 1; v > 0; v = prev[v]) path.unshift(all[v]); return path;
+}
+function walkTo(x, z, cb) {
+  const p = findPath(new THREE.Vector2(player.position.x, player.position.z), new THREE.Vector2(x, z));
+  route = p.map(v => new THREE.Vector3(v.x, 0, v.y)); moveTarget = route.shift(); onArrive = cb;
+  marker.position.set(x, 0.1, z); marker.visible = true;
+}
+goTo = id => {
+  const d = LOC[id].door;
+  if (player.position.distanceTo(d) < 2.5) return openPanel(id);
+  walkTo(d.x, d.z, () => openPanel(id));
+  toast(`前往第 ${byId[id].no} 站：${byId[id].name}`);
+};
+function collide(p) {
+  p.x = THREE.MathUtils.clamp(p.x, -CW / 2 + 1.5, CW / 2 - 1.5); p.z = THREE.MathUtils.clamp(p.z, -CD / 2 + 1.5, CD / 2 + 6);
+  if (p.z > CD / 2 - 1.5 && Math.abs(p.x) > 8) p.z = CD / 2 - 1.5;
+  solids.forEach(r => { if (p.x > r.x0 && p.x < r.x1 && p.z > r.z0 && p.z < r.z1) { const d = [p.x - r.x0, r.x1 - p.x, p.z - r.z0, r.z1 - p.z], m = Math.min(...d); if (m === d[0]) p.x = r.x0; else if (m === d[1]) p.x = r.x1; else if (m === d[2]) p.z = r.z0; else p.z = r.z1; } });
+}
+
+// 視角模式
+$('#t-view').addEventListener('click', e => { mode = mode === 'follow' ? 'overview' : 'follow'; const b = e.currentTarget; b.setAttribute('aria-pressed', mode === 'overview'); b.innerHTML = mode === 'overview' ? '🚶<span class="t">跟隨</span>' : '🗺️<span class="t">全景</span>'; });
+let night = false;
+$('#t-night').addEventListener('click', e => {
+  night = !night; const b = e.currentTarget; b.setAttribute('aria-pressed', night); b.innerHTML = night ? '☀️<span class="t">白天</span>' : '🌙<span class="t">夜晚</span>';
+  paintSky(night); scene.fog.color.set(night ? NIGHT.fog : DAY.fog);
+  hemi.intensity = night ? 0.3 : 0.55; hemi.color.set(night ? 0x8EA0E8 : 0xffffff);
+  sun.intensity = night ? 0.18 : 0.72; sun.color.set(night ? 0x9FB0FF : 0xFFF3DD);
+  winLit.forEach(m => (m.emissiveIntensity = night ? 0.95 : 0)); lampMat.emissiveIntensity = night ? 1.5 : 0.1;
+  lampLights.forEach(L => (L.intensity = night ? 1.8 : 0)); stars.material.opacity = night ? 0.9 : 0; cloudMat.opacity = night ? 0.25 : 0.92;
+});
+
+// ===================== 平面圖 =====================
+const mini = $('#mini-c'), mx = mini.getContext('2d'), MW = mini.width, MH = mini.height, MS = Math.min(MW / (CW + 8), MH / (CD + 8));
+const toM = (x, z) => [MW / 2 + x * MS, MH / 2 + z * MS];
+function drawMini() {
+  mx.fillStyle = night ? '#1E293B' : '#A7D08A'; mx.fillRect(0, 0, MW, MH);
+  mx.fillStyle = night ? '#334155' : '#8CC36A'; mx.fillRect(...toM(-CW / 2, -CD / 2), CW * MS, CD * MS);
+  mx.fillStyle = '#E7E2D6';
+  [[10, 62, 0, 40], [150, 8, 0, 22], [8, 40, -18, 2], [8, 40, 18, 2], [60, 7, -40, -24], [8, 22, -18, 36]].forEach(([w, d, x, z]) => mx.fillRect(...toM(x - w / 2, z - d / 2), w * MS, d * MS));
+  mx.fillStyle = '#C6573F'; mx.beginPath(); mx.ellipse(...toM(TR.x, TR.z), 31 * MS, 17.8 * MS, 0, 0, 7); mx.fill();
+  mx.fillStyle = '#5DAA4A'; mx.beginPath(); mx.ellipse(...toM(TR.x, TR.z), 25 * MS, 11.8 * MS, 0, 0, 7); mx.fill();
+  mx.fillStyle = '#D9824A'; mx.fillRect(...toM(BK.x - 17, BK.z - 14.5), 34 * MS, 29 * MS);
+  mx.fillStyle = '#E58C4B'; mx.fillRect(...toM(VB.x - 9, VB.z - 4.5), 18 * MS, 9 * MS);
+  mx.fillStyle = '#94A3B8'; solids.forEach(r => mx.fillRect(...toM(r.x0 + 0.8, r.z0 + 0.8), (r.x1 - r.x0 - 1.6) * MS, (r.z1 - r.z0 - 1.6) * MS));
+  mx.font = 'bold 18px sans-serif'; mx.textAlign = 'center'; mx.textBaseline = 'middle';
+  STATIONS.forEach(s => { const [x, y] = toM(LOC[s.id].pos.x, LOC[s.id].pos.z); mx.fillStyle = s.c; mx.beginPath(); mx.arc(x, y, 13, 0, 7); mx.fill(); mx.strokeStyle = state.visited.includes(s.id) ? '#FACC15' : '#fff'; mx.lineWidth = 3; mx.stroke(); mx.fillStyle = '#fff'; mx.fillText(s.no, x, y + 1); });
+  const [px, py] = toM(player.position.x, player.position.z);
+  mx.save(); mx.translate(px, py); mx.rotate(-C().yaw); mx.fillStyle = '#FACC15'; mx.strokeStyle = '#1E293B'; mx.lineWidth = 3; mx.beginPath(); mx.moveTo(0, -13); mx.lineTo(9, 9); mx.lineTo(0, 4); mx.lineTo(-9, 9); mx.closePath(); mx.fill(); mx.stroke(); mx.restore();
+}
+mini.addEventListener('click', e => {
+  const r = mini.getBoundingClientRect(); const x = ((e.clientX - r.left) / r.width * MW - MW / 2) / MS, z = ((e.clientY - r.top) / r.height * MH - MH / 2) / MS;
+  const st = STATIONS.find(s => LOC[s.id].pos.distanceTo(new THREE.Vector3(x, 0, z)) < 10); if (st) return goTo(st.id);
+  walkTo(x, z, null);
+});
+
+// ===================== 迴圈 =====================
+const clock = new THREE.Clock(); const v3 = new THREE.Vector3();
+let nearSt = null, miniTick = 0;
+$('#near-go').addEventListener('click', () => nearSt && openPanel(nearSt.id));
+function project(p, yOff, el, dy = 0) {
+  v3.set(p.x, p.y + yOff, p.z).project(camera);
+  if (v3.z > 1 || v3.z < -1 || Math.abs(v3.x) > 1.3 || Math.abs(v3.y) > 1.3) { el.style.display = 'none'; return; }
+  el.style.display = ''; el.style.transform = `translate(${(v3.x + 1) / 2 * innerWidth - el.offsetWidth / 2}px, ${(1 - v3.y) / 2 * innerHeight - el.offsetHeight - dy}px)`;
+}
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  anim.forEach(f => f(dt, t));
+  // 玩家
+  const yaw = C().yaw, fwd = new THREE.Vector2(-Math.sin(yaw), -Math.cos(yaw)), right = new THREE.Vector2(Math.cos(yaw), -Math.sin(yaw));
+  let ix = joyV.x, iy = joyV.y;
+  if (keys.has('w') || keys.has('arrowup')) iy += 1; if (keys.has('s') || keys.has('arrowdown')) iy -= 1;
+  if (keys.has('a') || keys.has('arrowleft')) ix -= 1; if (keys.has('d') || keys.has('arrowright')) ix += 1;
+  const dir = new THREE.Vector2();
+  if (ix || iy) { dir.addScaledVector(fwd, iy).addScaledVector(right, ix); if (dir.length() > 1) dir.normalize(); moveTarget = null; route = []; marker.visible = false; }
+  else if (moveTarget) { const dx = moveTarget.x - player.position.x, dz = moveTarget.z - player.position.z, d = Math.hypot(dx, dz);
+    if (d < 0.6) { if (route.length) moveTarget = route.shift(); else { moveTarget = null; marker.visible = false; const cb = onArrive; onArrive = null; cb && cb(); } } else dir.set(dx / d, dz / d); }
+  const moving = dir.lengthSq() > 1e-4, speed = 15;
+  if (moving) { player.position.x += dir.x * speed * dt; player.position.z += dir.y * speed * dt; collide(player.position); const ta = Math.atan2(dir.x, dir.y); let da = ta - player.rotation.y; da = Math.atan2(Math.sin(da), Math.cos(da)); player.rotation.y += da * Math.min(1, dt * 12); }
+  pose(player, moving, moving && dir.length() > 0.7, t);
+  ring.position.set(player.position.x, 0.08, player.position.z); ring.scale.setScalar(1 + Math.sin(t * 5) * 0.08);
+  marker.scale.setScalar(1 + Math.sin(t * 6) * 0.15);
+  // NPC
+  npcs.forEach(n => {
+    const o = n.o;
+    if (n.kind === 'run') { n.u = (n.u + n.speed * dt) % 1; const [x, z] = lapPt(n.u, n.lane); const [x2, z2] = lapPt((n.u + 0.002) % 1, n.lane); o.position.set(x, 0, z); o.rotation.y = Math.atan2(x2 - x, z2 - z); pose(o, true, true, t); return; }
+    if (!n.target) { n.wait -= dt; if (n.wait <= 0) { const w = WAY[Math.floor(Math.random() * WAY.length)]; n.target = new THREE.Vector2(w[0] + (Math.random() - 0.5) * 4, w[1] + (Math.random() - 0.5) * 4); n.path = findPath(new THREE.Vector2(o.position.x, o.position.z), n.target); } }
+    let mv = false;
+    if (n.target) { const tg = n.path[0]; const dx = tg.x - o.position.x, dz = tg.y - o.position.z, d = Math.hypot(dx, dz);
+      if (d < 0.5) { n.path.shift(); if (!n.path.length) { n.target = null; n.wait = 2 + Math.random() * 5; } }
+      else { o.position.x += dx / d * 4 * dt; o.position.z += dz / d * 4 * dt; collide(o.position); o.rotation.y = Math.atan2(dx, dz); mv = true; } }
+    pose(o, mv, false, t);
+  });
+  // 靠近學習站
+  let best = null, bd = 7;
+  STATIONS.forEach(s => { const d = player.position.distanceTo(LOC[s.id].door); if (d < bd) { bd = d; best = s; } });
+  if (best !== nearSt) { nearSt = best; const nb = $('#near'); if (best) { $('#near-t').textContent = `${best.no}. ${best.emoji} ${best.name}・${best.topic}`; nb.style.setProperty('--c', best.c); nb.classList.add('show'); } else nb.classList.remove('show'); }
+  // 相機
+  const c = C(), k = reduceMotion ? 1 : 1 - Math.exp(-dt * 4);
+  const tgt = mode === 'follow' ? v3.set(player.position.x, 3, player.position.z).clone() : new THREE.Vector3(0, 0, 0);
+  camTarget.lerp(tgt, k);
+  const desired = new THREE.Vector3(camTarget.x + Math.sin(c.yaw) * Math.cos(c.pitch) * c.dist, camTarget.y + Math.sin(c.pitch) * c.dist, camTarget.z + Math.cos(c.yaw) * Math.cos(c.pitch) * c.dist);
+  camera.position.lerp(desired, k); camera.lookAt(camTarget);
+  renderer.render(scene, camera);
+  plabels.forEach(({ el, s }) => project(LOC[s.id].pos, LOC[s.id].h, el));
+  project(player.position, 4.2, meTag);
+  if ((miniTick = (miniTick + 1) % 3) === 0) drawMini();
+  requestAnimationFrame(frame);
+}
+addEventListener('resize', () => { camera.fov = narrow() ? 58 : 45; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+requestAnimationFrame(frame);
+}
+})();
+</script>
+</body>
+</html>
