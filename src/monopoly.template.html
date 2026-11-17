@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>四維自學大富翁</title>
+<meta name="description" content="花蓮縣私立四維高級中學 圖書資訊中心｜擲骰子、選修主題、寫紀錄、拿成果：用大富翁玩懂自主學習。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<!-- 3D 引擎：three.js（MIT License） -->
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #3B3553; --ink2: #5E5878; --muted: #9089A8; --line: #ECE6F5;
+    --pink: #FF7EB6; --yellow: #FFC23D; --blue: #4FA8F5; --mint: #3DD6B5; --purple: #A78BFA;
+    --card: rgba(255,255,255,.88); --shadow: 0 8px 24px rgba(91,75,140,.16);
+    --round: 'Huninn', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    --sans: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; font-family: var(--sans); color: var(--ink); background: #FBEFFA; }
+  button { font: inherit; cursor: pointer; color: inherit; }
+  #bg { position: fixed; inset: 0; background: radial-gradient(circle at 18% 20%, #FFE3F1 0, transparent 40%), radial-gradient(circle at 85% 15%, #E3F0FF 0, transparent 42%), radial-gradient(circle at 70% 90%, #E9E2FF 0, transparent 45%), radial-gradient(circle at 10% 90%, #FFF3D6 0, transparent 40%), linear-gradient(160deg, #FDF0FA, #EEF1FF); }
+  #scene { position: fixed; inset: 0; touch-action: none; }
+  #scene canvas { display: block; width: 100%; height: 100%; outline: none; cursor: grab; }
+  .glass { background: var(--card); border: 1.5px solid rgba(255,255,255,.95); box-shadow: var(--shadow); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+
+  #brand { position: fixed; left: 16px; top: 14px; z-index: 20; border-radius: 18px; padding: 10px 16px; }
+  #brand h1 { margin: 0; font-family: var(--round); font-weight: 400; font-size: clamp(18px, 2.2vw, 24px); background: linear-gradient(90deg, #FF7EB6, #A78BFA 55%, #4FA8F5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #brand .chip { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: #FFF6D6; color: #A86B00; border: 1.5px solid #FFD970; }
+
+  #tools { position: fixed; right: 14px; top: 14px; z-index: 20; display: grid; grid-template-columns: repeat(2, auto); gap: 6px; }
+  .tb { height: 34px; padding: 0 12px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,.95); background: var(--card); box-shadow: 0 4px 12px rgba(91,75,140,.12); font-size: 12.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .tb:hover { background: #fff; }
+  .tb.on { background: #F3EAFF; color: #6D4BD8; border-color: #D9C8FF; }
+  .tb.hot { background: linear-gradient(135deg, #FF9EC7, #C59BFF); color: #fff; border-color: transparent; }
+  #zoom { position: fixed; right: 16px; top: 168px; z-index: 20; display: flex; gap: 6px; }
+  #zoom .tb { width: 34px; padding: 0; justify-content: center; font-size: 18px; border-radius: 50%; }
+
+  #players { position: fixed; z-index: 20; inset: 0; pointer-events: none; }
+  .pcard { position: absolute; width: 214px; border-radius: 18px; padding: 10px 12px 10px; pointer-events: auto; transition: transform .25s, box-shadow .25s; }
+  .pcard.p0 { left: 14px; top: 34%; } .pcard.p1 { right: 14px; top: 34%; } .pcard.p2 { left: 14px; top: calc(34% + 150px); } .pcard.p3 { right: 14px; top: calc(34% + 150px); }
+  .pcard.turn { box-shadow: 0 0 0 3px var(--pc), 0 10px 26px rgba(91,75,140,.25); transform: scale(1.04); }
+  .pcard.out { opacity: .45; filter: grayscale(.7); }
+  .pcard .tag { position: absolute; top: -11px; left: 14px; font-size: 11.5px; font-weight: 900; padding: 1px 10px; border-radius: 999px; background: var(--pc); color: #fff; display: none; }
+  .pcard.turn .tag { display: block; }
+  .pcard .row { display: flex; align-items: center; gap: 10px; }
+  .pcard .av { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; background: #fff; box-shadow: 0 0 0 3px var(--pc); flex: 0 0 auto; }
+  .pcard .nm { font-size: 13px; font-weight: 700; color: var(--ink2); display: flex; align-items: center; gap: 5px; }
+  .pcard .nm i { width: 8px; height: 8px; border-radius: 50%; background: var(--pc); display: inline-block; }
+  .pcard .money { font-size: 21px; font-weight: 900; line-height: 1.15; }
+  .pcard .money small { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .pcard .sub { font-size: 11.5px; color: var(--muted); }
+  .pcard .chips { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 6px; }
+  .pcard .chips span { width: 13px; height: 13px; border-radius: 4px; font-size: 8px; color: #fff; display: grid; place-items: center; font-weight: 900; }
+  .pcard .st { font-size: 11.5px; font-weight: 700; color: #E0457B; margin-top: 4px; }
+
+  #dock { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  #turnTxt { font-size: 13.5px; font-weight: 700; padding: 6px 16px; border-radius: 999px; }
+  #rollBtn { border: 0; font-family: var(--round); font-size: 20px; padding: 13px 42px; border-radius: 999px; background: linear-gradient(180deg, #FFD95A, #FFB81C); color: #6B4300; box-shadow: 0 6px 0 #E09A00, 0 12px 24px rgba(224,154,0,.35); }
+  #rollBtn:hover { filter: brightness(1.04); }
+  #rollBtn:active { transform: translateY(4px); box-shadow: 0 2px 0 #E09A00; }
+  #rollBtn:disabled { filter: grayscale(.6) brightness(1.05); opacity: .7; cursor: default; transform: none; box-shadow: 0 4px 0 #C9B07A; }
+  #rollBtn.pulse:not(:disabled) { animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { transform: scale(1.06); } }
+  #credit { font-size: 10.5px; color: var(--muted); }
+
+  #log { position: fixed; left: 14px; bottom: 14px; z-index: 20; width: 260px; max-height: 168px; overflow: hidden; border-radius: 16px; padding: 8px 12px; font-size: 12.5px; }
+  #log b { display: block; font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+  #log div { padding: 2px 0; border-bottom: 1px dashed var(--line); line-height: 1.45; }
+  #log div:last-child { border: 0; }
+  #menuBtns { position: fixed; right: 14px; bottom: 14px; z-index: 20; display: grid; grid-template-columns: repeat(2, auto); gap: 6px; }
+
+  #toast { position: fixed; left: 50%; top: 80px; transform: translateX(-50%) translateY(-16px); opacity: 0; z-index: 60; background: #3B3553; color: #fff; font-weight: 700; padding: 10px 18px; border-radius: 999px; transition: all .25s; pointer-events: none; white-space: nowrap; box-shadow: var(--shadow); }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .float { position: fixed; z-index: 30; font-weight: 900; font-size: 20px; pointer-events: none; text-shadow: 0 2px 0 #fff, 0 0 10px #fff; animation: up 1.4s ease-out forwards; }
+  @keyframes up { to { transform: translateY(-60px); opacity: 0; } }
+
+  /* 對話框 */
+  dialog { border: 0; padding: 0; background: transparent; overflow: visible; max-width: calc(100vw - 20px); }
+  dialog::backdrop { background: rgba(59,53,83,.28); backdrop-filter: blur(2px); }
+  .dc { width: min(440px, calc(100vw - 24px)); border-radius: 26px; background: #fff; box-shadow: 0 24px 60px rgba(59,53,83,.3); overflow: hidden; animation: pop .28s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes pop { from { transform: scale(.8) translateY(20px); opacity: 0; } }
+  .dh { padding: 18px 20px 14px; background: var(--dc, #F3EAFF); display: flex; gap: 12px; align-items: center; }
+  .dh .ic { width: 54px; height: 54px; border-radius: 16px; background: #fff; display: grid; place-items: center; font-size: 30px; flex: 0 0 auto; box-shadow: 0 3px 0 rgba(0,0,0,.06); }
+  .dh small { font-size: 12px; font-weight: 900; color: var(--di, #6D4BD8); letter-spacing: .5px; }
+  .dh h2 { margin: 2px 0 0; font-family: var(--round); font-weight: 400; font-size: 22px; line-height: 1.25; }
+  .db { padding: 14px 20px 6px; font-size: 14.5px; line-height: 1.75; color: var(--ink2); max-height: 52vh; overflow-y: auto; }
+  .db .tip { background: #F8F5FF; border-radius: 14px; padding: 8px 12px; margin-top: 10px; font-size: 13.5px; }
+  .db table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  .db td { padding: 4px 6px; border-bottom: 1px dashed var(--line); }
+  .db td:last-child { text-align: right; font-weight: 700; }
+  .db .opts { display: grid; gap: 8px; margin-top: 10px; }
+  .df { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; padding: 12px 20px 18px; }
+  .df .b { border: 0; border-radius: 999px; padding: 10px 20px; font-weight: 900; font-size: 14.5px; background: #F1EDF8; color: var(--ink2); }
+  .df .b.main { background: var(--dbtn, #8B6CF0); color: #fff; box-shadow: 0 3px 0 rgba(0,0,0,.12); }
+  .df.col { flex-direction: column; } .df.col .b { text-align: left; border-radius: 14px; }
+  .bot { font-size: 12px; color: var(--muted); padding: 0 20px 14px; text-align: right; }
+  .card3d { margin: 4px auto 0; width: 220px; border-radius: 18px; padding: 16px; text-align: center; color: #fff; font-weight: 700; font-size: 15px; line-height: 1.6; animation: flip .6s ease; }
+  @keyframes flip { from { transform: rotateY(90deg); } }
+
+  /* 開場設定 */
+  #setup { position: fixed; inset: 0; z-index: 50; display: grid; padding: 16px; background: rgba(251,239,250,.55); backdrop-filter: blur(4px); overflow-y: auto; }
+  #setup[hidden] { display: none; }
+  .sc { margin: auto; width: min(760px, 100%); border-radius: 30px; padding: 26px 24px 22px; background: #fff; box-shadow: 0 24px 60px rgba(91,75,140,.25); }
+  .sc h2 { margin: 0; font-family: var(--round); font-weight: 400; font-size: clamp(26px, 4.5vw, 38px); background: linear-gradient(90deg, #FF7EB6, #A78BFA 55%, #4FA8F5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sc .lead { color: var(--ink2); margin: 6px 0 16px; line-height: 1.8; }
+  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 8px; margin-bottom: 16px; }
+  .how div { background: #FBF8FF; border: 1.5px solid var(--line); border-radius: 16px; padding: 10px 12px; font-size: 13px; color: var(--ink2); }
+  .how b { display: block; font-size: 14px; color: var(--ink); }
+  .slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 10px; margin-bottom: 14px; }
+  .slot { border: 2px solid var(--line); border-radius: 18px; padding: 10px; display: grid; gap: 6px; }
+  .slot.off { opacity: .45; }
+  .slot .top { display: flex; gap: 8px; align-items: center; }
+  .slot .av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; background: #fff; box-shadow: 0 0 0 3px var(--pc); border: 0; flex: 0 0 auto; }
+  .slot input { width: 100%; border: 1.5px solid var(--line); border-radius: 10px; padding: 6px 8px; font: inherit; font-size: 14px; }
+  .slot .seg { display: flex; gap: 4px; }
+  .slot .seg button { flex: 1; border: 1.5px solid var(--line); background: #fff; border-radius: 10px; padding: 5px 0; font-size: 12.5px; font-weight: 700; }
+  .slot .seg button.on { background: var(--pc); color: #fff; border-color: transparent; }
+  .opts2 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; font-size: 14px; font-weight: 700; }
+  .opts2 button { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 14px; font-weight: 700; }
+  .opts2 button.on { background: #8B6CF0; color: #fff; border-color: transparent; }
+  .go { border: 0; font-family: var(--round); font-size: 20px; padding: 13px 34px; border-radius: 999px; background: linear-gradient(180deg, #FFD95A, #FFB81C); color: #6B4300; box-shadow: 0 6px 0 #E09A00; }
+  .go.alt { background: #fff; box-shadow: 0 6px 0 var(--line); color: var(--ink2); border: 1.5px solid var(--line); font-size: 17px; }
+  .gos { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 70; overflow: hidden; }
+  .confetti i { position: absolute; top: -20px; width: 10px; height: 14px; border-radius: 2px; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+  @media (max-width: 760px) {
+    #brand { left: 8px; top: 8px; padding: 6px 10px; border-radius: 14px; } #brand h1 { font-size: 16px; } #brand .chip { font-size: 11px; }
+    #tools { right: 8px; top: 10px; grid-template-columns: repeat(6, auto); gap: 3px; } .tb { height: 30px; padding: 0 8px; font-size: 11px; } .tb .t { display: none; }
+    #zoom { top: auto; bottom: 150px; right: 8px; flex-direction: column; }
+    .pcard { width: calc(50vw - 12px); padding: 6px 8px; border-radius: 14px; }
+    .pcard.p0 { left: 8px; top: 80px; } .pcard.p1 { right: 8px; top: 80px; left: auto; } .pcard.p2 { left: 8px; top: 140px; } .pcard.p3 { right: 8px; top: 140px; }
+    .pcard .av { width: 32px; height: 32px; font-size: 18px; } .pcard .money { font-size: 16px; } .pcard .sub, .pcard .chips { display: none; } .pcard .nm { font-size: 11.5px; }
+    #log { display: none; } #menuBtns { bottom: 8px; right: 8px; grid-template-columns: 1fr; } #menuBtns .tb { height: 28px; }
+    #dock { bottom: 12px; } #rollBtn { font-size: 18px; padding: 11px 32px; } #turnTxt { font-size: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="scene" aria-label="3D 大富翁棋盤：拖曳旋轉、滾輪或雙指縮放、點格子看說明"></div>
+
+<header id="brand" class="glass"><h1>四維自學大富翁</h1><div><span class="chip" id="roundChip">第 1 回合</span></div></header>
+<nav id="tools" aria-label="工具">
+  <button class="tb" id="bFull">⛶<span class="t"> 全螢幕</span></button>
+  <button class="tb" id="bSfx">🔊<span class="t"> 音效：開</span></button>
+  <button class="tb" id="bBgm">🎵<span class="t"> BGM：關</span></button>
+  <button class="tb" id="bReset">🎥<span class="t"> 重設視角</span></button>
+  <button class="tb" id="bSpin">🔄<span class="t"> 旋轉模式</span></button>
+  <button class="tb hot" id="bFollow">📌<span class="t"> 視角跟隨</span></button>
+</nav>
+<div id="zoom"><button class="tb" id="zIn" aria-label="放大">＋</button><button class="tb" id="zOut" aria-label="縮小">－</button></div>
+<div id="players"></div>
+<div id="dock">
+  <div id="turnTxt" class="glass">準備開始</div>
+  <button id="rollBtn" disabled>🎲 擲骰子</button>
+  <div id="credit">四維高中圖書資訊中心・自主學習推廣</div>
+</div>
+<div id="log" class="glass"><b>📜 遊戲紀錄</b><div id="logList"></div></div>
+<div id="menuBtns">
+  <button class="tb" id="bRules">📖 規則說明</button>
+  <button class="tb" id="bLegend">🌱 升級說明</button>
+  <button class="tb" id="bNew">🔁 重新開始</button>
+  <button class="tb" id="bEnd">🏁 結算遊戲</button>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div id="setup">
+  <div class="sc">
+    <h2>四維自學大富翁 🎲</h2>
+    <p class="lead">擲骰子走遍校園，<b>選修</b>你有興趣的自學主題，一路<b>寫紀錄、產出成果、上台發表</b>！<br>同學走到你的主題，要向你「請教」並支付交流能量。遊戲結束時，總能量最高的人就是本局的<b>自學大師</b>。</p>
+    <div class="how">
+      <div><b>🎲 擲骰前進</b>經過「起點」可領 200 學習能量</div>
+      <div><b>📗 選修主題</b>花能量買下主題，再回來就能升級</div>
+      <div><b>🌱 四個階段</b>擬定計畫 → 每週紀錄 → 產出成果 → 成果發表</div>
+      <div><b>💡 卡片與測驗</b>靈感卡、反思卡、自學小測驗，答對有獎勵</div>
+    </div>
+    <div class="slots" id="slots"></div>
+    <div class="opts2">遊戲回合：<span id="roundOpts"></span></div>
+    <div class="gos"><button class="go" id="start">開始遊戲 →</button><button class="go alt" id="resume" hidden>繼續上一局</button></div>
+  </div>
+</div>
+
+<dialog id="dlg"><div class="dc" id="dc"></div></dialog>
+
+<script>__THREE_JS__</script>
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const rnd = n => Math.floor(Math.random() * n);
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FONT = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif', RFONT = '"Huninn","Noto Sans TC",sans-serif';
+
+// ===================== 遊戲資料 =====================
+const GROUPS = {
+  nat: { name: '自然科普', c: '#5FCB6B' }, hum: { name: '人文社會', c: '#FFA94D' }, art: { name: '藝術創作', c: '#FF7EB6' }, lang: { name: '語言溝通', c: '#3FB6F0' },
+  tech: { name: '科技程式', c: '#7C83FF' }, life: { name: '生活技能', c: '#FFC93D' }, sport: { name: '運動健康', c: '#FF7A59' }, media: { name: '影音創作', c: '#B678F5' }
+};
+const T = (t, name, extra = {}) => Object.assign({ t, name }, extra);
+const TILES = [
+  T('start', '起點', { icon: '🚩', sub: '擬定新計畫', desc: '每經過一次，領取 200 學習能量。新的一圈，就是新的計畫！' }),
+  T('topic', '植物觀察日記', { g: 'nat', price: 60, tip: '每週固定拍照記錄同一株植物，比較生長變化，最後做成觀察圖鑑。' }),
+  T('chance', '靈感卡', { icon: '💡' }),
+  T('topic', '海洋塑膠調查', { g: 'nat', price: 80, tip: '到海邊撿拾並分類塑膠垃圾，用圖表呈現數據，提出減塑建議。' }),
+  T('quiz', '自學小測驗', { icon: '❓' }),
+  T('topic', '花蓮小吃史', { g: 'hum', price: 100, tip: '訪談在地老店，整理小吃的歷史與故事，做成一本小誌。' }),
+  T('topic', '老照片說故事', { g: 'hum', price: 120, tip: '蒐集家族或社區老照片，對照今昔，寫成地方記憶專題。' }),
+  T('jail', '卡關休息站', { icon: '🧩', sub: '只是路過', desc: '被送來這裡的人要休息一回合；也可以挑戰測驗提早脫困。' }),
+  T('topic', '手機攝影構圖', { g: 'art', price: 140, tip: '每週練一種構圖法，18 週後完成一組主題攝影作品。' }),
+  T('reflect', '反思卡', { icon: '💭' }),
+  T('topic', '水彩插畫', { g: 'art', price: 160, tip: '從基礎筆觸練起，最後完成 6 張系列插畫並辦小展覽。' }),
+  T('teacher', '指導老師面談', { icon: '👩‍🏫', desc: '和指導老師聊聊進度，獲得建議與 120 學習能量。' }),
+  T('topic', '英文 Podcast', { g: 'lang', price: 180, tip: '每週錄一集 3 分鐘英文 Podcast，分享生活或興趣。' }),
+  T('topic', '日語五十音', { g: 'lang', price: 200, tip: '用 App 與歌曲學五十音，最後完成自我介紹影片。' }),
+  T('library', '圖書館寶庫', { icon: '📚', sub: '寶庫能量', desc: '停在這裡可以領走寶庫裡累積的能量（再加 50）。' }),
+  T('topic', 'Scratch 小遊戲', { g: 'tech', price: 220, tip: '設計一款小遊戲，請同學試玩並根據回饋修改。' }),
+  T('chance', '靈感卡', { icon: '💡' }),
+  T('topic', 'Python 資料分析', { g: 'tech', price: 240, tip: '找政府開放資料，用 Python 做出圖表並解讀趨勢。' }),
+  T('quiz', '自學小測驗', { icon: '❓' }),
+  T('topic', '料理實驗室', { g: 'life', price: 260, tip: '研究一道料理的科學原理，紀錄每次實驗的配方與成果。' }),
+  T('topic', '理財小達人', { g: 'life', price: 280, tip: '記帳 18 週，分析消費習慣並訂出存錢計畫。' }),
+  T('audit', '審核關卡', { icon: '🛂', sub: '答題過關', desc: '回答一題自主學習測驗：答對獲得 150；答錯要到卡關休息站。' }),
+  T('topic', '跑步訓練計畫', { g: 'sport', price: 300, tip: '設定 5 公里目標，每週記錄配速與心得，調整訓練方式。' }),
+  T('reflect', '反思卡', { icon: '💭' }),
+  T('topic', '籃球戰術分析', { g: 'sport', price: 320, tip: '觀看比賽影片，整理戰術並畫成圖解，分享給球隊。' }),
+  T('monster', '拖延怪獸', { icon: '👾', desc: '被拖延怪獸咬了一口！支付 100 能量到圖書館寶庫。' }),
+  T('topic', '微電影製作', { g: 'media', price: 350, tip: '從劇本、拍攝到剪輯，完成一部 3 分鐘微電影。' }),
+  T('topic', '自架個人網站', { g: 'media', price: 400, tip: '學 HTML 與 CSS，把自主學習歷程做成作品集網站。' })
+];
+const N = TILES.length;
+const LV = [{ n: '擬定計畫', e: '📝', m: 0.12 }, { n: '每週紀錄', e: '📒', m: 0.3 }, { n: '產出成果', e: '🎨', m: 0.6 }, { n: '成果發表', e: '🏆', m: 1.0 }];
+const upCost = t => Math.round(t.price * 0.6 / 10) * 10;
+const groupOf = g => TILES.map((t, i) => i).filter(i => TILES[i].g === g);
+const ownsGroup = (pid, g) => groupOf(g).every(i => S.own[i] && S.own[i].p === pid);
+const rentOf = i => { const t = TILES[i], o = S.own[i]; let r = Math.round(t.price * LV[o.lv].m / 5) * 5; if (ownsGroup(o.p, t.g)) r = Math.round(r * 1.5 / 5) * 5; return Math.max(10, r); };
+
+const CHANCE = [
+  { t: '在學校 WebPAC 找到超實用的書！', e: '前進到「圖書館寶庫」', act: { to: 14 } },
+  { t: '和指導老師討論後豁然開朗！', e: '+150 能量', act: { m: 150 } },
+  { t: '把主題縮小、聚焦，效率大增！', e: '再擲一次骰子', act: { again: true } },
+  { t: '參加學長姐成果分享，靈感爆發', e: '+100 能量', act: { m: 100 } },
+  { t: '跨領域混搭出新點子！', e: '前進 3 格', act: { step: 3 } },
+  { t: '找到一門免費的線上課程', e: '+80 能量', act: { m: 80 } },
+  { t: '熬夜趕進度，隔天效率超差', e: '後退 2 格', act: { step: -2 } },
+  { t: '作品投稿中學生網站獲獎！', e: '+200 能量', act: { m: 200 } },
+  { t: '準備好計畫書，直奔審核！', e: '前進到「審核關卡」', act: { to: 21 } }
+];
+const REFLECT = [
+  { t: '每週都有寫紀錄表並請老師核章', e: '+120 能量', act: { m: 120 } },
+  { t: '連續兩週沒寫紀錄，進度落後……', e: '支付 100 到圖書館寶庫', act: { m: -100, pot: true } },
+  { t: '忘記帶紀錄表、也沒到核定地點', e: '前往「卡關休息站」', act: { jail: true } },
+  { t: '寫下本週的困惑，並找到解法', e: '+80 能量', act: { m: 80 } },
+  { t: '拖延症發作，一直滑手機', e: '支付 80 到圖書館寶庫', act: { m: -80, pot: true } },
+  { t: '幫同學解答問題，教學相長', e: '每位同學給你 30 能量', act: { each: 30 } },
+  { t: '計畫太大做不完，重新規劃', e: '回到「起點」（領 200）', act: { to: 0 } },
+  { t: '誠實標註哪裡用了 AI，獲得老師肯定', e: '+60 能量', act: { m: 60 } },
+  { t: '把成果上傳學習歷程平台', e: '+100 能量', act: { m: 100 } }
+];
+const QUIZ = [
+  ['自主學習和自習最大的不同是？', ['自己決定主題、規劃進度並產出成果', '在教室安靜寫作業', '讀考試範圍', '由老師指定題目'], '自主學習要自己選主題、訂目標、排進度，最後發表成果。'],
+  ['擬定自主學習計畫，通常在學期的第幾週？', ['第 1-2 週', '第 3 週', '第 10 週', '第 18 週'], '第 1-2 週擬定計畫、填申請表並請指導老師簽名。'],
+  ['自主學習推動小組審查計畫是在第幾週？', ['第 3 週', '第 1 週', '第 12 週', '不用審查'], '第 3 週審核，通過後依核定地點研習。'],
+  ['執行階段（第 4-16 週）每週要做什麼？', ['攜帶紀錄表記錄收穫與困惑，請老師核章', '人到就好', '期末再一次補寫', '在家自己看影片'], '每週攜帶紀錄表，課堂結束前由現場指導老師核章。'],
+  ['成果發表在第幾週？', ['第 17-18 週', '第 3 週', '第 8 週', '寒暑假'], '第 17-18 週彙整成果與反思並參與分享。'],
+  ['自主學習的成果與反思最後要上傳到哪裡？', ['高中學習歷程平台', '社群網站限時動態', '不用上傳', '期末考卷背面'], '記得把成果與自我反思上傳到學習歷程平台。'],
+  ['自主學習計畫申請表需要誰簽核？', ['家長、指導老師與相關處室', '只要自己', '只要同學', '不用簽名'], '需經家長、指導老師與相關處室簽核，再由自主學習小組審核。'],
+  ['下列哪一個是 SMART 目標？', ['18 週內完成 12 張花蓮街景攝影並展出', '我想學攝影', '我要變得很厲害', '有空就拍拍照'], '具體、可衡量、可達成、相關、有時限，才是好目標。'],
+  ['找資料的第一站，最推薦哪裡？', ['學校 WebPAC 館藏與圖書館', '只看社群貼文', '搜尋結果的第一筆', '直接相信 AI 的答案'], '書與期刊經過審查，是最可靠的起點；網路資料要查證。'],
+  ['AI 在自主學習中比較好的用法是？', ['當學伴幫忙發想與提問，並查證、標註', '請 AI 直接寫好作品繳交', '完全照抄 AI 答案', '把個人資料貼給 AI'], 'AI 是學伴不是代筆：要查證、誠實標註、保護個資。'],
+  ['進度落後時，最好的做法是？', ['縮小範圍，並盡早和指導老師討論', '直接放棄', '期末再熬夜一次補完', '假裝沒事'], '越早調整越好，先完成最核心的部分。'],
+  ['一份好的每週紀錄應該包含？', ['收穫、困惑與下週的調整', '只寫「今天有學習」', '空白也沒關係', '抄同學的內容'], '具體寫下做了什麼、卡在哪裡、下週怎麼改。'],
+  ['好的自主學習主題應該是？', ['真心有興趣、做得完、成果具體', '越大越難越好', '跟別人選一樣的', '不需要成果'], '主題健康檢查：興趣、範圍、資源、成果、指導老師。'],
+  ['未依規定認證、或沒到核定地點會怎樣？', ['依校規處理', '沒有關係', '可以加分', '自動通過'], '請記得每週到核定地點並完成認證。'],
+  ['判斷一份資料可不可信，要看什麼？', ['作者、時間、證據與目的', '字數多寡', '圖片好不好看', '按讚數'], '誰寫的、什麼時候寫的、有沒有證據、目的是什麼。'],
+  ['寫自學動機時，最重要的是寫出？', ['為什麼想學這個主題', '字數越多越好', '老師可能喜歡的答案', '別人的動機'], '「為什麼」比「做什麼」更重要，連結你的經驗與方向。']
+];
+const AVATARS = ['🐰', '🐶', '🐱', '🐻', '🐼', '🐸', '🦊', '🐹'];
+const PCOL = ['#FF7EB6', '#4FA8F5', '#FFB81C', '#3DD6B5'];
+
+// ===================== 狀態 =====================
+const KEY = 'swsh-monopoly-v1';
+let S = null; // 遊戲狀態
+const setup = { slots: [{ on: true, name: '玩家 1', bot: false, av: 0 }, { on: true, name: '電腦小四', bot: true, av: 1 }, { on: false, name: '玩家 3', bot: false, av: 2 }, { on: false, name: '玩家 4', bot: false, av: 3 }], rounds: 15 };
+function newState() {
+  const ps = setup.slots.map((s, i) => s.on ? { id: i, name: s.name.trim() || `玩家 ${i + 1}`, bot: s.bot, av: AVATARS[s.av], c: PCOL[i], m: 1500, pos: 0, jail: 0, out: false } : null).filter(Boolean);
+  return { gid: Math.random(), ps, cur: 0, round: 1, maxR: setup.rounds, own: {}, pot: 0, cd: shuffle(CHANCE.map((c, i) => i)), rd: shuffle(REFLECT.map((c, i) => i)), qd: shuffle(QUIZ.map((c, i) => i)), log: [], over: false };
+}
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+const P = id => S.ps.find(p => p.id === id);
+const assets = p => p.m + Object.entries(S.own).filter(([, o]) => o.p === p.id).reduce((a, [i, o]) => a + TILES[i].price + o.lv * upCost(TILES[i]), 0);
+
+// ===================== 音效 =====================
+let ac = null, sfxOn = true, bgmOn = false, bgmTimer = null;
+const actx = () => (ac = ac || new (window.AudioContext || window.webkitAudioContext)());
+function tone(f, d = 0.12, type = 'triangle', v = 0.08, when = 0) { if (!sfxOn) return; try { const a = actx(), o = a.createOscillator(), g = a.createGain(), t = a.currentTime + when; o.type = type; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(g).connect(a.destination); o.start(t); o.stop(t + d + 0.05); } catch (e) {} }
+const SFX = { hop: () => tone(660 + rnd(80), 0.09, 'sine', 0.06), coin: () => { tone(988, 0.08, 'square', 0.04); tone(1319, 0.18, 'square', 0.04, 0.07); }, lose: () => { tone(330, 0.15, 'sawtooth', 0.04); tone(247, 0.25, 'sawtooth', 0.04, 0.12); }, dice: () => { for (let k = 0; k < 6; k++) tone(180 + rnd(120), 0.04, 'square', 0.03, k * 0.07); }, card: () => { tone(523, 0.1); tone(784, 0.16, 'triangle', 0.08, 0.08); }, win: () => [523, 659, 784, 1047].forEach((f, k) => tone(f, 0.25, 'triangle', 0.08, k * 0.12)), build: () => { tone(392, 0.1); tone(523, 0.1, 'triangle', 0.08, 0.08); tone(659, 0.2, 'triangle', 0.08, 0.16); } };
+const MEL = [72, 76, 79, 81, 79, 76, 74, 77, 81, 79, 77, 74, 72, 76, 79, 84];
+function startBgm() { const a = actx(); a.resume(); let step = 0, next = a.currentTime + 0.05; const beat = 0.3;
+  const n = (m, t, len, v, type) => { const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = 440 * Math.pow(2, (m - 69) / 12); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + len); o.connect(g).connect(a.destination); o.start(t); o.stop(t + len + 0.05); };
+  bgmTimer = setInterval(() => { while (next < a.currentTime + 0.4) { n(MEL[step % 16], next, beat * 1.6, 0.05, 'triangle'); if (step % 4 === 0) n([48, 53, 55, 48][(step / 4) % 4], next, beat * 4, 0.04, 'sine'); step++; next += beat; } }, 100); }
+$('#bSfx').onclick = e => { sfxOn = !sfxOn; e.currentTarget.innerHTML = (sfxOn ? '🔊' : '🔇') + `<span class="t"> 音效：${sfxOn ? '開' : '關'}</span>`; e.currentTarget.classList.toggle('on', !sfxOn); };
+$('#bBgm').onclick = e => { bgmOn = !bgmOn; e.currentTarget.innerHTML = `🎵<span class="t"> BGM：${bgmOn ? '開' : '關'}</span>`; e.currentTarget.classList.toggle('on', bgmOn); if (bgmOn) startBgm(); else { clearInterval(bgmTimer); } };
+$('#bFull').onclick = () => { if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {}); else document.exitFullscreen && document.exitFullscreen(); };
+
+// ===================== UI 小工具 =====================
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2200); }
+function log(html) { S.log.unshift(html); S.log = S.log.slice(0, 30); renderLog(); }
+function renderLog() { $('#logList').innerHTML = S.log.slice(0, 6).map(l => `<div>${l}</div>`).join(''); }
+function floatText(p, txt, col) { const el = document.createElement('div'); el.className = 'float'; el.textContent = txt; el.style.color = col; const v = pawnScreen(p); el.style.left = (v.x - 30) + 'px'; el.style.top = (v.y - 60) + 'px'; document.body.appendChild(el); setTimeout(() => el.remove(), 1500); }
+function money(p, d, why) {
+  p.m += d; if (d > 0) SFX.coin(); else if (d < 0) SFX.lose();
+  floatText(p, (d > 0 ? '+' : '') + d + ' ⚡', d > 0 ? '#20A36B' : '#E0457B');
+  renderPlayers(); if (why) log(`${p.av} ${esc(p.name)} ${why} <b style="color:${d >= 0 ? '#20A36B' : '#E0457B'}">${d > 0 ? '+' : ''}${d}</b>`);
+}
+const esc = s => String(s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+function renderPlayers() {
+  const box = $('#players'); box.innerHTML = '';
+  S.ps.forEach((p, k) => {
+    const d = document.createElement('div'); d.className = `pcard glass p${k}` + (S.ps[S.cur] === p && !S.over ? ' turn' : '') + (p.out ? ' out' : ''); d.style.setProperty('--pc', p.c);
+    const mine = Object.entries(S.own).filter(([, o]) => o.p === p.id);
+    d.innerHTML = `<span class="tag">回合中</span><div class="row"><span class="av">${p.av}</span><div><div class="nm"><i></i>${esc(p.name)}${p.bot ? '・電腦' : ''}</div><div class="money">${p.m.toLocaleString()} <small>⚡</small></div><div class="sub">總資產 ${assets(p).toLocaleString()}・主題 ${mine.length}</div></div></div>
+      <div class="chips">${mine.map(([i, o]) => `<span title="${TILES[i].name}" style="background:${GROUPS[TILES[i].g].c}">${o.lv ? o.lv : ''}</span>`).join('')}</div>${p.jail ? '<div class="st">🧩 卡關中</div>' : ''}${p.out ? '<div class="st">暫時休學</div>' : ''}`;
+    box.appendChild(d);
+  });
+  $('#roundChip').textContent = `第 ${Math.min(S.round, S.maxR || S.round)} 回合` + (S.maxR ? ` / ${S.maxR}` : '・無限制') + (S.pot ? `・寶庫 ${S.pot}⚡` : '');
+}
+
+// 對話框
+const dlg = $('#dlg'), dc = $('#dc');
+function ask({ icon = '🎲', tag = '', title, html = '', color = '#F3EAFF', ink = '#6D4BD8', btn = '#8B6CF0', buttons = [{ t: '好', v: true, main: true }], col = false, bot }) {
+  return new Promise(res => {
+    dc.style.setProperty('--dc', color); dc.style.setProperty('--di', ink); dc.style.setProperty('--dbtn', btn);
+    const cur = S && S.ps[S.cur], isBot = cur && cur.bot && bot !== undefined;
+    dc.innerHTML = `<div class="dh"><span class="ic">${icon}</span><div><small>${tag}</small><h2>${title}</h2></div></div><div class="db">${html}</div>
+      <div class="df${col ? ' col' : ''}">${buttons.map((b, k) => `<button class="b${b.main ? ' main' : ''}" data-k="${k}" ${isBot ? 'disabled' : ''}>${b.t}</button>`).join('')}</div>${isBot ? `<div class="bot">${cur.av} ${esc(cur.name)} 思考中…</div>` : ''}`;
+    const done = v => { dlg.close(); res(v); };
+    dc.querySelectorAll('.df .b').forEach(b => (b.onclick = () => done(buttons[+b.dataset.k].v)));
+    dlg.oncancel = e => { e.preventDefault(); };
+    if (!dlg.open) dlg.showModal();
+    if (isBot) setTimeout(() => done(typeof bot === 'function' ? bot() : bot), reduceMotion ? 300 : 1300);
+  });
+}
+
+// ===================== 3D 場景 =====================
+let renderer = null;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); } catch (e) {}
+const scene = new THREE.Scene();
+const narrow = () => innerWidth < innerHeight;
+const camera = new THREE.PerspectiveCamera(narrow() ? 55 : 38, innerWidth / innerHeight, 1, 2000);
+const tex = (w, h, draw) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); if (renderer) t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.encoding = THREE.sRGBEncoding; return t; };
+const MAT = (color, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color, roughness: 0.62, metalness: 0 }, o));
+const mesh = (g, m, x = 0, y = 0, z = 0, cast = true) => { const o = new THREE.Mesh(g, m); o.position.set(x, y, z); o.castShadow = cast; o.receiveShadow = true; return o; };
+const geoCache = {};
+function rbox(w, h, d, r = 0.4) {
+  const k = [w, h, d, r].join('|'); if (geoCache[k]) return geoCache[k];
+  r = Math.min(r, w / 2 - 0.01, h / 2 - 0.01, d / 2 - 0.01);
+  const s = new THREE.Shape(), x0 = -w / 2 + r, y0 = -h / 2 + r, iw = w - 2 * r, ih = h - 2 * r;
+  s.moveTo(x0, y0); s.lineTo(x0 + iw, y0); s.lineTo(x0 + iw, y0 + ih); s.lineTo(x0, y0 + ih); s.lineTo(x0, y0);
+  const g = new THREE.ExtrudeGeometry(s, { depth: d - 2 * r, bevelEnabled: true, bevelThickness: r, bevelSize: r, bevelSegments: 4, curveSegments: 4 });
+  g.translate(0, 0, -(d - 2 * r) / 2); g.computeVertexNormals(); return (geoCache[k] = g);
+}
+function rr(x, X, Y, W, H, R) { x.beginPath(); x.moveTo(X + R, Y); x.arcTo(X + W, Y, X + W, Y + H, R); x.arcTo(X + W, Y + H, X, Y + H, R); x.arcTo(X, Y + H, X, Y, R); x.arcTo(X, Y, X + W, Y, R); x.closePath(); }
+function wrap(x, text, cx, y, maxW, lh) { const out = []; let line = ''; for (const ch of text) { if (x.measureText(line + ch).width > maxW && line) { out.push(line); line = ch; } else line += ch; } out.push(line); out.forEach((l, k) => x.fillText(l, cx, y + (k - (out.length - 1) / 2) * lh)); }
+
+// 棋盤座標
+const TW = 6, TD = 9, C = 22.5;
+function tileXZ(i) {
+  const side = Math.floor(i / 7), k = i % 7, along = k === 0 ? C : C - 7.5 - (k - 1) * 6;
+  if (side === 0) return { x: along, z: C, ry: 0, corner: k === 0 };
+  if (side === 1) return { x: -C, z: along, ry: -Math.PI / 2, corner: k === 0 };
+  if (side === 2) return { x: -along, z: -C, ry: Math.PI, corner: k === 0 };
+  return { x: C, z: -along, ry: Math.PI / 2, corner: k === 0 };
+}
+const tileObjs = [], decoObjs = [];
+let pickables = [];
+function tileTexture(i) {
+  const t = TILES[i], corner = i % 7 === 0, W = corner ? 384 : 256, H = 384;
+  return tex(W, H, (x) => {
+    x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H);
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    if (t.t === 'topic') {
+      const gc = GROUPS[t.g].c; x.fillStyle = gc; rr(x, 10, 10, W - 20, 88, 18); x.fill();
+      x.fillStyle = '#fff'; x.font = `900 30px ${FONT}`; x.fillText(GROUPS[t.g].name, W / 2, 56);
+      x.fillStyle = '#3B3553'; x.font = `900 40px ${FONT}`; wrap(x, t.name, W / 2, 200, W - 30, 46);
+      x.fillStyle = '#F6F1FF'; rr(x, 30, 300, W - 60, 56, 28); x.fill(); x.fillStyle = '#6D4BD8'; x.font = `900 32px ${FONT}`; x.fillText(`${t.price} ⚡`, W / 2, 330);
+    } else {
+      const bg = { start: '#FFE3F0', jail: '#E7F4FF', library: '#E9FBEF', audit: '#FFF4D6', chance: '#FFF6D6', reflect: '#F3EAFF', quiz: '#E6FAF6', teacher: '#FFEFE3', monster: '#F5E9FF' }[t.t] || '#fff';
+      x.fillStyle = bg; rr(x, 8, 8, W - 16, H - 16, 26); x.fill();
+      x.font = `${corner ? 120 : 92}px sans-serif`; x.fillText(t.icon, W / 2, corner ? 150 : 140);
+      x.fillStyle = '#3B3553'; x.font = `900 ${corner ? 50 : 40}px ${FONT}`; x.fillText(t.name, W / 2, corner ? 270 : 262);
+      if (t.sub) { x.fillStyle = '#8B6CF0'; x.font = `700 30px ${FONT}`; x.fillText(t.sub, W / 2, corner ? 324 : 318); }
+    }
+  });
+}
+function buildScene() {
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderer.setSize(innerWidth, innerHeight);
+  renderer.outputEncoding = THREE.sRGBEncoding; renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  $('#scene').appendChild(renderer.domElement);
+  scene.add(new THREE.HemisphereLight(0xFFFFFF, 0xE9DDF7, 0.75));
+  const sun = new THREE.DirectionalLight(0xFFF4EA, 0.75); sun.position.set(30, 70, 40); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -45, right: 45, top: 45, bottom: -45, near: 10, far: 160 }); sun.shadow.bias = -0.0004; sun.shadow.radius = 4; scene.add(sun);
+  scene.add(new THREE.AmbientLight(0xFFFFFF, 0.12));
+  // 底座
+  scene.add(mesh(rbox(66, 3, 66, 1.4), MAT(0xD9C8FF), 0, -2.2, 0, false));
+  scene.add(mesh(rbox(62, 1.6, 62, 0.8), MAT(0xF7F1FF), 0, -0.2, 0));
+  scene.add(mesh(rbox(64.5, 0.6, 64.5, 0.3), MAT(0xFFC9E2), 0, -1.05, 0, false));
+  // 中央區域
+  const mid = tex(1024, 1024, (x, W, H) => {
+    const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#E4FBF4'); g.addColorStop(1, '#EAF3FF'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.save(); x.globalAlpha = 0.5; x.strokeStyle = '#FFFFFF'; x.lineWidth = 26; for (let k = -W; k < W * 2; k += 70) { x.beginPath(); x.moveTo(k, 0); x.lineTo(k - H, H); x.stroke(); } x.restore();
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.font = `400 112px ${RFONT}`; x.lineWidth = 16; x.strokeStyle = '#fff'; x.strokeText('四維自學大富翁', W / 2, 250);
+    const tg = x.createLinearGradient(200, 0, 820, 0); tg.addColorStop(0, '#FF7EB6'); tg.addColorStop(.5, '#A78BFA'); tg.addColorStop(1, '#4FA8F5'); x.fillStyle = tg; x.fillText('四維自學大富翁', W / 2, 250);
+    x.fillStyle = '#8B6CF0'; x.font = `700 38px ${FONT}`; x.fillText('選主題・寫紀錄・拿成果・上台發表', W / 2, 340);
+    x.setLineDash([18, 14]); x.strokeStyle = 'rgba(167,139,250,.55)'; x.lineWidth = 6; x.beginPath(); x.arc(W / 2, 640, 180, 0, Math.PI * 2); x.stroke();
+  });
+  const midP = mesh(new THREE.PlaneGeometry(36, 36), new THREE.MeshStandardMaterial({ map: mid, roughness: 0.8 }), 0, 0.62, 0, false); midP.rotation.x = -Math.PI / 2; scene.add(midP);
+  // 格子
+  TILES.forEach((t, i) => {
+    const p = tileXZ(i), w = p.corner ? TD : TW - 0.25, d = TD - 0.25;
+    const g = new THREE.Group(); g.position.set(p.x, 0.6, p.z); g.rotation.y = p.ry; scene.add(g);
+    const base = mesh(rbox(w, 0.9, d, 0.3), MAT(0xFFFFFF), 0, 0.2, 0); g.add(base);
+    const top = mesh(new THREE.PlaneGeometry(w - 0.4, d - 0.4), new THREE.MeshStandardMaterial({ map: tileTexture(i), roughness: 0.7 }), 0, 0.66, 0, false); top.rotation.x = -Math.PI / 2; g.add(top);
+    g.traverse(o => (o.userData.tile = i)); tileObjs[i] = g; pickables.push(base, top);
+  });
+  // 卡牌堆
+  [[-9, 2, '💡', '靈感卡', '#FFC93D'], [9, 2, '💭', '反思卡', '#B678F5']].forEach(([x, z, e, n, c]) => {
+    const t = tex(256, 340, (cx, W, H) => { cx.fillStyle = c; rr(cx, 0, 0, W, H, 30); cx.fill(); cx.fillStyle = '#fff'; rr(cx, 16, 16, W - 32, H - 32, 22); cx.fill(); cx.fillStyle = c; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.font = '110px sans-serif'; cx.fillText(e, W / 2, 140); cx.font = `900 46px ${FONT}`; cx.fillText(n, W / 2, 262); });
+    const g = new THREE.Group(); g.position.set(x, 0.62, z); g.rotation.y = x < 0 ? 0.18 : -0.18; scene.add(g);
+    for (let k = 0; k < 5; k++) g.add(mesh(rbox(6, 0.22, 8, 0.1), MAT(c), 0, 0.12 + k * 0.24, 0));
+    const tp = mesh(new THREE.PlaneGeometry(5.6, 7.5), new THREE.MeshStandardMaterial({ map: t }), 0, 1.36, 0, false); tp.rotation.x = -Math.PI / 2; g.add(tp);
+    (x < 0 ? (deckC = g) : (deckR = g));
+  });
+  // 樹與裝飾
+  const TC = [0x8EE3A8, 0x6FD39A, 0xFFB3D1, 0xA6E5C0];
+  [[-14, -13], [14, -13], [-14, 14], [14, 14], [-12, -15.5], [12, 15.5]].forEach(([x, z], k) => {
+    const g = new THREE.Group(); g.position.set(x, 0.6, z); scene.add(g);
+    g.add(mesh(new THREE.CylinderGeometry(0.35, 0.45, 2.4, 10), MAT(0xC9A27E), 0, 1.2, 0));
+    const m = MAT(TC[k % 4]); [[0, 3.2, 0, 1.6], [0.9, 2.7, 0.3, 1.1], [-0.8, 2.8, -0.2, 1.15], [0, 4.2, 0, 1.05]].forEach(([a, b, c2, r]) => g.add(mesh(new THREE.IcosahedronGeometry(r, 1), m, a, b, c2)));
+  });
+  // 骰子
+  dice = [0, 1].map(k => { const d = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), [3, 4, 1, 6, 2, 5].map(v => new THREE.MeshStandardMaterial({ map: dieFace(v), roughness: 0.4 }))); d.castShadow = true; d.position.set(k ? 2 : -2, 2.15, 7.5); d.quaternion.copy(faceQ(k ? 5 : 3, 0.3)); scene.add(d); return d; });
+}
+let deckC, deckR, dice;
+function dieFace(v) { return tex(128, 128, (x, W) => { x.fillStyle = '#FFFDF8'; x.fillRect(0, 0, W, W); x.strokeStyle = '#F5BCD6'; x.lineWidth = 8; rr(x, 3, 3, W - 6, W - 6, 22); x.stroke(); const P = { 1: [[64, 64]], 2: [[36, 36], [92, 92]], 3: [[34, 34], [64, 64], [94, 94]], 4: [[36, 36], [92, 36], [36, 92], [92, 92]], 5: [[34, 34], [94, 34], [64, 64], [34, 94], [94, 94]], 6: [[36, 30], [92, 30], [36, 64], [92, 64], [36, 98], [92, 98]] }[v]; x.fillStyle = v === 1 ? '#FF5C93' : '#3B3553'; P.forEach(([a, b]) => { x.beginPath(); x.arc(a, b, v === 1 ? 17 : 11, 0, 7); x.fill(); }); }); }
+function faceQ(v, yaw) { const e = { 1: [0, 0, 0], 6: [Math.PI, 0, 0], 2: [-Math.PI / 2, 0, 0], 5: [Math.PI / 2, 0, 0], 3: [0, 0, Math.PI / 2], 4: [0, 0, -Math.PI / 2] }[v]; const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(...e)); return new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw).multiply(q); }
+
+// 棋子
+const pawns = {};
+function emojiTex(e) { return tex(128, 128, (x, W) => { x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = '100px sans-serif'; x.fillText(e, W / 2, W / 2 + 6); }); }
+function makePawn(p) {
+  const g = new THREE.Group(), c = new THREE.Color(p.c);
+  g.add(mesh(new THREE.CylinderGeometry(1.1, 1.25, 0.45, 24), MAT(c), 0, 0.22, 0));
+  g.add(mesh(new THREE.CylinderGeometry(0.55, 0.85, 1.6, 20), MAT(0xFFFFFF), 0, 1.2, 0));
+  g.add(mesh(new THREE.SphereGeometry(1.05, 24, 18), MAT(c.clone().lerp(new THREE.Color(0xffffff), 0.55)), 0, 2.5, 0));
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: emojiTex(p.av), depthTest: true })); sp.scale.set(2.1, 2.1, 1); sp.position.set(0, 2.6, 0); g.add(sp);
+  const ring = mesh(new THREE.RingGeometry(1.4, 1.75, 32), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.85, side: THREE.DoubleSide }), 0, 0.05, 0, false); ring.rotation.x = -Math.PI / 2; ring.visible = false; g.add(ring);
+  g.userData.ring = ring; g.scale.setScalar(0.9);
+  scene.add(g); pawns[p.id] = g; return g;
+}
+function slotPos(i, pid) { const p = tileXZ(i), k = S.ps.findIndex(q => q.id === pid), ox = (k % 2 ? 1.3 : -1.3), oz = (k < 2 ? 0.9 : 2.6) - 0.6; const c = Math.cos(p.ry), s = Math.sin(p.ry); return new THREE.Vector3(p.x + ox * c + oz * s, 1.25, p.z - ox * s + oz * c); }
+function placePawns() { S.ps.forEach(p => { const g = pawns[p.id]; g.visible = !p.out; g.position.copy(slotPos(p.pos, p.id)); }); }
+const anims = [];
+function animate(dur, fn) { return new Promise(res => { if (reduceMotion) dur = Math.min(dur, 60); const t0 = performance.now(); anims.push(now => { const u = Math.min(1, (now - t0) / dur); fn(u); if (u >= 1) { res(); return true; } return false; }); }); }
+async function hopTo(p, i) { const g = pawns[p.id], a = g.position.clone(), b = slotPos(i, p.id); SFX.hop(); await animate(230, u => { g.position.lerpVectors(a, b, u); g.position.y += Math.sin(u * Math.PI) * 2.4; g.rotation.y = Math.sin(u * Math.PI) * 0.4; }); }
+function pawnScreen(p) { const v = pawns[p.id] ? pawns[p.id].position.clone().add(new THREE.Vector3(0, 4, 0)).project(camera) : new THREE.Vector3(); return { x: (v.x + 1) / 2 * innerWidth, y: (1 - v.y) / 2 * innerHeight }; }
+
+// 主題擁有標記
+function refreshTile(i) {
+  if (decoObjs[i]) { tileObjs[i].remove(decoObjs[i]); decoObjs[i] = null; }
+  const o = S.own[i]; if (!o) return;
+  const pl = P(o.p), c = new THREE.Color(pl.c), g = new THREE.Group(); g.position.set(0, 0.66, -2.6); tileObjs[i].add(g); decoObjs[i] = g;
+  const strip = mesh(new THREE.PlaneGeometry(5.2, 0.45), new THREE.MeshBasicMaterial({ color: c }), 0, 0.02, 6.3, false); strip.rotation.x = -Math.PI / 2; g.add(strip);
+  const roofM = MAT(c), wall = MAT(0xFFFDF8);
+  const house = (x, s = 1) => { const h = new THREE.Group(); h.position.set(x, 0, 0); h.scale.setScalar(s); h.add(mesh(rbox(1.3, 1.1, 1.3, 0.15), wall, 0, 0.55, 0)); const r = mesh(new THREE.ConeGeometry(1.05, 0.9, 4), roofM, 0, 1.55, 0); r.rotation.y = Math.PI / 4; h.add(r); g.add(h); };
+  if (o.lv === 0) { g.add(mesh(new THREE.CylinderGeometry(0.12, 0.12, 3.2, 8), MAT(0xFFFFFF), 0, 1.6, 0)); g.add(mesh(new THREE.SphereGeometry(0.25, 10, 8), MAT(0xFFD54F), 0, 3.3, 0)); g.add(mesh(new THREE.BoxGeometry(1.9, 1.2, 0.1), roofM, 0.95, 2.55, 0)); }
+  if (o.lv === 1) house(0);
+  if (o.lv === 2) { house(-0.85, 0.9); house(0.85, 0.9); }
+  if (o.lv === 3) { house(-1.4, 0.75); house(1.4, 0.75); g.add(mesh(rbox(1.5, 2.6, 1.5, 0.2), wall, 0, 1.3, 0)); g.add(mesh(new THREE.ConeGeometry(0.95, 1.2, 4), roofM, 0, 3.2, 0)).rotation.y = Math.PI / 4; const st = mesh(new THREE.OctahedronGeometry(0.45), MAT(0xFFD54F, { emissive: 0xFFC107, emissiveIntensity: 0.4 }), 0, 4.2, 0); g.add(st); }
+  g.traverse(m => (m.userData.tile = i));
+  if (!reduceMotion) { g.scale.setScalar(0.01); animate(420, u => g.scale.setScalar(Math.max(0.01, 1 + Math.sin(u * Math.PI) * 0.25 * (1 - u) - (1 - u) * (1 - u) * 0.99))); }
+}
+
+// 相機
+const cam = { yaw: 0, pitch: narrow() ? 1.05 : 0.9, dist: narrow() ? 118 : 98 }, camTarget = new THREE.Vector3(0, 0, 2.5), camFocus = new THREE.Vector3(0, 0, 2.5);
+let spin = false, follow = true;
+function resetCam() { cam.yaw = 0; cam.pitch = narrow() ? 1.05 : 0.9; cam.dist = narrow() ? 118 : 98; camFocus.set(0, 0, 2.5); }
+$('#bReset').onclick = resetCam;
+$('#bSpin').onclick = e => { spin = !spin; e.currentTarget.classList.toggle('on', spin); };
+$('#bFollow').onclick = e => { follow = !follow; e.currentTarget.classList.toggle('hot', follow); if (!follow) camFocus.set(0, 0, 2.5); };
+$('#zIn').onclick = () => (cam.dist = Math.max(36, cam.dist * 0.85)); $('#zOut').onclick = () => (cam.dist = Math.min(200, cam.dist * 1.18));
+function setupControls() {
+  const cv = renderer.domElement, ptrs = new Map(); let moved = false, down = null, pinch = 0;
+  cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (ptrs.size === 1) { moved = false; down = { x: e.clientX, y: e.clientY }; } else { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); moved = true; } });
+  cv.addEventListener('pointermove', e => { if (!ptrs.has(e.pointerId)) return; const pr = ptrs.get(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch) cam.dist = THREE.MathUtils.clamp(cam.dist * pinch / d, 36, 200); pinch = d; return; }
+    if (!moved && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) moved = true;
+    if (moved) { cam.yaw -= (e.clientX - pr.x) * 0.006; cam.pitch = THREE.MathUtils.clamp(cam.pitch + (e.clientY - pr.y) * 0.005, 0.25, 1.45); } });
+  const up = e => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = 0; if (!ptrs.size && !moved && e.type === 'pointerup') clickTile(e.clientX, e.clientY); };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  cv.addEventListener('wheel', e => { e.preventDefault(); cam.dist = THREE.MathUtils.clamp(cam.dist * (e.deltaY > 0 ? 1.1 : 0.9), 36, 200); }, { passive: false });
+}
+const ray = new THREE.Raycaster();
+function clickTile(x, y) {
+  if (dlg.open || busyInfo) return;
+  ray.setFromCamera(new THREE.Vector2(x / innerWidth * 2 - 1, -(y / innerHeight) * 2 + 1), camera);
+  const objs = pickables.concat(decoObjs.filter(Boolean));
+  const h = ray.intersectObjects(objs, true)[0]; if (h && h.object.userData.tile !== undefined) showTile(h.object.userData.tile);
+}
+let busyInfo = false;
+async function showTile(i) {
+  busyInfo = true; const t = TILES[i];
+  if (t.t === 'topic') {
+    const o = S.own[i], g = GROUPS[t.g];
+    const rows = LV.map((l, k) => `<tr><td>${l.e} ${l.n}${o && o.lv === k ? ' ⬅ 目前' : ''}</td><td>${Math.max(10, Math.round(t.price * l.m / 5) * 5)} ⚡</td></tr>`).join('');
+    await ask({ icon: '📗', tag: `${g.name}・自學主題`, title: t.name, color: g.c + '33', ink: g.c, btn: g.c,
+      html: `選修價格 <b>${t.price} ⚡</b>・升級一階 <b>${upCost(t)} ⚡</b><br>擁有者：${o ? `${P(o.p).av} ${esc(P(o.p).name)}（${LV[o.lv].n}）` : '尚未被選修'}<table>${rows}</table><div style="font-size:12px;color:#9089A8">同學走到這裡要支付的交流費；同一領域兩格都擁有時 ×1.5</div><div class="tip">💡 <b>自學小點子：</b>${t.tip}</div>`, buttons: [{ t: '知道了', v: 1, main: true }] });
+  } else await ask({ icon: t.icon, tag: '特殊格', title: t.name, html: t.desc || { chance: '抽一張靈感卡：好點子、好資源、好機會！', reflect: '抽一張反思卡：檢視自己的學習習慣。', quiz: '回答一題自主學習小測驗，答對 +100 能量。' }[t.t], buttons: [{ t: '知道了', v: 1, main: true }] });
+  busyInfo = false;
+}
+
+// ===================== 擲骰 =====================
+async function rollDice() {
+  SFX.dice(); const v = [1 + rnd(6), 1 + rnd(6)];
+  const starts = dice.map(d => d.position.clone()), spinAx = dice.map(() => new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize());
+  const ends = [new THREE.Vector3(-2.2 + Math.random(), 2.15, 6.5 + Math.random() * 2), new THREE.Vector3(1.6 + Math.random(), 2.15, 6.5 + Math.random() * 2)];
+  const finalQ = v.map(n => faceQ(n, (Math.random() - 0.5) * 0.8));
+  await animate(900, u => dice.forEach((d, k) => { d.position.lerpVectors(starts[k], ends[k], u); d.position.y = 2.15 + Math.abs(Math.sin(u * Math.PI * 2.5)) * 6 * (1 - u); d.quaternion.setFromAxisAngle(spinAx[k], (1 - u) * 18); if (u > 0.8) d.quaternion.slerp(finalQ[k], (u - 0.8) / 0.2); }));
+  dice.forEach((d, k) => d.quaternion.copy(finalQ[k]));
+  return v;
+}
+
+// ===================== 遊戲流程 =====================
+const cur = () => S.ps[S.cur];
+let rollResolve = null;
+const rollBtn = $('#rollBtn');
+rollBtn.onclick = () => { if (rollResolve) { const r = rollResolve; rollResolve = null; rollBtn.disabled = true; rollBtn.classList.remove('pulse'); r(); } };
+addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && rollResolve && !dlg.open && $('#setup').hidden) { e.preventDefault(); rollBtn.click(); } });
+function waitRoll(p) {
+  $('#turnTxt').innerHTML = `輪到 ${p.av} <b>${esc(p.name)}</b>${p.bot ? '（電腦）' : ''}`;
+  return new Promise(res => { if (p.bot) { rollBtn.disabled = true; setTimeout(res, reduceMotion ? 200 : 900); } else { rollBtn.disabled = false; rollBtn.classList.add('pulse'); rollResolve = res; } });
+}
+function setRing() { S.ps.forEach(p => pawns[p.id] && (pawns[p.id].userData.ring.visible = p === cur())); }
+async function moveSteps(p, n) {
+  const dir = n < 0 ? -1 : 1;
+  for (let k = 0; k < Math.abs(n); k++) {
+    p.pos = (p.pos + dir + N) % N; await hopTo(p, p.pos);
+    if (dir > 0 && p.pos === 0) { money(p, 200, '經過起點，擬定新計畫'); toast('經過起點！+200 學習能量'); }
+  }
+}
+async function moveTo(p, idx) { let n = (idx - p.pos + N) % N; if (n === 0) n = N; await moveSteps(p, n); }
+async function goJail(p) { p.pos = 7; p.jail = 1; await hopTo(p, 7); log(`${p.av} ${esc(p.name)} 被送到 🧩 卡關休息站`); renderPlayers(); }
+async function quiz(p, why) {
+  if (!S.qd.length) S.qd = shuffle(QUIZ.map((c, i) => i));
+  const [q, opts, ex] = QUIZ[S.qd.pop()], order = shuffle(opts.map((o, i) => i));
+  const pick = await ask({ icon: '❓', tag: why || '自學小測驗', title: q, color: '#E6FAF6', ink: '#11967A', btn: '#3DD6B5', col: true, buttons: order.map((k, n) => ({ t: `${'ABCD'[n]}. ${opts[k]}`, v: k })), bot: () => (Math.random() < 0.7 ? 0 : order[rnd(order.length)]) });
+  const ok = pick === 0;
+  await ask({ icon: ok ? '🎉' : '🤔', tag: ok ? '答對了！' : '再想想～', title: ok ? '正確答案！' : `正確答案是：${opts[0]}`, color: ok ? '#E9FBEF' : '#FFF0F5', ink: ok ? '#20A36B' : '#E0457B', btn: ok ? '#3DD6B5' : '#FF7EB6', html: `📘 ${ex}`, buttons: [{ t: '繼續', v: 1, main: true }], bot: 1 });
+  return ok;
+}
+async function drawCard(p, kind) {
+  const deck = kind === 'c' ? 'cd' : 'rd', list = kind === 'c' ? CHANCE : REFLECT;
+  if (!S[deck].length) S[deck] = shuffle(list.map((c, i) => i));
+  const c = list[S[deck].pop()], col = kind === 'c' ? '#FFC93D' : '#B678F5';
+  SFX.card(); const dk = kind === 'c' ? deckC : deckR; if (dk) animate(400, u => (dk.position.y = 0.62 + Math.sin(u * Math.PI) * 1.5));
+  await ask({ icon: kind === 'c' ? '💡' : '💭', tag: kind === 'c' ? '靈感卡' : '反思卡', title: kind === 'c' ? '抽到一張靈感卡！' : '抽到一張反思卡！', color: kind === 'c' ? '#FFF6D6' : '#F3EAFF', ink: kind === 'c' ? '#A86B00' : '#7B2CBF', btn: col,
+    html: `<div class="card3d" style="background:${col}">${c.t}<div style="margin-top:8px;font-size:17px;background:rgba(255,255,255,.25);border-radius:10px;padding:4px">${c.e}</div></div>`, buttons: [{ t: '好！', v: 1, main: true }], bot: 1 });
+  log(`${p.av} ${esc(p.name)} 抽到${kind === 'c' ? '💡' : '💭'}「${c.t}」`);
+  const a = c.act;
+  if (a.m) { money(p, a.m); if (a.pot && a.m < 0) S.pot += -a.m; }
+  if (a.each) S.ps.filter(q => q !== p && !q.out).forEach(q => { money(q, -a.each); money(p, a.each); });
+  if (a.jail) { await goJail(p); return; }
+  if (a.again) p.again = true;
+  if (a.to !== undefined) { await moveTo(p, a.to); await resolve(p, true); return; }
+  if (a.step) { await moveSteps(p, a.step); await resolve(p, true); }
+}
+async function resolve(p, fromCard) {
+  const i = p.pos, t = TILES[i];
+  if (t.t === 'topic') {
+    const o = S.own[i], g = GROUPS[t.g];
+    if (!o) {
+      const can = p.m >= t.price;
+      const v = await ask({ icon: '📗', tag: `${g.name}・自學主題`, title: `要選修「${t.name}」嗎？`, color: g.c + '33', ink: g.c, btn: g.c,
+        html: `花費 <b>${t.price} ⚡</b> 選修這個主題，進入「📝 擬定計畫」階段。<br>之後再走到這裡，就能繼續深耕升級！<div class="tip">💡 ${t.tip}</div>${can ? '' : '<div class="tip" style="background:#FFF0F5">能量不足，這次先觀望吧！</div>'}`,
+        buttons: can ? [{ t: '先不要', v: 0 }, { t: `選修（${t.price}⚡）`, v: 1, main: true }] : [{ t: '好吧', v: 0, main: true }], bot: () => (can && p.m - t.price >= 150 ? 1 : 0) });
+      if (v) { money(p, -t.price); S.own[i] = { p: p.id, lv: 0 }; refreshTile(i); SFX.build(); log(`${p.av} ${esc(p.name)} 選修了 <b style="color:${g.c}">${t.name}</b>`); if (ownsGroup(p.id, t.g)) toast(`${p.name} 集滿「${g.name}」！交流費 ×1.5`); }
+    } else if (o.p === p.id) {
+      if (o.lv < 3) {
+        const c = upCost(t), nx = LV[o.lv + 1], can = p.m >= c;
+        const v = await ask({ icon: nx.e, tag: '繼續深耕', title: `把「${t.name}」推進到「${nx.n}」？`, color: g.c + '33', ink: g.c, btn: g.c,
+          html: `目前階段：${LV[o.lv].e} ${LV[o.lv].n} → 下一步：${nx.e} <b>${nx.n}</b><br>花費 <b>${c} ⚡</b>，同學來請教你時的交流費會提高！<div class="tip">🌱 自主學習就是這樣一步步累積：計畫 → 紀錄 → 成果 → 發表。</div>`,
+          buttons: can ? [{ t: '下次再說', v: 0 }, { t: `升級（${c}⚡）`, v: 1, main: true }] : [{ t: '能量不足', v: 0, main: true }], bot: () => (can && p.m - c >= 200 ? 1 : 0) });
+        if (v) { money(p, -c); o.lv++; refreshTile(i); SFX.build(); log(`${p.av} ${esc(p.name)} 的 ${t.name} 進入 ${nx.e}${nx.n}`); if (o.lv === 3) { toast(`🏆 ${p.name} 完成「${t.name}」成果發表！`); confetti(40); } }
+      } else { await ask({ icon: '🏆', tag: '成果發表完成', title: `「${t.name}」已經完整發表！`, html: '你在這個主題已經走完整個自主學習歷程，獲得 30 能量的成就感！', buttons: [{ t: '太棒了', v: 1, main: true }], bot: 1 }); money(p, 30, '成就感'); }
+    } else {
+      const ow = P(o.p), r = rentOf(i);
+      await ask({ icon: ow.av, tag: '向同學請教', title: `${ow.name} 的「${t.name}」`, color: g.c + '33', ink: g.c, btn: g.c,
+        html: `${esc(ow.name)} 已經在這個主題走到「${LV[o.lv].e} ${LV[o.lv].n}」。<br>你向他請教，支付交流費 <b>${r} ⚡</b>，他也因為教學相長獲得能量！`, buttons: [{ t: `支付 ${r}⚡`, v: 1, main: true }], bot: 1 });
+      money(p, -r, `向 ${esc(ow.name)} 請教 ${t.name}`); money(ow, r);
+    }
+  } else if (t.t === 'chance') await drawCard(p, 'c');
+  else if (t.t === 'reflect') await drawCard(p, 'r');
+  else if (t.t === 'quiz') { if (await quiz(p)) money(p, 100, '答對自學小測驗'); }
+  else if (t.t === 'teacher') { await ask({ icon: '👩‍🏫', tag: '指導老師面談', title: '老師給了你好建議！', html: '「先把範圍縮小，每週完成一個小目標。」<br>獲得 120 學習能量。', buttons: [{ t: '謝謝老師', v: 1, main: true }], bot: 1 }); money(p, 120, '和指導老師面談'); }
+  else if (t.t === 'library') { const g = S.pot + 50; await ask({ icon: '📚', tag: '圖書館寶庫', title: `領取寶庫能量 ${g} ⚡`, html: '找到好書、好資料庫，大家拖延時繳的能量也都歸你了！', buttons: [{ t: '領取', v: 1, main: true }], bot: 1 }); S.pot = 0; money(p, g, '在圖書館寶庫找到寶藏'); }
+  else if (t.t === 'monster') { await ask({ icon: '👾', tag: '拖延怪獸', title: '被拖延怪獸咬了一口！', html: '一直滑手機、明天再說……<br>支付 100 能量到圖書館寶庫。', color: '#F5E9FF', buttons: [{ t: '下次不拖延了', v: 1, main: true }], bot: 1 }); money(p, -100, '被拖延怪獸咬'); S.pot += 100; }
+  else if (t.t === 'audit') { if (await quiz(p, '審核關卡')) money(p, 150, '通過計畫審核'); else await goJail(p); }
+  else if (t.t === 'jail' && !fromCard) toast('只是路過卡關休息站～');
+  renderPlayers();
+  await checkBroke(p);
+}
+async function checkBroke(p) {
+  if (p.m >= 0) return;
+  const mine = Object.entries(S.own).filter(([, o]) => o.p === p.id).sort((a, b) => TILES[a[0]].price - TILES[b[0]].price);
+  while (p.m < 0 && mine.length) { const [i, o] = mine.shift(); const back = Math.round((TILES[i].price + o.lv * upCost(TILES[i])) / 2); p.m += back; delete S.own[i]; refreshTile(+i); log(`${p.av} ${esc(p.name)} 放棄 ${TILES[i].name}，回收 ${back}`); }
+  if (p.m < 0) { p.out = true; pawns[p.id].visible = false; log(`${p.av} ${esc(p.name)} 能量耗盡，暫時休學`); await ask({ icon: '😵', tag: '能量耗盡', title: `${p.name} 暫時休學了`, html: '能量用完了……休息一下，下次再挑戰！', buttons: [{ t: '好', v: 1, main: true }] }); }
+  renderPlayers();
+}
+async function takeTurn() {
+  if (S.over) return;
+  const gid = S.gid, stop = () => S.over || S.gid !== gid;
+  const p = cur(); setRing(); renderPlayers(); save();
+  
+  if (p.jail) {
+    $('#turnTxt').innerHTML = `${p.av} <b>${esc(p.name)}</b> 在卡關休息站`;
+    const v = await ask({ icon: '🧩', tag: '卡關休息站', title: `${p.name} 卡關中`, html: '挑戰一題自主學習測驗，答對就能脫困並立刻擲骰；或乖乖休息一回合。', buttons: [{ t: '休息一回合', v: 0 }, { t: '答題脫困', v: 1, main: true }], bot: 1 });
+    if (stop()) return;
+    if (v && await quiz(p, '脫困挑戰')) { p.jail = 0; toast('成功脫困！'); }
+    else { p.jail = 0; log(`${p.av} ${esc(p.name)} 在卡關休息站休息一回合`); return endTurn(); }
+  }
+  let doubles = 0;
+  for (;;) {
+    await waitRoll(p); if (stop()) return;
+    const [a, b] = await rollDice(); if (stop()) return; log(`${p.av} ${esc(p.name)} 擲出 🎲${a} + 🎲${b} = <b>${a + b}</b>`);
+    $('#turnTxt').innerHTML = `${p.av} <b>${esc(p.name)}</b> 前進 ${a + b} 步`;
+    await moveSteps(p, a + b); if (stop()) return;
+    await resolve(p); if (stop()) return;
+    if (p.out || p.jail || S.over) break;
+    if (p.again) { p.again = false; toast('再擲一次！'); continue; }
+    if (a === b && doubles < 1) { doubles++; toast('擲出相同點數！再擲一次'); continue; }
+    break;
+  }
+  if (!stop()) endTurn();
+}
+function endTurn() {
+  if (S.over) return;
+  const alive = S.ps.filter(p => !p.out);
+  if (alive.length <= 1) return endGame();
+  let n = S.cur;
+  do { n = (n + 1) % S.ps.length; if (n === 0) S.round++; } while (S.ps[n].out);
+  S.cur = n;
+  if (S.maxR && S.round > S.maxR) return endGame();
+  save(); setTimeout(takeTurn, 200);
+}
+const TITLES = ['🏆 自學大師', '🥈 深耕達人', '🥉 好奇探險家', '🌱 潛力新星'];
+async function endGame() {
+  S.over = true; save(); renderPlayers(); rollBtn.disabled = true; $('#turnTxt').textContent = '遊戲結束！';
+  const rank = S.ps.slice().sort((a, b) => assets(b) - assets(a)); SFX.win(); confetti(100);
+  const rows = rank.map((p, k) => { const mine = Object.entries(S.own).filter(([, o]) => o.p === p.id); const done = mine.filter(([, o]) => o.lv === 3).length;
+    return `<tr><td>${TITLES[k] || ''}<br><b style="font-size:16px">${p.av} ${esc(p.name)}</b><div style="font-size:12px;color:#9089A8">選修 ${mine.length} 個主題・完成發表 ${done} 個</div></td><td style="font-size:17px">${assets(p).toLocaleString()} ⚡</td></tr>`; }).join('');
+  const v = await ask({ icon: '🎓', tag: '本局結算', title: `${rank[0].name} 成為本局自學大師！`, color: '#FFF6D6', ink: '#A86B00', btn: '#FFB81C',
+    html: `<table>${rows}</table><div class="tip">🌱 遊戲裡的四個階段，就是真實的自主學習：<b>擬定計畫 → 每週紀錄 → 產出成果 → 成果發表</b>。現在就去圖資中心領一張申請表吧！</div>`, buttons: [{ t: '再玩一局', v: 1, main: true }] });
+  if (v) openSetup();
+}
+function confetti(n) { if (reduceMotion) return; const box = document.createElement('div'); box.className = 'confetti'; const C = ['#FF7EB6', '#FFC23D', '#4FA8F5', '#3DD6B5', '#A78BFA']; for (let k = 0; k < n; k++) { const i = document.createElement('i'); i.style.left = Math.random() * 100 + 'vw'; i.style.background = C[k % 5]; i.style.animationDuration = 2 + Math.random() * 2 + 's'; i.style.animationDelay = Math.random() * 0.5 + 's'; box.appendChild(i); } document.body.appendChild(box); setTimeout(() => box.remove(), 4500); }
+
+// ===================== 開場設定 =====================
+function renderSetup() {
+  const box = $('#slots'); box.innerHTML = '';
+  setup.slots.forEach((s, k) => {
+    const d = document.createElement('div'); d.className = 'slot' + (s.on ? '' : ' off'); d.style.setProperty('--pc', PCOL[k]);
+    d.innerHTML = `<div class="top"><button class="av" title="換角色" type="button">${AVATARS[s.av]}</button><input value="${esc(s.name)}" maxlength="8" aria-label="玩家名稱" ${s.on ? '' : 'disabled'}></div>
+      <div class="seg">${k < 2 ? '' : `<button type="button" data-a="off" class="${s.on ? '' : 'on'}">不參加</button>`}<button type="button" data-a="human" class="${s.on && !s.bot ? 'on' : ''}">👤 玩家</button><button type="button" data-a="bot" class="${s.on && s.bot ? 'on' : ''}">🤖 電腦</button></div>`;
+    d.querySelector('.av').onclick = () => { s.av = (s.av + 1) % AVATARS.length; renderSetup(); };
+    d.querySelector('input').oninput = e => (s.name = e.target.value);
+    d.querySelectorAll('.seg button').forEach(b => (b.onclick = () => { const a = b.dataset.a; s.on = a !== 'off'; s.bot = a === 'bot'; if (a === 'bot' && /^玩家/.test(s.name)) s.name = ['電腦小四', '電腦思思', '電腦心兒', '電腦捲毛'][k]; if (a === 'human' && /^電腦/.test(s.name)) s.name = `玩家 ${k + 1}`; renderSetup(); }));
+    box.appendChild(d);
+  });
+  const ro = $('#roundOpts'); ro.innerHTML = '';
+  [[10, '10 回合（約 15 分）'], [15, '15 回合'], [20, '20 回合'], [0, '無限制']].forEach(([v, t]) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.className = setup.rounds === v ? 'on' : ''; b.onclick = () => { setup.rounds = v; renderSetup(); }; ro.appendChild(b); });
+}
+function openSetup() { renderSetup(); let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} $('#resume').hidden = !(saved && !saved.over); $('#setup').hidden = false; }
+function beginGame(state) {
+  S = state; S.gid = Math.random(); $('#setup').hidden = true;
+  Object.values(pawns).forEach(g => scene.remove(g)); for (const k in pawns) delete pawns[k];
+  for (let i = 0; i < N; i++) refreshTile(i);
+  S.ps.forEach(makePawn); placePawns(); renderPlayers(); renderLog();
+  if (!S.log.length) log('🎲 遊戲開始！祝大家自學順利～');
+  actx(); setTimeout(takeTurn, 400);
+}
+$('#start').onclick = () => { if (setup.slots.filter(s => s.on).length < 2) return toast('至少需要 2 位玩家'); beginGame(newState()); };
+$('#resume').onclick = () => { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) beginGame(s); } catch (e) { toast('讀取失敗'); } };
+$('#bNew').onclick = async () => { if (dlg.open) return; const v = await ask({ icon: '🔁', title: '要重新開始嗎？', html: '目前的進度會結束。', buttons: [{ t: '取消', v: 0 }, { t: '重新開始', v: 1, main: true }] }); if (v) { S.over = true; rollResolve = null; openSetup(); } };
+$('#bEnd').onclick = async () => { if (dlg.open || !S || S.over) return; const v = await ask({ icon: '🏁', title: '現在就結算嗎？', html: '依總資產（能量＋主題價值）排名。', buttons: [{ t: '再玩一下', v: 0 }, { t: '結算', v: 1, main: true }] }); if (v) { rollResolve = null; endGame(); } };
+$('#bRules').onclick = () => !dlg.open && ask({ icon: '📖', tag: '遊戲規則', title: '怎麼玩？', html: `<b>🎲 擲骰前進</b>：輪到你時按「擲骰子」，經過起點 +200。擲出相同點數可再擲一次。<br><b>📗 自學主題</b>：沒人選修 → 可花能量選修；自己的 → 可升級；別人的 → 支付交流費。<br><b>💡 靈感卡 / 💭 反思卡</b>：抽卡看看好習慣與壞習慣帶來的影響。<br><b>❓ 小測驗 / 🛂 審核關卡</b>：答對有能量；審核答錯要到卡關休息站。<br><b>👾 拖延怪獸</b>：支付 100 到圖書館寶庫，停在 📚 的人可以全部領走。<br><b>🏁 結束</b>：回合數到了或只剩一人時，總資產最高的人獲勝。`, buttons: [{ t: '開始玩', v: 1, main: true }] });
+$('#bLegend').onclick = () => !dlg.open && ask({ icon: '🌱', tag: '主題升級＝自主學習歷程', title: '四個階段', html: `<table>${LV.map((l, k) => `<tr><td>${l.e} Lv${k} ${l.n}</td><td>交流費 ×${l.m}</td></tr>`).join('')}</table><div class="tip">真實的自主學習也是這樣：第 1-2 週擬定計畫、第 4-16 週每週紀錄、整理成果，第 17-18 週上台發表並上傳學習歷程！</div>`, buttons: [{ t: '了解', v: 1, main: true }] });
+
+// ===================== 啟動 =====================
+function loop(now) {
+  for (let k = anims.length - 1; k >= 0; k--) if (anims[k](now)) anims.splice(k, 1);
+  if (spin) cam.yaw += 0.0025;
+  if (S && follow && !S.over && pawns[cur().id]) camFocus.lerp(new THREE.Vector3(pawns[cur().id].position.x * 0.22, 0, pawns[cur().id].position.z * 0.22 + 2.5), 0.04);
+  camTarget.lerp(camFocus, 0.08);
+  camera.position.set(camTarget.x + Math.sin(cam.yaw) * Math.cos(cam.pitch) * cam.dist, camTarget.y + Math.sin(cam.pitch) * cam.dist, camTarget.z + Math.cos(cam.yaw) * Math.cos(cam.pitch) * cam.dist);
+  camera.lookAt(camTarget);
+  Object.values(pawns).forEach((g, k) => { if (g.userData.ring.visible) g.userData.ring.scale.setScalar(1 + Math.sin(now / 250) * 0.08); });
+  renderer.render(scene, camera); requestAnimationFrame(loop);
+}
+addEventListener('resize', () => { camera.fov = narrow() ? 55 : 38; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+Promise.race([document.fonts ? Promise.all([document.fonts.load(`400 60px Huninn`), document.fonts.load(`900 40px "Noto Sans TC"`), document.fonts.load(`700 30px "Noto Sans TC"`)]) : 0, sleep(2500)]).then(() => {
+  if (!renderer) { document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;z-index:99;background:#fff;padding:20px;text-align:center">這台裝置無法顯示 3D 棋盤，請改用電腦或較新的手機瀏覽器開啟。</div>'); return; }
+  buildScene(); setupControls(); requestAnimationFrame(loop); openSetup();
+});
+window.__game = { get S() { return S; } };
+})();
+</script>
+</body>
+</html>
