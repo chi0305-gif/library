@@ -39,6 +39,7 @@
   #brand .chip { display: inline-block; margin-top: 4px; font: 900 12.5px var(--bold); padding: 2px 10px; border-radius: 999px; background: var(--sky); color: #fff; border: 3px solid var(--ol); }
 
   #tools { position: fixed; right: 14px; top: 14px; z-index: 20; display: grid; grid-template-columns: repeat(3, auto); gap: 8px; }
+  #tools #bSfx.on { background: linear-gradient(180deg, #eee 0 50%, #ccc 50%); }
   .tb { height: 40px; padding: 0 14px; border-radius: 14px; border: 3px solid var(--ol); background: linear-gradient(180deg, #fff 0 50%, #EDE6FF 50%); box-shadow: 0 4px 0 var(--ol); font: 900 13px var(--bold); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; transition: transform .1s; }
   .tb:hover { transform: translateY(-2px); }
   .tb:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ol); }
@@ -146,7 +147,7 @@
 
   @media (max-width: 760px) {
     #brand { left: 8px; top: 8px; padding: 5px 10px 6px 6px; border-radius: 16px; gap: 6px; border-width: 3px; } #brand .logo { width: 36px; height: 36px; font-size: 20px; border-width: 3px; } #brand h1 { font-size: 17px; -webkit-text-stroke: 5px var(--ol); } #brand .chip { font-size: 11px; }
-    #tools { right: 8px; top: 10px; grid-template-columns: repeat(3, auto); gap: 4px; } .tb { height: 32px; padding: 0 8px; font-size: 12px; border-width: 2.5px; } .tb .t { display: none; }
+    #tools { right: 8px; top: 10px; grid-template-columns: repeat(5, auto); gap: 4px; } .tb { height: 32px; padding: 0 8px; font-size: 12px; border-width: 2.5px; } .tb .t { display: none; }
     #zoom { top: auto; bottom: 170px; right: 8px; flex-direction: column; } #zoom .tb { width: 36px; height: 36px; }
     .pcard { width: calc(50vw - 14px); border-width: 3px; box-shadow: 0 4px 0 var(--ol); }
     .pcard .hd { padding: 3px 8px 3px 50px; font-size: 12px; } .pcard .av { width: 40px; height: 40px; font-size: 22px; top: -10px; left: 4px; border-width: 3px; }
@@ -165,8 +166,7 @@
 <header id="brand" class="glass"><span class="logo">🎲</span><div><h1>四維自學大富翁</h1><span class="chip" id="roundChip">第 1 回合</span></div></header>
 <nav id="tools" aria-label="工具">
   <button class="tb" id="bFull">⛶<span class="t"> 全螢幕</span></button>
-  <button class="tb" id="bSfx">🔊<span class="t"> 音效：開</span></button>
-  <button class="tb" id="bBgm">🎵<span class="t"> 音樂：關</span></button>
+  <button class="tb" id="bSfx">🔊<span class="t"> 音效</span></button>
   <button class="tb" id="bReset">🎥<span class="t"> 重設視角</span></button>
   <button class="tb" id="bSpin">🔄<span class="t"> 旋轉模式</span></button>
   <button class="tb hot" id="bFollow">📌<span class="t"> 視角跟隨</span></button>
@@ -190,10 +190,10 @@
 <div id="setup">
   <div class="sc">
     <h2>四維自學大富翁 🎲</h2>
-    <p class="lead">擲骰子走遍校園，把<b>因材網、磨課師、WebPAC</b> 等自學資源加入你的計畫，一路<b>寫紀錄、產出成果、上台發表</b>！<br>同學走到你的主題，要向你「請教」並支付交流能量。遊戲結束時，總能量最高的人就是本局的<b>自學大師</b>。</p>
+    <p class="lead">擲骰子走遍校園，在 16 個<b>思考站</b>回答自主學習的情境題、認領它們，一路<b>寫紀錄、產出成果、上台發表</b>！<br>同學走到你的主題，要向你「請教」並支付交流能量。遊戲結束時，總能量最高的人就是本局的<b>自學大師</b>。</p>
     <div class="how">
       <div><b>🎲 擲骰前進</b>經過「擬定計畫」可領 200 學習能量</div>
-      <div><b>💻 自學資源</b>選修因材網、磨課師、WebPAC 等平台，再回來就能升級</div>
+      <div><b>🤔 思考站</b>走到就要想一想：答對才能認領，再回來就能升級</div>
       <div><b>🌱 四個階段</b>擬定計畫 → 落實執行 → 產出成果 → 成果發表</div>
       <div><b>🏆 卡片與測驗</b>成果專區卡、紀錄表卡、自學小測驗，答對有獎勵</div>
     </div>
@@ -223,39 +223,39 @@ const FONT = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif', RFO
 
 // ===================== 遊戲資料 =====================
 const GROUPS = {
-  base: { name: '學科學習平台', c: '#FF9F1C' }, high: { name: '高中線上課程', c: '#FFC300' }, mooc: { name: '大學先修課程', c: '#F15BB5' }, open: { name: '開放式課程', c: '#9B5DE5' },
-  world: { name: '國際線上課程', c: '#2EC4F1' }, art: { name: '藝術與音樂', c: '#00C9A7' }, code: { name: '程式設計', c: '#4361EE' }, db: { name: '圖書與資料庫', c: '#38D16A' }
+  idea: { name: '主題發想', c: '#FF9F1C' }, goal: { name: '目標設定', c: '#FFC300' }, plan: { name: '計畫規劃', c: '#F15BB5' }, res: { name: '找資源', c: '#9B5DE5' },
+  exec: { name: '執行紀錄', c: '#2EC4F1' }, time: { name: '時間管理', c: '#00C9A7' }, show: { name: '成果呈現', c: '#4361EE' }, refl: { name: '自我反思', c: '#38D16A' }
 };
 const T = (t, name, extra = {}) => Object.assign({ t, name }, extra);
 const TILES = [
   T('start', '擬定計畫', { icon: '📝', sub: '第 1-2 週・起點', desc: '確立自學主題與 18 週進度規劃，填妥計畫申請表並請指導教師簽名。每經過一次，領取 200 學習能量！' }),
-  T('topic', '因材網', { g: 'base', price: 60, url: 'https://adl.edu.tw/', tip: '教育部的適性學習平台，可以針對弱點單元重新學習，打好主題需要的學科基礎。' }),
+  T('topic', '興趣變主題', { g: 'idea', price: 60, q: ['你很喜歡打電動，想把它變成自主學習主題，哪一個最適合？', ['研究一款遊戲的關卡設計，再用 Scratch 做出自己的小關卡', '每天打電動 2 小時', '研究怎麼最快升等', '看遊戲實況主直播'], '好主題要有「想探究的問題」和「做得出來的成果」，不只是做喜歡的事。'], tip: '好主題要有「想探究的問題」和「做得出來的成果」，不只是做喜歡的事。' }),
   T('chance', '成果專區卡', { icon: '🏆' }),
-  T('topic', '均一教育平台', { g: 'base', price: 80, url: 'https://www.junyiacademy.org/', tip: '免費的影片與練習題，適合自學數學、自然等學科，進度可以自己掌控。' }),
+  T('topic', '主題健康檢查', { g: 'idea', price: 80, q: ['「我要研究全世界的氣候變遷」這個主題最大的問題是？', ['範圍太大，18 週做不完，要縮小（例如：花蓮海岸的水溫變化）', '不夠有趣', '太簡單了', '完全沒有問題'], '主題健康檢查：有興趣、範圍剛好、找得到資源、成果具體、有老師能指導。'], tip: '主題健康檢查：有興趣、範圍剛好、找得到資源、成果具體、有老師能指導。' }),
   T('quiz', '自學小測驗', { icon: '❓' }),
-  T('topic', '臺北酷課雲', { g: 'high', price: 100, url: 'https://cooc.tp.edu.tw/', tip: '高中各科的線上課程與學習資源，可以預習或延伸課堂內容。' }),
-  T('topic', '學習吧 LearnMode', { g: 'high', price: 120, url: 'https://www.learnmode.net/', tip: '線上學習平台，有課程、作業與學習紀錄，方便追蹤自己的進度。' }),
+  T('topic', 'SMART 目標', { g: 'goal', price: 100, q: ['哪一個目標最清楚、最能檢查有沒有做到？', ['18 週內學會 8 首吉他曲，並錄成演奏影片', '我想變得很會彈吉他', '有空就練吉他', '練到老師覺得滿意'], 'SMART：具體、可衡量、可達成、相關、有時限。'], tip: 'SMART：具體、可衡量、可達成、相關、有時限。' }),
+  T('topic', '為什麼想學', { g: 'goal', price: 120, q: ['寫自學動機時，哪一段最有說服力？', ['我家開民宿，常遇到外國旅客，想加強英語會話來幫忙接待', '因為大家都選這個', '因為這個比較輕鬆', '因為老師叫我寫'], '動機要連結自己的經驗與需求，「為什麼」比「做什麼」更重要。'], tip: '動機要連結自己的經驗與需求，「為什麼」比「做什麼」更重要。' }),
   T('jail', '卡關休息站', { icon: '🧩', sub: '只是路過', desc: '忘了帶紀錄表、沒有核章或沒到核定地點，就會被送來這裡休息一回合；也可以挑戰測驗提早脫困。' }),
-  T('topic', '磨課師 MOOCs', { g: 'mooc', price: 140, url: 'https://taiwanmooc.org/', tip: '臺灣各大學開設的線上課程，可以提早接觸大學的學習內容。' }),
+  T('topic', '18 週怎麼排', { g: 'plan', price: 140, q: ['規劃 18 週進度，哪一種排法最合理？', ['把大目標拆成每週小任務，並預留調整和整理成果的時間', '前 16 週先放鬆，最後兩週衝刺', '不用排，想到什麼做什麼', '每週都做一模一樣的事'], '第 1-2 週擬定計畫、第 3 週審核、第 4-16 週執行、第 17-18 週成果發表。'], tip: '第 1-2 週擬定計畫、第 3 週審核、第 4-16 週執行、第 17-18 週成果發表。' }),
   T('reflect', '紀錄表卡', { icon: '📒' }),
-  T('topic', '大學先修課程認證', { g: 'mooc', price: 160, url: 'https://apc.cloud.ncnu.edu.tw/', tip: '全國大學先修課程認證平台，修課成果可以成為學習歷程的亮點。' }),
+  T('topic', '申請表下一步', { g: 'plan', price: 160, q: ['自主學習計畫申請表填好後，下一步應該？', ['請家長、指導教師與相關處室簽核，再送審核', '直接開始做就好', '先放在抽屜裡', '自己簽名就可以'], '計畫需經家長、指導教師與相關處室簽核，再由自主學習推動小組審查。'], tip: '計畫需經家長、指導教師與相關處室簽核，再由自主學習推動小組審查。' }),
   T('teacher', '每週核章', { icon: '✅', sub: '第 4-16 週', desc: '每週攜帶紀錄表詳實記錄收穫與困惑，課堂結束前由現場指導教師核章確認。獲得 120 學習能量！' }),
-  T('topic', '台灣開放式課程聯盟', { g: 'open', price: 180, url: 'http://www.tocwc.org.tw/', tip: '各大學公開的完整課程影片與講義，可以依興趣挑一門系統性地學。' }),
-  T('topic', 'ShareCourse 學聯網', { g: 'open', price: 200, url: 'http://www.sharecourse.net/', tip: '多元主題的線上課程平台，適合找專題需要的入門課。' }),
+  T('topic', '找資料第一站', { g: 'res', price: 180, q: ['要找可靠的資料，第一步最好怎麼做？', ['先查學校 WebPAC 館藏與資料庫，再延伸到網路', '直接引用社群貼文', '只看搜尋結果第一筆', '全部問 AI 就好'], '書與期刊經過審查，是最可靠的起點；圖資中心老師也能幫你找資料。'], tip: '書與期刊經過審查，是最可靠的起點；圖資中心老師也能幫你找資料。' }),
+  T('topic', '這資料可信嗎', { g: 'res', price: 200, q: ['判斷一篇網路文章能不能引用，最該檢查什麼？', ['作者是誰、何時發布、有沒有證據與出處', '按讚數多不多', '圖片好不好看', '字數夠不夠多'], '看作者、時間、證據與目的，必要時用第二個來源交叉查證。'], tip: '看作者、時間、證據與目的，必要時用第二個來源交叉查證。' }),
   T('library', '圖書資訊中心', { icon: '📚', sub: '能量寶庫', desc: '主題發想、填表遇到問題，都可以來圖資中心找老師諮詢（總機轉 517）！停在這裡可以領走寶庫裡累積的能量（再加 50）。' }),
-  T('topic', 'Coursera', { g: 'world', price: 220, url: 'https://www.coursera.org/', tip: '國際大學的線上課程（英文），挑戰看看用英文學新知識。' }),
+  T('topic', '紀錄怎麼寫', { g: 'exec', price: 220, q: ['哪一則每週紀錄寫得最好？', ['看完迴圈單元並寫出九九乘法表；卡在巢狀迴圈，下週先複習再練習', '今天有學習', '很充實', '跟上週一樣'], '好的紀錄要寫出：做了什麼、卡在哪裡、下週怎麼調整，並請現場老師核章。'], tip: '好的紀錄要寫出：做了什麼、卡在哪裡、下週怎麼調整，並請現場老師核章。' }),
   T('chance', '成果專區卡', { icon: '🏆' }),
-  T('topic', 'edX', { g: 'world', price: 240, url: 'https://www.edx.org/', tip: '哈佛、MIT 等名校的線上課程（英文），適合想深入某個領域的你。' }),
+  T('topic', '卡關了怎麼辦', { g: 'exec', price: 240, q: ['實作卡關兩週都沒有進展，最好的做法是？', ['主動找指導教師討論，調整方法或縮小範圍', '直接放棄換主題', '假裝沒事繼續拖', '等期末再一起處理'], '越早說越好調整；卡關的過程也是反思的好素材。'], tip: '越早說越好調整；卡關的過程也是反思的好素材。' }),
   T('show', '成果發表會', { icon: '🎤', sub: '第 17-18 週', desc: '彙整學期成果作品與自我反思，參與成果分享並上傳到高中學習歷程平台！獲得 100 能量，每個已到「成果發表」的主題再加 50。' }),
-  T('topic', '嘎老師 Miss Ga', { g: 'art', price: 260, url: 'https://www.youtube.com/@MissGa', tip: '用輕鬆的影片學樂理與音樂知識，適合音樂類的自學主題。' }),
-  T('topic', 'Kadenze', { g: 'art', price: 280, url: 'https://www.kadenze.com/', tip: '藝術、設計與音樂科技的線上課程，讓創作主題更有深度。' }),
+  T('topic', '拖延怪獸', { g: 'time', price: 260, q: ['一直想滑手機、無法專心，哪個方法最有效？', ['把手機放遠，設定 25 分鐘專注時段，完成再休息', '邊滑手機邊學', '等有心情再做', '晚上熬夜補回來'], '把大任務切小、限定時間專注，是對付拖延的好方法。'], tip: '把大任務切小、限定時間專注，是對付拖延的好方法。' }),
+  T('topic', '進度落後了', { g: 'time', price: 280, q: ['第 12 週發現進度只到一半，你會怎麼做？', ['重新排列優先順序，先完成最核心的部分', '全部打掉重來', '每天熬夜趕工', '不管它順其自然'], '先保住核心目標，再和指導教師討論哪些部分可以縮小。'], tip: '先保住核心目標，再和指導教師討論哪些部分可以縮小。' }),
   T('audit', '審核核定', { icon: '🛂', sub: '第 3 週', desc: '自主學習推動小組審查計畫：回答一題測驗，答對獲得 150；答錯要到卡關休息站修改計畫。' }),
-  T('topic', 'Scratch', { g: 'code', price: 300, url: 'https://scratch.mit.edu/', tip: '用積木寫程式，做出小遊戲或動畫，是程式自學的好起點。' }),
+  T('topic', '成果怎麼呈現', { g: 'show', price: 300, q: ['主題是「花蓮小吃的歷史」，哪一種成果最能展現學習？', ['訪談店家做成短片＋圖文小誌，說明過程與發現', '只交一張心得', '抄網路資料', '只拍一張照片'], '成果可以是影片、作品、展演或小論文，重點是看得見你的學習過程。'], tip: '成果可以是影片、作品、展演或小論文，重點是看得見你的學習過程。' }),
   T('reflect', '紀錄表卡', { icon: '📒' }),
-  T('topic', 'Code.org', { g: 'code', price: 320, url: 'https://code.org/', tip: '有系統的程式學習關卡，從基礎邏輯一路學到網頁與 App。' }),
+  T('topic', '5 分鐘發表', { g: 'show', price: 320, q: ['5 分鐘的成果發表，最該怎麼安排？', ['動機 → 過程與困難 → 成果 → 收穫與下一步', '把所有資料念完', '只播一支影片', '只講最後的結果'], '第 17-18 週成果分享，讓聽眾看見你的學習歷程。'], tip: '第 17-18 週成果分享，讓聽眾看見你的學習歷程。' }),
   T('monster', '拖延怪獸', { icon: '👾', desc: '一直滑手機、明天再說……被拖延怪獸咬了一口！支付 100 能量到圖書資訊中心寶庫。' }),
-  T('topic', '電子書服務平台', { g: 'db', price: 350, url: 'https://ebook.nlpi.edu.tw/', tip: '國立公共資訊圖書館的電子書，免費借閱，查資料超方便。' }),
-  T('topic', '四維 WebPAC', { g: 'db', price: 400, url: 'http://opac.swsh.hlc.edu.tw/', tip: '查詢校內實體圖書、專業期刊與主題書單，自主學習文獻搜尋好幫手！' })
+  T('topic', '反思寫什麼', { g: 'refl', price: 350, q: ['上傳學習歷程的自我反思，最重要的是？', ['寫出遇到的困難、怎麼解決、學到什麼和未來怎麼應用', '寫得越長越好', '說一切都很順利', '照抄範例'], '做了什麼 → 學到什麼 → 困難 → 解決 → 未來應用。'], tip: '做了什麼 → 學到什麼 → 困難 → 解決 → 未來應用。' }),
+  T('topic', 'AI 怎麼用', { g: 'refl', price: 400, q: ['用 AI 協助自主學習，哪一個做法正確？', ['請 AI 提問引導、自己查證，並在成果中標註怎麼使用', '請 AI 直接寫好報告', '完全相信 AI 的答案', '把個人資料貼給 AI'], 'AI 是學伴不是代筆：要查證、誠實標註、保護個資。'], tip: 'AI 是學伴不是代筆：要查證、誠實標註、保護個資。' }),
 ];
 const N = TILES.length;
 const LV = [{ n: '擬定計畫', e: '📝', m: 0.12 }, { n: '落實執行', e: '📒', m: 0.3 }, { n: '產出成果', e: '🎨', m: 0.6 }, { n: '成果發表', e: '🏆', m: 1.0 }];
@@ -355,14 +355,14 @@ const SFX = {
   pop: () => tone(880, 0.07, 'sine', 0.06, 0, 1320),
   win: () => [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, k) => tone(f, 0.3, 'triangle', 0.08, k * 0.11))
 };
-addEventListener('click', e => { if (e.target.closest('button')) SFX.pop(); }, true);
+['arrive', 'coin', 'kaching', 'lose', 'card', 'build', 'right', 'wrong', 'pop', 'win'].forEach(k => (SFX[k] = () => {}));
 const MEL = [76, 79, 84, 79, 81, 79, 76, 72, 74, 76, 79, 76, 74, 72, 74, 79, 76, 79, 84, 86, 84, 81, 79, 76, 77, 76, 74, 72, 74, 76, 72, 0];
 function startBgm() { const a = actx(); let step = 0, next = a.currentTime + 0.05; const beat = 0.24;
   const n = (m, t, len, v, type) => { const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = 440 * Math.pow(2, (m - 69) / 12); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + len); o.connect(g).connect(a.destination); o.start(t); o.stop(t + len + 0.05); };
   bgmTimer = setInterval(() => { while (next < a.currentTime + 0.4) { const m = MEL[step % MEL.length]; if (m) { n(m, next, beat * 1.5, 0.035, 'triangle'); n(m + 12, next, 0.08, 0.012, 'sine'); } if (step % 4 === 0) n([48, 53, 55, 48, 45, 53, 55, 48][(step / 4) % 8], next, beat * 3.5, 0.04, 'sine'); if (step % 2 === 1) noise(0.02, 0.02, next - a.currentTime, 8000, 1); step++; next += beat; } }, 90); }
 function setBgm(on) { bgmOn = on; const b = $('#bBgm'); b.innerHTML = `🎵<span class="t"> 音樂：${on ? '開' : '關'}</span>`; b.classList.toggle('on', on); clearInterval(bgmTimer); if (on) startBgm(); }
-$('#bSfx').onclick = e => { sfxOn = !sfxOn; e.currentTarget.innerHTML = (sfxOn ? '🔊' : '🔇') + `<span class="t"> 音效：${sfxOn ? '開' : '關'}</span>`; e.currentTarget.classList.toggle('on', !sfxOn); };
-$('#bBgm').onclick = () => setBgm(!bgmOn);
+$('#bSfx').onclick = e => { sfxOn = !sfxOn; e.currentTarget.innerHTML = (sfxOn ? '🔊' : '🔇') + `<span class="t"> 音效</span>`; e.currentTarget.classList.toggle('on', !sfxOn); };
+
 $('#bFull').onclick = () => { if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {}); else document.exitFullscreen && document.exitFullscreen(); };
 
 // ===================== UI 小工具 =====================
@@ -414,7 +414,7 @@ const tex = (w, h, draw) => { const c = document.createElement('canvas'); c.widt
 const matCache = {};
 const GRAD = (() => { const t = new THREE.DataTexture(new Uint8Array([120, 120, 120, 255, 200, 200, 200, 255, 255, 255, 255, 255]), 3, 1, THREE.RGBAFormat); t.minFilter = t.magFilter = THREE.NearestFilter; t.generateMipmaps = false; t.needsUpdate = true; return t; })();
 const toonM = (o = {}) => { o = Object.assign({}, o); delete o.roughness; delete o.metalness; return new THREE.MeshToonMaterial(Object.assign({ gradientMap: GRAD }, o)); };
-const pop = c => { const col = new THREE.Color(c), h = {}; col.getHSL(h); if (h.s > 0.12 && h.l < 0.97) col.setHSL(h.h, Math.min(1, h.s * 1.25 + 0.18), Math.max(0.12, h.l * 0.93)); return col; };
+const pop = c => { const col = new THREE.Color(c), h = {}; col.getHSL(h); if (h.s > 0.12 && h.l < 0.97 && h.l > 0.28) col.setHSL(h.h, Math.min(1, h.s * 1.25 + 0.18), Math.max(0.12, h.l * 0.93)); return col; };
 const MAT = (color, o) => { if (o) return toonM(Object.assign({ color: pop(color) }, o)); const k = String(color); return matCache[k] || (matCache[k] = toonM({ color: pop(color) })); };
 const OL_MAT = new THREE.MeshBasicMaterial({ color: 0x2B1F3A, side: THREE.BackSide });
 function addOutlines(root, t = 0.085) {
@@ -521,7 +521,7 @@ const MODELS = {
     Sp(g, 0.32, '#FFE27A', 1.55, 3.7, 0.1); Cy(g, 0.06, 0.06, 0.6, '#B9B6CC', 1.55, 3.35, 0.1); },
 gradcap(g) { Cy(g, 0.75, 0.85, 0.7, '#3B3553', 0, 0.9, 0); const top = Bx(g, 2.4, 0.16, 2.4, '#3B3553', 0, 1.33, 0, 0.05); top.rotation.y = Math.PI / 4; Sp(g, 0.14, '#FFC93D', 0, 1.45, 0); const ts = Cy(g, 0.03, 0.03, 1.0, '#FFC93D', 0.8, 1.0, 0.8, 6); Cy(g, 0.12, 0.05, 0.35, '#FFC93D', 0.8, 0.45, 0.8, 10); Bx(g, 1.4, 0.12, 1.0, '#FFFDF5', -0.6, 0.06, 0.6, 0.04); To(g, 0.15, 0.05, '#FF7EB6', -0.6, 0.12, 0.6).rotation.x = Math.PI / 2; },
   medal(g) { [-0.35, 0.35].forEach((x, k) => { const r = Bx(g, 0.5, 1.5, 0.08, k ? '#5AB8FF' : '#FF7EB6', x, 2.4, -0.05, 0.04); r.rotation.z = k ? -0.3 : 0.3; }); const m = Cy(g, 0.85, 0.85, 0.2, '#FFC93D', 0, 1.4, 0, 32); m.rotation.x = Math.PI / 2; const st = mesh(new THREE.OctahedronGeometry(0.4), MAT('#FFFFFF'), 0, 1.4, 0.14); st.scale.z = 0.3; g.add(st); Cy(g, 0.9, 1.0, 0.3, '#FFE9A8', 0, 0.15, 0); face(g, 1.1, 0.13, 0.55); spinners.push({ o: m, wobble: 1 }); },
-  globe(g) { CHAR_MODEL.globe(g); },
+  globe(g) { Cy(g, 0.65, 0.75, 0.22, '#D5A877', 0, 0.11, 0); Cy(g, 0.1, 0.1, 0.5, '#D5A877', 0, 0.45, 0, 10); const a = To(g, 1.15, 0.07, '#D5A877', 0, 1.75, 0, Math.PI); a.rotation.z = Math.PI / 2 + 0.3; Sp(g, 1.0, '#6CC4FF', 0, 1.75, 0); [[0.5, 2.2, 0.6, 0.45], [-0.6, 1.5, 0.6, 0.4], [0.2, 1.2, -0.85, 0.35], [-0.3, 2.4, -0.7, 0.3]].forEach(([x, y, z, r]) => Sp(g, r, '#7ED957', x, y, z, 1, 0.8, 0.5).lookAt(0, 1.75, 0)); face(g, 1.75, 0.97, 0.85); },
   musicnote(g) { const n = new THREE.Group(); n.position.set(0, 0.2, 0); g.add(n); Sp(n, 0.45, '#3DD6B5', -0.5, 0.5, 0, 1.25, 0.9, 0.9); Sp(n, 0.45, '#3DD6B5', 0.7, 0.8, 0, 1.25, 0.9, 0.9); Cy(n, 0.09, 0.09, 2.2, '#3DD6B5', -0.03, 1.6, 0, 10); Cy(n, 0.09, 0.09, 2.2, '#3DD6B5', 1.18, 1.9, 0, 10); const bar = Bx(n, 1.3, 0.3, 0.2, '#3DD6B5', 0.58, 2.85, 0, 0.08); bar.rotation.z = 0.25; spinners.push({ o: n, wobble: 1 }); },
   ebook(g) { const t = new THREE.Group(); t.position.y = 1.3; t.rotation.x = -0.35; g.add(t); Bx(t, 2.0, 2.6, 0.18, '#5A6B8C', 0, 0, 0, 0.18); Pl(t, 1.7, 2.2, tex(170, 220, (x, W, H) => { x.fillStyle = '#FFFDF5'; x.fillRect(0, 0, W, H); x.fillStyle = '#5FCB6B'; x.fillRect(14, 14, W - 28, 40); x.fillStyle = '#C9C2E4'; for (let k = 0; k < 8; k++) x.fillRect(14, 70 + k * 17, W - 28 - (k % 3) * 20, 8); }), 0, 0, 0.1); Bx(g, 1.8, 0.3, 0.4, '#C99A6C', 0, 0.15, 0.6, 0.1); },
   books(g) { const C = ['#FF7EB6', '#5AB8FF', '#FFC93D', '#5FCB6B', '#B678F5']; for (let k = 0; k < 4; k++) { const b = Bx(g, 2.4 - k * 0.15, 0.45, 1.7 - k * 0.08, C[k], 0, 0.25 + k * 0.47, 0, 0.1); b.rotation.y = (k % 2 ? 0.15 : -0.1); Bx(g, 2.3 - k * 0.15, 0.36, 1.6 - k * 0.08, '#FFFDF5', 0.08, 0.25 + k * 0.47, 0, 0.05).rotation.y = b.rotation.y; } const mg = new THREE.Group(); mg.position.set(0.3, 2.6, 0); mg.rotation.z = 0.5; g.add(mg); To(mg, 0.5, 0.1, '#5A5394', 0, 0, 0); Cy(mg, 0.08, 0.1, 0.9, '#C99A6C', 0, -0.95, 0, 10); spinners.push({ o: mg, bob: 1 }); },
@@ -531,7 +531,7 @@ gradcap(g) { Cy(g, 0.75, 0.85, 0.7, '#3B3553', 0, 0.9, 0); const top = Bx(g, 2.4
     Cy(g, 0.15, 0.15, 1.6, '#9AA3B8', -1.8, 0.8, -1.2, 10); const arm = Bx(g, 3.2, 0.22, 0.22, '#FFFFFF', -0.25, 1.5, -1.2, 0.08); arm.rotation.z = 0.15; for (let k = 0; k < 4; k++) Bx(g, 0.35, 0.24, 0.24, '#F0534F', -1.3 + k * 0.8, 1.5 + k * 0.12, -1.2, 0.05); }
 };
 const TILE_MODEL = { start: 'start', jail: 'jail', library: 'library', audit: 'audit', chance: 'medal', reflect: 'ebook', quiz: 'question', teacher: 'teacher', monster: 'monster', show: 'stage' };
-const TOPIC_MODEL = ['laptop', 'monitor', 'thought', 'plant', 'gradcap', 'medal', 'clapper', 'mic', 'globe', 'gradcap', 'musicnote', 'palette', 'controller', 'monitor', 'ebook', 'books'];
+const TOPIC_MODEL = ['bulb', 'globe', 'medal', 'plant', 'laptop', 'teacher', 'books', 'ebook', 'monitor', 'controller', 'piggy', 'shoe', 'clapper', 'mic', 'thought', 'palette']; const _OLD_TM = ['laptop', 'monitor', 'thought', 'plant', 'gradcap', 'medal', 'clapper', 'mic', 'globe', 'gradcap', 'musicnote', 'palette', 'controller', 'monitor', 'ebook', 'books'];
 
 // 棋盤座標
 const TW = 6, TD = 9, C = 22.5;
@@ -647,29 +647,47 @@ function tickSpinners(t) {
 
 // ===================== 文具小夥伴（棋子） =====================
 const CHARS = [
-  { key: 'pencil', e: '✏️', n: '鉛筆小黃' }, { key: 'eraser', e: '🧽', n: '橡皮擦粉粉' }, { key: 'note', e: '📒', n: '筆記本綠綠' },
-  { key: 'crayon', e: '🖍️', n: '蠟筆小橘' }, { key: 'glue', e: '🧴', n: '膠水阿黏' }, { key: 'globe', e: '🌏', n: '地球儀圓圓' }
+  { key: 'zhe', e: '👦', n: '阿哲', hair: 'spiky', hc: '#5A3A22', shirt: '#FF4D6D', pants: '#3A4A8C' },
+  { key: 'qing', e: '👧', n: '小晴', hair: 'pigtail', hc: '#2B1F3A', shirt: '#FFC300', pants: '#FF8FB8', acc: 'bow' },
+  { key: 'ba', e: '🧑‍🎓', n: '學霸阿凱', hair: 'short', hc: '#2B1F3A', shirt: '#38D16A', pants: '#2B3A55', acc: 'grad', glasses: 1 },
+  { key: 'si', e: '👩', n: '思思', hair: 'long', hc: '#7A4A2A', shirt: '#9B5DE5', pants: '#3A4A8C', acc: 'band' },
+  { key: 'yun', e: '🧢', n: '運動小宇', hair: 'short', hc: '#3A2A1A', shirt: '#FF9F1C', pants: '#2EC4F1', acc: 'cap' },
+  { key: 'mei', e: '👩‍🎨', n: '畫畫小美', hair: 'bob', hc: '#C0503A', shirt: '#F15BB5', pants: '#FFF4D6', acc: 'beret' }
 ];
-const CHAR_MODEL = {
-  pencil(g) { Cy(g, 0.62, 0.62, 0.5, '#FF9EC7', 0, 0.3, 0, 6); Cy(g, 0.64, 0.64, 0.35, '#C9CCD6', 0, 0.72, 0, 6); Cy(g, 0.62, 0.62, 1.9, '#FFD54F', 0, 1.85, 0, 6); Co(g, 0.62, 0.95, '#F2D3B0', 0, 3.27, 0, 6); Co(g, 0.2, 0.32, '#4A3F6B', 0, 3.6, 0, 12); face(g, 1.9, 0.56, 1.05); },
-  eraser(g) { Bx(g, 1.7, 1.7, 1.1, '#FF9EC7', 0, 0.95, 0, 0.32); Bx(g, 1.76, 0.95, 1.16, '#6CC4FF', 0, 1.45, 0, 0.16); Pl(g, 1.2, 0.5, tex(120, 50, (x, W, H) => { x.fillStyle = '#6CC4FF'; x.fillRect(0, 0, W, H); x.fillStyle = '#fff'; x.font = `400 30px ${RFONT}`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('ERASE', W / 2, H / 2 + 2); }), 0, 1.5, 0.59); face(g, 0.75, 0.56, 1.0); },
-  note(g) { Bx(g, 1.9, 2.3, 0.5, '#FFFDF5', 0.08, 1.3, -0.05, 0.1); Bx(g, 1.9, 2.3, 0.18, '#7ED957', 0, 1.3, 0.22, 0.12); for (let k = 0; k < 6; k++) To(g, 0.13, 0.04, '#B9B6CC', -0.95, 0.45 + k * 0.34, 0.08).rotation.y = Math.PI / 2; Bx(g, 1.1, 0.4, 0.04, '#FFFFFF', 0.1, 2.0, 0.32, 0.08); face(g, 1.2, 0.33, 1.0, 0.1); },
-  crayon(g) { Cy(g, 0.55, 0.55, 2.3, '#FF8A5B', 0, 1.25, 0, 20); Cy(g, 0.57, 0.57, 1.0, '#FFFFFF', 0, 1.3, 0, 20); Cy(g, 0.58, 0.58, 0.12, '#FF8A5B', 0, 0.85, 0, 20); Cy(g, 0.58, 0.58, 0.12, '#FF8A5B', 0, 1.75, 0, 20); Co(g, 0.48, 0.8, '#FF8A5B', 0, 2.8, 0, 20); face(g, 1.3, 0.56, 0.95); },
-  glue(g) { Cy(g, 0.7, 0.8, 1.9, '#FFFFFF', 0, 1.0, 0, 24); Cy(g, 0.72, 0.8, 0.9, '#5EDDBE', 0, 0.85, 0, 24); Cy(g, 0.35, 0.6, 0.35, '#FFFFFF', 0, 2.1, 0); Co(g, 0.35, 0.8, '#FF8FC3', 0, 2.65, 0, 20); Sp(g, 0.14, '#FF8FC3', 0, 3.1, 0); face(g, 1.5, 0.72, 1.0); },
-  globe(g) { Cy(g, 0.65, 0.75, 0.22, '#D5A877', 0, 0.11, 0); Cy(g, 0.1, 0.1, 0.5, '#D5A877', 0, 0.45, 0, 10); const a = To(g, 1.15, 0.07, '#D5A877', 0, 1.75, 0, Math.PI); a.rotation.z = Math.PI / 2 + 0.3; Sp(g, 1.0, '#6CC4FF', 0, 1.75, 0);
-    [[0.5, 2.2, 0.6, 0.45], [-0.6, 1.5, 0.6, 0.4], [0.2, 1.2, -0.85, 0.35], [-0.3, 2.4, -0.7, 0.3]].forEach(([x, y, z, r]) => Sp(g, r, '#7ED957', x * 1.0, y, z, 1, 0.8, 0.5).lookAt(0, 1.75, 0)); face(g, 1.75, 0.97, 0.85); }
-};
+const SKIN = '#FFD9B8';
+function buildKid(g, c) {
+  const legs = [-1, 1].map(k => { const pv = new THREE.Group(); pv.position.set(k * 0.32, 1.05, 0); g.add(pv); Cy(pv, 0.2, 0.18, 0.75, c.pants, 0, -0.4, 0, 14); Sp(pv, 0.3, '#FFFFFF', 0, -0.85, 0.12, 1, 0.62, 1.35); Sp(pv, 0.31, '#2B1F3A', 0, -0.95, 0.12, 1, 0.25, 1.36); return pv; });
+  Cy(g, 0.58, 0.72, 1.25, c.shirt, 0, 1.6, 0, 24); Cy(g, 0.73, 0.73, 0.2, c.pants, 0, 1.06, 0, 24);
+  Sp(g, 0.24, '#FFFFFF', 0, 2.18, 0.5, 1.6, 0.6, 0.6);
+  const arms = [-1, 1].map(k => { const pv = new THREE.Group(); pv.position.set(k * 0.72, 2.05, 0); pv.rotation.z = k * 0.2; g.add(pv); Cy(pv, 0.17, 0.15, 0.8, c.shirt, 0, -0.35, 0, 12); Sp(pv, 0.21, SKIN, 0, -0.85, 0); return pv; });
+  const head = new THREE.Group(); head.position.y = 3.25; g.add(head);
+  Sp(head, 1.05, SKIN, 0, 0, 0, 1.05, 0.98, 1); [-1, 1].forEach(k => Sp(head, 0.2, SKIN, k * 1.08, -0.05, 0));
+  face(head, -0.1, 0.98, 1.45);
+  const H = c.hc, cap = mesh(new THREE.SphereGeometry(1.13, 28, 16, 0, Math.PI * 2, 0, Math.PI * 0.52), MAT(H), 0, 0.08, -0.05); cap.rotation.x = -0.42; head.add(cap);
+  for (let k = -2; k <= 2; k++) Sp(head, 0.32, H, k * 0.3, 0.72 - Math.abs(k) * 0.06, 0.68 - Math.abs(k) * 0.08, 1, 0.7, 0.7);
+  if (c.hair === 'spiky') for (let k = 0; k < 6; k++) { const a = k / 6 * Math.PI * 2; const sp = Co(head, 0.3, 0.75, H, Math.cos(a) * 0.55, 1.05, Math.sin(a) * 0.55 - 0.15, 10); sp.rotation.set(Math.sin(a) * 0.6, 0, -Math.cos(a) * 0.6); }
+  if (c.hair === 'pigtail') [-1, 1].forEach(k => { Sp(head, 0.45, H, k * 1.2, -0.05, -0.25, 0.9, 1.2, 0.9); Sp(head, 0.16, '#FF4D6D', k * 1.0, 0.25, -0.2); });
+  if (c.hair === 'long') Bx(head, 2.1, 2.0, 0.7, H, 0, -0.55, -0.6, 0.34);
+  if (c.hair === 'bob') Sp(head, 1.12, H, 0, -0.15, -0.3, 1.05, 0.9, 0.9);
+  if (c.acc === 'bow') { Sp(head, 0.3, '#FF4D6D', 0.55, 0.9, 0.35, 1.2, 0.8, 0.6); }
+  if (c.acc === 'band') To(head, 1.02, 0.09, '#FFC300', 0, 0.55, -0.15).rotation.x = Math.PI / 2 - 0.5;
+  if (c.acc === 'grad') { Cy(head, 0.75, 0.8, 0.45, '#2B1F3A', 0, 1.05, -0.05); const b = Bx(head, 2.1, 0.14, 2.1, '#2B1F3A', 0, 1.3, -0.05, 0.05); b.rotation.y = Math.PI / 4; Sp(head, 0.12, '#FFC300', 0, 1.4, -0.05); Cy(head, 0.03, 0.03, 0.8, '#FFC300', 0.85, 1.0, 0.6, 6); }
+  if (c.acc === 'cap') { const k = mesh(new THREE.SphereGeometry(1.16, 28, 16, 0, Math.PI * 2, 0, Math.PI * 0.42), MAT('#2EC4F1'), 0, 0.1, 0); k.rotation.x = -0.25; head.add(k); const br = Cy(head, 0.8, 0.8, 0.1, '#2EC4F1', 0, 0.6, 1.05, 24); br.scale.z = 0.7; Sp(head, 0.12, '#FFFFFF', 0, 1.25, 0.05); }
+  if (c.acc === 'beret') { const be = Sp(head, 0.95, '#FF4D6D', -0.2, 0.95, -0.1, 1.15, 0.4, 1.1); be.rotation.z = 0.25; Sp(head, 0.1, '#FF4D6D', -0.2, 1.35, -0.1); }
+  if (c.glasses) [-1, 1].forEach(k => To(head, 0.28, 0.05, '#2B1F3A', k * 0.38, -0.05, 1.02));
+  return { legs, arms, head };
+}
+const CHAR_MODEL = Object.fromEntries(CHARS.map(c => [c.key, g => buildKid(g, c)]));
 const pawns = {};
 const charOf = p => CHARS.find(c => c.key === p.ch) || CHARS[0];
 function makePawn(p) {
   const g = new THREE.Group(), c = new THREE.Color(p.c), body = new THREE.Group();
   const base = mesh(new THREE.CylinderGeometry(1.15, 1.3, 0.35, 32), MAT(c), 0, 0.18, 0); g.add(base);
   To(g, 1.18, 0.09, '#FFFFFF', 0, 0.36, 0).rotation.x = Math.PI / 2;
-  g.add(body); body.position.y = 0.35; CHAR_MODEL[charOf(p).key](body);
-  [-1, 1].forEach(k => Sp(body, 0.22, '#FFFFFF', k * 0.35, 0.05, 0.35, 1, 0.6, 1.2));
+  g.add(body); body.position.y = 0.36; body.scale.setScalar(0.92); const limbs = CHAR_MODEL[charOf(p).key](body);
   const ring = mesh(new THREE.RingGeometry(1.5, 1.9, 40), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.9, side: THREE.DoubleSide }), 0, 0.05, 0, false); ring.rotation.x = -Math.PI / 2; ring.visible = false; g.add(ring);
-  const star = mesh(new THREE.OctahedronGeometry(0.35), MAT('#FFD54F', { emissive: 0xFFC107, emissiveIntensity: 0.5 }), 0, 5, 0, false); star.visible = false; g.add(star);
-  g.userData = { ring, body, star }; g.scale.setScalar(1.25);
+  const star = mesh(new THREE.OctahedronGeometry(0.4), MAT('#FFD54F', { emissive: 0xFFC107, emissiveIntensity: 0.5 }), 0, 6, 0, false); star.visible = false; g.add(star);
+  g.userData = { ring, body, star, limbs }; g.scale.setScalar(1.15);
   addOutlines(g, 0.06); scene.add(g); pawns[p.id] = g; return g;
 }
 function slotPos(i, pid) { const p = tileXZ(i), k = S.ps.findIndex(q => q.id === pid), ox = (k % 2 ? 1.3 : -1.3), oz = (k < 2 ? 1.2 : 3.0) - 0.4; const c = Math.cos(p.ry), s = Math.sin(p.ry); return new THREE.Vector3(p.x + ox * c + oz * s, 1.27, p.z - ox * s + oz * c); }
@@ -677,12 +695,15 @@ function placePawns() { S.ps.forEach(p => { const g = pawns[p.id]; g.visible = !
 const anims = [];
 function animate(dur, fn) { return new Promise(res => { if (reduceMotion) dur = Math.min(dur, 60); const t0 = performance.now(); anims.push(now => { const u = Math.min(1, (now - t0) / dur); fn(u); if (u >= 1) { res(); return true; } return false; }); }); }
 async function hopTo(p, i) {
-  const g = pawns[p.id], b0 = g.userData.body, a = g.position.clone(), b = slotPos(i, p.id), dir = Math.atan2(b.x - a.x, b.z - a.z);
+  const g = pawns[p.id], b0 = g.userData.body, L = g.userData.limbs, a = g.position.clone(), b = slotPos(i, p.id), dir = Math.atan2(b.x - a.x, b.z - a.z);
+  let da = dir - g.rotation.y; da = Math.atan2(Math.sin(da), Math.cos(da)); const r0 = g.rotation.y;
   SFX.hop();
-  await animate(90, u => { b0.scale.set(1 + u * 0.18, 1 - u * 0.25, 1 + u * 0.18); });
-  await animate(260, u => { g.position.lerpVectors(a, b, u); g.position.y += Math.sin(u * Math.PI) * 2.6; const s = 1 + Math.sin(u * Math.PI) * 0.15; b0.scale.set(1 / Math.sqrt(s), s, 1 / Math.sqrt(s)); g.rotation.y += (dir - g.rotation.y) * 0.25; });
-  await animate(130, u => { const k = Math.sin(u * Math.PI); b0.scale.set(1 + k * 0.2, 1 - k * 0.22, 1 + k * 0.2); });
-  b0.scale.set(1, 1, 1);
+  await animate(320, u => {
+    g.position.lerpVectors(a, b, u); g.position.y += Math.sin(u * Math.PI) * 1.2; g.rotation.y = r0 + da * Math.min(1, u * 3);
+    const sw = Math.sin(u * Math.PI * 2) * 0.75; L.legs[0].rotation.x = sw; L.legs[1].rotation.x = -sw; L.arms[0].rotation.x = -sw; L.arms[1].rotation.x = sw;
+    L.head.rotation.z = Math.sin(u * Math.PI * 2) * 0.08; b0.position.y = 0.36 + Math.abs(Math.sin(u * Math.PI * 2)) * 0.15;
+  });
+  [...L.legs, ...L.arms].forEach(x => (x.rotation.x = 0)); L.head.rotation.z = 0; b0.position.y = 0.36;
 }
 function pawnScreen(p) { const v = pawns[p.id] ? pawns[p.id].position.clone().add(new THREE.Vector3(0, 4, 0)).project(camera) : new THREE.Vector3(); return { x: (v.x + 1) / 2 * innerWidth, y: (1 - v.y) / 2 * innerHeight }; }
 
@@ -735,8 +756,8 @@ async function showTile(i) {
   if (t.t === 'topic') {
     const o = S.own[i], g = GROUPS[t.g];
     const rows = LV.map((l, k) => `<tr><td>${l.e} ${l.n}${o && o.lv === k ? ' ⬅ 目前' : ''}</td><td>${Math.max(10, Math.round(t.price * l.m / 5) * 5)} ⚡</td></tr>`).join('');
-    await ask({ icon: '📗', tag: `${g.name}・自學資源`, title: t.name, color: g.c + '33', ink: g.c, btn: g.c,
-      html: `選修價格 <b>${t.price} ⚡</b>・升級一階 <b>${upCost(t)} ⚡</b><br>擁有者：${o ? `${P(o.p).av} ${esc(P(o.p).name)}（${LV[o.lv].n}）` : '尚未被選修'}<table>${rows}</table><div style="font-size:12px;color:#9089A8">同學走到這裡要支付的交流費；同一領域兩格都擁有時 ×1.5</div><div class="tip">💡 ${t.tip}</div>`, buttons: [{ t: '前往網站 ↗', v: 'url' }, { t: '知道了', v: 1, main: true }] }).then(v => { if (v === 'url') window.open(t.url, '_blank', 'noopener'); });
+    await ask({ icon: '📗', tag: `${g.name}・思考站`, title: t.name, color: g.c + '33', ink: g.c, btn: g.c,
+      html: `認領價格 <b>${t.price} ⚡</b>・升級一階 <b>${upCost(t)} ⚡</b><br>擁有者：${o ? `${P(o.p).av} ${esc(P(o.p).name)}（${LV[o.lv].n}）` : '尚未被認領'}<table>${rows}</table><div style="font-size:12px;color:#9089A8">同學走到這裡要支付的交流費；同一領域兩格都擁有時 ×1.5</div><div class="tip">🤔 <b>思考題：</b>${t.q[0]}<br><small>走到這裡就要回答，答對才能認領！</small></div>`, buttons: [{ t: '知道了', v: 1, main: true }] });
   } else await ask({ icon: t.icon, tag: '特殊格', title: t.name, html: t.desc || { chance: '抽一張成果專區卡：學長姐成果、好資源、好機會！', reflect: '抽一張紀錄表卡：檢視自己每週的紀錄與學習習慣。', quiz: '回答一題自主學習小測驗，答對 +100 能量。' }[t.t], buttons: [{ t: '知道了', v: 1, main: true }] });
   busyInfo = false;
 }
@@ -773,6 +794,13 @@ async function moveSteps(p, n) {
 }
 async function moveTo(p, idx) { let n = (idx - p.pos + N) % N; if (n === 0) n = N; await moveSteps(p, n); }
 async function goJail(p) { p.pos = 7; p.jail = 1; await hopTo(p, 7); log(`${p.av} ${esc(p.name)} 被送到 🧩 卡關休息站`); renderPlayers(); }
+async function askQ(p, qq, why, color = ['#E6FAF6', '#11967A', '#00C9A7']) {
+  const [q, opts, ex] = qq, order = shuffle(opts.map((o, i) => i));
+  const pick = await ask({ icon: '🤔', tag: why || '思考題', title: q, color: color[0], ink: color[1], btn: color[2], col: true, buttons: order.map((k, n) => ({ t: `${'ABCD'[n]}. ${opts[k]}`, v: k })), bot: () => (Math.random() < 0.75 ? 0 : order[rnd(order.length)]) });
+  const ok = pick === 0;
+  await ask({ icon: ok ? '🎉' : '💡', tag: ok ? '想得很好！' : '再想想～', title: ok ? '答對了！' : `比較好的做法是：`, color: ok ? '#E9FBEF' : '#FFF0F5', ink: ok ? '#20A36B' : '#E0457B', btn: ok ? '#38D16A' : '#FF4D6D', html: `${ok ? '' : `<b>${opts[0]}</b><br>`}📘 ${ex}`, buttons: [{ t: '繼續', v: 1, main: true }], bot: 1 });
+  return ok;
+}
 async function quiz(p, why) {
   if (!S.qd.length) S.qd = shuffle(QUIZ.map((c, i) => i));
   const [q, opts, ex] = QUIZ[S.qd.pop()], order = shuffle(opts.map((o, i) => i));
@@ -802,11 +830,14 @@ async function resolve(p, fromCard) {
   if (t.t === 'topic') {
     const o = S.own[i], g = GROUPS[t.g];
     if (!o) {
+      const ok = await askQ(p, t.q, `${g.name}・思考站`, [g.c + '33', g.c, g.c]);
+      if (!ok) { log(`${p.av} ${esc(p.name)} 在「${t.name}」還要再想想`); renderPlayers(); await checkBroke(p); return; }
+      money(p, 30, `想通了「${t.name}」`);
       const can = p.m >= t.price;
-      const v = await ask({ icon: '📗', tag: `${g.name}・自學資源`, title: `把「${t.name}」加入自學計畫？`, color: g.c + '33', ink: g.c, btn: g.c,
-        html: `花費 <b>${t.price} ⚡</b> 選修這個主題，進入「📝 擬定計畫」階段。<br>之後再走到這裡，就能繼續深耕升級！<div class="tip">💡 ${t.tip}</div>${can ? '' : '<div class="tip" style="background:#FFF0F5">能量不足，這次先觀望吧！</div>'}`,
-        buttons: can ? [{ t: '先不要', v: 0 }, { t: `選修（${t.price}⚡）`, v: 1, main: true }] : [{ t: '好吧', v: 0, main: true }], bot: () => (can && p.m - t.price >= 150 ? 1 : 0) });
-      if (v) { money(p, -t.price); S.own[i] = { p: p.id, lv: 0 }; refreshTile(i); SFX.kaching(); log(`${p.av} ${esc(p.name)} 選修了 <b style="color:${g.c}">${t.name}</b>`); if (ownsGroup(p.id, t.g)) toast(`${p.name} 集滿「${g.name}」！交流費 ×1.5`); }
+      const v = await ask({ icon: '📗', tag: `${g.name}・思考站`, title: `要認領「${t.name}」思考站嗎？`, color: g.c + '33', ink: g.c, btn: g.c,
+        html: `你想通了這一題！花費 <b>${t.price} ⚡</b> 認領這個思考站，進入「📝 擬定計畫」階段。<br>之後同學走到這裡，就要向你請教；你再回來還能繼續升級！${can ? '' : '<div class="tip" style="background:#FFF0F5">能量不足，這次先觀望吧！</div>'}`,
+        buttons: can ? [{ t: '先不要', v: 0 }, { t: `認領（${t.price}⚡）`, v: 1, main: true }] : [{ t: '好吧', v: 0, main: true }], bot: () => (can && p.m - t.price >= 150 ? 1 : 0) });
+      if (v) { money(p, -t.price); S.own[i] = { p: p.id, lv: 0 }; refreshTile(i); SFX.kaching(); log(`${p.av} ${esc(p.name)} 認領了思考站 <b style="color:${g.c}">${t.name}</b>`); if (ownsGroup(p.id, t.g)) toast(`${p.name} 集滿「${g.name}」！交流費 ×1.5`); }
     } else if (o.p === p.id) {
       if (o.lv < 3) {
         const c = upCost(t), nx = LV[o.lv + 1], can = p.m >= c;
@@ -818,7 +849,7 @@ async function resolve(p, fromCard) {
     } else {
       const ow = P(o.p), r = rentOf(i);
       await ask({ icon: ow.av, tag: '向同學請教', title: `${ow.name} 的「${t.name}」`, color: g.c + '33', ink: g.c, btn: g.c,
-        html: `${esc(ow.name)} 已經在這個主題走到「${LV[o.lv].e} ${LV[o.lv].n}」。<br>你向對方請教，支付交流費 <b>${r} ⚡</b>，對方也因為教學相長獲得能量！`, buttons: [{ t: `支付 ${r}⚡`, v: 1, main: true }], bot: 1 });
+        html: `${esc(ow.name)} 已經在這個主題走到「${LV[o.lv].e} ${LV[o.lv].n}」。<br>你向對方請教，支付交流費 <b>${r} ⚡</b>，對方也因為教學相長獲得能量！<div class="tip">🤔 ${t.q[0]}<br>💡 ${t.tip}</div>`, buttons: [{ t: `支付 ${r}⚡`, v: 1, main: true }], bot: 1 });
       money(p, -r, `向 ${esc(ow.name)} 請教 ${t.name}`); money(ow, r);
     }
   } else if (t.t === 'chance') await drawCard(p, 'c');
@@ -912,8 +943,8 @@ function beginGame(state) {
   if (!S.log.length) log('🎲 遊戲開始！祝大家自學順利～');
   actx(); setTimeout(takeTurn, 400);
 }
-$('#start').onclick = () => { if (setup.slots.filter(s => s.on).length < 2) return toast('至少需要 2 位玩家'); if (!bgmOn) setBgm(true); beginGame(newState()); };
-$('#resume').onclick = () => { if (!bgmOn) setBgm(true); try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) beginGame(s); } catch (e) { toast('讀取失敗'); } };
+$('#start').onclick = () => { if (setup.slots.filter(s => s.on).length < 2) return toast('至少需要 2 位玩家'); beginGame(newState()); };
+$('#resume').onclick = () => { try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) beginGame(s); } catch (e) { toast('讀取失敗'); } };
 $('#bNew').onclick = async () => { if (dlg.open) return; const v = await ask({ icon: '🔁', title: '要重新開始嗎？', html: '目前的進度會結束。', buttons: [{ t: '取消', v: 0 }, { t: '重新開始', v: 1, main: true }] }); if (v) { S.over = true; rollResolve = null; openSetup(); } };
 $('#bEnd').onclick = async () => { if (dlg.open || !S || S.over) return; const v = await ask({ icon: '🏁', title: '現在就結算嗎？', html: '依總資產（能量＋主題價值）排名。', buttons: [{ t: '再玩一下', v: 0 }, { t: '結算', v: 1, main: true }] }); if (v) { rollResolve = null; endGame(); } };
 $('#bRules').onclick = () => !dlg.open && ask({ icon: '📖', tag: '遊戲規則', title: '怎麼玩？', html: `<b>🎲 擲骰前進</b>：輪到你時按「擲骰子」，經過起點 +200。擲出相同點數可再擲一次。<br><b>📗 自學主題</b>：沒人選修 → 可花能量選修；自己的 → 可升級；別人的 → 支付交流費。<br><b>💡 靈感卡 / 💭 反思卡</b>：抽卡看看好習慣與壞習慣帶來的影響。<br><b>❓ 小測驗 / 🛂 審核關卡</b>：答對有能量；審核答錯要到卡關休息站。<br><b>👾 拖延怪獸</b>：支付 100 到圖書館寶庫，停在 📚 的人可以全部領走。<br><b>🏁 結束</b>：回合數到了或只剩一人時，總資產最高的人獲勝。`, buttons: [{ t: '開始玩', v: 1, main: true }] });
@@ -928,7 +959,8 @@ function loop(now) {
   camera.position.set(camTarget.x + Math.sin(cam.yaw) * Math.cos(cam.pitch) * cam.dist, camTarget.y + Math.sin(cam.pitch) * cam.dist, camTarget.z + Math.cos(cam.yaw) * Math.cos(cam.pitch) * cam.dist);
   camera.lookAt(camTarget);
   tickSpinners(now / 1000);
-  Object.values(pawns).forEach((g, k) => { const on = g.userData.ring.visible; g.userData.star.visible = on; if (on) { g.userData.ring.scale.setScalar(1 + Math.sin(now / 250) * 0.08); g.userData.star.rotation.y = now / 400; g.userData.star.position.y = 5.2 + Math.sin(now / 300) * 0.3; } });
+  Object.values(pawns).forEach((g, k) => { const on = g.userData.ring.visible; g.userData.star.visible = on; if (on && g.userData.limbs && !anims.length) { g.userData.limbs.arms[1].rotation.z = 0.2 - 2.4 - Math.sin(now / 160) * 0.35; } else if (g.userData.limbs) g.userData.limbs.arms[1].rotation.z = 0.2;
+  if (on) { g.userData.ring.scale.setScalar(1 + Math.sin(now / 250) * 0.08); g.userData.star.rotation.y = now / 400; g.userData.star.position.y = 6.2 + Math.sin(now / 300) * 0.3; } });
   renderer.render(scene, camera); requestAnimationFrame(loop);
 }
 addEventListener('resize', () => { camera.fov = narrow() ? 55 : 38; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
@@ -936,7 +968,7 @@ Promise.race([document.fonts ? Promise.all([document.fonts.load(`400 60px Huninn
   if (!renderer) { document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;z-index:99;background:#fff;padding:20px;text-align:center">這台裝置無法顯示 3D 棋盤，請改用電腦或較新的手機瀏覽器開啟。</div>'); return; }
   buildScene(); setupControls(); requestAnimationFrame(loop); openSetup();
 });
-window.__game = { get S() { return S; }, scene };
+window.__game = { get S() { return S; }, scene, cam, camFocus };
 })();
 </script>
 </body>
