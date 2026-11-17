@@ -7,171 +7,148 @@
 <meta name="description" content="花蓮縣私立四維高級中學 圖書資訊中心｜擲骰子、選修主題、寫紀錄、拿成果：用大富翁玩懂自主學習。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&family=Noto+Serif+TC:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet">
 <!-- 3D 引擎：three.js（MIT License） -->
 <style>
-/* 主題：自學手帳。面板是手帳內頁、紙膠帶、學生證、印章；配色與鏡中番薯同系的馬卡龍色 */
+/* 主題：療癒小島生活風。奶油色圓角面板、咖啡色文字、草綠與檸檬黃按鈕、對話泡泡 */
 :root {
   color-scheme: light;
-  --rose: #f27a9a; --rose-deep: #d95f82; --rose-pale: #ffe8f0;
-  --plum: #6b4c6e; --plum-2: #a084c4; --lilac: #d6c9f7; --lilac-pale: #f7f2ff;
-  --gold: #ecc77a; --gold-pale: #fff4d6; --paper: #fffbfd; --muted: #a08aa3; --mint: #5fcf9f; --sky: #a7c7f2;
-  --ink: var(--plum); --ink2: #7a5f7d;
-  --card-shadow: 0 1px 2px rgba(160,110,150,.08), 0 8px 22px rgba(205,150,190,.2), 0 26px 60px rgba(160,132,196,.22);
-  --gold-frame: inset 0 0 0 1px rgba(236,199,122,.7), inset 0 0 0 4px rgba(255,251,253,.92), inset 0 0 0 5px rgba(247,182,207,.55);
-  --chip-shadow: 0 2px 8px rgba(160,110,150,.14);
-  --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-  --serif: "Noto Serif TC", "Songti TC", "PMingLiU", Georgia, serif;
-  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-  --round: var(--sans); --bold: var(--sans);
-  --stripes: repeating-linear-gradient(135deg, #f7b6cf 0 7px, #cdb6f4 7px 14px);
+  --cream: #FFF9E8; --cream2: #F7EED3; --brown: #6E5A3E; --brown2: #9A8463; --muted: #B3A27F;
+  --leaf: #79C55A; --leaf-d: #4FA23A; --sun: #FFD84D; --sun-d: #E8B21C; --sky: #7FD3F0; --coral: #FF8A7A; --pink: #F7A3C0;
+  --round: 'Huninn', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --sans: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --soft: 0 4px 0 rgba(150,120,70,.18), 0 10px 24px rgba(110,90,62,.16);
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; height: 100%; overflow: hidden; font: 14px/1.5 var(--sans); color: var(--plum); background: #fbeaf3; -webkit-font-smoothing: antialiased; }
+html, body { margin: 0; height: 100%; overflow: hidden; font: 15px/1.5 var(--round); color: var(--brown); background: #8ED8F2; }
 button { font: inherit; cursor: pointer; color: inherit; }
-#bg { position: fixed; inset: 0; background: radial-gradient(60% 50% at 12% 88%, rgba(198,236,214,.7) 0%, transparent 70%), radial-gradient(130% 95% at 50% 18%, #fff8fb 0%, #fde6f0 48%, #e8defa 100%); }
+#bg { position: fixed; inset: 0; background: linear-gradient(180deg, #6CC8EE 0%, #A8E2F5 55%, #E6F7FB 100%); }
 #scene { position: fixed; inset: 0; touch-action: none; }
 #scene canvas { display: block; width: 100%; height: 100%; outline: none; cursor: grab; }
-.glass { background: rgba(255,248,252,.88); -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); border: 1px solid rgba(255,255,255,.8); box-shadow: var(--card-shadow), var(--gold-frame); }
-.eyebrow { font: 700 10px/1.4 var(--mono); letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.glass { background: var(--cream); border-radius: 26px; box-shadow: var(--soft); }
 
-/* 標題：手帳封面 */
-#brand { position: fixed; left: 16px; top: 16px; z-index: 20; border-radius: 18px; padding: 12px 20px 13px 16px; display: flex; gap: 12px; align-items: center; }
-#brand::before { content: ""; position: absolute; left: 22px; top: -9px; width: 64px; height: 18px; background: rgba(247,182,207,.75); transform: rotate(-4deg); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
-#brand .logo { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; background: var(--paper); box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--gold), var(--chip-shadow); }
-#brand h1 { margin: 0; font: 800 25px/1.1 var(--serif); letter-spacing: .5px; color: var(--plum); }
-#brand h1::first-letter { color: var(--rose); }
-#brand .chip { display: inline-block; margin-top: 5px; font: 700 10.5px/1.4 var(--mono); letter-spacing: 1.5px; color: var(--muted); }
+#brand { position: fixed; left: 16px; top: 14px; z-index: 20; border-radius: 999px; padding: 8px 22px 8px 10px; display: flex; gap: 10px; align-items: center; background: var(--cream); box-shadow: var(--soft); }
+#brand .logo { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; background: var(--leaf); box-shadow: inset 0 -4px 0 var(--leaf-d); }
+#brand h1 { margin: 0; font: 400 24px/1.1 var(--round); color: var(--brown); letter-spacing: 1px; }
+#brand .chip { display: inline-block; margin-top: 3px; font: 400 12.5px var(--round); color: #fff; background: var(--brown2); padding: 1px 12px; border-radius: 999px; }
 
-/* 工具列 */
-#tools { position: fixed; right: 16px; top: 16px; z-index: 20; display: flex; gap: 4px; padding: 5px; border-radius: 14px; background: rgba(255,248,252,.88); backdrop-filter: blur(16px); box-shadow: var(--card-shadow), var(--gold-frame); }
-.tb { min-height: 40px; padding: 0 12px; border-radius: 9px; border: 0; background: transparent; font: 600 13px var(--sans); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background .18s, transform .18s; }
-.tb:hover { background: var(--lilac-pale); transform: rotate(-2deg) scale(1.04); }
-.tb.on { background: #eee6f3; color: var(--muted); }
-.tb.hot { background: var(--rose); color: #fff; box-shadow: inset 0 -3px 0 rgba(255,255,255,.45), 0 3px 8px rgba(242,122,154,.35); }
-#zoom { position: fixed; right: 16px; top: 78px; z-index: 20; display: flex; gap: 4px; padding: 5px; border-radius: 14px; background: rgba(255,248,252,.88); box-shadow: var(--card-shadow), var(--gold-frame); }
-#zoom .tb { width: 40px; padding: 0; justify-content: center; font-size: 18px; }
-#menuBtns { position: fixed; right: 16px; bottom: 16px; z-index: 20; display: grid; grid-template-columns: repeat(2, auto); gap: 4px; padding: 5px; border-radius: 14px; background: rgba(255,248,252,.88); box-shadow: var(--card-shadow), var(--gold-frame); }
+#tools { position: fixed; right: 16px; top: 14px; z-index: 20; display: flex; gap: 6px; }
+.tb { height: 42px; padding: 0 15px; border-radius: 999px; border: 0; background: var(--cream); box-shadow: 0 4px 0 rgba(150,120,70,.22); font: 400 14px var(--round); color: var(--brown); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: transform .15s; }
+.tb:hover { transform: translateY(-2px) scale(1.04); }
+.tb:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(150,120,70,.22); }
+.tb.on { background: #E9E0C8; color: var(--muted); }
+.tb.hot { background: var(--leaf); color: #fff; box-shadow: 0 4px 0 var(--leaf-d); }
+#zoom { position: fixed; right: 16px; top: 66px; z-index: 20; display: flex; gap: 6px; }
+#zoom .tb { width: 42px; padding: 0; justify-content: center; font-size: 20px; }
+#menuBtns { position: fixed; right: 16px; bottom: 16px; z-index: 20; display: grid; grid-template-columns: repeat(2, auto); gap: 6px; }
 
-/* 玩家：學生證 */
+/* 玩家：島民名牌 */
 #players { position: fixed; z-index: 20; inset: 0; pointer-events: none; }
-.pcard { position: absolute; width: 226px; border-radius: 16px; padding: 0; pointer-events: auto; overflow: visible; background: var(--paper); box-shadow: var(--card-shadow), inset 0 0 0 1px rgba(236,199,122,.6); transition: transform .3s cubic-bezier(.2,.8,.2,1); }
-.pcard::after { content: ""; position: absolute; right: 12px; bottom: 10px; width: 46px; height: 16px; background: repeating-linear-gradient(90deg, var(--plum) 0 1.5px, transparent 1.5px 3.5px, var(--plum) 3.5px 4.5px, transparent 4.5px 7px); opacity: .25; }
-.pcard .hd { background: var(--pc); color: #fff; border-radius: 16px 16px 0 0; padding: 6px 12px 6px 72px; font: 700 10.5px/1.4 var(--mono); letter-spacing: 1.5px; text-transform: uppercase; position: relative; }
-
-.pcard.p0 { left: 16px; top: 132px; } .pcard.p1 { right: 16px; top: 132px; } .pcard.p2 { left: 16px; top: 270px; } .pcard.p3 { right: 16px; top: 270px; }
-.pcard.turn { transform: translateY(-3px) rotate(-1deg); box-shadow: 0 0 0 3px var(--pc), var(--card-shadow); }
+.pcard { position: absolute; width: 224px; border-radius: 28px; pointer-events: auto; background: var(--cream); box-shadow: var(--soft); padding: 0; transition: transform .3s cubic-bezier(.2,1.5,.4,1); }
+.pcard .hd { position: absolute; left: 66px; top: -14px; background: var(--pc); color: #fff; border-radius: 999px; padding: 3px 14px; font: 400 14px var(--round); box-shadow: 0 3px 0 rgba(0,0,0,.12); transform: rotate(-3deg); }
+.pcard.p0 { left: 16px; top: 120px; } .pcard.p1 { right: 16px; top: 120px; } .pcard.p2 { left: 16px; top: 250px; } .pcard.p3 { right: 16px; top: 250px; }
+.pcard.turn { transform: scale(1.05); box-shadow: 0 0 0 4px var(--pc), var(--soft); }
 .pcard.out { opacity: .45; filter: grayscale(.8); }
-.pcard .tag { position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-3deg); font: 700 11px var(--sans); padding: 2px 12px; background: rgba(249,215,126,.92); color: var(--plum); display: none; box-shadow: 0 1px 2px rgba(0,0,0,.08); z-index: 3; }
+.pcard .tag { position: absolute; right: -6px; top: -16px; font: 400 13px var(--round); padding: 3px 12px; border-radius: 999px; background: var(--sun); color: var(--brown); box-shadow: 0 3px 0 var(--sun-d); display: none; animation: hop 1s ease-in-out infinite; }
+@keyframes hop { 50% { transform: translateY(-5px); } }
 .pcard.turn .tag { display: block; }
-.pcard .av { position: absolute; left: 12px; top: 10px; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; font-size: 28px; background: #fff; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--gold), 0 6px 14px rgba(43,29,63,.15); z-index: 2; }
-.pcard.turn .av { animation: wob 1.8s ease-in-out infinite; }
-@keyframes wob { 50% { transform: rotate(-7deg) scale(1.05); } }
-.pcard .bd { padding: 8px 14px 12px 72px; }
-.pcard .bd > *:first-child::before { content: attr(data-n); }
-.pcard .money { font: 800 24px/1.1 var(--serif); color: var(--plum); }
-.pcard .money small { font: 700 11px var(--mono); color: var(--muted); letter-spacing: 1px; }
-.pcard .sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
-.pcard .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; padding-right: 50px; }
-.pcard .chips span { min-width: 16px; height: 16px; border-radius: 50%; font: 700 9px var(--sans); color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 2px #fff; }
-.pcard .st { font-size: 12px; font-weight: 700; color: var(--rose-deep); margin-top: 4px; }
+.pcard .av { position: absolute; left: 10px; top: 14px; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; font-size: 28px; background: #fff; box-shadow: 0 0 0 4px var(--pc); }
+.pcard .bd { padding: 20px 14px 12px 72px; }
+.pcard .money { font: 400 24px/1.1 var(--round); color: var(--brown); }
+.pcard .money small { font-size: 14px; color: var(--muted); }
+.pcard .sub { font: 500 12px var(--sans); color: var(--brown2); margin-top: 2px; }
+.pcard .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+.pcard .chips span { width: 16px; height: 16px; border-radius: 50%; font: 700 9px var(--sans); color: #fff; display: grid; place-items: center; }
+.pcard .st { font: 400 13px var(--round); color: var(--coral); margin-top: 3px; }
 
-/* 骰子：印章 */
 #dock { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-#turnTxt { font: 600 13.5px var(--sans); padding: 6px 16px; border-radius: 999px; }
-#rollBtn { position: relative; border: 0; font: 800 21px var(--serif); letter-spacing: 4px; padding: 15px 40px 15px 44px; border-radius: 999px; color: #fff; background: radial-gradient(circle at 30% 25%, #ff9bb7, var(--rose) 55%, var(--rose-deep)); box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--gold), 0 10px 26px rgba(217,95,130,.45); transition: transform .18s; }
-#rollBtn::before { content: ""; position: absolute; inset: 6px; border-radius: 999px; border: 1.5px dashed rgba(255,255,255,.75); }
-#rollBtn:hover:not(:disabled) { transform: translateY(-2px) rotate(-2deg); }
-#rollBtn:active:not(:disabled) { transform: scale(.95); }
-#rollBtn:disabled { filter: grayscale(.55); opacity: .65; cursor: default; }
-#rollBtn.pulse:not(:disabled) { animation: breathe 1.6s ease-in-out infinite; }
-@keyframes breathe { 50% { box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--gold), 0 0 0 14px rgba(242,122,154,.18), 0 10px 26px rgba(217,95,130,.45); } }
-#credit { font: 700 10px var(--mono); letter-spacing: 1.5px; color: var(--muted); }
+#turnTxt { font: 400 15px var(--round); padding: 6px 20px; border-radius: 999px; }
+#rollBtn { border: 0; font: 400 24px var(--round); letter-spacing: 3px; padding: 14px 46px; border-radius: 999px; color: var(--brown); background: var(--sun); box-shadow: 0 6px 0 var(--sun-d), 0 14px 26px rgba(232,178,28,.35); transition: transform .15s; }
+#rollBtn:hover:not(:disabled) { transform: translateY(-3px) scale(1.04); }
+#rollBtn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 2px 0 var(--sun-d); }
+#rollBtn:disabled { filter: grayscale(.6); opacity: .7; cursor: default; }
+#rollBtn.pulse:not(:disabled) { animation: hop 1.2s ease-in-out infinite; }
+#credit { font: 400 12px var(--round); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
 
-/* 遊戲紀錄：手帳內頁（橫線） */
-#log { position: fixed; left: 16px; bottom: 16px; z-index: 20; width: 270px; max-height: 182px; overflow: hidden; border-radius: 16px; padding: 12px 14px 10px 26px; font-size: 12.5px; background: repeating-linear-gradient(180deg, transparent 0 23px, rgba(167,199,242,.45) 23px 24px), var(--paper); background-position: 0 30px; box-shadow: var(--card-shadow), inset 0 0 0 1px rgba(236,199,122,.6); }
-#log::before { content: ""; position: absolute; left: 14px; top: 0; bottom: 0; border-left: 1.5px solid rgba(242,122,154,.5); }
-#log b { display: block; font: 700 10px/1.4 var(--mono); letter-spacing: 2px; color: var(--muted); margin-bottom: 4px; }
-#log div { line-height: 24px; }
+#log { position: fixed; left: 16px; bottom: 16px; z-index: 20; width: 270px; max-height: 180px; overflow: hidden; border-radius: 24px; padding: 12px 16px; font-size: 13px; }
+#log b { display: block; font: 400 13px var(--round); color: #fff; background: var(--leaf); width: max-content; padding: 1px 12px; border-radius: 999px; margin-bottom: 4px; }
+#log div { padding: 3px 0; border-bottom: 2px dotted #E8DCBC; font: 500 12.5px/1.45 var(--sans); }
+#log div:last-child { border: 0; }
 
-#toast { position: fixed; left: 50%; top: 90px; transform: translateX(-50%) translateY(-12px); opacity: 0; z-index: 60; background: var(--paper); color: var(--plum); padding: 10px 20px; border-radius: 999px; transition: all .25s; pointer-events: none; white-space: nowrap; box-shadow: var(--card-shadow), var(--gold-frame); font: 600 14px var(--sans); }
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.float { position: fixed; z-index: 30; font: 800 22px var(--serif); pointer-events: none; text-shadow: 0 2px 0 #fff, 0 0 10px #fff; animation: up 1.4s ease-out forwards; }
+#toast { position: fixed; left: 50%; top: 86px; transform: translateX(-50%) translateY(-12px) scale(.9); opacity: 0; z-index: 60; background: var(--cream); color: var(--brown); padding: 10px 22px; border-radius: 999px; transition: all .3s cubic-bezier(.2,1.5,.4,1); pointer-events: none; white-space: nowrap; box-shadow: var(--soft); font: 400 16px var(--round); }
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+.float { position: fixed; z-index: 30; font: 400 24px var(--round); pointer-events: none; text-shadow: 0 2px 0 #fff, 0 0 10px #fff; animation: up 1.4s ease-out forwards; }
 @keyframes up { to { transform: translateY(-60px); opacity: 0; } }
 
-/* 對話框：索引卡 */
+/* 對話框：對話泡泡＋名牌 */
 dialog { border: 0; padding: 0; background: transparent; overflow: visible; max-width: calc(100vw - 20px); }
-dialog::backdrop { background: rgba(107,76,110,.22); backdrop-filter: blur(3px); }
-.dc { position: relative; width: min(460px, calc(100vw - 24px)); border-radius: 20px; overflow: visible; animation: cardIn .4s cubic-bezier(.2,.8,.2,1);
-  background: repeating-linear-gradient(45deg, rgba(185,163,227,.07) 0 1px, transparent 1px 14px), repeating-linear-gradient(-45deg, rgba(185,163,227,.07) 0 1px, transparent 1px 14px), var(--paper);
-  box-shadow: var(--card-shadow), inset 0 0 0 7px var(--paper), inset 0 0 0 8.5px rgba(217,69,95,.3); }
-.dc::before { content: ""; position: absolute; left: 50%; top: -10px; width: 90px; height: 22px; transform: translateX(-50%) rotate(-3deg); background: rgba(205,182,244,.75); box-shadow: 0 1px 2px rgba(0,0,0,.06); z-index: 2; }
-@keyframes cardIn { from { transform: perspective(900px) rotateX(18deg) translateY(16px); opacity: 0; } }
-.dh { padding: 26px 24px 4px; display: flex; gap: 14px; align-items: center; }
-.dh .ic { width: 58px; height: 58px; border-radius: 50%; background: var(--dc, var(--lilac-pale)); display: grid; place-items: center; font-size: 30px; flex: 0 0 auto; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--gold), 0 6px 16px rgba(43,29,63,.15); }
-.dh small { font: 700 10px/1.4 var(--mono); letter-spacing: 2px; color: var(--di, var(--muted)); text-transform: uppercase; }
-.dh h2 { margin: 3px 0 0; font: 800 21px/1.3 var(--serif); color: var(--plum); text-wrap: balance; }
-.db { padding: 10px 24px 6px; font-size: 14.5px; line-height: 1.75; color: #463a55; max-height: 52vh; overflow-y: auto; }
-.db b { color: var(--plum); }
-.db .tip { background: var(--gold-pale); border-radius: 12px; padding: 9px 12px; margin-top: 10px; font-size: 13.5px; box-shadow: inset 3px 0 0 var(--gold); }
-.db table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 8px; }
-.db td { padding: 6px 4px; border-bottom: 1px dashed rgba(160,132,196,.35); }
+dialog::backdrop { background: rgba(80,60,30,.18); }
+.dc { position: relative; width: min(480px, calc(100vw - 24px)); border-radius: 40px; background: var(--cream); box-shadow: 0 6px 0 rgba(150,120,70,.2), 0 20px 50px rgba(80,60,30,.25); overflow: visible; animation: pop .35s cubic-bezier(.2,1.6,.4,1); margin-top: 26px; }
+@keyframes pop { from { transform: scale(.7) translateY(20px); opacity: 0; } }
+.dh { padding: 30px 28px 6px; display: flex; gap: 14px; align-items: center; }
+.dh .ic { width: 60px; height: 60px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 32px; flex: 0 0 auto; box-shadow: 0 0 0 4px var(--dbtn, var(--leaf)); }
+.dh small { position: absolute; left: 30px; top: -16px; font: 400 15px var(--round); color: #fff; background: var(--dbtn, var(--leaf)); padding: 4px 18px; border-radius: 999px; transform: rotate(-3deg); box-shadow: 0 3px 0 rgba(0,0,0,.12); }
+.dh small:empty { display: none; }
+.dh h2 { margin: 0; font: 400 22px/1.35 var(--round); color: var(--brown); }
+.db { padding: 10px 28px 6px; font: 500 15px/1.75 var(--sans); color: var(--brown); max-height: 52vh; overflow-y: auto; }
+.db b { color: #4A3B26; }
+.db .tip { background: #F2E9CC; border-radius: 18px; padding: 9px 14px; margin-top: 10px; font-size: 14px; }
+.db table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 8px; }
+.db td { padding: 6px 4px; border-bottom: 2px dotted #E8DCBC; }
 .db td:last-child { text-align: right; font-weight: 700; }
-.df { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; padding: 12px 22px 22px; }
-.df .b { border: 0; border-radius: 999px; padding: 10px 20px; font: 700 14px var(--sans); background: #fff; color: var(--plum); box-shadow: var(--chip-shadow), inset 0 0 0 1px rgba(160,132,196,.3); transition: transform .15s, background .15s; }
-.df .b:hover:not(:disabled) { background: var(--rose-pale); transform: rotate(-1.5deg); }
-.df .b.main { background: var(--dbtn, var(--rose)); color: #fff; box-shadow: inset 0 -3px 0 rgba(255,255,255,.35), 0 4px 12px rgba(160,110,150,.3); }
-.df.col { flex-direction: column; } .df.col .b { text-align: left; border-radius: 14px; font-weight: 600; padding: 11px 16px; box-shadow: var(--chip-shadow), inset 3px 0 0 var(--dbtn, var(--rose)); }
-.bot { font-size: 12px; color: var(--muted); padding: 0 24px 16px; text-align: right; font-style: italic; }
-.card3d { margin: 4px auto 0; width: 230px; border-radius: 16px; padding: 18px; text-align: center; color: var(--plum); font: 700 15.5px/1.6 var(--serif); background: #fff !important; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--gold), var(--card-shadow); animation: flip .6s cubic-bezier(.2,.8,.2,1); }
-.card3d > div { background: var(--gold-pale) !important; color: var(--plum); }
-@keyframes flip { from { transform: perspective(700px) rotateY(160deg); } }
+.df { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; padding: 12px 26px 26px; }
+.df .b { border: 0; border-radius: 999px; padding: 11px 22px; font: 400 16px var(--round); background: #fff; color: var(--brown); box-shadow: 0 4px 0 #E3D5B3; transition: transform .15s; }
+.df .b:hover:not(:disabled) { transform: translateY(-2px); }
+.df .b:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 #E3D5B3; }
+.df .b.main { background: var(--dbtn, var(--leaf)); color: #fff; box-shadow: 0 4px 0 rgba(0,0,0,.16); }
+.df.col { flex-direction: column; } .df.col .b { text-align: left; border-radius: 22px; font: 500 15px var(--sans); padding: 12px 18px; }
+.df.col .b:hover { background: #FFF2B8; }
+.bot { font: 400 13px var(--round); color: var(--muted); padding: 0 28px 18px; text-align: right; }
+.card3d { margin: 4px auto 0; width: 240px; border-radius: 26px; padding: 18px; text-align: center; color: var(--brown); font: 400 17px/1.6 var(--round); background: #fff !important; box-shadow: 0 4px 0 #E3D5B3; animation: flip .6s cubic-bezier(.2,1.4,.4,1); }
+.card3d > div { background: #FFF2B8 !important; }
+@keyframes flip { from { transform: rotateY(160deg) scale(.6); } }
 
-/* 開場設定 */
-#setup { position: fixed; inset: 0; z-index: 50; display: grid; padding: 16px; background: radial-gradient(circle at 50% 40%, rgba(255,243,248,.75), rgba(217,198,247,.65)); backdrop-filter: blur(4px); overflow-y: auto; }
+#setup { position: fixed; inset: 0; z-index: 50; display: grid; padding: 16px; background: rgba(120,200,235,.45); overflow-y: auto; }
 #setup[hidden] { display: none; }
-.sc { position: relative; margin: auto; width: min(780px, 100%); border-radius: 22px; padding: 30px 28px 26px;
-  background: repeating-linear-gradient(45deg, rgba(185,163,227,.06) 0 1px, transparent 1px 14px), var(--paper); box-shadow: var(--card-shadow), inset 0 0 0 7px var(--paper), inset 0 0 0 8.5px rgba(236,199,122,.8); }
-.sc::before { content: ""; position: absolute; left: 40px; top: -12px; width: 110px; height: 26px; background: rgba(247,182,207,.8); transform: rotate(-4deg); }
-.sc::after { content: ""; position: absolute; right: 40px; top: -12px; width: 90px; height: 26px; background: rgba(168,216,197,.8); transform: rotate(5deg); }
-.sc h2 { margin: 0; font: 800 clamp(30px, 5vw, 44px)/1.1 var(--serif); color: var(--plum); }
-.sc h2::before { content: "SELF-LEARNING JOURNAL · 四維高中圖書資訊中心"; display: block; font: 700 10.5px/1.4 var(--mono); letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; }
-.sc .lead { color: #463a55; margin: 10px 0 18px; line-height: 1.8; }
-.how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 8px; margin-bottom: 18px; }
-.how div { background: #fff; border-radius: 12px; padding: 10px 12px; font-size: 12.5px; color: var(--ink2); box-shadow: var(--chip-shadow), inset 3px 0 0 var(--rose); }
-.how div:nth-child(2) { box-shadow: var(--chip-shadow), inset 3px 0 0 var(--gold); } .how div:nth-child(3) { box-shadow: var(--chip-shadow), inset 3px 0 0 var(--mint); } .how div:nth-child(4) { box-shadow: var(--chip-shadow), inset 3px 0 0 var(--plum-2); }
-.how b { display: block; font: 700 14px var(--serif); color: var(--plum); margin-bottom: 2px; }
-.slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr)); gap: 10px; margin-bottom: 16px; }
-.slot { border-radius: 14px; padding: 12px 10px 10px; display: grid; gap: 7px; background: #fff; box-shadow: var(--chip-shadow), inset 0 4px 0 var(--pc); }
-.slot.off { opacity: .45; }
+.sc { position: relative; margin: auto; width: min(780px, 100%); border-radius: 44px; padding: 34px 30px 28px; background: var(--cream); box-shadow: 0 8px 0 rgba(150,120,70,.2), 0 26px 60px rgba(80,60,30,.25); }
+.sc h2 { margin: 0; font: 400 clamp(30px, 5vw, 44px)/1.15 var(--round); color: var(--brown); }
+.sc h2::before { content: "歡迎來到自學小島"; display: inline-block; font: 400 15px var(--round); color: #fff; background: var(--leaf); padding: 3px 16px; border-radius: 999px; margin-bottom: 10px; box-shadow: 0 3px 0 var(--leaf-d); transform: rotate(-2deg); }
+.sc h2 { display: flex; flex-direction: column; align-items: flex-start; }
+.sc .lead { margin: 10px 0 18px; font: 500 15px/1.85 var(--sans); }
+.how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 10px; margin-bottom: 18px; }
+.how div { background: #fff; border-radius: 22px; padding: 12px 14px; font: 500 13px var(--sans); color: var(--brown2); box-shadow: 0 4px 0 #EDE2C4; }
+.how b { display: block; font: 400 16px var(--round); color: var(--brown); margin-bottom: 2px; }
+.slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr)); gap: 12px; margin-bottom: 16px; }
+.slot { border-radius: 26px; padding: 12px; display: grid; gap: 8px; background: #fff; box-shadow: 0 4px 0 #EDE2C4; }
+.slot.off { opacity: .5; }
 .slot .top { display: flex; gap: 8px; align-items: center; }
-.slot .av { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; background: #fff; border: 0; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--pc), var(--chip-shadow); flex: 0 0 auto; }
-.slot .chn { font-size: 11px; color: var(--muted); text-align: center; margin-top: 3px; }
-.slot input { width: 100%; border: 1px solid rgba(160,132,196,.35); border-radius: 9px; padding: 6px 8px; font: 600 14px var(--sans); color: var(--plum); background: var(--paper); }
+.slot .av { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-size: 28px; background: var(--cream); border: 0; box-shadow: 0 0 0 4px var(--pc); flex: 0 0 auto; }
+.slot .chn { font: 400 12px var(--round); color: var(--brown2); text-align: center; margin-top: 4px; }
+.slot input { width: 100%; border: 0; border-radius: 999px; padding: 7px 12px; font: 400 15px var(--round); color: var(--brown); background: var(--cream2); }
 .slot .seg { display: flex; gap: 4px; }
-.slot .seg button { flex: 1; border: 0; background: var(--lilac-pale); border-radius: 8px; padding: 5px 0; font: 600 12px var(--sans); }
+.slot .seg button { flex: 1; border: 0; background: var(--cream2); border-radius: 999px; padding: 5px 0; font: 400 13px var(--round); }
 .slot .seg button.on { background: var(--pc); color: #fff; }
-.opts2 { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 20px; font: 700 13px var(--serif); }
-.opts2 button { border: 1px dashed rgba(123,79,176,.45); background: var(--paper); border-radius: 999px; padding: 5px 14px; font: 600 12.5px var(--sans); box-shadow: var(--chip-shadow); }
-.opts2 button.on { background: var(--plum); color: #fff; border-style: solid; }
-.go { border: 0; font: 800 19px var(--serif); letter-spacing: 2px; padding: 14px 36px; border-radius: 999px; color: #fff; background: radial-gradient(circle at 30% 25%, #ff9bb7, var(--rose) 55%, var(--rose-deep)); box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--gold), 0 10px 26px rgba(217,95,130,.4); }
-.go:hover { transform: rotate(-2deg); }
-.go.alt { background: #fff; color: var(--plum); box-shadow: 0 0 0 4px #fff, 0 0 0 5px rgba(160,132,196,.4), var(--chip-shadow); font-size: 16px; }
-.gos { display: flex; gap: 16px; flex-wrap: wrap; }
+.opts2 { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 22px; font: 400 15px var(--round); }
+.opts2 button { border: 0; background: #fff; border-radius: 999px; padding: 6px 16px; font: 400 14px var(--round); box-shadow: 0 3px 0 #EDE2C4; }
+.opts2 button.on { background: var(--leaf); color: #fff; box-shadow: 0 3px 0 var(--leaf-d); }
+.go { border: 0; font: 400 22px var(--round); letter-spacing: 2px; padding: 14px 40px; border-radius: 999px; color: var(--brown); background: var(--sun); box-shadow: 0 6px 0 var(--sun-d); }
+.go:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--sun-d); }
+.go.alt { background: #fff; box-shadow: 0 6px 0 #E3D5B3; font-size: 18px; }
+.gos { display: flex; gap: 14px; flex-wrap: wrap; }
 
 .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 70; overflow: hidden; }
-.confetti i { position: absolute; top: -20px; width: 9px; height: 13px; border-radius: 2px; animation: fall linear forwards; }
+.confetti i { position: absolute; top: -20px; width: 11px; height: 11px; border-radius: 50% 50% 50% 0; animation: fall linear forwards; }
 @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 
 @media (max-width: 760px) {
-  #brand { left: 8px; top: 8px; padding: 7px 12px 8px 8px; gap: 8px; } #brand .logo { width: 34px; height: 34px; font-size: 18px; } #brand h1 { font-size: 17px; } #brand .chip { font-size: 9px; }
-  #tools { right: 8px; top: 8px; padding: 3px; } .tb { min-height: 34px; padding: 0 8px; font-size: 12px; } .tb .t { display: none; }
+  #brand { left: 8px; top: 8px; padding: 5px 14px 5px 6px; gap: 6px; } #brand .logo { width: 34px; height: 34px; font-size: 18px; } #brand h1 { font-size: 17px; } #brand .chip { font-size: 11px; }
+  #tools { right: 8px; top: 8px; gap: 4px; flex-wrap: wrap; justify-content: flex-end; max-width: 46vw; } .tb { height: 34px; padding: 0 10px; font-size: 13px; } .tb .t { display: none; }
   #zoom { top: auto; bottom: 168px; right: 8px; flex-direction: column; } #zoom .tb { width: 36px; }
-  .pcard { width: calc(50vw - 12px); } .pcard .hd { padding: 4px 8px 4px 52px; font-size: 9px; } .pcard .hd::after { display: none; } .pcard::after { display: none; }
-  .pcard .av { width: 36px; height: 36px; font-size: 20px; left: 8px; top: 8px; } .pcard .bd { padding: 4px 8px 8px 52px; } .pcard .money { font-size: 18px; } .pcard .sub, .pcard .chips { display: none; }
-  .pcard.p0 { left: 8px; top: 74px; } .pcard.p1 { right: 8px; top: 74px; left: auto; } .pcard.p2 { left: 8px; top: 140px; } .pcard.p3 { right: 8px; top: 140px; }
-  #log { display: none; } #menuBtns { bottom: 8px; right: 8px; grid-template-columns: 1fr; padding: 3px; } #menuBtns .tb { min-height: 30px; }
-  #rollBtn { font-size: 18px; padding: 12px 30px; } #turnTxt { font-size: 12px; }
+  .pcard { width: calc(50vw - 12px); border-radius: 20px; } .pcard .hd { left: 44px; font-size: 12px; padding: 2px 10px; } .pcard .av { width: 34px; height: 34px; font-size: 19px; left: 6px; top: 12px; }
+  .pcard .bd { padding: 14px 8px 8px 48px; } .pcard .money { font-size: 18px; } .pcard .sub, .pcard .chips { display: none; }
+  .pcard.p0 { left: 8px; top: 92px; } .pcard.p1 { right: 8px; top: 92px; left: auto; } .pcard.p2 { left: 8px; top: 162px; } .pcard.p3 { right: 8px; top: 162px; }
+  #log { display: none; } #menuBtns { bottom: 8px; right: 8px; grid-template-columns: 1fr; } #menuBtns .tb { height: 32px; }
+  #rollBtn { font-size: 20px; padding: 12px 34px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
@@ -180,7 +157,7 @@ dialog::backdrop { background: rgba(107,76,110,.22); backdrop-filter: blur(3px);
 <div id="bg"></div>
 <div id="scene" aria-label="3D 大富翁棋盤：拖曳旋轉、滾輪或雙指縮放、點格子看說明"></div>
 
-<header id="brand" class="glass"><span class="logo">📔</span><div><h1>四維自學大富翁</h1><span class="chip" id="roundChip">第 1 回合</span></div></header>
+<header id="brand" class="glass"><span class="logo">🏝️</span><div><h1>四維自學大富翁</h1><span class="chip" id="roundChip">第 1 回合</span></div></header>
 <nav id="tools" aria-label="工具">
   <button class="tb" id="bFull">⛶<span class="t"> 全螢幕</span></button>
   <button class="tb" id="bSfx">🔊<span class="t"> 音效</span></button>
@@ -234,8 +211,8 @@ const FONT = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif', RFO
 
 // ===================== 遊戲資料 =====================
 const GROUPS = {
-  idea: { name: '主題發想', c: '#7BC67E' }, goal: { name: '目標設定', c: '#5FB8A0' }, plan: { name: '計畫規劃', c: '#E77FA6' }, res: { name: '找資源', c: '#E89A6A' },
-  exec: { name: '執行紀錄', c: '#5B9BE0' }, time: { name: '時間管理', c: '#6FB6D8' }, show: { name: '成果呈現', c: '#B48BE6' }, refl: { name: '自我反思', c: '#D48FCB' }
+  idea: { name: '主題發想', c: '#5DBB4A' }, goal: { name: '目標設定', c: '#3DB89A' }, plan: { name: '計畫規劃', c: '#F07FA8' }, res: { name: '找資源', c: '#F29A4A' },
+  exec: { name: '執行紀錄', c: '#4E9BE8' }, time: { name: '時間管理', c: '#33B5D6' }, show: { name: '成果呈現', c: '#A579E8' }, refl: { name: '自我反思', c: '#E07CC4' }
 };
 const T = (t, name, extra = {}) => Object.assign({ t, name }, extra);
 const TILES = [
@@ -315,7 +292,7 @@ const QUIZ = [
   ['判斷一份資料可不可信，要看什麼？', ['作者、時間、證據與目的', '字數多寡', '圖片好不好看', '按讚數'], '誰寫的、什麼時候寫的、有沒有證據、目的是什麼。'],
   ['寫自學動機時，最重要的是寫出？', ['為什麼想學這個主題', '字數越多越好', '老師可能喜歡的答案', '別人的動機'], '「為什麼」比「做什麼」更重要，連結你的經驗與方向。']
 ];
-const PCOL = ['#F27A9A', '#7FB2E5', '#E8B04E', '#5FCF9F'];
+const PCOL = ['#F27A9A', '#4E9BE8', '#F2A53A', '#4FBF6A'];
 
 // ===================== 狀態 =====================
 const KEY = 'swsh-monopoly-v1';
@@ -564,12 +541,12 @@ function tileTexture(i) {
   const t = TILES[i], corner = i % 7 === 0, W = corner ? 432 : 288, H = 432;
   return tex(W, H, (x) => {
     const c = t.t === 'topic' ? GROUPS[t.g].c : SPECIAL_BG[t.t];
-    x.fillStyle = '#FFFDF8'; x.fillRect(0, 0, W, H);
-    x.fillStyle = 'rgba(160,132,196,.12)'; for (let a = 16; a < W; a += 22) for (let b = 16; b < H; b += 22) { x.beginPath(); x.arc(a, b, 1.6, 0, 7); x.fill(); }
+    x.fillStyle = '#FFF9E8'; x.fillRect(0, 0, W, H);
+    x.fillStyle = 'rgba(200,170,110,.14)'; for (let a = 16; a < W; a += 22) for (let b = 16; b < H; b += 22) { x.beginPath(); x.arc(a, b, 1.6, 0, 7); x.fill(); }
     x.fillStyle = c; x.globalAlpha = .9; rr(x, 0, 0, W, 54, 0); x.fill(); x.globalAlpha = 1;
     x.strokeStyle = 'rgba(255,255,255,.85)'; x.setLineDash([8, 7]); x.lineWidth = 2.5; x.beginPath(); x.moveTo(10, 46); x.lineTo(W - 10, 46); x.stroke(); x.setLineDash([]);
     x.textAlign = 'center'; x.textBaseline = 'middle';
-    x.fillStyle = '#fff'; x.font = `700 20px ui-monospace, monospace`; x.fillText(t.t === 'topic' ? GROUPS[t.g].name : (t.sub || '特殊格'), W / 2, 25);
+    x.fillStyle = '#fff'; x.font = `400 24px "Huninn", ${FONT}`; x.fillText(t.t === 'topic' ? GROUPS[t.g].name : (t.sub || '特殊格'), W / 2, 25);
     // 插圖圓章
     const cy = corner ? 170 : 150, R = corner ? 92 : 70;
     x.fillStyle = '#fff'; x.beginPath(); x.arc(W / 2, cy, R + 8, 0, 7); x.fill();
@@ -577,25 +554,26 @@ function tileTexture(i) {
     const g = x.createRadialGradient(W / 2 - R / 3, cy - R / 3, 4, W / 2, cy, R); g.addColorStop(0, '#FFFFFF'); g.addColorStop(1, c + '55'); x.fillStyle = g; x.beginPath(); x.arc(W / 2, cy, R, 0, 7); x.fill();
     x.font = `${corner ? 104 : 80}px sans-serif`; x.fillText(t.t === 'topic' ? (ICON[t.name] || '🤔') : t.icon, W / 2, cy + 6);
     // 名稱
-    x.fillStyle = '#6B4C6E'; x.font = `800 ${corner ? 46 : 36}px "Noto Serif TC", ${FONT}`;
+    x.fillStyle = '#6E5A3E'; x.font = `400 ${corner ? 48 : 38}px "Huninn", ${FONT}`;
     const name = t.name, lines = []; let line = ''; for (const ch of name) { if (x.measureText(line + ch).width > W - 30 && line) { lines.push(line); line = ch; } else line += ch; } lines.push(line);
     const ny = corner ? 318 : 280; lines.forEach((l, k) => x.fillText(l, W / 2, ny + (k - (lines.length - 1) / 2) * 40));
-    if (t.t === 'topic') { x.fillStyle = '#FFF4D6'; rr(x, W / 2 - 70, 348, 140, 46, 23); x.fill(); x.strokeStyle = '#ECC77A'; x.lineWidth = 2; x.stroke(); x.fillStyle = '#A0743A'; x.font = `800 26px "Noto Serif TC", ${FONT}`; x.fillText(`${t.price} ⚡`, W / 2, 372); }
+    if (t.t === 'topic') { x.fillStyle = '#FFF4D6'; rr(x, W / 2 - 70, 348, 140, 46, 23); x.fill(); x.strokeStyle = '#ECC77A'; x.lineWidth = 2; x.stroke(); x.fillStyle = '#8A6A2E'; x.font = `400 28px "Huninn", ${FONT}`; x.fillText(`${t.price} ⚡`, W / 2, 372); }
     else { x.fillStyle = '#A08AA3'; x.font = `700 22px ${FONT}`; x.fillText(t.t === 'chance' || t.t === 'reflect' ? '抽一張卡' : t.t === 'quiz' ? '答題拿能量' : '', W / 2, corner ? 380 : 360); }
-    x.strokeStyle = c; x.lineWidth = 6; rr(x, 3, 3, W - 6, H - 6, 18); x.stroke();
+    x.strokeStyle = '#C79B5E'; x.lineWidth = 8; rr(x, 4, 4, W - 8, H - 8, 22); x.stroke();
   });
 }
 let deckC, deckR, dice;
 function tree(x, z, c, s = 1) { const g = new THREE.Group(); g.position.set(x, 0.6, z); g.scale.setScalar(s); scene.add(g); Cy(g, 0.32, 0.42, 2.2, '#C9A27E', 0, 1.1, 0, 12); [[0, 3.1, 0, 1.55], [0.95, 2.6, 0.3, 1.05], [-0.85, 2.7, -0.2, 1.1], [0.1, 4.1, -0.1, 1.0]].forEach(([a, b, d, r]) => Sp(g, r, c, a, b, d)); for (let k = 0; k < 4; k++) Sp(g, 0.16, ['#FF7EB6', '#FFFFFF', '#FFCB45'][k % 3], Math.cos(k * 1.7) * 1.3, 3 + (k % 2) * 0.8, Math.sin(k * 1.7) * 1.3 + 0.4); return g; }
 // ---- 低多邊形自然景 ----
 const LP = (color, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color, roughness: 0.9, metalness: 0, flatShading: true }, o));
-function lpTree(par, x, z, s = 1, kind = 0, cols = ['#9ED9A0', '#7CC98A', '#B6E3A4']) {
+function lpTree(par, x, z, s = 1, kind = 0, cols = ['#6CC24A', '#86D35C', '#58B54A']) {
+  cols = cols.map(c => ({ '#9ED9A0': '#6CC24A', '#7CC98A': '#58B54A', '#B6E3A4': '#86D35C', '#C3E8A0': '#9ADB64', '#A8DDA8': '#6CC24A', '#F4B6CD': '#F59BB8', '#CFE7A4': '#86D35C', '#A8DDA8': '#6CC24A' }[c] || c));
   const g = new THREE.Group(); g.position.set(x, 0, z); g.scale.setScalar(s); g.rotation.y = Math.random() * 6; par.add(g);
   g.add(mesh(new THREE.CylinderGeometry(0.22, 0.32, 1.6, 6), LP('#B98E6A'), 0, 0.8, 0));
   const c = cols[Math.floor(Math.random() * cols.length)];
   if (kind === 1) { g.add(mesh(new THREE.ConeGeometry(1.25, 2.4, 7), LP(c), 0, 2.4, 0)); g.add(mesh(new THREE.ConeGeometry(0.95, 1.9, 7), LP(c), 0, 3.4, 0)); }
   else if (kind === 2) { [[0, 2.3, 0, 1.05], [0.6, 2.0, 0.3, 0.7], [-0.55, 2.05, -0.2, 0.75]].forEach(([a, b, d, r]) => g.add(mesh(new THREE.IcosahedronGeometry(r, 0), LP(c), a, b, d))); for (let k = 0; k < 5; k++) g.add(mesh(new THREE.IcosahedronGeometry(0.16, 0), LP(['#FFB7CF', '#FFFFFF', '#FFE08A'][k % 3]), Math.cos(k * 1.3) * 0.9, 2.2 + (k % 2) * 0.5, Math.sin(k * 1.3) * 0.9)); }
-  else g.add(mesh(new THREE.IcosahedronGeometry(1.2, 0), LP(c), 0, 2.4, 0));
+  else { g.add(mesh(new THREE.IcosahedronGeometry(1.25, 1), MAT(c), 0, 2.5, 0)); if (Math.random() < 0.6) for (let k = 0; k < 3; k++) g.add(mesh(new THREE.SphereGeometry(0.2, 10, 8), MAT(['#FF7A59', '#FFB13B', '#E8444B'][Math.floor(Math.random() * 3)]), Math.cos(k * 2.1) * 0.95, 2.2 + (k % 2) * 0.5, Math.sin(k * 2.1) * 0.95)); }
   return g;
 }
 function lpHouse(par, x, z, ry, wall, roof, s = 1) {
@@ -613,28 +591,28 @@ function flagLine(par, a, b, h, cols) {
 function districtSign(par, x, z, ry, title, sub, col) {
   const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; par.add(g);
   [-2.3, 2.3].forEach(dx => g.add(mesh(new THREE.CylinderGeometry(0.12, 0.15, 3.4, 8), MAT('#B98E6A'), dx, 1.7, 0)));
-  const t = tex(512, 160, (c, W, H) => { c.fillStyle = '#FFFBF4'; rr(c, 4, 4, W - 8, H - 8, 26); c.fill(); c.lineWidth = 6; c.strokeStyle = col; rr(c, 10, 10, W - 20, H - 20, 22); c.stroke();
-    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = col; c.font = `800 62px "Noto Serif TC", ${FONT}`; c.fillText(title, W / 2, 66); c.fillStyle = '#8A7896'; c.font = `700 26px ${FONT}`; c.fillText(sub, W / 2, 122); });
-  g.add(mesh(rbox(5.6, 1.95, 0.22, 0.1), MAT('#FFFBF4'), 0, 3.1, 0)); const pl = mesh(new THREE.PlaneGeometry(5.4, 1.7), new THREE.MeshStandardMaterial({ map: t, roughness: 0.7 }), 0, 3.1, 0.12, false); g.add(pl);
+  const t = tex(512, 160, (c, W, H) => { c.fillStyle = '#E9C88F'; rr(c, 4, 4, W - 8, H - 8, 26); c.fill(); c.lineWidth = 6; c.strokeStyle = '#B88A52'; rr(c, 10, 10, W - 20, H - 20, 22); c.stroke();
+    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#5A4630'; c.font = `400 64px "Huninn", ${FONT}`; c.fillText(title, W / 2, 66); c.fillStyle = '#7A6040'; c.font = `700 26px ${FONT}`; c.fillText(sub, W / 2, 122); });
+  g.add(mesh(rbox(5.6, 1.95, 0.22, 0.1), MAT('#C9975C'), 0, 3.1, 0)); const pl = mesh(new THREE.PlaneGeometry(5.4, 1.7), new THREE.MeshStandardMaterial({ map: t, roughness: 0.7 }), 0, 3.1, 0.12, false); g.add(pl);
   return g;
 }
 function buildScene() {
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75)); renderer.setSize(innerWidth, innerHeight);
   renderer.outputEncoding = THREE.sRGBEncoding; renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.8;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.85;
   $('#scene').appendChild(renderer.domElement);
   // 天空漸層 + 霧
-  const skyG = new THREE.SphereGeometry(900, 32, 16), cols = [], top = new THREE.Color("#BFD6FF"), skyMid = new THREE.Color("#FBE3F0"), bot = new THREE.Color("#FFF4EA");
+  const skyG = new THREE.SphereGeometry(900, 32, 16), cols = [], top = new THREE.Color("#4FB9EC"), skyMid = new THREE.Color("#A9E3F6"), bot = new THREE.Color("#E3F7FB");
   for (let i = 0; i < skyG.attributes.position.count; i++) { const y = skyG.attributes.position.getY(i) / 900, c = y > 0 ? skyMid.clone().lerp(top, Math.pow(y, 0.7)) : skyMid.clone().lerp(bot, Math.min(1, -y * 3)); c.convertSRGBToLinear(); cols.push(c.r, c.g, c.b); }
   skyG.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
   scene.add(new THREE.Mesh(skyG, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false, toneMapped: false })));
-  scene.fog = new THREE.Fog(0xF6E6F2, 300, 900);
-  scene.add(new THREE.HemisphereLight(0xFFF6FB, 0xB9C4E0, 0.42));
-  const sun = new THREE.DirectionalLight(0xFFF1E0, 1.05); sun.position.set(40, 80, 55); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+  scene.fog = new THREE.Fog(0xB8E6F5, 320, 950);
+  scene.add(new THREE.HemisphereLight(0xEAF8FF, 0xA89770, 0.5));
+  const sun = new THREE.DirectionalLight(0xFFF0D6, 1.25); sun.position.set(40, 80, 55); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
   Object.assign(sun.shadow.camera, { left: -55, right: 55, top: 55, bottom: -55, near: 10, far: 220 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.04; sun.shadow.radius = 4; scene.add(sun);
   const fill = new THREE.DirectionalLight(0xD8E4FF, 0.35); fill.position.set(-50, 30, -30); scene.add(fill);
   // 海面
-  const waterT = tex(512, 512, (x, W) => { x.fillStyle = '#A9C9EE'; x.fillRect(0, 0, W, W); x.strokeStyle = 'rgba(255,255,255,.6)'; x.lineWidth = 3; x.lineCap = 'round'; for (let k = 0; k < 70; k++) { const a = (k * 137) % W, b = (k * 251) % W; x.beginPath(); x.moveTo(a, b); x.quadraticCurveTo(a + 10, b - 6, a + 20, b); x.stroke(); } });
+  const waterT = tex(512, 512, (x, W) => { x.fillStyle = '#4FC6D3'; x.fillRect(0, 0, W, W); for (let k = 0; k < 40; k++) { x.fillStyle = 'rgba(120,225,230,.35)'; x.beginPath(); x.arc((k * 173) % W, (k * 97) % W, 18 + k % 14, 0, 7); x.fill(); } x.strokeStyle = 'rgba(255,255,255,.75)'; x.lineWidth = 3; x.lineCap = 'round'; for (let k = 0; k < 70; k++) { const a = (k * 137) % W, b = (k * 251) % W; x.beginPath(); x.moveTo(a, b); x.quadraticCurveTo(a + 10, b - 6, a + 20, b); x.stroke(); } });
   waterT.wrapS = waterT.wrapT = THREE.RepeatWrapping; waterT.repeat.set(30, 30);
   const sea = mesh(new THREE.PlaneGeometry(1600, 1600), new THREE.MeshStandardMaterial({ map: waterT, roughness: 0.35, metalness: 0.05 }), 0, -9, 0, false); sea.rotation.x = -Math.PI / 2; scene.add(sea);
   spinners.push({ water: waterT });
@@ -648,9 +626,11 @@ function buildScene() {
   // ===== 棋盤島：漂浮的手帳島 =====
   const BW = 76;
   const isle = new THREE.Group(); scene.add(isle);
-  isle.add(mesh(rbox(BW + 4, 3.2, BW + 4, 1.4), LP('#BFE3A9'), 0, -2.5, 0));
-  const rock = mesh(new THREE.CylinderGeometry(BW * 0.62, BW * 0.2, 16, 10, 2), LP('#E8D6C8'), 0, -12, 0, false); rock.rotation.y = Math.PI / 10; isle.add(rock);
-  const rock2 = mesh(new THREE.ConeGeometry(BW * 0.22, 14, 8), LP('#D9C3B3'), 0, -26, 0, false); rock2.rotation.x = Math.PI; isle.add(rock2);
+  isle.add(mesh(rbox(BW + 18, 2.2, BW + 18, 4), MAT('#F6E2AE'), 0, -4.6, 0, false));
+  isle.add(mesh(rbox(BW + 4, 3.2, BW + 4, 1.4), MAT('#C9A47A'), 0, -2.5, 0));
+  for (let k = 0; k < 26; k++) { const a = k / 26 * Math.PI * 2, r = BW / 2 + 7 + (k % 3); const sq = Math.max(Math.abs(Math.cos(a)), Math.abs(Math.sin(a))); const sh = mesh(new THREE.IcosahedronGeometry(0.5 + (k % 3) * 0.2, 0), LP(['#FFFFFF', '#F7B3C4', '#FFE7A8'][k % 3]), Math.cos(a) * r / sq * 0.98, -3.4, Math.sin(a) * r / sq * 0.98); isle.add(sh); }
+  const rock = mesh(new THREE.CylinderGeometry(BW * 0.62, BW * 0.2, 16, 10, 2), LP('#B8946C'), 0, -12, 0, false); rock.rotation.y = Math.PI / 10; isle.add(rock);
+  const rock2 = mesh(new THREE.ConeGeometry(BW * 0.22, 14, 8), LP('#A88760'), 0, -26, 0, false); rock2.rotation.x = Math.PI; isle.add(rock2);
   // 四邊的街區色帶（側面）
   const DIST = [
     { n: '好奇森林', en: 'CURIOSITY FOREST', s: '主題發想・目標設定', c: '#7BC67E', bg: '#E3F5DE' },
@@ -661,7 +641,9 @@ function buildScene() {
   const bandTex = d => tex(1024, 96, (c, W, H) => { c.fillStyle = d.bg; c.fillRect(0, 0, W, H); c.fillStyle = d.c; c.fillRect(0, 0, W, 10); c.fillRect(0, H - 10, W, 10);
     c.textBaseline = 'middle'; c.textAlign = 'center'; for (let k = 0; k < 3; k++) { const x = W / 6 + k * W / 3; c.fillStyle = d.c; c.font = `800 40px "Noto Serif TC", ${FONT}`; c.fillText(d.n, x - 40, H / 2); c.font = `700 16px ui-monospace, monospace`; c.fillText(d.en, x + 100, H / 2); c.beginPath(); c.arc(x + W / 6, H / 2, 6, 0, 7); c.fill(); } });
   const slab = new THREE.Group(); isle.add(slab);
-  const slabTop = mesh(rbox(BW, 1.6, BW, 0.6), MAT('#FFF9F1'), 0, -0.2, 0); slab.add(slabTop);
+  const grassT = tex(256, 256, (c, W) => { c.fillStyle = '#6BBF45'; c.fillRect(0, 0, W, W); for (let k = 0; k < 90; k++) { c.fillStyle = k % 3 ? 'rgba(110,190,80,.55)' : 'rgba(160,220,120,.55)'; c.beginPath(); c.ellipse((k * 67) % W, (k * 131) % W, 10 + k % 9, 6 + k % 5, k, 0, 7); c.fill(); } c.strokeStyle = 'rgba(70,150,60,.5)'; c.lineWidth = 2; for (let k = 0; k < 50; k++) { const a = (k * 89) % W, b = (k * 53) % W; c.beginPath(); c.moveTo(a, b); c.lineTo(a + 3, b - 7); c.moveTo(a + 6, b); c.lineTo(a + 8, b - 6); c.stroke(); } });
+  grassT.wrapS = grassT.wrapT = THREE.RepeatWrapping; grassT.repeat.set(10, 10);
+  const slabTop = mesh(rbox(BW, 1.6, BW, 0.6), [new THREE.MeshStandardMaterial({ color: 0xffffff, map: grassT, roughness: 0.95 }), MAT('#7CC45A')], 0, -0.2, 0); slab.add(slabTop);
   [[0, BW / 2 + 0.02, 0], [-BW / 2 - 0.02, 0, -Math.PI / 2], [0, -BW / 2 - 0.02, Math.PI], [BW / 2 + 0.02, 0, Math.PI / 2]].forEach(([x, z, ry], k) => {
     const b = mesh(new THREE.PlaneGeometry(BW - 1.4, 1.3), new THREE.MeshStandardMaterial({ map: bandTex(DIST[k]), roughness: 0.8 }), 0, -0.25, 0, false);
     const pv = new THREE.Group(); pv.position.set(x || 0, 0, z || 0); if (k === 1 || k === 3) { pv.position.set(k === 1 ? -BW / 2 - 0.02 : BW / 2 + 0.02, 0, 0); } else pv.position.set(0, 0, k === 0 ? BW / 2 + 0.02 : -BW / 2 - 0.02);
@@ -669,25 +651,26 @@ function buildScene() {
   });
   // 中央：手帳內頁（點點格線）
   const mid = tex(1024, 1024, (x, W, H) => {
-    x.fillStyle = '#FFFDF8'; x.fillRect(0, 0, W, H); x.fillStyle = 'rgba(160,132,196,.22)'; for (let a = 24; a < W; a += 32) for (let b = 24; b < H; b += 32) { x.beginPath(); x.arc(a, b, 2.2, 0, 7); x.fill(); }
-    x.strokeStyle = 'rgba(236,199,122,.8)'; x.lineWidth = 4; rr(x, 18, 18, W - 36, H - 36, 40); x.stroke(); x.setLineDash([14, 10]); x.strokeStyle = 'rgba(242,122,154,.45)'; rr(x, 34, 34, W - 68, H - 68, 30); x.stroke(); x.setLineDash([]);
-    x.textAlign = 'center'; x.textBaseline = 'middle';
-    x.fillStyle = '#A08AA3'; x.font = `700 22px ui-monospace, monospace`; x.fillText('S E L F - L E A R N I N G   J O U R N A L', W / 2, 286);
-    x.fillStyle = '#6B4C6E'; x.font = `italic 700 34px "Noto Serif TC", ${FONT}`; x.fillText('發想 → 計畫 → 執行 → 發表', W / 2, 336);
-    x.strokeStyle = 'rgba(160,132,196,.5)'; x.lineWidth = 3; x.setLineDash([10, 9]); x.beginPath(); x.arc(W / 2, 640, 170, 0, 7); x.stroke(); x.setLineDash([]);
+    x.fillStyle = '#74C64E'; x.fillRect(0, 0, W, H);
+    for (let k = 0; k < 220; k++) { x.fillStyle = k % 2 ? 'rgba(120,200,90,.6)' : 'rgba(170,228,130,.55)'; x.beginPath(); x.ellipse((k * 211) % W, (k * 337) % H, 16 + k % 18, 9 + k % 8, k, 0, 7); x.fill(); }
+    // 石板廣場
+    x.fillStyle = '#EBDDBB'; x.beginPath(); x.arc(W / 2, 640, 230, 0, 7); x.fill();
+    for (let r = 60; r < 230; r += 56) for (let a = 0; a < Math.PI * 2; a += 0.42 + 30 / r) { x.fillStyle = ['#E2D1A9', '#F2E6C8', '#D9C69C'][Math.floor(a * 7 + r) % 3]; x.beginPath(); x.ellipse(W / 2 + Math.cos(a) * r, 640 + Math.sin(a) * r, 22, 16, a, 0, 7); x.fill(); }
+    // 花圃
+    [[150, 140], [874, 140], [150, 900], [874, 900], [150, 520], [874, 520]].forEach(([a, b], k) => { for (let n = 0; n < 26; n++) { x.fillStyle = ['#FF8FB0', '#FFFFFF', '#FFD54F', '#B48BE6'][(n + k) % 4]; x.beginPath(); x.arc(a + Math.cos(n * 2.4) * (n % 6) * 9, b + Math.sin(n * 2.4) * (n % 6) * 9, 8, 0, 7); x.fill(); x.fillStyle = '#FFE680'; x.beginPath(); x.arc(a + Math.cos(n * 2.4) * (n % 6) * 9, b + Math.sin(n * 2.4) * (n % 6) * 9, 3, 0, 7); x.fill(); } });
+    x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round';
+    x.font = `400 38px "Huninn", ${FONT}`; x.lineWidth = 12; x.strokeStyle = '#FFF9E8'; x.strokeText('發想 → 計畫 → 執行 → 發表', W / 2, 336); x.fillStyle = '#6E5A3E'; x.fillText('發想 → 計畫 → 執行 → 發表', W / 2, 336);
   });
   const midP = mesh(new THREE.PlaneGeometry(36, 36), new THREE.MeshStandardMaterial({ map: mid, roughness: 0.85 }), 0, 0.62, 0, false); midP.rotation.x = -Math.PI / 2; scene.add(midP);
-  // 紙膠帶
-  [[-17, -17, 0.7, '#F7B6CF'], [17, -17, -0.7, '#A8D8C5'], [-17, 17, -0.7, '#F9D77E'], [17, 17, 0.7, '#C9B6F4']].forEach(([x, z, r, c]) => { const t = mesh(rbox(6, 0.08, 1.8, 0.04), MAT(c, { transparent: true, opacity: 0.85 }), x, 0.66, z, false); t.rotation.y = r; scene.add(t); });
   // 立體標題：書籤式
-  const ttl = tex(1024, 220, (x, W, H) => { x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `800 120px "Noto Serif TC", ${FONT}`; x.fillStyle = '#E58FAE'; x.fillText('四維自學大富翁', W / 2, 110 + 6); x.fillStyle = '#6B4C6E'; x.fillText('四維自學大富翁', W / 2, 110); });
+  const ttl = tex(1024, 220, (x, W, H) => { x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `400 124px "Huninn", ${FONT}`; x.lineJoin = 'round'; x.lineWidth = 30; x.strokeStyle = '#FFF9E8'; x.strokeText('四維自學大富翁', W / 2, 112); x.fillStyle = '#6E5A3E'; x.fillText('四維自學大富翁', W / 2, 112); });
   const sign = new THREE.Group(); sign.position.set(0, 0.62, -9); scene.add(sign);
   const tp = new THREE.Mesh(new THREE.PlaneGeometry(26, 5.6), new THREE.MeshStandardMaterial({ map: ttl, transparent: true, roughness: 0.6 })); tp.position.set(0, 0.06, 0); tp.rotation.x = -Math.PI / 2; sign.add(tp);
   // 格子
   TILES.forEach((t, i) => {
     const p = tileXZ(i), w = p.corner ? TD : TW - 0.35, d = TD - 0.35;
     const g = new THREE.Group(); g.position.set(p.x, 0.6, p.z); g.rotation.y = p.ry; scene.add(g);
-    const base = mesh(rbox(w, 0.7, d, 0.22), MAT('#FFFFFF'), 0, 0.05, 0); g.add(base);
+    const base = mesh(rbox(w, 0.7, d, 0.22), MAT('#D8B27A'), 0, 0.05, 0); g.add(base);
     const top = mesh(new THREE.PlaneGeometry(w - 0.3, d - 0.3), new THREE.MeshStandardMaterial({ map: tileTexture(i), roughness: 0.7 }), 0, 0.41, 0, false); top.rotation.x = -Math.PI / 2; g.add(top);
     g.traverse(o => (o.userData.tile = i)); tileObjs[i] = g; pickables.push(base, top);
   });
@@ -702,7 +685,7 @@ function buildScene() {
   });
   // ===== 街區地面（有圖案的色塊） =====
   const groundTex = (k) => tex(512, 128, (c, W, H) => {
-    if (k === 0) { c.fillStyle = '#BFE6B4'; c.fillRect(0, 0, W, H); for (let n = 0; n < 160; n++) { c.fillStyle = ['#A9DCA0', '#D3F0C6', '#FFFFFF', '#FFD7E4'][n % 4]; c.beginPath(); c.arc((n * 97) % W, (n * 53) % H, n % 4 > 1 ? 2.5 : 4, 0, 7); c.fill(); } }
+    if (k === 0) { c.fillStyle = '#86CC66'; c.fillRect(0, 0, W, H); for (let n = 0; n < 160; n++) { c.fillStyle = ['#A9DCA0', '#D3F0C6', '#FFFFFF', '#FFD7E4'][n % 4]; c.beginPath(); c.arc((n * 97) % W, (n * 53) % H, n % 4 > 1 ? 2.5 : 4, 0, 7); c.fill(); } }
     if (k === 1) { c.fillStyle = '#F9D9E4'; c.fillRect(0, 0, W, H); c.strokeStyle = '#F2C2D3'; c.lineWidth = 3; for (let y = 0; y < H; y += 21) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); for (let x = (y / 21 % 2) * 21; x < W; x += 42) { c.beginPath(); c.moveTo(x, y); c.lineTo(x, y + 21); c.stroke(); } } }
     if (k === 2) { c.fillStyle = '#D6E6F7'; c.fillRect(0, 0, W, H); for (let x = 0; x < W; x += 32) { c.fillStyle = (x / 32) % 2 ? '#CADDF3' : '#DCEAF9'; c.fillRect(x, 0, 32, H); } c.strokeStyle = 'rgba(91,155,224,.25)'; c.lineWidth = 2; for (let x = 0; x < W; x += 32) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); } }
     if (k === 3) { for (let x = 0; x < W; x += 32) for (let y = 0; y < H; y += 32) { c.fillStyle = ((x + y) / 32) % 2 ? '#E8DCFA' : '#F6F0FE'; c.fillRect(x, y, 32, 32); } }
