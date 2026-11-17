@@ -7,163 +7,180 @@
 <meta name="description" content="花蓮縣私立四維高級中學 圖書資訊中心｜擲骰子、選修主題、寫紀錄、拿成果：用大富翁玩懂自主學習。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&family=Noto+Serif+TC:wght@600;700;800;900&display=swap" rel="stylesheet">
 <!-- 3D 引擎：three.js（MIT License） -->
 <style>
-  :root {
-    color-scheme: light;
-    --ol: #2B1F3A; --ink: #2B1F3A; --ink2: #4A3D5E; --muted: #7C6F92; --line: #2B1F3A;
-    --red: #FF4D6D; --orange: #FF9F1C; --yellow: #FFD60A; --green: #38D16A; --sky: #2EC4F1; --blue: #4361EE; --purple: #9B5DE5; --pink: #F15BB5;
-    --round: 'Huninn', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-    --bold: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; overflow: hidden; font-family: var(--round); color: var(--ink); background: #6FD3FF; }
-  button { font: inherit; cursor: pointer; color: inherit; }
-  #bg { position: fixed; inset: 0; overflow: hidden; background: linear-gradient(180deg, #4CC9FF 0%, #8BE0FF 55%, #C9F3FF 100%); }
-  #bg::before { content: ""; position: absolute; left: 50%; top: 55%; width: 260vmax; height: 260vmax; transform: translate(-50%, -50%); background: repeating-conic-gradient(rgba(255,255,255,.16) 0 9deg, transparent 9deg 18deg); animation: rays 80s linear infinite; }
-  @keyframes rays { to { transform: translate(-50%, -50%) rotate(360deg); } }
-  .cloud { position: absolute; width: 150px; height: 56px; background: #fff; border-radius: 60px; animation: float 8s ease-in-out infinite; filter: drop-shadow(4px 0 0 #2B1F3A) drop-shadow(-4px 0 0 #2B1F3A) drop-shadow(0 4px 0 #2B1F3A) drop-shadow(0 -4px 0 #2B1F3A) drop-shadow(0 6px 0 rgba(43,31,58,.2)); }
-  .cloud::before, .cloud::after { content: ""; position: absolute; background: #fff; border-radius: 50%; }
-  .cloud::before { width: 70px; height: 66px; left: 20px; top: -34px; } .cloud::after { width: 52px; height: 50px; left: 76px; top: -22px; }
-  @keyframes float { 50% { transform: translateY(-12px); } }
-  #scene { position: fixed; inset: 0; touch-action: none; }
-  #scene canvas { display: block; width: 100%; height: 100%; outline: none; cursor: grab; }
-  .glass { background: #FFFDF5; border: 4px solid var(--ol); box-shadow: 0 6px 0 var(--ol); }
-  .stroke { -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; }
+/* 主題：自學手帳。面板是手帳內頁、紙膠帶、學生證、印章；配色與鏡中番薯同系的馬卡龍色 */
+:root {
+  color-scheme: light;
+  --rose: #f27a9a; --rose-deep: #d95f82; --rose-pale: #ffe8f0;
+  --plum: #6b4c6e; --plum-2: #a084c4; --lilac: #d6c9f7; --lilac-pale: #f7f2ff;
+  --gold: #ecc77a; --gold-pale: #fff4d6; --paper: #fffbfd; --muted: #a08aa3; --mint: #5fcf9f; --sky: #a7c7f2;
+  --ink: var(--plum); --ink2: #7a5f7d;
+  --card-shadow: 0 1px 2px rgba(160,110,150,.08), 0 8px 22px rgba(205,150,190,.2), 0 26px 60px rgba(160,132,196,.22);
+  --gold-frame: inset 0 0 0 1px rgba(236,199,122,.7), inset 0 0 0 4px rgba(255,251,253,.92), inset 0 0 0 5px rgba(247,182,207,.55);
+  --chip-shadow: 0 2px 8px rgba(160,110,150,.14);
+  --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --serif: "Noto Serif TC", "Songti TC", "PMingLiU", Georgia, serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --round: var(--sans); --bold: var(--sans);
+  --stripes: repeating-linear-gradient(135deg, #f7b6cf 0 7px, #cdb6f4 7px 14px);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; font: 14px/1.5 var(--sans); color: var(--plum); background: #fbeaf3; -webkit-font-smoothing: antialiased; }
+button { font: inherit; cursor: pointer; color: inherit; }
+#bg { position: fixed; inset: 0; background: radial-gradient(60% 50% at 12% 88%, rgba(198,236,214,.7) 0%, transparent 70%), radial-gradient(130% 95% at 50% 18%, #fff8fb 0%, #fde6f0 48%, #e8defa 100%); }
+#scene { position: fixed; inset: 0; touch-action: none; }
+#scene canvas { display: block; width: 100%; height: 100%; outline: none; cursor: grab; }
+.glass { background: rgba(255,248,252,.88); -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); border: 1px solid rgba(255,255,255,.8); box-shadow: var(--card-shadow), var(--gold-frame); }
+.eyebrow { font: 700 10px/1.4 var(--mono); letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
 
-  #brand { position: fixed; left: 16px; top: 12px; z-index: 20; border-radius: 22px; padding: 8px 16px 10px 10px; display: flex; gap: 10px; align-items: center; transform: rotate(-2deg); }
-  #brand .logo { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 30px; background: var(--yellow); border: 4px solid var(--ol); box-shadow: inset 0 -5px 0 rgba(0,0,0,.15); animation: wob 2.4s ease-in-out infinite; }
-  @keyframes wob { 50% { transform: rotate(-10deg) scale(1.06); } }
-  #brand h1 { margin: 0; font: 900 clamp(20px, 2.4vw, 28px) var(--bold); color: #FFD60A; -webkit-text-stroke: 7px var(--ol); paint-order: stroke fill; letter-spacing: 1px; text-shadow: 0 4px 0 var(--ol); }
-  #brand .chip { display: inline-block; margin-top: 4px; font: 900 12.5px var(--bold); padding: 2px 10px; border-radius: 999px; background: var(--sky); color: #fff; border: 3px solid var(--ol); }
+/* 標題：手帳封面 */
+#brand { position: fixed; left: 16px; top: 16px; z-index: 20; border-radius: 18px; padding: 12px 20px 13px 16px; display: flex; gap: 12px; align-items: center; }
+#brand::before { content: ""; position: absolute; left: 22px; top: -9px; width: 64px; height: 18px; background: rgba(247,182,207,.75); transform: rotate(-4deg); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+#brand .logo { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; background: var(--paper); box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--gold), var(--chip-shadow); }
+#brand h1 { margin: 0; font: 800 25px/1.1 var(--serif); letter-spacing: .5px; color: var(--plum); }
+#brand h1::first-letter { color: var(--rose); }
+#brand .chip { display: inline-block; margin-top: 5px; font: 700 10.5px/1.4 var(--mono); letter-spacing: 1.5px; color: var(--muted); }
 
-  #tools { position: fixed; right: 14px; top: 14px; z-index: 20; display: grid; grid-template-columns: repeat(3, auto); gap: 8px; }
-  #tools #bSfx.on { background: linear-gradient(180deg, #eee 0 50%, #ccc 50%); }
-  .tb { height: 40px; padding: 0 14px; border-radius: 14px; border: 3px solid var(--ol); background: linear-gradient(180deg, #fff 0 50%, #EDE6FF 50%); box-shadow: 0 4px 0 var(--ol); font: 900 13px var(--bold); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; transition: transform .1s; }
-  .tb:hover { transform: translateY(-2px); }
-  .tb:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ol); }
-  .tb.on { background: linear-gradient(180deg, #B8F5C9 0 50%, #7BE59B 50%); }
-  .tb.hot { background: linear-gradient(180deg, #FF9FD0 0 50%, #F15BB5 50%); color: #fff; }
-  #zoom { position: fixed; right: 16px; top: 120px; z-index: 20; display: flex; gap: 8px; }
-  #zoom .tb { width: 42px; height: 42px; padding: 0; justify-content: center; font-size: 22px; border-radius: 50%; }
+/* 工具列 */
+#tools { position: fixed; right: 16px; top: 16px; z-index: 20; display: flex; gap: 4px; padding: 5px; border-radius: 14px; background: rgba(255,248,252,.88); backdrop-filter: blur(16px); box-shadow: var(--card-shadow), var(--gold-frame); }
+.tb { min-height: 40px; padding: 0 12px; border-radius: 9px; border: 0; background: transparent; font: 600 13px var(--sans); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background .18s, transform .18s; }
+.tb:hover { background: var(--lilac-pale); transform: rotate(-2deg) scale(1.04); }
+.tb.on { background: #eee6f3; color: var(--muted); }
+.tb.hot { background: var(--rose); color: #fff; box-shadow: inset 0 -3px 0 rgba(255,255,255,.45), 0 3px 8px rgba(242,122,154,.35); }
+#zoom { position: fixed; right: 16px; top: 78px; z-index: 20; display: flex; gap: 4px; padding: 5px; border-radius: 14px; background: rgba(255,248,252,.88); box-shadow: var(--card-shadow), var(--gold-frame); }
+#zoom .tb { width: 40px; padding: 0; justify-content: center; font-size: 18px; }
+#menuBtns { position: fixed; right: 16px; bottom: 16px; z-index: 20; display: grid; grid-template-columns: repeat(2, auto); gap: 4px; padding: 5px; border-radius: 14px; background: rgba(255,248,252,.88); box-shadow: var(--card-shadow), var(--gold-frame); }
 
-  #players { position: fixed; z-index: 20; inset: 0; pointer-events: none; }
-  .pcard { position: absolute; width: 228px; border-radius: 22px; padding: 0 0 10px; pointer-events: auto; transition: transform .25s cubic-bezier(.2,1.6,.4,1); overflow: visible; background: #FFFDF5; border: 4px solid var(--ol); box-shadow: 0 7px 0 var(--ol); }
-  .pcard .hd { background: var(--pc); border-bottom: 4px solid var(--ol); border-radius: 17px 17px 0 0; padding: 4px 12px 5px 72px; font: 900 15px var(--bold); color: #fff; -webkit-text-stroke: 4px var(--ol); paint-order: stroke fill; position: relative; }
-  .pcard.p0 { left: 14px; top: 30%; } .pcard.p1 { right: 14px; top: 30%; } .pcard.p2 { left: 14px; top: calc(30% + 168px); } .pcard.p3 { right: 14px; top: calc(30% + 168px); }
-  .pcard.turn { transform: scale(1.07) rotate(-2deg); }
-  .pcard.out { opacity: .5; filter: grayscale(.8); }
-  .pcard .tag { position: absolute; top: -18px; right: 10px; font: 900 13px var(--bold); padding: 2px 12px; border-radius: 999px; background: var(--yellow); color: var(--ol); border: 3px solid var(--ol); display: none; animation: bob .8s ease-in-out infinite; z-index: 2; }
-  @keyframes bob { 50% { transform: translateY(-5px) rotate(3deg); } }
-  .pcard.turn .tag { display: block; }
-  .pcard .av { position: absolute; left: 8px; top: -14px; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; font-size: 32px; background: #fff; border: 4px solid var(--ol); box-shadow: 0 4px 0 var(--ol); z-index: 1; }
-  .pcard.turn .av { animation: wob 1.2s ease-in-out infinite; }
-  .pcard .bd { padding: 8px 12px 0 14px; }
-  .pcard .money { font: 900 26px var(--bold); line-height: 1.1; color: var(--yellow); -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; }
-  .pcard .money small { font-size: 15px; }
-  .pcard .sub { font: 700 12px var(--bold); color: var(--muted); margin-top: 2px; }
-  .pcard .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
-  .pcard .chips span { min-width: 20px; height: 20px; border-radius: 7px; font: 900 11px var(--bold); color: #fff; display: grid; place-items: center; padding: 0 3px; border: 2.5px solid var(--ol); }
-  .pcard .st { font: 900 12.5px var(--bold); color: var(--red); margin-top: 4px; }
+/* 玩家：學生證 */
+#players { position: fixed; z-index: 20; inset: 0; pointer-events: none; }
+.pcard { position: absolute; width: 226px; border-radius: 16px; padding: 0; pointer-events: auto; overflow: visible; background: var(--paper); box-shadow: var(--card-shadow), inset 0 0 0 1px rgba(236,199,122,.6); transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+.pcard::after { content: ""; position: absolute; right: 12px; bottom: 10px; width: 46px; height: 16px; background: repeating-linear-gradient(90deg, var(--plum) 0 1.5px, transparent 1.5px 3.5px, var(--plum) 3.5px 4.5px, transparent 4.5px 7px); opacity: .25; }
+.pcard .hd { background: var(--pc); color: #fff; border-radius: 16px 16px 0 0; padding: 6px 12px 6px 72px; font: 700 10.5px/1.4 var(--mono); letter-spacing: 1.5px; text-transform: uppercase; position: relative; }
 
-  #dock { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-  #turnTxt { font: 900 15px var(--bold); padding: 6px 18px; border-radius: 999px; }
-  #rollBtn { position: relative; border: 5px solid var(--ol); font: 900 26px var(--bold); padding: 12px 44px; border-radius: 26px; background: linear-gradient(180deg, #FFE45C 0 48%, #FFC300 48%); color: #fff; -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; box-shadow: 0 8px 0 var(--ol), inset 0 -6px 0 rgba(0,0,0,.12); letter-spacing: 3px; }
-  #rollBtn::before { content: ""; position: absolute; left: 14px; top: 8px; width: 34px; height: 10px; border-radius: 10px; background: rgba(255,255,255,.75); }
-  #rollBtn:hover:not(:disabled) { transform: translateY(-3px) scale(1.04); }
-  #rollBtn:active:not(:disabled) { transform: translateY(6px); box-shadow: 0 2px 0 var(--ol); }
-  #rollBtn:disabled { filter: grayscale(.6); opacity: .75; cursor: default; }
-  #rollBtn.pulse:not(:disabled) { animation: jelly 1.1s ease-in-out infinite; }
-  @keyframes jelly { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.1, .92); } 50% { transform: scale(.95, 1.07); } 70% { transform: scale(1.03, .98); } }
-  #credit { font: 700 11px var(--bold); color: var(--ol); background: rgba(255,255,255,.7); padding: 1px 10px; border-radius: 999px; }
+.pcard.p0 { left: 16px; top: 132px; } .pcard.p1 { right: 16px; top: 132px; } .pcard.p2 { left: 16px; top: 270px; } .pcard.p3 { right: 16px; top: 270px; }
+.pcard.turn { transform: translateY(-3px) rotate(-1deg); box-shadow: 0 0 0 3px var(--pc), var(--card-shadow); }
+.pcard.out { opacity: .45; filter: grayscale(.8); }
+.pcard .tag { position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-3deg); font: 700 11px var(--sans); padding: 2px 12px; background: rgba(249,215,126,.92); color: var(--plum); display: none; box-shadow: 0 1px 2px rgba(0,0,0,.08); z-index: 3; }
+.pcard.turn .tag { display: block; }
+.pcard .av { position: absolute; left: 12px; top: 10px; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; font-size: 28px; background: #fff; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--gold), 0 6px 14px rgba(43,29,63,.15); z-index: 2; }
+.pcard.turn .av { animation: wob 1.8s ease-in-out infinite; }
+@keyframes wob { 50% { transform: rotate(-7deg) scale(1.05); } }
+.pcard .bd { padding: 8px 14px 12px 72px; }
+.pcard .bd > *:first-child::before { content: attr(data-n); }
+.pcard .money { font: 800 24px/1.1 var(--serif); color: var(--plum); }
+.pcard .money small { font: 700 11px var(--mono); color: var(--muted); letter-spacing: 1px; }
+.pcard .sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.pcard .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; padding-right: 50px; }
+.pcard .chips span { min-width: 16px; height: 16px; border-radius: 50%; font: 700 9px var(--sans); color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 2px #fff; }
+.pcard .st { font-size: 12px; font-weight: 700; color: var(--rose-deep); margin-top: 4px; }
 
-  #log { position: fixed; left: 14px; bottom: 14px; z-index: 20; width: 272px; max-height: 180px; overflow: hidden; border-radius: 20px; padding: 10px 14px; font-size: 13px; }
-  #log b { display: block; font: 900 13px var(--bold); margin-bottom: 2px; }
-  #log div { padding: 3px 0; border-bottom: 2px dashed #D9D0E6; line-height: 1.45; font-family: var(--bold); font-weight: 500; }
-  #log div:last-child { border: 0; }
-  #menuBtns { position: fixed; right: 14px; bottom: 14px; z-index: 20; display: grid; grid-template-columns: repeat(2, auto); gap: 8px; }
+/* 骰子：印章 */
+#dock { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+#turnTxt { font: 600 13.5px var(--sans); padding: 6px 16px; border-radius: 999px; }
+#rollBtn { position: relative; border: 0; font: 800 21px var(--serif); letter-spacing: 4px; padding: 15px 40px 15px 44px; border-radius: 999px; color: #fff; background: radial-gradient(circle at 30% 25%, #ff9bb7, var(--rose) 55%, var(--rose-deep)); box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--gold), 0 10px 26px rgba(217,95,130,.45); transition: transform .18s; }
+#rollBtn::before { content: ""; position: absolute; inset: 6px; border-radius: 999px; border: 1.5px dashed rgba(255,255,255,.75); }
+#rollBtn:hover:not(:disabled) { transform: translateY(-2px) rotate(-2deg); }
+#rollBtn:active:not(:disabled) { transform: scale(.95); }
+#rollBtn:disabled { filter: grayscale(.55); opacity: .65; cursor: default; }
+#rollBtn.pulse:not(:disabled) { animation: breathe 1.6s ease-in-out infinite; }
+@keyframes breathe { 50% { box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--gold), 0 0 0 14px rgba(242,122,154,.18), 0 10px 26px rgba(217,95,130,.45); } }
+#credit { font: 700 10px var(--mono); letter-spacing: 1.5px; color: var(--muted); }
 
-  #toast { position: fixed; left: 50%; top: 90px; transform: translateX(-50%) translateY(-16px) scale(.8); opacity: 0; z-index: 60; background: var(--yellow); color: var(--ol); padding: 10px 22px; border-radius: 18px; transition: all .25s cubic-bezier(.2,1.6,.4,1); pointer-events: none; white-space: nowrap; border: 4px solid var(--ol); box-shadow: 0 6px 0 var(--ol); font: 900 17px var(--bold); }
-  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
-  .float { position: fixed; z-index: 30; font: 900 30px var(--bold); pointer-events: none; -webkit-text-stroke: 7px var(--ol); paint-order: stroke fill; animation: up 1.5s cubic-bezier(.2,1.4,.4,1) forwards; }
-  @keyframes up { 0% { transform: scale(.3); } 20% { transform: scale(1.3); } to { transform: translateY(-80px) scale(1); opacity: 0; } }
+/* 遊戲紀錄：手帳內頁（橫線） */
+#log { position: fixed; left: 16px; bottom: 16px; z-index: 20; width: 270px; max-height: 182px; overflow: hidden; border-radius: 16px; padding: 12px 14px 10px 26px; font-size: 12.5px; background: repeating-linear-gradient(180deg, transparent 0 23px, rgba(167,199,242,.45) 23px 24px), var(--paper); background-position: 0 30px; box-shadow: var(--card-shadow), inset 0 0 0 1px rgba(236,199,122,.6); }
+#log::before { content: ""; position: absolute; left: 14px; top: 0; bottom: 0; border-left: 1.5px solid rgba(242,122,154,.5); }
+#log b { display: block; font: 700 10px/1.4 var(--mono); letter-spacing: 2px; color: var(--muted); margin-bottom: 4px; }
+#log div { line-height: 24px; }
 
-  dialog { border: 0; padding: 0; background: transparent; overflow: visible; max-width: calc(100vw - 20px); }
-  dialog::backdrop { background: rgba(43,31,58,.35); }
-  .dc { position: relative; width: min(460px, calc(100vw - 24px)); border-radius: 28px; background: #FFFDF5; border: 5px solid var(--ol); box-shadow: 0 10px 0 var(--ol); overflow: visible; animation: pop .35s cubic-bezier(.2,1.7,.4,1); }
-  @keyframes pop { from { transform: scale(.5) rotate(-6deg); opacity: 0; } }
-  .dh { padding: 16px 18px 14px 96px; background: var(--dbtn, var(--purple)); display: flex; gap: 14px; align-items: center; border-bottom: 5px solid var(--ol); border-radius: 22px 22px 0 0; position: relative; min-height: 82px; }
-  .dh .ic { position: absolute; left: 12px; top: -22px; width: 72px; height: 72px; border-radius: 22px; background: #fff; display: grid; place-items: center; font-size: 40px; border: 5px solid var(--ol); box-shadow: 0 5px 0 var(--ol); animation: wob 1.8s ease-in-out infinite; }
-  .dh small { font: 900 13px var(--bold); color: #fff; opacity: .95; }
-  .dh h2 { margin: 2px 0 0; font: 900 23px var(--bold); line-height: 1.25; color: #fff; -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; }
-  .db { padding: 14px 22px 6px; font: 500 15px var(--bold); line-height: 1.75; color: var(--ink2); max-height: 52vh; overflow-y: auto; }
-  .db b { color: var(--ink); font-weight: 900; }
-  .db .tip { background: #FFF3C4; border: 3px solid var(--ol); border-radius: 16px; padding: 8px 12px; margin-top: 10px; font-size: 13.5px; }
-  .db table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 8px; }
-  .db td { padding: 5px 6px; border-bottom: 2px dashed #D9D0E6; }
-  .db td:last-child { text-align: right; font-weight: 900; }
-  .df { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; padding: 12px 20px 20px; }
-  .df .b { border: 4px solid var(--ol); border-radius: 16px; padding: 9px 20px; font: 900 16px var(--bold); background: linear-gradient(180deg, #fff 0 50%, #EDE6FF 50%); color: var(--ink); box-shadow: 0 5px 0 var(--ol); transition: transform .1s; }
-  .df .b:hover:not(:disabled) { transform: translateY(-2px); }
-  .df .b:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 var(--ol); }
-  .df .b.main { background: var(--dbtn, var(--purple)); color: #fff; -webkit-text-stroke: 5px var(--ol); paint-order: stroke fill; }
-  .df.col { flex-direction: column; } .df.col .b { text-align: left; font-size: 14.5px; -webkit-text-stroke: 0; }
-  .bot { font: 700 13px var(--bold); color: var(--muted); padding: 0 22px 16px; text-align: right; }
-  .card3d { margin: 4px auto 0; width: 240px; border-radius: 22px; padding: 18px; text-align: center; color: #fff; font: 900 17px var(--bold); line-height: 1.6; animation: flip .6s cubic-bezier(.2,1.5,.4,1); border: 5px solid var(--ol); box-shadow: 0 6px 0 var(--ol); -webkit-text-stroke: 5px var(--ol); paint-order: stroke fill; }
-  @keyframes flip { from { transform: rotateY(180deg) scale(.5); } }
+#toast { position: fixed; left: 50%; top: 90px; transform: translateX(-50%) translateY(-12px); opacity: 0; z-index: 60; background: var(--paper); color: var(--plum); padding: 10px 20px; border-radius: 999px; transition: all .25s; pointer-events: none; white-space: nowrap; box-shadow: var(--card-shadow), var(--gold-frame); font: 600 14px var(--sans); }
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.float { position: fixed; z-index: 30; font: 800 22px var(--serif); pointer-events: none; text-shadow: 0 2px 0 #fff, 0 0 10px #fff; animation: up 1.4s ease-out forwards; }
+@keyframes up { to { transform: translateY(-60px); opacity: 0; } }
 
-  #setup { position: fixed; inset: 0; z-index: 50; display: grid; padding: 16px; background: rgba(43,31,58,.25); overflow-y: auto; }
-  #setup[hidden] { display: none; }
-  .sc { margin: auto; width: min(800px, 100%); border-radius: 32px; padding: 24px 24px 24px; background: #FFFDF5; border: 5px solid var(--ol); box-shadow: 0 12px 0 var(--ol); }
-  .sc h2 { margin: 0; font: 900 clamp(30px, 5vw, 46px) var(--bold); color: var(--yellow); -webkit-text-stroke: 9px var(--ol); paint-order: stroke fill; text-shadow: 0 5px 0 var(--ol); letter-spacing: 2px; }
-  .sc .lead { color: var(--ink2); margin: 8px 0 16px; line-height: 1.8; font: 500 15px var(--bold); }
-  .sc .lead b { font-weight: 900; color: var(--ink); }
-  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr)); gap: 10px; margin-bottom: 16px; }
-  .how div { border: 3px solid var(--ol); border-radius: 18px; padding: 10px 12px; font: 500 13px var(--bold); color: var(--ink2); box-shadow: 0 4px 0 var(--ol); }
-  .how div:nth-child(1) { background: #FFF3C4; } .how div:nth-child(2) { background: #D7F5FF; } .how div:nth-child(3) { background: #DFFBE6; } .how div:nth-child(4) { background: #FFE0F1; }
-  .how b { display: block; font: 900 15px var(--bold); color: var(--ink); }
-  .slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 12px; margin-bottom: 14px; }
-  .slot { border: 4px solid var(--ol); border-radius: 22px; padding: 10px; display: grid; gap: 7px; background: #fff; box-shadow: 0 5px 0 var(--ol); border-top: 14px solid var(--pc); }
-  .slot.off { opacity: .45; }
-  .slot .top { display: flex; gap: 8px; align-items: center; }
-  .slot .av { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-size: 30px; background: #fff; border: 4px solid var(--ol); box-shadow: 0 3px 0 var(--ol); flex: 0 0 auto; }
-  .slot .chn { font: 900 12px var(--bold); text-align: center; margin-top: 2px; }
-  .slot input { width: 100%; border: 3px solid var(--ol); border-radius: 12px; padding: 6px 8px; font: 700 15px var(--bold); }
-  .slot .seg { display: flex; gap: 4px; }
-  .slot .seg button { flex: 1; border: 3px solid var(--ol); background: #fff; border-radius: 12px; padding: 4px 0; font: 900 12.5px var(--bold); }
-  .slot .seg button.on { background: var(--pc); color: #fff; -webkit-text-stroke: 3px var(--ol); paint-order: stroke fill; }
-  .opts2 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; font: 900 15px var(--bold); }
-  .opts2 button { border: 3px solid var(--ol); background: #fff; border-radius: 999px; padding: 5px 14px; font: 900 14px var(--bold); box-shadow: 0 3px 0 var(--ol); }
-  .opts2 button.on { background: var(--sky); color: #fff; -webkit-text-stroke: 3px var(--ol); paint-order: stroke fill; }
-  .go { border: 5px solid var(--ol); font: 900 24px var(--bold); padding: 12px 36px; border-radius: 22px; background: linear-gradient(180deg, #7DF09A 0 48%, #38D16A 48%); color: #fff; -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; box-shadow: 0 8px 0 var(--ol); }
-  .go:active { transform: translateY(6px); box-shadow: 0 2px 0 var(--ol); }
-  .go.alt { background: linear-gradient(180deg, #fff 0 48%, #EDE6FF 48%); color: var(--ink); -webkit-text-stroke: 0; font-size: 19px; }
-  .gos { display: flex; gap: 12px; flex-wrap: wrap; }
+/* 對話框：索引卡 */
+dialog { border: 0; padding: 0; background: transparent; overflow: visible; max-width: calc(100vw - 20px); }
+dialog::backdrop { background: rgba(107,76,110,.22); backdrop-filter: blur(3px); }
+.dc { position: relative; width: min(460px, calc(100vw - 24px)); border-radius: 20px; overflow: visible; animation: cardIn .4s cubic-bezier(.2,.8,.2,1);
+  background: repeating-linear-gradient(45deg, rgba(185,163,227,.07) 0 1px, transparent 1px 14px), repeating-linear-gradient(-45deg, rgba(185,163,227,.07) 0 1px, transparent 1px 14px), var(--paper);
+  box-shadow: var(--card-shadow), inset 0 0 0 7px var(--paper), inset 0 0 0 8.5px rgba(217,69,95,.3); }
+.dc::before { content: ""; position: absolute; left: 50%; top: -10px; width: 90px; height: 22px; transform: translateX(-50%) rotate(-3deg); background: rgba(205,182,244,.75); box-shadow: 0 1px 2px rgba(0,0,0,.06); z-index: 2; }
+@keyframes cardIn { from { transform: perspective(900px) rotateX(18deg) translateY(16px); opacity: 0; } }
+.dh { padding: 26px 24px 4px; display: flex; gap: 14px; align-items: center; }
+.dh .ic { width: 58px; height: 58px; border-radius: 50%; background: var(--dc, var(--lilac-pale)); display: grid; place-items: center; font-size: 30px; flex: 0 0 auto; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--gold), 0 6px 16px rgba(43,29,63,.15); }
+.dh small { font: 700 10px/1.4 var(--mono); letter-spacing: 2px; color: var(--di, var(--muted)); text-transform: uppercase; }
+.dh h2 { margin: 3px 0 0; font: 800 21px/1.3 var(--serif); color: var(--plum); text-wrap: balance; }
+.db { padding: 10px 24px 6px; font-size: 14.5px; line-height: 1.75; color: #463a55; max-height: 52vh; overflow-y: auto; }
+.db b { color: var(--plum); }
+.db .tip { background: var(--gold-pale); border-radius: 12px; padding: 9px 12px; margin-top: 10px; font-size: 13.5px; box-shadow: inset 3px 0 0 var(--gold); }
+.db table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 8px; }
+.db td { padding: 6px 4px; border-bottom: 1px dashed rgba(160,132,196,.35); }
+.db td:last-child { text-align: right; font-weight: 700; }
+.df { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; padding: 12px 22px 22px; }
+.df .b { border: 0; border-radius: 999px; padding: 10px 20px; font: 700 14px var(--sans); background: #fff; color: var(--plum); box-shadow: var(--chip-shadow), inset 0 0 0 1px rgba(160,132,196,.3); transition: transform .15s, background .15s; }
+.df .b:hover:not(:disabled) { background: var(--rose-pale); transform: rotate(-1.5deg); }
+.df .b.main { background: var(--dbtn, var(--rose)); color: #fff; box-shadow: inset 0 -3px 0 rgba(255,255,255,.35), 0 4px 12px rgba(160,110,150,.3); }
+.df.col { flex-direction: column; } .df.col .b { text-align: left; border-radius: 14px; font-weight: 600; padding: 11px 16px; box-shadow: var(--chip-shadow), inset 3px 0 0 var(--dbtn, var(--rose)); }
+.bot { font-size: 12px; color: var(--muted); padding: 0 24px 16px; text-align: right; font-style: italic; }
+.card3d { margin: 4px auto 0; width: 230px; border-radius: 16px; padding: 18px; text-align: center; color: var(--plum); font: 700 15.5px/1.6 var(--serif); background: #fff !important; box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--gold), var(--card-shadow); animation: flip .6s cubic-bezier(.2,.8,.2,1); }
+.card3d > div { background: var(--gold-pale) !important; color: var(--plum); }
+@keyframes flip { from { transform: perspective(700px) rotateY(160deg); } }
 
-  .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 70; overflow: hidden; }
-  .confetti i { position: absolute; top: -20px; width: 13px; height: 17px; border-radius: 4px; border: 2.5px solid var(--ol); animation: fall linear forwards; }
-  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+/* 開場設定 */
+#setup { position: fixed; inset: 0; z-index: 50; display: grid; padding: 16px; background: radial-gradient(circle at 50% 40%, rgba(255,243,248,.75), rgba(217,198,247,.65)); backdrop-filter: blur(4px); overflow-y: auto; }
+#setup[hidden] { display: none; }
+.sc { position: relative; margin: auto; width: min(780px, 100%); border-radius: 22px; padding: 30px 28px 26px;
+  background: repeating-linear-gradient(45deg, rgba(185,163,227,.06) 0 1px, transparent 1px 14px), var(--paper); box-shadow: var(--card-shadow), inset 0 0 0 7px var(--paper), inset 0 0 0 8.5px rgba(236,199,122,.8); }
+.sc::before { content: ""; position: absolute; left: 40px; top: -12px; width: 110px; height: 26px; background: rgba(247,182,207,.8); transform: rotate(-4deg); }
+.sc::after { content: ""; position: absolute; right: 40px; top: -12px; width: 90px; height: 26px; background: rgba(168,216,197,.8); transform: rotate(5deg); }
+.sc h2 { margin: 0; font: 800 clamp(30px, 5vw, 44px)/1.1 var(--serif); color: var(--plum); }
+.sc h2::before { content: "SELF-LEARNING JOURNAL · 四維高中圖書資訊中心"; display: block; font: 700 10.5px/1.4 var(--mono); letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; }
+.sc .lead { color: #463a55; margin: 10px 0 18px; line-height: 1.8; }
+.how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 8px; margin-bottom: 18px; }
+.how div { background: #fff; border-radius: 12px; padding: 10px 12px; font-size: 12.5px; color: var(--ink2); box-shadow: var(--chip-shadow), inset 3px 0 0 var(--rose); }
+.how div:nth-child(2) { box-shadow: var(--chip-shadow), inset 3px 0 0 var(--gold); } .how div:nth-child(3) { box-shadow: var(--chip-shadow), inset 3px 0 0 var(--mint); } .how div:nth-child(4) { box-shadow: var(--chip-shadow), inset 3px 0 0 var(--plum-2); }
+.how b { display: block; font: 700 14px var(--serif); color: var(--plum); margin-bottom: 2px; }
+.slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr)); gap: 10px; margin-bottom: 16px; }
+.slot { border-radius: 14px; padding: 12px 10px 10px; display: grid; gap: 7px; background: #fff; box-shadow: var(--chip-shadow), inset 0 4px 0 var(--pc); }
+.slot.off { opacity: .45; }
+.slot .top { display: flex; gap: 8px; align-items: center; }
+.slot .av { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; background: #fff; border: 0; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--pc), var(--chip-shadow); flex: 0 0 auto; }
+.slot .chn { font-size: 11px; color: var(--muted); text-align: center; margin-top: 3px; }
+.slot input { width: 100%; border: 1px solid rgba(160,132,196,.35); border-radius: 9px; padding: 6px 8px; font: 600 14px var(--sans); color: var(--plum); background: var(--paper); }
+.slot .seg { display: flex; gap: 4px; }
+.slot .seg button { flex: 1; border: 0; background: var(--lilac-pale); border-radius: 8px; padding: 5px 0; font: 600 12px var(--sans); }
+.slot .seg button.on { background: var(--pc); color: #fff; }
+.opts2 { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 20px; font: 700 13px var(--serif); }
+.opts2 button { border: 1px dashed rgba(123,79,176,.45); background: var(--paper); border-radius: 999px; padding: 5px 14px; font: 600 12.5px var(--sans); box-shadow: var(--chip-shadow); }
+.opts2 button.on { background: var(--plum); color: #fff; border-style: solid; }
+.go { border: 0; font: 800 19px var(--serif); letter-spacing: 2px; padding: 14px 36px; border-radius: 999px; color: #fff; background: radial-gradient(circle at 30% 25%, #ff9bb7, var(--rose) 55%, var(--rose-deep)); box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--gold), 0 10px 26px rgba(217,95,130,.4); }
+.go:hover { transform: rotate(-2deg); }
+.go.alt { background: #fff; color: var(--plum); box-shadow: 0 0 0 4px #fff, 0 0 0 5px rgba(160,132,196,.4), var(--chip-shadow); font-size: 16px; }
+.gos { display: flex; gap: 16px; flex-wrap: wrap; }
 
-  @media (max-width: 760px) {
-    #brand { left: 8px; top: 8px; padding: 5px 10px 6px 6px; border-radius: 16px; gap: 6px; border-width: 3px; } #brand .logo { width: 36px; height: 36px; font-size: 20px; border-width: 3px; } #brand h1 { font-size: 17px; -webkit-text-stroke: 5px var(--ol); } #brand .chip { font-size: 11px; }
-    #tools { right: 8px; top: 10px; grid-template-columns: repeat(5, auto); gap: 4px; } .tb { height: 32px; padding: 0 8px; font-size: 12px; border-width: 2.5px; } .tb .t { display: none; }
-    #zoom { top: auto; bottom: 170px; right: 8px; flex-direction: column; } #zoom .tb { width: 36px; height: 36px; }
-    .pcard { width: calc(50vw - 14px); border-width: 3px; box-shadow: 0 4px 0 var(--ol); }
-    .pcard .hd { padding: 3px 8px 3px 50px; font-size: 12px; } .pcard .av { width: 40px; height: 40px; font-size: 22px; top: -10px; left: 4px; border-width: 3px; }
-    .pcard.p0 { left: 8px; top: 92px; } .pcard.p1 { right: 8px; top: 92px; left: auto; } .pcard.p2 { left: 8px; top: 166px; } .pcard.p3 { right: 8px; top: 166px; }
-    .pcard .money { font-size: 19px; -webkit-text-stroke: 5px var(--ol); } .pcard .sub, .pcard .chips { display: none; } .pcard .bd { padding: 4px 8px 0; }
-    #log, .cloud { display: none; } #menuBtns { bottom: 8px; right: 8px; grid-template-columns: 1fr; } #menuBtns .tb { height: 30px; }
-    #dock { bottom: 14px; } #rollBtn { font-size: 21px; padding: 10px 32px; } #turnTxt { font-size: 13px; }
-  }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+.confetti { position: fixed; inset: 0; pointer-events: none; z-index: 70; overflow: hidden; }
+.confetti i { position: absolute; top: -20px; width: 9px; height: 13px; border-radius: 2px; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+@media (max-width: 760px) {
+  #brand { left: 8px; top: 8px; padding: 7px 12px 8px 8px; gap: 8px; } #brand .logo { width: 34px; height: 34px; font-size: 18px; } #brand h1 { font-size: 17px; } #brand .chip { font-size: 9px; }
+  #tools { right: 8px; top: 8px; padding: 3px; } .tb { min-height: 34px; padding: 0 8px; font-size: 12px; } .tb .t { display: none; }
+  #zoom { top: auto; bottom: 168px; right: 8px; flex-direction: column; } #zoom .tb { width: 36px; }
+  .pcard { width: calc(50vw - 12px); } .pcard .hd { padding: 4px 8px 4px 52px; font-size: 9px; } .pcard .hd::after { display: none; } .pcard::after { display: none; }
+  .pcard .av { width: 36px; height: 36px; font-size: 20px; left: 8px; top: 8px; } .pcard .bd { padding: 4px 8px 8px 52px; } .pcard .money { font-size: 18px; } .pcard .sub, .pcard .chips { display: none; }
+  .pcard.p0 { left: 8px; top: 74px; } .pcard.p1 { right: 8px; top: 74px; left: auto; } .pcard.p2 { left: 8px; top: 140px; } .pcard.p3 { right: 8px; top: 140px; }
+  #log { display: none; } #menuBtns { bottom: 8px; right: 8px; grid-template-columns: 1fr; padding: 3px; } #menuBtns .tb { min-height: 30px; }
+  #rollBtn { font-size: 18px; padding: 12px 30px; } #turnTxt { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
-<div id="bg"><div class="cloud" style="left:5%;top:14%"></div><div class="cloud" style="right:20%;top:8%;animation-delay:-3s;transform:scale(.8)"></div><div class="cloud" style="left:24%;bottom:10%;animation-delay:-5s;transform:scale(.7)"></div><div class="cloud" style="right:6%;bottom:34%;animation-delay:-2s"></div></div>
+<div id="bg"></div>
 <div id="scene" aria-label="3D 大富翁棋盤：拖曳旋轉、滾輪或雙指縮放、點格子看說明"></div>
 
-<header id="brand" class="glass"><span class="logo">🎲</span><div><h1>四維自學大富翁</h1><span class="chip" id="roundChip">第 1 回合</span></div></header>
+<header id="brand" class="glass"><span class="logo">📔</span><div><h1>四維自學大富翁</h1><span class="chip" id="roundChip">第 1 回合</span></div></header>
 <nav id="tools" aria-label="工具">
   <button class="tb" id="bFull">⛶<span class="t"> 全螢幕</span></button>
   <button class="tb" id="bSfx">🔊<span class="t"> 音效</span></button>
@@ -217,8 +234,8 @@ const FONT = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif', RFO
 
 // ===================== 遊戲資料 =====================
 const GROUPS = {
-  idea: { name: '主題發想', c: '#FF9F1C' }, goal: { name: '目標設定', c: '#FFC300' }, plan: { name: '計畫規劃', c: '#F15BB5' }, res: { name: '找資源', c: '#9B5DE5' },
-  exec: { name: '執行紀錄', c: '#2EC4F1' }, time: { name: '時間管理', c: '#00C9A7' }, show: { name: '成果呈現', c: '#4361EE' }, refl: { name: '自我反思', c: '#38D16A' }
+  idea: { name: '主題發想', c: '#7BC67E' }, goal: { name: '目標設定', c: '#5FB8A0' }, plan: { name: '計畫規劃', c: '#E77FA6' }, res: { name: '找資源', c: '#E89A6A' },
+  exec: { name: '執行紀錄', c: '#5B9BE0' }, time: { name: '時間管理', c: '#6FB6D8' }, show: { name: '成果呈現', c: '#B48BE6' }, refl: { name: '自我反思', c: '#D48FCB' }
 };
 const T = (t, name, extra = {}) => Object.assign({ t, name }, extra);
 const TILES = [
@@ -298,7 +315,7 @@ const QUIZ = [
   ['判斷一份資料可不可信，要看什麼？', ['作者、時間、證據與目的', '字數多寡', '圖片好不好看', '按讚數'], '誰寫的、什麼時候寫的、有沒有證據、目的是什麼。'],
   ['寫自學動機時，最重要的是寫出？', ['為什麼想學這個主題', '字數越多越好', '老師可能喜歡的答案', '別人的動機'], '「為什麼」比「做什麼」更重要，連結你的經驗與方向。']
 ];
-const PCOL = ['#FF4D6D', '#2EC4F1', '#FFC300', '#38D16A'];
+const PCOL = ['#F27A9A', '#7FB2E5', '#E8B04E', '#5FCF9F'];
 
 // ===================== 狀態 =====================
 const KEY = 'swsh-monopoly-v1';
@@ -403,15 +420,18 @@ let renderer = null;
 try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); } catch (e) {}
 const scene = new THREE.Scene();
 const narrow = () => innerWidth < innerHeight;
-const camera = new THREE.PerspectiveCamera(narrow() ? 55 : 38, innerWidth / innerHeight, 1, 2000);
+const camera = new THREE.PerspectiveCamera(narrow() ? 44 : 30, innerWidth / innerHeight, 1, 2400);
 const tex = (w, h, draw) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); if (renderer) t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.encoding = THREE.sRGBEncoding; return t; };
 const matCache = {};
 const GRAD = (() => { const t = new THREE.DataTexture(new Uint8Array([120, 120, 120, 255, 200, 200, 200, 255, 255, 255, 255, 255]), 3, 1, THREE.RGBAFormat); t.minFilter = t.magFilter = THREE.NearestFilter; t.generateMipmaps = false; t.needsUpdate = true; return t; })();
-const toonM = (o = {}) => { o = Object.assign({}, o); delete o.roughness; delete o.metalness; return new THREE.MeshToonMaterial(Object.assign({ gradientMap: GRAD }, o)); };
+const toonM = (o = {}) => new THREE.MeshStandardMaterial(Object.assign({ roughness: 0.72, metalness: 0 }, o));
 const pop = c => { const col = new THREE.Color(c), h = {}; col.getHSL(h); if (h.s > 0.12 && h.l < 0.97 && h.l > 0.28) col.setHSL(h.h, Math.min(1, h.s * 1.25 + 0.18), Math.max(0.12, h.l * 0.93)); return col; };
-const MAT = (color, o) => { if (o) return toonM(Object.assign({ color: pop(color) }, o)); const k = String(color); return matCache[k] || (matCache[k] = toonM({ color: pop(color) })); };
+const MAT = (color, o) => { if (o) return new THREE.MeshStandardMaterial(Object.assign({ color, roughness: 0.72, metalness: 0 }, o)); const k = String(color); return matCache[k] || (matCache[k] = new THREE.MeshStandardMaterial({ color, roughness: 0.72, metalness: 0 })); };
 const OL_MAT = new THREE.MeshBasicMaterial({ color: 0x2B1F3A, side: THREE.BackSide });
-function addOutlines(root, t = 0.085) {
+const _lin = new WeakSet();
+function linearize(root) { root.traverse(o => { if (!o.material) return; (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => { if (_lin.has(m)) return; _lin.add(m); if (m.color && !m.vertexColors) m.color.convertSRGBToLinear(); if (m.emissive) m.emissive.convertSRGBToLinear(); }); }); }
+function addOutlines() { return; }
+function addOutlines_old(root, t = 0.085) {
   root.updateMatrixWorld(true);
   const list = []; root.traverse(o => { if (o.isMesh && !o.userData.isOL && !o.userData.noOL) list.push(o); });
   const ws = new THREE.Vector3(), q = new THREE.Quaternion(), p = new THREE.Vector3();
@@ -538,88 +558,222 @@ function tileXZ(i) {
 }
 const tileObjs = [], decoObjs = [];
 let pickables = [];
-const SPECIAL_BG = { show: '#FF8A5B', start: '#FF4D6D', jail: '#2EC4F1', library: '#38D16A', audit: '#FFC300', chance: '#FFC300', reflect: '#9B5DE5', quiz: '#00C9A7', teacher: '#38D16A', monster: '#9B5DE5' };
+const ICON = { '興趣變主題': '🎮', '主題健康檢查': '🔍', 'SMART 目標': '🎯', '為什麼想學': '💗', '18 週怎麼排': '🗓️', '申請表下一步': '✍️', '找資料第一站': '📚', '這資料可信嗎': '🕵️', '紀錄怎麼寫': '📒', '卡關了怎麼辦': '🧩', '拖延怪獸': '👾', '進度落後了': '⏳', '成果怎麼呈現': '🎬', '5 分鐘發表': '🎤', '反思寫什麼': '🪞', 'AI 怎麼用': '🤖' };
+const SPECIAL_BG = { show: '#F2A6BE', start: '#F27A9A', jail: '#A7C7F2', library: '#7BC67E', audit: '#ECC77A', chance: '#ECC77A', reflect: '#B9A3E3', quiz: '#5FCF9F', teacher: '#7BC67E', monster: '#B48BE6' };
 function tileTexture(i) {
-  const t = TILES[i], corner = i % 7 === 0, W = corner ? 384 : 256, H = 384;
+  const t = TILES[i], corner = i % 7 === 0, W = corner ? 432 : 288, H = 432;
   return tex(W, H, (x) => {
-    const bg = t.t === 'topic' ? GROUPS[t.g].c : SPECIAL_BG[t.t];
-    x.fillStyle = '#2B1F3A'; x.fillRect(0, 0, W, H); x.fillStyle = '#FFF8E7'; rr(x, 8, 8, W - 16, H - 16, 26); x.fill();
-    x.fillStyle = bg; x.globalAlpha = 0.18; rr(x, 8, 8, W - 16, 200, 26); x.fill(); x.globalAlpha = 1;
-    x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round';
-    const txt = (str, y, size) => { x.font = `900 ${size}px ${FONT}`; x.lineWidth = size * 0.28; x.strokeStyle = '#FFFFFF'; x.strokeText(str, W / 2, y); x.fillStyle = '#2B1F3A'; x.fillText(str, W / 2, y); };
-    if (t.t === 'topic') {
-      x.font = `900 34px ${FONT}`; const lines = []; let line = ''; for (const ch of t.name) { if (x.measureText(line + ch).width > W - 34 && line) { lines.push(line); line = ch; } else line += ch; } lines.push(line);
-      lines.forEach((l, k) => txt(l, 262 + (k - (lines.length - 1) / 2) * 38, 34));
-      x.fillStyle = bg; rr(x, 30, 312, W - 60, 54, 18); x.fill(); x.lineWidth = 6; x.strokeStyle = '#2B1F3A'; x.stroke();
-      x.font = `900 32px ${FONT}`; x.lineWidth = 9; x.strokeText(`${t.price} ⚡`, W / 2, 340); x.fillStyle = '#FFFFFF'; x.fillText(`${t.price} ⚡`, W / 2, 340);
-    } else { x.fillStyle = bg; rr(x, 20, 236, W - 40, corner ? 128 : 120, 22); x.fill(); x.lineWidth = 6; x.strokeStyle = '#2B1F3A'; x.stroke();
-      x.font = `900 ${corner ? 48 : 34}px ${FONT}`; x.lineWidth = 11; x.strokeText(t.name, W / 2, corner ? 280 : 274); x.fillStyle = '#FFFFFF'; x.fillText(t.name, W / 2, corner ? 280 : 274);
-      if (t.sub) { x.font = `900 ${corner ? 28 : 24}px ${FONT}`; x.fillStyle = '#2B1F3A'; x.fillText(t.sub, W / 2, corner ? 334 : 322); } }
+    const c = t.t === 'topic' ? GROUPS[t.g].c : SPECIAL_BG[t.t];
+    x.fillStyle = '#FFFDF8'; x.fillRect(0, 0, W, H);
+    x.fillStyle = 'rgba(160,132,196,.12)'; for (let a = 16; a < W; a += 22) for (let b = 16; b < H; b += 22) { x.beginPath(); x.arc(a, b, 1.6, 0, 7); x.fill(); }
+    x.fillStyle = c; x.globalAlpha = .9; rr(x, 0, 0, W, 54, 0); x.fill(); x.globalAlpha = 1;
+    x.strokeStyle = 'rgba(255,255,255,.85)'; x.setLineDash([8, 7]); x.lineWidth = 2.5; x.beginPath(); x.moveTo(10, 46); x.lineTo(W - 10, 46); x.stroke(); x.setLineDash([]);
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillStyle = '#fff'; x.font = `700 20px ui-monospace, monospace`; x.fillText(t.t === 'topic' ? GROUPS[t.g].name : (t.sub || '特殊格'), W / 2, 25);
+    // 插圖圓章
+    const cy = corner ? 170 : 150, R = corner ? 92 : 70;
+    x.fillStyle = '#fff'; x.beginPath(); x.arc(W / 2, cy, R + 8, 0, 7); x.fill();
+    x.strokeStyle = '#ECC77A'; x.lineWidth = 4; x.beginPath(); x.arc(W / 2, cy, R + 8, 0, 7); x.stroke();
+    const g = x.createRadialGradient(W / 2 - R / 3, cy - R / 3, 4, W / 2, cy, R); g.addColorStop(0, '#FFFFFF'); g.addColorStop(1, c + '55'); x.fillStyle = g; x.beginPath(); x.arc(W / 2, cy, R, 0, 7); x.fill();
+    x.font = `${corner ? 104 : 80}px sans-serif`; x.fillText(t.t === 'topic' ? (ICON[t.name] || '🤔') : t.icon, W / 2, cy + 6);
+    // 名稱
+    x.fillStyle = '#6B4C6E'; x.font = `800 ${corner ? 46 : 36}px "Noto Serif TC", ${FONT}`;
+    const name = t.name, lines = []; let line = ''; for (const ch of name) { if (x.measureText(line + ch).width > W - 30 && line) { lines.push(line); line = ch; } else line += ch; } lines.push(line);
+    const ny = corner ? 318 : 280; lines.forEach((l, k) => x.fillText(l, W / 2, ny + (k - (lines.length - 1) / 2) * 40));
+    if (t.t === 'topic') { x.fillStyle = '#FFF4D6'; rr(x, W / 2 - 70, 348, 140, 46, 23); x.fill(); x.strokeStyle = '#ECC77A'; x.lineWidth = 2; x.stroke(); x.fillStyle = '#A0743A'; x.font = `800 26px "Noto Serif TC", ${FONT}`; x.fillText(`${t.price} ⚡`, W / 2, 372); }
+    else { x.fillStyle = '#A08AA3'; x.font = `700 22px ${FONT}`; x.fillText(t.t === 'chance' || t.t === 'reflect' ? '抽一張卡' : t.t === 'quiz' ? '答題拿能量' : '', W / 2, corner ? 380 : 360); }
+    x.strokeStyle = c; x.lineWidth = 6; rr(x, 3, 3, W - 6, H - 6, 18); x.stroke();
   });
 }
 let deckC, deckR, dice;
 function tree(x, z, c, s = 1) { const g = new THREE.Group(); g.position.set(x, 0.6, z); g.scale.setScalar(s); scene.add(g); Cy(g, 0.32, 0.42, 2.2, '#C9A27E', 0, 1.1, 0, 12); [[0, 3.1, 0, 1.55], [0.95, 2.6, 0.3, 1.05], [-0.85, 2.7, -0.2, 1.1], [0.1, 4.1, -0.1, 1.0]].forEach(([a, b, d, r]) => Sp(g, r, c, a, b, d)); for (let k = 0; k < 4; k++) Sp(g, 0.16, ['#FF7EB6', '#FFFFFF', '#FFCB45'][k % 3], Math.cos(k * 1.7) * 1.3, 3 + (k % 2) * 0.8, Math.sin(k * 1.7) * 1.3 + 0.4); return g; }
+// ---- 低多邊形自然景 ----
+const LP = (color, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color, roughness: 0.9, metalness: 0, flatShading: true }, o));
+function lpTree(par, x, z, s = 1, kind = 0, cols = ['#9ED9A0', '#7CC98A', '#B6E3A4']) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.scale.setScalar(s); g.rotation.y = Math.random() * 6; par.add(g);
+  g.add(mesh(new THREE.CylinderGeometry(0.22, 0.32, 1.6, 6), LP('#B98E6A'), 0, 0.8, 0));
+  const c = cols[Math.floor(Math.random() * cols.length)];
+  if (kind === 1) { g.add(mesh(new THREE.ConeGeometry(1.25, 2.4, 7), LP(c), 0, 2.4, 0)); g.add(mesh(new THREE.ConeGeometry(0.95, 1.9, 7), LP(c), 0, 3.4, 0)); }
+  else if (kind === 2) { [[0, 2.3, 0, 1.05], [0.6, 2.0, 0.3, 0.7], [-0.55, 2.05, -0.2, 0.75]].forEach(([a, b, d, r]) => g.add(mesh(new THREE.IcosahedronGeometry(r, 0), LP(c), a, b, d))); for (let k = 0; k < 5; k++) g.add(mesh(new THREE.IcosahedronGeometry(0.16, 0), LP(['#FFB7CF', '#FFFFFF', '#FFE08A'][k % 3]), Math.cos(k * 1.3) * 0.9, 2.2 + (k % 2) * 0.5, Math.sin(k * 1.3) * 0.9)); }
+  else g.add(mesh(new THREE.IcosahedronGeometry(1.2, 0), LP(c), 0, 2.4, 0));
+  return g;
+}
+function lpHouse(par, x, z, ry, wall, roof, s = 1) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; g.scale.setScalar(s); par.add(g);
+  g.add(mesh(rbox(2.4, 2.0, 2.0, 0.12), MAT(wall), 0, 1.0, 0));
+  const r = mesh(new THREE.CylinderGeometry(0.01, 1.85, 1.3, 4, 1), MAT(roof), 0, 2.65, 0); r.rotation.y = Math.PI / 4; r.scale.set(1, 1, 0.85); g.add(r);
+  g.add(mesh(rbox(0.55, 0.9, 0.08, 0.05), MAT('#C9946A'), 0, 0.45, 1.02)); [-0.75, 0.75].forEach(dx => { g.add(mesh(rbox(0.5, 0.5, 0.08, 0.05), MAT('#FFFFFF'), dx, 1.25, 1.02)); g.add(mesh(rbox(0.38, 0.38, 0.1, 0.04), MAT('#BFE3FA', { emissive: 0xFFD27A, emissiveIntensity: 0.05 }), dx, 1.25, 1.03)); });
+  g.add(mesh(rbox(0.3, 0.7, 0.3, 0.05), MAT('#E9DED6'), 0.6, 3.0, -0.3));
+  return g;
+}
+function flagLine(par, a, b, h, cols) {
+  const n = Math.max(4, Math.round(a.distanceTo(b) / 0.9));
+  for (let k = 1; k < n; k++) { const f = k / n, p = a.clone().lerp(b, f); p.y = h - Math.sin(f * Math.PI) * 0.6; const t = mesh(new THREE.ConeGeometry(0.28, 0.6, 3), MAT(cols[k % cols.length]), p.x, p.y - 0.25, p.z, false); t.rotation.x = Math.PI; par.add(t); }
+}
+function districtSign(par, x, z, ry, title, sub, col) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; par.add(g);
+  [-2.3, 2.3].forEach(dx => g.add(mesh(new THREE.CylinderGeometry(0.12, 0.15, 3.4, 8), MAT('#B98E6A'), dx, 1.7, 0)));
+  const t = tex(512, 160, (c, W, H) => { c.fillStyle = '#FFFBF4'; rr(c, 4, 4, W - 8, H - 8, 26); c.fill(); c.lineWidth = 6; c.strokeStyle = col; rr(c, 10, 10, W - 20, H - 20, 22); c.stroke();
+    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = col; c.font = `800 62px "Noto Serif TC", ${FONT}`; c.fillText(title, W / 2, 66); c.fillStyle = '#8A7896'; c.font = `700 26px ${FONT}`; c.fillText(sub, W / 2, 122); });
+  g.add(mesh(rbox(5.6, 1.95, 0.22, 0.1), MAT('#FFFBF4'), 0, 3.1, 0)); const pl = mesh(new THREE.PlaneGeometry(5.4, 1.7), new THREE.MeshStandardMaterial({ map: t, roughness: 0.7 }), 0, 3.1, 0.12, false); g.add(pl);
+  return g;
+}
 function buildScene() {
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75)); renderer.setSize(innerWidth, innerHeight);
   renderer.outputEncoding = THREE.sRGBEncoding; renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.8;
   $('#scene').appendChild(renderer.domElement);
-  scene.add(new THREE.HemisphereLight(0xFFFFFF, 0xB9C8FF, 0.5));
-  const sun = new THREE.DirectionalLight(0xFFFFFF, 0.95); sun.position.set(30, 70, 40); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera, { left: -45, right: 45, top: 45, bottom: -45, near: 10, far: 160 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03; sun.shadow.radius = 5; scene.add(sun);
-  const fill = new THREE.DirectionalLight(0xD9E8FF, 0.22); fill.position.set(-40, 30, -20); scene.add(fill);
-  // 底座：三層糖果蛋糕
-  scene.add(mesh(rbox(67, 2.4, 67, 1.2), MAT(0x4361EE), 0, -2.4, 0, false));
-  scene.add(mesh(rbox(65, 0.8, 65, 0.4), MAT(0xFFD60A), 0, -1.05, 0, false));
-  scene.add(mesh(rbox(62.5, 1.4, 62.5, 0.7), MAT(0xFFF4D6), 0, -0.1, 0));
-  for (let k = 0; k < 44; k++) { const a = k / 44 * Math.PI * 2, r = 33.6; const sq = Math.max(Math.abs(Math.cos(a)), Math.abs(Math.sin(a))); Sp(scene, 0.45, ['#FF8FC3', '#FFCB45', '#6CC4FF', '#5EDDBE', '#B79BFF'][k % 5], Math.cos(a) * r / sq, -1.05, Math.sin(a) * r / sq); }
-  // 中央
-  const mid = tex(1024, 1024, (x, W, H) => {
-    for (let k = 0; k < 16; k++) { x.fillStyle = k % 2 ? '#7BE495' : '#6AD887'; x.fillRect(k * 64, 0, 64, H); }
-    x.fillStyle = 'rgba(255,255,255,.35)'; for (let k = 0; k < 60; k++) { const a = (k * 197) % W, b = (k * 311) % H; x.beginPath(); x.moveTo(a, b); x.lineTo(a + 6, b - 16); x.lineTo(a + 12, b); x.fill(); }
-    x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round';
-    x.font = `900 42px ${FONT}`; x.lineWidth = 12; x.strokeStyle = '#2B1F3A'; x.strokeText('選資源・寫紀錄・拿成果・上台發表', W / 2, 330); x.fillStyle = '#FFFFFF'; x.fillText('選資源・寫紀錄・拿成果・上台發表', W / 2, 330);
-    x.fillStyle = '#FFF4D6'; x.beginPath(); x.arc(W / 2, 640, 190, 0, Math.PI * 2); x.fill(); x.lineWidth = 12; x.strokeStyle = '#2B1F3A'; x.stroke();
+  // 天空漸層 + 霧
+  const skyG = new THREE.SphereGeometry(900, 32, 16), cols = [], top = new THREE.Color("#BFD6FF"), skyMid = new THREE.Color("#FBE3F0"), bot = new THREE.Color("#FFF4EA");
+  for (let i = 0; i < skyG.attributes.position.count; i++) { const y = skyG.attributes.position.getY(i) / 900, c = y > 0 ? skyMid.clone().lerp(top, Math.pow(y, 0.7)) : skyMid.clone().lerp(bot, Math.min(1, -y * 3)); c.convertSRGBToLinear(); cols.push(c.r, c.g, c.b); }
+  skyG.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+  scene.add(new THREE.Mesh(skyG, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false, toneMapped: false })));
+  scene.fog = new THREE.Fog(0xF6E6F2, 300, 900);
+  scene.add(new THREE.HemisphereLight(0xFFF6FB, 0xB9C4E0, 0.42));
+  const sun = new THREE.DirectionalLight(0xFFF1E0, 1.05); sun.position.set(40, 80, 55); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -55, right: 55, top: 55, bottom: -55, near: 10, far: 220 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.04; sun.shadow.radius = 4; scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xD8E4FF, 0.35); fill.position.set(-50, 30, -30); scene.add(fill);
+  // 海面
+  const waterT = tex(512, 512, (x, W) => { x.fillStyle = '#A9C9EE'; x.fillRect(0, 0, W, W); x.strokeStyle = 'rgba(255,255,255,.6)'; x.lineWidth = 3; x.lineCap = 'round'; for (let k = 0; k < 70; k++) { const a = (k * 137) % W, b = (k * 251) % W; x.beginPath(); x.moveTo(a, b); x.quadraticCurveTo(a + 10, b - 6, a + 20, b); x.stroke(); } });
+  waterT.wrapS = waterT.wrapT = THREE.RepeatWrapping; waterT.repeat.set(30, 30);
+  const sea = mesh(new THREE.PlaneGeometry(1600, 1600), new THREE.MeshStandardMaterial({ map: waterT, roughness: 0.35, metalness: 0.05 }), 0, -9, 0, false); sea.rotation.x = -Math.PI / 2; scene.add(sea);
+  spinners.push({ water: waterT });
+  // 漂浮小島（遠景）
+  [[-110, -70, 1.6], [120, -60, 1.3], [-140, 40, 1.1], [135, 70, 1.4], [20, -150, 1.8], [-60, -170, 1.2]].forEach(([x, z, s], k) => {
+    const g = new THREE.Group(); g.position.set(x, -9, z); g.scale.setScalar(s); scene.add(g);
+    g.add(mesh(new THREE.CylinderGeometry(9, 6, 3, 9), LP(['#BDE5B1', '#F5D9E6', '#D9E8C5'][k % 3]), 0, 1.2, 0));
+    g.add(mesh(new THREE.ConeGeometry(6, 7, 9), LP('#E6D3C3'), 0, -3.7, 0)).rotation.x = Math.PI;
+    for (let j = 0; j < 7; j++) lpTree(g, Math.cos(j * 2.1) * 5.5, Math.sin(j * 2.1) * 5.5, 1.1, j % 3, ['#A8DDA8', '#F4B6CD', '#CFE7A4']).position.y = 2.7;
   });
-  const midP = mesh(new THREE.PlaneGeometry(36, 36), toonM({ map: mid, roughness: 0.8 }), 0, 0.62, 0, false); midP.rotation.x = -Math.PI / 2; scene.add(midP);
-  // 立體標題字牌
-  const ttl = tex(1024, 200, (x, W, H) => { x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `900 124px ${FONT}`; x.lineJoin = 'round'; x.lineWidth = 30; x.strokeStyle = '#2B1F3A'; x.strokeText('四維自學大富翁', W / 2, H / 2 + 12); x.strokeText('四維自學大富翁', W / 2, H / 2 + 4); const tg = x.createLinearGradient(0, 40, 0, 170); tg.addColorStop(0, '#FFF27A'); tg.addColorStop(.55, '#FFD60A'); tg.addColorStop(1, '#FF9F1C'); x.fillStyle = tg; x.fillText('四維自學大富翁', W / 2, H / 2 + 4); });
-  const sign = new THREE.Group(); sign.position.set(0, 0.62, -8.5); scene.add(sign);
-  Bx(sign, 27, 0.6, 3.2, '#FF4D6D', 0, 0.3, 0, 0.28); const tp = new THREE.Mesh(new THREE.PlaneGeometry(26, 5.1), toonM({ map: ttl, transparent: true, roughness: 0.5 })); tp.position.set(0, 2.9, 0.2); tp.rotation.x = -0.35; sign.add(tp);
-  Bx(sign, 26.5, 4.6, 0.4, '#4361EE', 0, 2.6, -0.4, 0.3).rotation.x = -0.35;
+  // ===== 棋盤島：漂浮的手帳島 =====
+  const BW = 76;
+  const isle = new THREE.Group(); scene.add(isle);
+  isle.add(mesh(rbox(BW + 4, 3.2, BW + 4, 1.4), LP('#BFE3A9'), 0, -2.5, 0));
+  const rock = mesh(new THREE.CylinderGeometry(BW * 0.62, BW * 0.2, 16, 10, 2), LP('#E8D6C8'), 0, -12, 0, false); rock.rotation.y = Math.PI / 10; isle.add(rock);
+  const rock2 = mesh(new THREE.ConeGeometry(BW * 0.22, 14, 8), LP('#D9C3B3'), 0, -26, 0, false); rock2.rotation.x = Math.PI; isle.add(rock2);
+  // 四邊的街區色帶（側面）
+  const DIST = [
+    { n: '好奇森林', en: 'CURIOSITY FOREST', s: '主題發想・目標設定', c: '#7BC67E', bg: '#E3F5DE' },
+    { n: '計畫小鎮', en: 'PLANNING TOWN', s: '計畫規劃・找資源', c: '#E77FA6', bg: '#FDE4EE' },
+    { n: '實作工坊', en: 'MAKER WORKSHOP', s: '執行紀錄・時間管理', c: '#5B9BE0', bg: '#E1EEFC' },
+    { n: '成果舞台', en: 'SHOWCASE STAGE', s: '成果呈現・自我反思', c: '#B48BE6', bg: '#F0E7FD' }
+  ];
+  const bandTex = d => tex(1024, 96, (c, W, H) => { c.fillStyle = d.bg; c.fillRect(0, 0, W, H); c.fillStyle = d.c; c.fillRect(0, 0, W, 10); c.fillRect(0, H - 10, W, 10);
+    c.textBaseline = 'middle'; c.textAlign = 'center'; for (let k = 0; k < 3; k++) { const x = W / 6 + k * W / 3; c.fillStyle = d.c; c.font = `800 40px "Noto Serif TC", ${FONT}`; c.fillText(d.n, x - 40, H / 2); c.font = `700 16px ui-monospace, monospace`; c.fillText(d.en, x + 100, H / 2); c.beginPath(); c.arc(x + W / 6, H / 2, 6, 0, 7); c.fill(); } });
+  const slab = new THREE.Group(); isle.add(slab);
+  const slabTop = mesh(rbox(BW, 1.6, BW, 0.6), MAT('#FFF9F1'), 0, -0.2, 0); slab.add(slabTop);
+  [[0, BW / 2 + 0.02, 0], [-BW / 2 - 0.02, 0, -Math.PI / 2], [0, -BW / 2 - 0.02, Math.PI], [BW / 2 + 0.02, 0, Math.PI / 2]].forEach(([x, z, ry], k) => {
+    const b = mesh(new THREE.PlaneGeometry(BW - 1.4, 1.3), new THREE.MeshStandardMaterial({ map: bandTex(DIST[k]), roughness: 0.8 }), 0, -0.25, 0, false);
+    const pv = new THREE.Group(); pv.position.set(x || 0, 0, z || 0); if (k === 1 || k === 3) { pv.position.set(k === 1 ? -BW / 2 - 0.02 : BW / 2 + 0.02, 0, 0); } else pv.position.set(0, 0, k === 0 ? BW / 2 + 0.02 : -BW / 2 - 0.02);
+    pv.rotation.y = [0, -Math.PI / 2, Math.PI, Math.PI / 2][k]; pv.add(b); slab.add(pv);
+  });
+  // 中央：手帳內頁（點點格線）
+  const mid = tex(1024, 1024, (x, W, H) => {
+    x.fillStyle = '#FFFDF8'; x.fillRect(0, 0, W, H); x.fillStyle = 'rgba(160,132,196,.22)'; for (let a = 24; a < W; a += 32) for (let b = 24; b < H; b += 32) { x.beginPath(); x.arc(a, b, 2.2, 0, 7); x.fill(); }
+    x.strokeStyle = 'rgba(236,199,122,.8)'; x.lineWidth = 4; rr(x, 18, 18, W - 36, H - 36, 40); x.stroke(); x.setLineDash([14, 10]); x.strokeStyle = 'rgba(242,122,154,.45)'; rr(x, 34, 34, W - 68, H - 68, 30); x.stroke(); x.setLineDash([]);
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillStyle = '#A08AA3'; x.font = `700 22px ui-monospace, monospace`; x.fillText('S E L F - L E A R N I N G   J O U R N A L', W / 2, 286);
+    x.fillStyle = '#6B4C6E'; x.font = `italic 700 34px "Noto Serif TC", ${FONT}`; x.fillText('發想 → 計畫 → 執行 → 發表', W / 2, 336);
+    x.strokeStyle = 'rgba(160,132,196,.5)'; x.lineWidth = 3; x.setLineDash([10, 9]); x.beginPath(); x.arc(W / 2, 640, 170, 0, 7); x.stroke(); x.setLineDash([]);
+  });
+  const midP = mesh(new THREE.PlaneGeometry(36, 36), new THREE.MeshStandardMaterial({ map: mid, roughness: 0.85 }), 0, 0.62, 0, false); midP.rotation.x = -Math.PI / 2; scene.add(midP);
+  // 紙膠帶
+  [[-17, -17, 0.7, '#F7B6CF'], [17, -17, -0.7, '#A8D8C5'], [-17, 17, -0.7, '#F9D77E'], [17, 17, 0.7, '#C9B6F4']].forEach(([x, z, r, c]) => { const t = mesh(rbox(6, 0.08, 1.8, 0.04), MAT(c, { transparent: true, opacity: 0.85 }), x, 0.66, z, false); t.rotation.y = r; scene.add(t); });
+  // 立體標題：書籤式
+  const ttl = tex(1024, 220, (x, W, H) => { x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `800 120px "Noto Serif TC", ${FONT}`; x.fillStyle = '#E58FAE'; x.fillText('四維自學大富翁', W / 2, 110 + 6); x.fillStyle = '#6B4C6E'; x.fillText('四維自學大富翁', W / 2, 110); });
+  const sign = new THREE.Group(); sign.position.set(0, 0.62, -9); scene.add(sign);
+  const tp = new THREE.Mesh(new THREE.PlaneGeometry(26, 5.6), new THREE.MeshStandardMaterial({ map: ttl, transparent: true, roughness: 0.6 })); tp.position.set(0, 0.06, 0); tp.rotation.x = -Math.PI / 2; sign.add(tp);
   // 格子
   TILES.forEach((t, i) => {
-    const p = tileXZ(i), w = p.corner ? TD : TW - 0.3, d = TD - 0.3;
+    const p = tileXZ(i), w = p.corner ? TD : TW - 0.35, d = TD - 0.35;
     const g = new THREE.Group(); g.position.set(p.x, 0.6, p.z); g.rotation.y = p.ry; scene.add(g);
-    const sideC = new THREE.Color(t.t === 'topic' ? GROUPS[t.g].c : SPECIAL_BG[t.t]);
-    const base = mesh(rbox(w, 1.0, d, 0.35), MAT(sideC.getHex()), 0, 0.15, 0); g.add(base);
-    const top = mesh(new THREE.PlaneGeometry(w - 0.45, d - 0.45), toonM({ map: tileTexture(i), roughness: 0.55 }), 0, 0.67, 0, false); top.rotation.x = -Math.PI / 2; g.add(top);
-    if (t.t === 'topic') Bx(g, w - 0.7, 0.5, 1.1, GROUPS[t.g].c, 0, 0.8, -d / 2 + 0.85, 0.22);
-    const mg = new THREE.Group(); const key = t.t === 'topic' ? TOPIC_MODEL[TILES.filter((q, j) => q.t === 'topic' && j < i).length] : TILE_MODEL[t.t];
-    MODELS[key](mg); mg.position.set(0, 0.67, p.corner ? -1.6 : -1.15); mg.scale.setScalar(p.corner ? 1.3 : 0.95); g.add(mg);
-    g.traverse(o => (o.userData.tile = i)); tileObjs[i] = g; pickables.push(base, top); mg.traverse(o => o.isMesh && pickables.push(o));
+    const base = mesh(rbox(w, 0.7, d, 0.22), MAT('#FFFFFF'), 0, 0.05, 0); g.add(base);
+    const top = mesh(new THREE.PlaneGeometry(w - 0.3, d - 0.3), new THREE.MeshStandardMaterial({ map: tileTexture(i), roughness: 0.7 }), 0, 0.41, 0, false); top.rotation.x = -Math.PI / 2; g.add(top);
+    g.traverse(o => (o.userData.tile = i)); tileObjs[i] = g; pickables.push(base, top);
   });
   // 卡牌堆
-  [[-9.5, 2.5, '🏆', '成果專區卡', '#FFC300'], [9.5, 2.5, '📒', '紀錄表卡', '#9B5DE5']].forEach(([x, z, e, n, c]) => {
-    const t = tex(256, 340, (cx, W, H) => { cx.fillStyle = c; rr(cx, 0, 0, W, H, 30); cx.fill(); cx.fillStyle = '#fff'; rr(cx, 16, 16, W - 32, H - 32, 22); cx.fill(); cx.fillStyle = c; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.font = '110px sans-serif'; cx.fillText(e, W / 2, 140); cx.font = `400 50px ${RFONT}`; cx.fillText(n, W / 2, 262); });
-    const g = new THREE.Group(); g.position.set(x, 0.62, z); g.rotation.y = x < 0 ? 0.18 : -0.18; scene.add(g);
-    for (let k = 0; k < 6; k++) { const cd = Bx(g, 6, 0.22, 8, k % 2 ? c : '#FFFFFF', 0, 0.12 + k * 0.24, 0, 0.1); cd.rotation.y = (k % 3 - 1) * 0.04; }
-    const tp = mesh(new THREE.PlaneGeometry(5.6, 7.5), toonM({ map: t }), 0, 1.6, 0, false); tp.rotation.x = -Math.PI / 2; g.add(tp);
+  [[-9.5, 2.5, '🏆', '成果專區卡', '#ECC77A'], [9.5, 2.5, '📒', '紀錄表卡', '#B9A3E3']].forEach(([x, z, e, n, c]) => {
+    const t = tex(256, 340, (cx, W, H) => { cx.fillStyle = '#FFFBF4'; rr(cx, 0, 0, W, H, 26); cx.fill(); cx.strokeStyle = c; cx.lineWidth = 8; rr(cx, 14, 14, W - 28, H - 28, 18); cx.stroke(); cx.setLineDash([8, 7]); cx.lineWidth = 3; rr(cx, 28, 28, W - 56, H - 56, 12); cx.stroke(); cx.setLineDash([]);
+      cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.font = '96px sans-serif'; cx.fillText(e, W / 2, 140); cx.fillStyle = '#6B4C6E'; cx.font = `800 40px "Noto Serif TC", ${FONT}`; cx.fillText(n, W / 2, 252); });
+    const g = new THREE.Group(); g.position.set(x, 0.62, z); g.rotation.y = x < 0 ? 0.14 : -0.14; scene.add(g);
+    for (let k = 0; k < 6; k++) { const cd = mesh(rbox(6, 0.16, 8, 0.08), MAT(k % 2 ? c : '#FFFBF4'), (k % 2) * 0.08, 0.1 + k * 0.17, -(k % 3) * 0.06); g.add(cd); }
+    const tp = mesh(new THREE.PlaneGeometry(5.8, 7.8), new THREE.MeshStandardMaterial({ map: t, roughness: 0.7 }), 0, 1.13, 0, false); tp.rotation.x = -Math.PI / 2; g.add(tp);
     (x < 0 ? (deckC = g) : (deckR = g));
   });
-  // 樹、花叢、熱氣球、雲
-  [[-14.5, -13, '#38D16A'], [14.5, -13, '#FF7EB6'], [-14.5, 14.5, '#FF7EB6'], [14.5, 14.5, '#38D16A'], [-15.5, 1, '#2FBF5B'], [15.5, 1, '#FFC300']].forEach(([x, z, c], k) => tree(x, z, c, k > 3 ? 0.75 : 1));
-  for (let k = 0; k < 10; k++) { const a = k / 10 * Math.PI * 2; const fx = Math.cos(a) * 15.5, fz = Math.sin(a) * 15.5; if (Math.abs(fz + 8.5) < 3 && Math.abs(fx) < 14) continue; const fg = new THREE.Group(); fg.position.set(fx, 0.62, fz); scene.add(fg); Sp(fg, 0.55, '#7ED957', 0, 0.3, 0, 1, 0.6, 1); for (let j = 0; j < 5; j++) Sp(fg, 0.18, ['#FF7EB6', '#FFCB45', '#FFFFFF'][j % 3], Math.cos(j * 1.3) * 0.4, 0.62, Math.sin(j * 1.3) * 0.4); }
-  const bal = new THREE.Group(); bal.position.set(-26, 22, -18); scene.add(bal);
-  for (let k = 0; k < 8; k++) { const s = mesh(new THREE.SphereGeometry(3, 24, 18, k / 8 * Math.PI * 2, Math.PI / 4), MAT(k % 2 ? '#FFB3D1' : '#FFF3B0'), 0, 0, 0); bal.add(s); }
-  Bx(bal, 1.6, 1.0, 1.6, '#C99A6C', 0, -4.6, 0, 0.2); [-0.6, 0.6].forEach(x => [-0.6, 0.6].forEach(z => Cy(bal, 0.03, 0.03, 2.2, '#9A7B5B', x, -3.3, z, 4)));
-  spinners.push({ o: bal, balloon: 1 });
+  // ===== 街區地面（有圖案的色塊） =====
+  const groundTex = (k) => tex(512, 128, (c, W, H) => {
+    if (k === 0) { c.fillStyle = '#BFE6B4'; c.fillRect(0, 0, W, H); for (let n = 0; n < 160; n++) { c.fillStyle = ['#A9DCA0', '#D3F0C6', '#FFFFFF', '#FFD7E4'][n % 4]; c.beginPath(); c.arc((n * 97) % W, (n * 53) % H, n % 4 > 1 ? 2.5 : 4, 0, 7); c.fill(); } }
+    if (k === 1) { c.fillStyle = '#F9D9E4'; c.fillRect(0, 0, W, H); c.strokeStyle = '#F2C2D3'; c.lineWidth = 3; for (let y = 0; y < H; y += 21) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); for (let x = (y / 21 % 2) * 21; x < W; x += 42) { c.beginPath(); c.moveTo(x, y); c.lineTo(x, y + 21); c.stroke(); } } }
+    if (k === 2) { c.fillStyle = '#D6E6F7'; c.fillRect(0, 0, W, H); for (let x = 0; x < W; x += 32) { c.fillStyle = (x / 32) % 2 ? '#CADDF3' : '#DCEAF9'; c.fillRect(x, 0, 32, H); } c.strokeStyle = 'rgba(91,155,224,.25)'; c.lineWidth = 2; for (let x = 0; x < W; x += 32) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); } }
+    if (k === 3) { for (let x = 0; x < W; x += 32) for (let y = 0; y < H; y += 32) { c.fillStyle = ((x + y) / 32) % 2 ? '#E8DCFA' : '#F6F0FE'; c.fillRect(x, y, 32, 32); } }
+  });
+  for (let k = 0; k < 4; k++) { const pv = new THREE.Group(); pv.rotation.y = [0, -Math.PI / 2, Math.PI, Math.PI / 2][k]; scene.add(pv); const t = groundTex(k); t.wrapS = THREE.RepeatWrapping; t.repeat.set(3, 1);
+    const gp = mesh(new THREE.PlaneGeometry(BW - 21, 10), new THREE.MeshStandardMaterial({ map: t, roughness: 0.9 }), 0, 0.62, 32.6, false); gp.rotation.x = -Math.PI / 2; pv.add(gp);
+    const edge = mesh(rbox(BW - 21, 0.25, 0.5, 0.1), MAT(DIST[k].c), 0, 0.66, 27.6, false); pv.add(edge); }
+  [[1, 1, '#FDE4EE'], [-1, 1, '#E3EEFB'], [-1, -1, '#E3F5DE'], [1, -1, '#FFF4D6']].forEach(([sx, sz, c]) => { const cp = mesh(new THREE.CircleGeometry(6.2, 32), MAT(c), sx * 32.6, 0.63, sz * 32.6, false); cp.rotation.x = -Math.PI / 2; scene.add(cp); });
+  // ===== 四個街區（棋盤外圈） =====
+  const OUT = 32.6, CL = '#FFB7CF';
+  const sideFrame = k => { const pv = new THREE.Group(); pv.rotation.y = [0, -Math.PI / 2, Math.PI, Math.PI / 2][k]; pv.position.y = 0.6; scene.add(pv); return pv; }; // 本地 +z 指向外側
+  // 0 好奇森林（近側）
+  { const pv = sideFrame(0);
+    for (let k = 0; k < 16; k++) { const x = -26 + k * 3.5 + (k % 2) * 0.6; if (Math.abs(x) < 4) continue; lpTree(pv, x, OUT + (k % 2 ? 1.6 : -0.6), 0.8 + (k % 3) * 0.12, k % 3, ['#9ED9A0', '#7CC98A', '#B6E3A4', '#C3E8A0']); }
+    for (let k = 0; k < 8; k++) { const x = -22 + k * 6.2 + 1.5; const st = mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.3, 6), MAT('#7CC98A'), x, 0.65, OUT + 2.6); pv.add(st); const b = mesh(new THREE.IcosahedronGeometry(0.42, 1), MAT('#FFE6A0', { emissive: 0xFFD27A, emissiveIntensity: 0.35 }), x, 1.55, OUT + 2.6); pv.add(b); spinners.push({ o: b, glow: 1, ph: k }); }
+    for (let k = 0; k < 6; k++) { const x = -18 + k * 7; const m = new THREE.Group(); m.position.set(x, 0, OUT - 1.4); pv.add(m); m.add(mesh(new THREE.CylinderGeometry(0.15, 0.2, 0.6, 8), MAT('#FFF6EC'), 0, 0.3, 0)); const cap = mesh(new THREE.SphereGeometry(0.5, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), MAT(k % 2 ? '#F27A9A' : '#ECC77A'), 0, 0.55, 0); m.add(cap); [[0.2, 0.2], [-0.2, 0.1]].forEach(([a, b]) => m.add(mesh(new THREE.SphereGeometry(0.08, 8, 6), MAT('#FFFFFF'), a, 0.95, b))); }
+    districtSign(pv, 0, OUT + 0.5, 0, DIST[0].n, DIST[0].s, DIST[0].c);
+    for (let k = 0; k < 4; k++) { const bf = new THREE.Group(); bf.position.set(-20 + k * 13, 3 + k % 2, OUT + 1); pv.add(bf); [-1, 1].forEach(s => { const w = mesh(new THREE.CircleGeometry(0.35, 12), new THREE.MeshStandardMaterial({ color: ['#F7B6CF', '#C9B6F4', '#A8D8C5', '#F9D77E'][k], side: THREE.DoubleSide }), s * 0.3, 0, 0, false); w.rotation.y = s * 0.6; bf.add(w); }); spinners.push({ o: bf, fly: 1, ph: k * 1.7 }); }
+  }
+  // 1 計畫小鎮（左側）
+  { const pv = sideFrame(1);
+    const W = ['#FFF1F5', '#FFF7E3', '#EEF6FF', '#F4EFFF', '#EFFAF2'], R = ['#E77FA6', '#ECC77A', '#7FB2E5', '#B48BE6', '#7BC67E'];
+    for (let k = 0; k < 9; k++) { const x = -24 + k * 6; if (Math.abs(x) < 4) continue; lpHouse(pv, x, OUT + (k % 2 ? 1.2 : 0), 0, W[k % 5], R[k % 5], 0.95 + (k % 2) * 0.15); }
+    for (let k = 0; k < 9; k++) lpTree(pv, -27 + k * 6.5, OUT + 3.6, 0.6, 2, ['#A8DDA8', '#F4B6CD']);
+    const mb = new THREE.Group(); mb.position.set(-3.2, 0, OUT - 1.5); pv.add(mb); mb.add(mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.2, 6), MAT('#8A7896'), 0, 0.6, 0)); mb.add(mesh(rbox(0.7, 0.55, 0.9, 0.2), MAT('#F27A9A'), 0, 1.4, 0));
+    districtSign(pv, 0, OUT + 0.5, 0, DIST[1].n, DIST[1].s, DIST[1].c);
+  }
+  // 2 實作工坊（遠側）
+  { const pv = sideFrame(2);
+    const shed = (x, c, s = 1) => { const g = new THREE.Group(); g.position.set(x, 0, OUT + 0.6); g.scale.setScalar(s); pv.add(g); g.add(mesh(rbox(4, 2.4, 2.6, 0.15), MAT('#FFFBF4'), 0, 1.2, 0)); for (let k = 0; k < 3; k++) { const s2 = new THREE.Shape(); s2.moveTo(0, 0); s2.lineTo(1.33, 0); s2.lineTo(0, 0.9); g.add(mesh(new THREE.ExtrudeGeometry(s2, { depth: 2.6, bevelEnabled: false }), MAT(c), -2 + k * 1.33, 2.4, -1.3)); }
+      const ch = mesh(new THREE.CylinderGeometry(0.22, 0.26, 1.6, 10), MAT('#C9B6F4'), 1.3, 3.4, -0.6); g.add(ch); spinners.push({ smoke: g, x: 1.3, y: 4.3, z: -0.6, puffs: [0, 1, 2].map(j => { const p = mesh(new THREE.IcosahedronGeometry(0.35, 0), MAT('#FFFFFF', { transparent: true, opacity: 0.8 }), 1.3, 4.3, -0.6, false); g.add(p); return p; }) });
+      const gr = new THREE.Group(); gr.position.set(-0.9, 1.4, 1.32); g.add(gr); gr.add(mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.15, 12), MAT('#ECC77A'), 0, 0, 0)).rotation.x = Math.PI / 2; for (let t = 0; t < 8; t++) { const a = t / 8 * Math.PI * 2; gr.add(mesh(rbox(0.18, 0.18, 0.15, 0.03), MAT('#ECC77A'), Math.cos(a) * 0.52, Math.sin(a) * 0.52, 0)); } spinners.push({ o: gr, gear: 1 });
+      g.add(mesh(rbox(0.8, 1.2, 0.08, 0.05), MAT('#BFE3FA'), 0.9, 1.1, 1.31)); };
+    [-21, -10, 10, 21].forEach((x, k) => shed(x, ['#5B9BE0', '#E77FA6', '#7BC67E', '#B48BE6'][k], 1));
+    for (let k = 0; k < 4; k++) { const e = new THREE.Group(); e.position.set(-15.5 + k * 10.3, 0, OUT - 1.2); e.rotation.y = 0.3; pv.add(e); [-0.35, 0.35].forEach(dx => { const l = mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.8, 6), MAT('#C9946A'), dx, 0.9, 0); l.rotation.z = -dx * 0.25; e.add(l); }); e.add(mesh(rbox(1.0, 0.8, 0.06, 0.03), MAT(['#FFFFFF', '#FFF1F5', '#EEF6FF', '#F4EFFF'][k]), 0, 1.3, 0.08)); }
+    districtSign(pv, 0, OUT + 0.5, 0, DIST[2].n, DIST[2].s, DIST[2].c);
+    for (let k = 0; k < 8; k++) lpTree(pv, -27 + k * 7.7, OUT + 3.8, 0.65, 1, ['#9ED9A0', '#B6E3A4']);
+  }
+  // 3 成果舞台（右側）
+  { const pv = sideFrame(3);
+    const st = new THREE.Group(); st.position.set(-12, 0, OUT + 0.6); pv.add(st);
+    st.add(mesh(rbox(8, 0.9, 3.4, 0.2), MAT('#ECC77A'), 0, 0.45, 0)); [-1, 1].forEach(s => { const c = mesh(rbox(1.3, 4.2, 0.3, 0.15), MAT('#E77FA6'), s * 3.6, 2.6, -1.3); st.add(c); }); st.add(mesh(rbox(8.4, 0.9, 0.4, 0.2), MAT('#E77FA6'), 0, 4.9, -1.3));
+    st.add(mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.3, 6), MAT('#8A7896'), 0, 1.55, 0.6)); st.add(mesh(new THREE.SphereGeometry(0.18, 10, 8), MAT('#6B4C6E'), 0, 2.3, 0.6));
+    for (let k = 0; k < 5; k++) st.add(mesh(new THREE.IcosahedronGeometry(0.2, 0), MAT('#FFE6A0', { emissive: 0xFFD27A, emissiveIntensity: 0.5 }), -3 + k * 1.5, 5.45, -1.1));
+    for (let r = 0; r < 2; r++) for (let k = 0; k < 4; k++) { const ch = new THREE.Group(); ch.position.set(-14.4 + k * 1.6, 0, OUT - 1.6 - r * 0 + r * -0); ch.position.z = OUT - 1.4 - r * 1.3; ch.position.x = -14.4 + k * 1.6; pv.add(ch); ch.add(mesh(rbox(0.9, 0.18, 0.8, 0.05), MAT(['#F7B6CF', '#C9B6F4', '#A8D8C5', '#F9D77E'][k]), 0, 0.55, 0)); ch.add(mesh(rbox(0.9, 0.8, 0.14, 0.05), MAT(['#F7B6CF', '#C9B6F4', '#A8D8C5', '#F9D77E'][k]), 0, 0.95, 0.35)); }
+    [6, 16].forEach((x, k) => { const sp = new THREE.Group(); sp.position.set(x, 0, OUT + 1.2); pv.add(sp); sp.add(mesh(new THREE.CylinderGeometry(0.12, 0.16, 4.2, 8), MAT('#8A7896'), 0, 2.1, 0)); const hd = mesh(new THREE.CylinderGeometry(0.35, 0.55, 0.8, 12), MAT('#6B4C6E'), 0, 4.4, 0); hd.rotation.x = 0.7; sp.add(hd); });
+    const tr = new THREE.Group(); tr.position.set(11, 0, OUT - 0.8); pv.add(tr); tr.add(mesh(rbox(1.4, 0.5, 1.4, 0.12), MAT('#B48BE6'), 0, 0.25, 0)); tr.add(mesh(new THREE.CylinderGeometry(0.15, 0.25, 0.7, 10), MAT('#ECC77A'), 0, 0.85, 0));
+    const cup = new THREE.Mesh(new THREE.LatheGeometry([[0, 0], [0.35, 0.05], [0.75, 0.45], [0.85, 1.1], [0.88, 1.25]].map(([a, b]) => new THREE.Vector2(a, b)), 24), MAT('#ECC77A', { metalness: 0.4, roughness: 0.35, side: THREE.DoubleSide })); cup.position.y = 1.2; cup.castShadow = true; tr.add(cup); spinners.push({ o: tr, spin: 0.6 });
+    flagLine(pv, new THREE.Vector3(-26, 0, OUT + 2), new THREE.Vector3(-17, 0, OUT + 2), 4.5, ['#F27A9A', '#ECC77A', '#A7C7F2', '#B48BE6']);
+    flagLine(pv, new THREE.Vector3(4, 0, OUT + 2), new THREE.Vector3(26, 0, OUT + 2), 4.5, ['#F27A9A', '#ECC77A', '#A7C7F2', '#B48BE6']);
+    districtSign(pv, 0, OUT + 0.5, 0, DIST[3].n, DIST[3].s, DIST[3].c);
+  }
+  // ===== 四角地標 =====
+  const corner = (x, z, ry, build) => { const g = new THREE.Group(); g.position.set(x, 0.6, z); g.rotation.y = ry; g.scale.setScalar(1.7); scene.add(g); build(g); g.traverse(o => o.isMesh && pickables.push(o)); return g; };
+  const CO = 32.6;
+  corner(CO, CO, Math.PI / 4, g => MODELS.start(g)).traverse(o => (o.userData.tile = 0));
+  corner(-CO, CO, -Math.PI / 4, g => MODELS.jail(g)).traverse(o => (o.userData.tile = 7));
+  corner(-CO, -CO, -Math.PI * 0.75, g => MODELS.library(g)).traverse(o => (o.userData.tile = 14));
+  corner(CO, -CO, Math.PI * 0.75, g => MODELS.audit(g)).traverse(o => (o.userData.tile = 21));
+  // 雲
   const clouds = [];
-  for (let k = 0; k < 5; k++) { const c = new THREE.Group(); c.position.set(-60 + k * 30, 26 + (k % 2) * 6, -48 - (k % 3) * 8); [[0, 0, 2.6], [2.6, -0.4, 2], [-2.4, -0.5, 1.9], [1, 1.4, 1.8]].forEach(([x, y, r]) => { const s = Sp(c, r, '#FFFFFF', x, y, 0, 1, 0.8, 0.9); s.castShadow = false; }); scene.add(c); clouds.push(c); }
+  for (let k = 0; k < 7; k++) { const c = new THREE.Group(); c.position.set(-120 + k * 40, 34 + (k % 3) * 7, -70 - (k % 2) * 40); [[0, 0, 4], [4, -0.6, 3], [-3.8, -0.8, 3], [1.4, 2.2, 2.8]].forEach(([x, y, r]) => c.add(mesh(new THREE.IcosahedronGeometry(r, 1), LP('#FFFFFF', { emissive: 0xFFF4FA, emissiveIntensity: 0.35 }), x, y, 0, false))); scene.add(c); clouds.push(c); }
   spinners.push({ clouds });
-  addOutlines(scene);
-  // 骰子：圓角
-  dice = [0, 1].map(k => { const d = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), [3, 4, 1, 6, 2, 5].map(v => toonM({ map: dieFace(v), roughness: 0.3 }))); d.castShadow = true; d.position.set(k ? 2 : -2, 2.15, 6.5); d.quaternion.copy(faceQ(k ? 5 : 3, 0.3)); scene.add(d); addOutlines(d, 0.1); return d; });
+  // 骰子
+  dice = [0, 1].map(k => { const d = new THREE.Mesh(rbox(3, 3, 3, 0.45), new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.35 })); d.castShadow = true;
+    const pips = new THREE.Group(); d.add(pips); const PM = new THREE.MeshStandardMaterial({ color: 0x6B4C6E, roughness: 0.4 }), PR = new THREE.MeshStandardMaterial({ color: 0xF27A9A, roughness: 0.4 });
+    const F = { 1: [[0, 0]], 2: [[-.6, -.6], [.6, .6]], 3: [[-.65, -.65], [0, 0], [.65, .65]], 4: [[-.6, -.6], [.6, -.6], [-.6, .6], [.6, .6]], 5: [[-.65, -.65], [.65, -.65], [0, 0], [-.65, .65], [.65, .65]], 6: [[-.6, -.7], [.6, -.7], [-.6, 0], [.6, 0], [-.6, .7], [.6, .7]] };
+    const faces = { 1: ['y', 1], 6: ['y', -1], 2: ['z', 1], 5: ['z', -1], 3: ['x', 1], 4: ['x', -1] };
+    Object.entries(F).forEach(([v, pts]) => { const [ax, sg] = faces[v]; pts.forEach(([a, b]) => { const s = mesh(new THREE.SphereGeometry(v === '1' ? 0.42 : 0.26, 14, 10), v === '1' ? PR : PM, 0, 0, 0, false); s.scale.set(1, 1, 1); const p = ax === 'y' ? [a, sg * 1.47, b] : ax === 'z' ? [a, b, sg * 1.47] : [sg * 1.47, a, b]; s.position.set(...p); const sc = [1, 1, 1]; sc[{ x: 0, y: 1, z: 2 }[ax]] = 0.35; s.scale.set(...sc); pips.add(s); }); });
+    d.position.set(k ? 2 : -2, 2.15, 6.5); d.quaternion.copy(faceQ(k ? 5 : 3, 0.3)); scene.add(d); return d; });
+  linearize(scene);
 }
 function dieFace(v) { return tex(160, 160, (x, W) => { const g = x.createRadialGradient(W / 2, W / 2, 10, W / 2, W / 2, W * 0.75); g.addColorStop(0, '#FFFFFF'); g.addColorStop(1, '#FFE6F2'); x.fillStyle = '#F5B3D2'; x.fillRect(0, 0, W, W); x.fillStyle = g; rr(x, 6, 6, W - 12, W - 12, 34); x.fill();
   const s = W / 128, P = { 1: [[64, 64]], 2: [[36, 36], [92, 92]], 3: [[34, 34], [64, 64], [94, 94]], 4: [[36, 36], [92, 36], [36, 92], [92, 92]], 5: [[34, 34], [94, 34], [64, 64], [34, 94], [94, 94]], 6: [[36, 30], [92, 30], [36, 64], [92, 64], [36, 98], [92, 98]] }[v];
@@ -627,6 +781,11 @@ function dieFace(v) { return tex(160, 160, (x, W) => { const g = x.createRadialG
 function faceQ(v, yaw) { const e = { 1: [0, 0, 0], 6: [Math.PI, 0, 0], 2: [-Math.PI / 2, 0, 0], 5: [Math.PI / 2, 0, 0], 3: [0, 0, Math.PI / 2], 4: [0, 0, -Math.PI / 2] }[v]; const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(...e)); return new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw).multiply(q); }
 function tickSpinners(t) {
   spinners.forEach((s, k) => {
+    if (s.water) s.water.offset.set(t * 0.004, t * 0.006);
+    if (s.o && s.glow) s.o.material.emissiveIntensity = 0.3 + Math.sin(t * 2 + s.ph) * 0.2;
+    if (s.o && s.fly) { s.o.position.y = (s.o.userData.y0 ?? (s.o.userData.y0 = s.o.position.y)) + Math.sin(t * 1.5 + s.ph) * 0.6; s.o.position.x += Math.sin(t * 0.5 + s.ph) * 0.01; s.o.children.forEach((w, j) => (w.rotation.y = (j ? 1 : -1) * (0.3 + Math.abs(Math.sin(t * 9 + s.ph)) * 0.9))); }
+    if (s.o && s.gear) s.o.rotation.z = t * 1.2;
+    if (s.smoke) s.puffs.forEach((m, j) => { const u = (t * 0.35 + j / 3) % 1; m.position.set(s.x + u * 0.6, s.y + u * 2.2, s.z); m.scale.setScalar(0.5 + u); m.material.opacity = 0.8 * (1 - u); });
     if (s.o && s.spin) s.o.rotation.y = t * s.spin;
     if (s.o && s.bob) s.o.position.y = (s.o.userData.y0 ?? (s.o.userData.y0 = s.o.position.y)) + Math.sin(t * 2 + (s.ph || k)) * 0.15;
     if (s.o && s.bounce) s.o.position.y = 0.75 + Math.abs(Math.sin(t * 3)) * 0.8;
@@ -635,7 +794,7 @@ function tickSpinners(t) {
     if (s.o && s.stamp) s.o.position.y = Math.max(0, Math.sin(t * 2.5)) * 0.8;
     if (s.o && s.balloon) { s.o.position.y = 22 + Math.sin(t * 0.6) * 1.5; s.o.position.x = -26 + Math.sin(t * 0.15) * 6; }
     if (s.steam) s.steam.forEach((m, j) => { const u = (t * 0.5 + j / 3) % 1; m.position.y = 1.7 + u * 1.6; m.scale.setScalar(0.18 + u * 0.25); m.material.opacity = 0.75 * (1 - u); });
-    if (s.clouds) s.clouds.forEach((c, j) => { c.position.x += 0.01 + j * 0.002; if (c.position.x > 55) c.position.x = -55; });
+    if (s.clouds) s.clouds.forEach((c, j) => { c.position.x += 0.02 + j * 0.004; if (c.position.x > 160) c.position.x = -160; });
   });
 }
 
@@ -682,7 +841,7 @@ function makePawn(p) {
   const ring = mesh(new THREE.RingGeometry(1.5, 1.9, 40), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.9, side: THREE.DoubleSide }), 0, 0.05, 0, false); ring.rotation.x = -Math.PI / 2; ring.visible = false; g.add(ring);
   const star = mesh(new THREE.OctahedronGeometry(0.4), MAT('#FFD54F', { emissive: 0xFFC107, emissiveIntensity: 0.5 }), 0, 6, 0, false); star.visible = false; g.add(star);
   g.userData = { ring, body, star, limbs }; g.scale.setScalar(1.15);
-  addOutlines(g, 0.06); scene.add(g); pawns[p.id] = g; return g;
+  linearize(g); scene.add(g); pawns[p.id] = g; return g;
 }
 function slotPos(i, pid) { const p = tileXZ(i), k = S.ps.findIndex(q => q.id === pid), ox = (k % 2 ? 1.3 : -1.3), oz = (k < 2 ? 1.2 : 3.0) - 0.4; const c = Math.cos(p.ry), s = Math.sin(p.ry); return new THREE.Vector3(p.x + ox * c + oz * s, 1.27, p.z - ox * s + oz * c); }
 function placePawns() { S.ps.forEach(p => { const g = pawns[p.id]; g.visible = !p.out; g.position.copy(slotPos(p.pos, p.id)); g.rotation.y = tileXZ(p.pos).ry; }); }
@@ -713,29 +872,29 @@ function refreshTile(i) {
   if (o.lv === 1) house(0);
   if (o.lv === 2) { house(-0.9, 0.85); house(0.9, 0.85); }
   if (o.lv === 3) { house(-1.55, 0.7); house(1.55, 0.7); Bx(g, 1.5, 2.8, 1.5, wall, 0, 2.0, 0, 0.22); const r = Co(g, 1.1, 1.3, roofC, 0, 4.05, 0, 4); r.rotation.y = Math.PI / 4; const st = mesh(new THREE.OctahedronGeometry(0.5), MAT('#FFD54F', { emissive: 0xFFC107, emissiveIntensity: 0.5 }), 0, 5.2, 0); g.add(st); spinners.push({ o: st, spin: 2, bob: 1 }); }
-  addOutlines(g);
+  linearize(g);
   g.traverse(m => (m.userData.tile = i));
   if (!reduceMotion) { g.scale.setScalar(0.01); animate(520, u => { const e = 1 - Math.pow(1 - u, 3); g.scale.setScalar(Math.max(0.01, e + Math.sin(u * Math.PI) * 0.25)); }); }
 }
 
 // 相機
-const cam = { yaw: 0, pitch: narrow() ? 1.05 : 0.9, dist: narrow() ? 130 : 98 }, camTarget = new THREE.Vector3(0, 0, 2.5), camFocus = new THREE.Vector3(0, 0, 2.5);
+const cam = { yaw: 0, pitch: narrow() ? 1.0 : 0.8, dist: narrow() ? 190 : 142 }, camTarget = new THREE.Vector3(0, 0, 2.5), camFocus = new THREE.Vector3(0, 0, 2.5);
 let spin = false, follow = true;
-function resetCam() { cam.yaw = 0; cam.pitch = narrow() ? 1.05 : 0.9; cam.dist = narrow() ? 130 : 98; camFocus.set(0, 0, 2.5); }
+function resetCam() { cam.yaw = 0; cam.pitch = narrow() ? 1.0 : 0.8; cam.dist = narrow() ? 190 : 142; camFocus.set(0, 0, 2.5); }
 $('#bReset').onclick = resetCam;
 $('#bSpin').onclick = e => { spin = !spin; e.currentTarget.classList.toggle('on', spin); };
 $('#bFollow').onclick = e => { follow = !follow; e.currentTarget.classList.toggle('hot', follow); if (!follow) camFocus.set(0, 0, 2.5); };
-$('#zIn').onclick = () => (cam.dist = Math.max(36, cam.dist * 0.85)); $('#zOut').onclick = () => (cam.dist = Math.min(200, cam.dist * 1.18));
+$('#zIn').onclick = () => (cam.dist = Math.max(50, cam.dist * 0.85)); $('#zOut').onclick = () => (cam.dist = Math.min(320, cam.dist * 1.18));
 function setupControls() {
   const cv = renderer.domElement, ptrs = new Map(); let moved = false, down = null, pinch = 0;
   cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (ptrs.size === 1) { moved = false; down = { x: e.clientX, y: e.clientY }; } else { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); moved = true; } });
   cv.addEventListener('pointermove', e => { if (!ptrs.has(e.pointerId)) return; const pr = ptrs.get(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch) cam.dist = THREE.MathUtils.clamp(cam.dist * pinch / d, 36, 200); pinch = d; return; }
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch) cam.dist = THREE.MathUtils.clamp(cam.dist * pinch / d, 50, 320); pinch = d; return; }
     if (!moved && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) moved = true;
-    if (moved) { cam.yaw -= (e.clientX - pr.x) * 0.006; cam.pitch = THREE.MathUtils.clamp(cam.pitch + (e.clientY - pr.y) * 0.005, 0.25, 1.45); } });
+    if (moved) { cam.yaw -= (e.clientX - pr.x) * 0.006; cam.pitch = THREE.MathUtils.clamp(cam.pitch + (e.clientY - pr.y) * 0.005, 0.3, 1.4); } });
   const up = e => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = 0; if (!ptrs.size && !moved && e.type === 'pointerup') clickTile(e.clientX, e.clientY); };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
-  cv.addEventListener('wheel', e => { e.preventDefault(); cam.dist = THREE.MathUtils.clamp(cam.dist * (e.deltaY > 0 ? 1.1 : 0.9), 36, 200); }, { passive: false });
+  cv.addEventListener('wheel', e => { e.preventDefault(); cam.dist = THREE.MathUtils.clamp(cam.dist * (e.deltaY > 0 ? 1.1 : 0.9), 50, 320); }, { passive: false });
 }
 const ray = new THREE.Raycaster();
 function clickTile(x, y) {
