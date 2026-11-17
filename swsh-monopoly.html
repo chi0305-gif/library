@@ -12,151 +12,154 @@
 <style>
   :root {
     color-scheme: light;
-    --ink: #4A3F6B; --ink2: #6B5F8E; --muted: #A79CC4; --line: #F0E6FA;
-    --pink: #FF8FC3; --yellow: #FFCB45; --blue: #6CC4FF; --mint: #5EDDBE; --purple: #B79BFF;
-    --card: rgba(255,255,255,.92);
+    --ol: #2B1F3A; --ink: #2B1F3A; --ink2: #4A3D5E; --muted: #7C6F92; --line: #2B1F3A;
+    --red: #FF4D6D; --orange: #FF9F1C; --yellow: #FFD60A; --green: #38D16A; --sky: #2EC4F1; --blue: #4361EE; --purple: #9B5DE5; --pink: #F15BB5;
     --round: 'Huninn', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-    --sans: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    --bold: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; overflow: hidden; font-family: var(--round); color: var(--ink); background: #FFF0F8; }
+  html, body { margin: 0; height: 100%; overflow: hidden; font-family: var(--round); color: var(--ink); background: #6FD3FF; }
   button { font: inherit; cursor: pointer; color: inherit; }
-  #bg { position: fixed; inset: 0; overflow: hidden; background: radial-gradient(circle at 15% 18%, #FFD9EC 0, transparent 38%), radial-gradient(circle at 88% 12%, #D6EEFF 0, transparent 40%), radial-gradient(circle at 75% 92%, #E6DBFF 0, transparent 44%), radial-gradient(circle at 8% 88%, #FFF0C9 0, transparent 40%), linear-gradient(160deg, #FFF0F8, #EEF2FF); }
-  #bg::before { content: ""; position: absolute; inset: -50%; background-image: radial-gradient(rgba(255,255,255,.9) 2px, transparent 2.5px); background-size: 34px 34px; opacity: .55; animation: drift 60s linear infinite; }
-  @keyframes drift { to { transform: translate(34px, 34px); } }
-  .cloud { position: absolute; font-size: 64px; opacity: .55; animation: float 9s ease-in-out infinite; filter: drop-shadow(0 4px 0 rgba(183,155,255,.15)); }
-  @keyframes float { 50% { transform: translateY(-14px); } }
+  #bg { position: fixed; inset: 0; overflow: hidden; background: linear-gradient(180deg, #4CC9FF 0%, #8BE0FF 55%, #C9F3FF 100%); }
+  #bg::before { content: ""; position: absolute; left: 50%; top: 55%; width: 260vmax; height: 260vmax; transform: translate(-50%, -50%); background: repeating-conic-gradient(rgba(255,255,255,.16) 0 9deg, transparent 9deg 18deg); animation: rays 80s linear infinite; }
+  @keyframes rays { to { transform: translate(-50%, -50%) rotate(360deg); } }
+  .cloud { position: absolute; width: 150px; height: 56px; background: #fff; border-radius: 60px; animation: float 8s ease-in-out infinite; filter: drop-shadow(4px 0 0 #2B1F3A) drop-shadow(-4px 0 0 #2B1F3A) drop-shadow(0 4px 0 #2B1F3A) drop-shadow(0 -4px 0 #2B1F3A) drop-shadow(0 6px 0 rgba(43,31,58,.2)); }
+  .cloud::before, .cloud::after { content: ""; position: absolute; background: #fff; border-radius: 50%; }
+  .cloud::before { width: 70px; height: 66px; left: 20px; top: -34px; } .cloud::after { width: 52px; height: 50px; left: 76px; top: -22px; }
+  @keyframes float { 50% { transform: translateY(-12px); } }
   #scene { position: fixed; inset: 0; touch-action: none; }
   #scene canvas { display: block; width: 100%; height: 100%; outline: none; cursor: grab; }
-  .glass { background: var(--card); border: 3px solid #fff; box-shadow: 0 6px 0 rgba(183,155,255,.22), 0 12px 26px rgba(120,90,180,.14); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .glass { background: #FFFDF5; border: 4px solid var(--ol); box-shadow: 0 6px 0 var(--ol); }
+  .stroke { -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; }
 
-  #brand { position: fixed; left: 16px; top: 14px; z-index: 20; border-radius: 24px; padding: 8px 18px 10px 12px; display: flex; gap: 10px; align-items: center; }
-  #brand .logo { width: 48px; height: 48px; border-radius: 16px; display: grid; place-items: center; font-size: 28px; background: linear-gradient(135deg, #FFB3D6, #C7B2FF); box-shadow: inset 0 -4px 0 rgba(0,0,0,.08); animation: wob 3s ease-in-out infinite; }
-  @keyframes wob { 50% { transform: rotate(-8deg) scale(1.05); } }
-  #brand h1 { margin: 0; font-weight: 400; font-size: clamp(19px, 2.2vw, 25px); letter-spacing: 1px; background: linear-gradient(90deg, #FF6FAE, #A07BFF 55%, #4FB2FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  #brand .chip { display: inline-block; margin-top: 2px; font-size: 12.5px; padding: 1px 10px; border-radius: 999px; background: #FFF4CF; color: #B07800; border: 2px dashed #FFD970; }
+  #brand { position: fixed; left: 16px; top: 12px; z-index: 20; border-radius: 22px; padding: 8px 16px 10px 10px; display: flex; gap: 10px; align-items: center; transform: rotate(-2deg); }
+  #brand .logo { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 30px; background: var(--yellow); border: 4px solid var(--ol); box-shadow: inset 0 -5px 0 rgba(0,0,0,.15); animation: wob 2.4s ease-in-out infinite; }
+  @keyframes wob { 50% { transform: rotate(-10deg) scale(1.06); } }
+  #brand h1 { margin: 0; font: 900 clamp(20px, 2.4vw, 28px) var(--bold); color: #FFD60A; -webkit-text-stroke: 7px var(--ol); paint-order: stroke fill; letter-spacing: 1px; text-shadow: 0 4px 0 var(--ol); }
+  #brand .chip { display: inline-block; margin-top: 4px; font: 900 12.5px var(--bold); padding: 2px 10px; border-radius: 999px; background: var(--sky); color: #fff; border: 3px solid var(--ol); }
 
-  #tools { position: fixed; right: 14px; top: 14px; z-index: 20; display: grid; grid-template-columns: repeat(3, auto); gap: 7px; }
-  .tb { height: 38px; padding: 0 13px; border-radius: 999px; border: 0; background: #fff; box-shadow: 0 4px 0 #EADCFB, 0 8px 16px rgba(120,90,180,.12); font-size: 13px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; transition: transform .15s; }
-  .tb:hover { transform: translateY(-2px) rotate(-1deg); }
-  .tb:active { transform: translateY(3px); box-shadow: 0 1px 0 #EADCFB; }
-  .tb.on { background: #F1E8FF; color: #7B55E6; box-shadow: 0 4px 0 #D8C6FF; }
-  .tb.hot { background: linear-gradient(135deg, #FF9EC9, #C3A2FF); color: #fff; box-shadow: 0 4px 0 #B48BEA; }
-  #zoom { position: fixed; right: 16px; top: 116px; z-index: 20; display: flex; gap: 7px; }
-  #zoom .tb { width: 38px; padding: 0; justify-content: center; font-size: 20px; }
+  #tools { position: fixed; right: 14px; top: 14px; z-index: 20; display: grid; grid-template-columns: repeat(3, auto); gap: 8px; }
+  .tb { height: 40px; padding: 0 14px; border-radius: 14px; border: 3px solid var(--ol); background: linear-gradient(180deg, #fff 0 50%, #EDE6FF 50%); box-shadow: 0 4px 0 var(--ol); font: 900 13px var(--bold); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; transition: transform .1s; }
+  .tb:hover { transform: translateY(-2px); }
+  .tb:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ol); }
+  .tb.on { background: linear-gradient(180deg, #B8F5C9 0 50%, #7BE59B 50%); }
+  .tb.hot { background: linear-gradient(180deg, #FF9FD0 0 50%, #F15BB5 50%); color: #fff; }
+  #zoom { position: fixed; right: 16px; top: 120px; z-index: 20; display: flex; gap: 8px; }
+  #zoom .tb { width: 42px; height: 42px; padding: 0; justify-content: center; font-size: 22px; border-radius: 50%; }
 
   #players { position: fixed; z-index: 20; inset: 0; pointer-events: none; }
-  .pcard { position: absolute; width: 222px; border-radius: 26px; padding: 10px 12px 10px; pointer-events: auto; transition: transform .3s cubic-bezier(.2,1.6,.4,1), box-shadow .3s; overflow: visible; }
-  .pcard::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 14px; border-radius: 23px 23px 0 0; background: repeating-linear-gradient(-45deg, var(--pc) 0 8px, color-mix(in srgb, var(--pc) 60%, #fff) 8px 16px); opacity: .5; }
-  .pcard.p0 { left: 14px; top: 30%; } .pcard.p1 { right: 14px; top: 30%; } .pcard.p2 { left: 14px; top: calc(30% + 160px); } .pcard.p3 { right: 14px; top: calc(30% + 160px); }
-  .pcard.turn { box-shadow: 0 0 0 4px var(--pc), 0 8px 0 color-mix(in srgb, var(--pc) 60%, #000 0%), 0 16px 30px rgba(120,90,180,.25); transform: scale(1.06) rotate(-1deg); }
-  .pcard.out { opacity: .45; filter: grayscale(.7); }
-  .pcard .tag { position: absolute; top: -14px; right: 14px; font-size: 12.5px; padding: 2px 12px; border-radius: 999px; background: var(--pc); color: #fff; display: none; box-shadow: 0 3px 0 rgba(0,0,0,.1); animation: bob 1s ease-in-out infinite; }
-  @keyframes bob { 50% { transform: translateY(-4px); } }
+  .pcard { position: absolute; width: 228px; border-radius: 22px; padding: 0 0 10px; pointer-events: auto; transition: transform .25s cubic-bezier(.2,1.6,.4,1); overflow: visible; background: #FFFDF5; border: 4px solid var(--ol); box-shadow: 0 7px 0 var(--ol); }
+  .pcard .hd { background: var(--pc); border-bottom: 4px solid var(--ol); border-radius: 17px 17px 0 0; padding: 4px 12px 5px 72px; font: 900 15px var(--bold); color: #fff; -webkit-text-stroke: 4px var(--ol); paint-order: stroke fill; position: relative; }
+  .pcard.p0 { left: 14px; top: 30%; } .pcard.p1 { right: 14px; top: 30%; } .pcard.p2 { left: 14px; top: calc(30% + 168px); } .pcard.p3 { right: 14px; top: calc(30% + 168px); }
+  .pcard.turn { transform: scale(1.07) rotate(-2deg); }
+  .pcard.out { opacity: .5; filter: grayscale(.8); }
+  .pcard .tag { position: absolute; top: -18px; right: 10px; font: 900 13px var(--bold); padding: 2px 12px; border-radius: 999px; background: var(--yellow); color: var(--ol); border: 3px solid var(--ol); display: none; animation: bob .8s ease-in-out infinite; z-index: 2; }
+  @keyframes bob { 50% { transform: translateY(-5px) rotate(3deg); } }
   .pcard.turn .tag { display: block; }
-  .pcard .row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
-  .pcard .av { width: 52px; height: 52px; border-radius: 18px; display: grid; place-items: center; font-size: 30px; background: color-mix(in srgb, var(--pc) 22%, #fff); box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--pc) 35%, #fff); flex: 0 0 auto; }
-  .pcard.turn .av { animation: wob 1.6s ease-in-out infinite; }
-  .pcard .nm { font-size: 14px; color: var(--ink2); }
-  .pcard .money { font-size: 24px; line-height: 1.15; color: var(--ink); }
-  .pcard .money small { font-size: 13px; color: var(--muted); }
-  .pcard .sub { font-size: 11.5px; color: var(--muted); font-family: var(--sans); }
+  .pcard .av { position: absolute; left: 8px; top: -14px; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; font-size: 32px; background: #fff; border: 4px solid var(--ol); box-shadow: 0 4px 0 var(--ol); z-index: 1; }
+  .pcard.turn .av { animation: wob 1.2s ease-in-out infinite; }
+  .pcard .bd { padding: 8px 12px 0 14px; }
+  .pcard .money { font: 900 26px var(--bold); line-height: 1.1; color: var(--yellow); -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; }
+  .pcard .money small { font-size: 15px; }
+  .pcard .sub { font: 700 12px var(--bold); color: var(--muted); margin-top: 2px; }
   .pcard .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
-  .pcard .chips span { min-width: 18px; height: 18px; border-radius: 7px; font-size: 10px; color: #fff; display: grid; place-items: center; padding: 0 3px; box-shadow: inset 0 -2px 0 rgba(0,0,0,.12); }
-  .pcard .st { font-size: 12px; color: #E0457B; margin-top: 4px; }
+  .pcard .chips span { min-width: 20px; height: 20px; border-radius: 7px; font: 900 11px var(--bold); color: #fff; display: grid; place-items: center; padding: 0 3px; border: 2.5px solid var(--ol); }
+  .pcard .st { font: 900 12.5px var(--bold); color: var(--red); margin-top: 4px; }
 
-  #dock { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  #turnTxt { font-size: 15px; padding: 7px 18px; border-radius: 999px; }
-  #rollBtn { position: relative; border: 0; font-family: var(--round); font-size: 23px; padding: 14px 46px; border-radius: 999px; background: linear-gradient(180deg, #FFE27A, #FFBE2E); color: #7A4A00; box-shadow: 0 7px 0 #EBA100, 0 14px 26px rgba(235,161,0,.35), inset 0 3px 0 rgba(255,255,255,.6); letter-spacing: 2px; }
-  #rollBtn::after { content: "✨"; position: absolute; right: -6px; top: -10px; font-size: 22px; animation: wob 1.2s ease-in-out infinite; }
-  #rollBtn:hover:not(:disabled) { transform: translateY(-2px) scale(1.03); }
-  #rollBtn:active:not(:disabled) { transform: translateY(5px); box-shadow: 0 2px 0 #EBA100; }
-  #rollBtn:disabled { filter: grayscale(.5) brightness(1.06); opacity: .65; cursor: default; }
-  #rollBtn:disabled::after { display: none; }
-  #rollBtn.pulse:not(:disabled) { animation: jelly 1.3s ease-in-out infinite; }
-  @keyframes jelly { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.08, .94); } 50% { transform: scale(.96, 1.06); } 70% { transform: scale(1.03, .98); } }
-  #credit { font-size: 11px; color: var(--muted); }
+  #dock { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  #turnTxt { font: 900 15px var(--bold); padding: 6px 18px; border-radius: 999px; }
+  #rollBtn { position: relative; border: 5px solid var(--ol); font: 900 26px var(--bold); padding: 12px 44px; border-radius: 26px; background: linear-gradient(180deg, #FFE45C 0 48%, #FFC300 48%); color: #fff; -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; box-shadow: 0 8px 0 var(--ol), inset 0 -6px 0 rgba(0,0,0,.12); letter-spacing: 3px; }
+  #rollBtn::before { content: ""; position: absolute; left: 14px; top: 8px; width: 34px; height: 10px; border-radius: 10px; background: rgba(255,255,255,.75); }
+  #rollBtn:hover:not(:disabled) { transform: translateY(-3px) scale(1.04); }
+  #rollBtn:active:not(:disabled) { transform: translateY(6px); box-shadow: 0 2px 0 var(--ol); }
+  #rollBtn:disabled { filter: grayscale(.6); opacity: .75; cursor: default; }
+  #rollBtn.pulse:not(:disabled) { animation: jelly 1.1s ease-in-out infinite; }
+  @keyframes jelly { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.1, .92); } 50% { transform: scale(.95, 1.07); } 70% { transform: scale(1.03, .98); } }
+  #credit { font: 700 11px var(--bold); color: var(--ol); background: rgba(255,255,255,.7); padding: 1px 10px; border-radius: 999px; }
 
-  #log { position: fixed; left: 14px; bottom: 14px; z-index: 20; width: 270px; max-height: 176px; overflow: hidden; border-radius: 22px; padding: 10px 14px; font-size: 13px; }
-  #log b { display: block; font-size: 13px; color: var(--muted); font-weight: 400; margin-bottom: 2px; }
-  #log div { padding: 3px 0; border-bottom: 2px dotted var(--line); line-height: 1.45; font-family: var(--sans); }
+  #log { position: fixed; left: 14px; bottom: 14px; z-index: 20; width: 272px; max-height: 180px; overflow: hidden; border-radius: 20px; padding: 10px 14px; font-size: 13px; }
+  #log b { display: block; font: 900 13px var(--bold); margin-bottom: 2px; }
+  #log div { padding: 3px 0; border-bottom: 2px dashed #D9D0E6; line-height: 1.45; font-family: var(--bold); font-weight: 500; }
   #log div:last-child { border: 0; }
-  #menuBtns { position: fixed; right: 14px; bottom: 14px; z-index: 20; display: grid; grid-template-columns: repeat(2, auto); gap: 7px; }
+  #menuBtns { position: fixed; right: 14px; bottom: 14px; z-index: 20; display: grid; grid-template-columns: repeat(2, auto); gap: 8px; }
 
-  #toast { position: fixed; left: 50%; top: 86px; transform: translateX(-50%) translateY(-16px) scale(.9); opacity: 0; z-index: 60; background: #fff; color: var(--ink); padding: 10px 20px; border-radius: 999px; transition: all .3s cubic-bezier(.2,1.6,.4,1); pointer-events: none; white-space: nowrap; box-shadow: 0 5px 0 #EADCFB, 0 12px 26px rgba(120,90,180,.2); border: 3px solid #FFD6EA; font-size: 16px; }
+  #toast { position: fixed; left: 50%; top: 90px; transform: translateX(-50%) translateY(-16px) scale(.8); opacity: 0; z-index: 60; background: var(--yellow); color: var(--ol); padding: 10px 22px; border-radius: 18px; transition: all .25s cubic-bezier(.2,1.6,.4,1); pointer-events: none; white-space: nowrap; border: 4px solid var(--ol); box-shadow: 0 6px 0 var(--ol); font: 900 17px var(--bold); }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
-  .float { position: fixed; z-index: 30; font-size: 24px; pointer-events: none; text-shadow: 0 3px 0 #fff, 0 0 12px #fff; animation: up 1.5s cubic-bezier(.2,1.4,.4,1) forwards; }
-  @keyframes up { 0% { transform: scale(.4); } 20% { transform: scale(1.2); } to { transform: translateY(-70px) scale(1); opacity: 0; } }
+  .float { position: fixed; z-index: 30; font: 900 30px var(--bold); pointer-events: none; -webkit-text-stroke: 7px var(--ol); paint-order: stroke fill; animation: up 1.5s cubic-bezier(.2,1.4,.4,1) forwards; }
+  @keyframes up { 0% { transform: scale(.3); } 20% { transform: scale(1.3); } to { transform: translateY(-80px) scale(1); opacity: 0; } }
 
   dialog { border: 0; padding: 0; background: transparent; overflow: visible; max-width: calc(100vw - 20px); }
-  dialog::backdrop { background: rgba(110,85,170,.22); backdrop-filter: blur(3px); }
-  .dc { position: relative; width: min(450px, calc(100vw - 24px)); border-radius: 32px; background: #fff; box-shadow: 0 10px 0 rgba(183,155,255,.3), 0 26px 60px rgba(90,60,150,.3); overflow: hidden; animation: pop .4s cubic-bezier(.2,1.6,.4,1); border: 4px solid #fff; }
-  @keyframes pop { from { transform: scale(.6) translateY(30px) rotate(-4deg); opacity: 0; } }
-  .dh { padding: 18px 20px 16px; background: var(--dc, #F3EAFF); display: flex; gap: 14px; align-items: center; border-bottom: 3px dashed rgba(255,255,255,.9); }
-  .dh .ic { width: 60px; height: 60px; border-radius: 20px; background: #fff; display: grid; place-items: center; font-size: 34px; flex: 0 0 auto; box-shadow: 0 4px 0 rgba(0,0,0,.06); animation: wob 2.2s ease-in-out infinite; }
-  .dh small { font-size: 13px; color: var(--di, #7B55E6); }
-  .dh h2 { margin: 2px 0 0; font-weight: 400; font-size: 23px; line-height: 1.25; }
-  .db { padding: 14px 22px 6px; font-size: 15px; line-height: 1.75; color: var(--ink2); max-height: 52vh; overflow-y: auto; font-family: var(--sans); }
-  .db b { color: var(--ink); }
-  .db .tip { background: #FBF6FF; border: 2px dashed #E6D9FF; border-radius: 16px; padding: 8px 12px; margin-top: 10px; font-size: 13.5px; }
+  dialog::backdrop { background: rgba(43,31,58,.35); }
+  .dc { position: relative; width: min(460px, calc(100vw - 24px)); border-radius: 28px; background: #FFFDF5; border: 5px solid var(--ol); box-shadow: 0 10px 0 var(--ol); overflow: visible; animation: pop .35s cubic-bezier(.2,1.7,.4,1); }
+  @keyframes pop { from { transform: scale(.5) rotate(-6deg); opacity: 0; } }
+  .dh { padding: 16px 18px 14px 96px; background: var(--dbtn, var(--purple)); display: flex; gap: 14px; align-items: center; border-bottom: 5px solid var(--ol); border-radius: 22px 22px 0 0; position: relative; min-height: 82px; }
+  .dh .ic { position: absolute; left: 12px; top: -22px; width: 72px; height: 72px; border-radius: 22px; background: #fff; display: grid; place-items: center; font-size: 40px; border: 5px solid var(--ol); box-shadow: 0 5px 0 var(--ol); animation: wob 1.8s ease-in-out infinite; }
+  .dh small { font: 900 13px var(--bold); color: #fff; opacity: .95; }
+  .dh h2 { margin: 2px 0 0; font: 900 23px var(--bold); line-height: 1.25; color: #fff; -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; }
+  .db { padding: 14px 22px 6px; font: 500 15px var(--bold); line-height: 1.75; color: var(--ink2); max-height: 52vh; overflow-y: auto; }
+  .db b { color: var(--ink); font-weight: 900; }
+  .db .tip { background: #FFF3C4; border: 3px solid var(--ol); border-radius: 16px; padding: 8px 12px; margin-top: 10px; font-size: 13.5px; }
   .db table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 8px; }
-  .db td { padding: 5px 6px; border-bottom: 2px dotted var(--line); }
-  .db td:last-child { text-align: right; font-weight: 700; }
-  .df { display: flex; flex-wrap: wrap; gap: 9px; justify-content: flex-end; padding: 12px 20px 20px; }
-  .df .b { border: 0; border-radius: 999px; padding: 11px 22px; font-size: 16px; background: #F4EEFB; color: var(--ink2); box-shadow: 0 4px 0 #E4D8F5; transition: transform .15s; font-family: var(--round); }
+  .db td { padding: 5px 6px; border-bottom: 2px dashed #D9D0E6; }
+  .db td:last-child { text-align: right; font-weight: 900; }
+  .df { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; padding: 12px 20px 20px; }
+  .df .b { border: 4px solid var(--ol); border-radius: 16px; padding: 9px 20px; font: 900 16px var(--bold); background: linear-gradient(180deg, #fff 0 50%, #EDE6FF 50%); color: var(--ink); box-shadow: 0 5px 0 var(--ol); transition: transform .1s; }
   .df .b:hover:not(:disabled) { transform: translateY(-2px); }
-  .df .b:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 #E4D8F5; }
-  .df .b.main { background: var(--dbtn, #9B7BFF); color: #fff; box-shadow: 0 4px 0 color-mix(in srgb, var(--dbtn, #9B7BFF) 70%, #000); }
-  .df.col { flex-direction: column; } .df.col .b { text-align: left; border-radius: 18px; font-family: var(--sans); font-weight: 700; font-size: 14.5px; }
-  .bot { font-size: 13px; color: var(--muted); padding: 0 22px 16px; text-align: right; }
-  .card3d { margin: 4px auto 0; width: 230px; border-radius: 22px; padding: 18px; text-align: center; color: #fff; font-size: 16px; line-height: 1.6; animation: flip .7s cubic-bezier(.2,1.4,.4,1); box-shadow: 0 6px 0 rgba(0,0,0,.08); font-family: var(--round); }
-  @keyframes flip { from { transform: rotateY(180deg) scale(.6); } }
+  .df .b:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 var(--ol); }
+  .df .b.main { background: var(--dbtn, var(--purple)); color: #fff; -webkit-text-stroke: 5px var(--ol); paint-order: stroke fill; }
+  .df.col { flex-direction: column; } .df.col .b { text-align: left; font-size: 14.5px; -webkit-text-stroke: 0; }
+  .bot { font: 700 13px var(--bold); color: var(--muted); padding: 0 22px 16px; text-align: right; }
+  .card3d { margin: 4px auto 0; width: 240px; border-radius: 22px; padding: 18px; text-align: center; color: #fff; font: 900 17px var(--bold); line-height: 1.6; animation: flip .6s cubic-bezier(.2,1.5,.4,1); border: 5px solid var(--ol); box-shadow: 0 6px 0 var(--ol); -webkit-text-stroke: 5px var(--ol); paint-order: stroke fill; }
+  @keyframes flip { from { transform: rotateY(180deg) scale(.5); } }
 
-  #setup { position: fixed; inset: 0; z-index: 50; display: grid; padding: 16px; background: rgba(255,240,248,.55); backdrop-filter: blur(5px); overflow-y: auto; }
+  #setup { position: fixed; inset: 0; z-index: 50; display: grid; padding: 16px; background: rgba(43,31,58,.25); overflow-y: auto; }
   #setup[hidden] { display: none; }
-  .sc { margin: auto; width: min(780px, 100%); border-radius: 36px; padding: 26px 24px 24px; background: #fff; box-shadow: 0 10px 0 #EADCFB, 0 28px 60px rgba(90,60,150,.22); border: 4px solid #FFE3F1; }
-  .sc h2 { margin: 0; font-weight: 400; font-size: clamp(28px, 4.6vw, 42px); background: linear-gradient(90deg, #FF6FAE, #A07BFF 55%, #4FB2FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .sc .lead { color: var(--ink2); margin: 6px 0 16px; line-height: 1.8; font-family: var(--sans); }
-  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 8px; margin-bottom: 16px; }
-  .how div { background: #FFF8FC; border: 2px dashed #FFD6EA; border-radius: 18px; padding: 10px 12px; font-size: 13px; color: var(--ink2); font-family: var(--sans); }
-  .how b { display: block; font-size: 15px; color: var(--ink); font-family: var(--round); font-weight: 400; }
-  .slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr)); gap: 10px; margin-bottom: 14px; }
-  .slot { border: 3px solid color-mix(in srgb, var(--pc) 40%, #fff); border-radius: 22px; padding: 10px; display: grid; gap: 7px; background: color-mix(in srgb, var(--pc) 6%, #fff); }
+  .sc { margin: auto; width: min(800px, 100%); border-radius: 32px; padding: 24px 24px 24px; background: #FFFDF5; border: 5px solid var(--ol); box-shadow: 0 12px 0 var(--ol); }
+  .sc h2 { margin: 0; font: 900 clamp(30px, 5vw, 46px) var(--bold); color: var(--yellow); -webkit-text-stroke: 9px var(--ol); paint-order: stroke fill; text-shadow: 0 5px 0 var(--ol); letter-spacing: 2px; }
+  .sc .lead { color: var(--ink2); margin: 8px 0 16px; line-height: 1.8; font: 500 15px var(--bold); }
+  .sc .lead b { font-weight: 900; color: var(--ink); }
+  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr)); gap: 10px; margin-bottom: 16px; }
+  .how div { border: 3px solid var(--ol); border-radius: 18px; padding: 10px 12px; font: 500 13px var(--bold); color: var(--ink2); box-shadow: 0 4px 0 var(--ol); }
+  .how div:nth-child(1) { background: #FFF3C4; } .how div:nth-child(2) { background: #D7F5FF; } .how div:nth-child(3) { background: #DFFBE6; } .how div:nth-child(4) { background: #FFE0F1; }
+  .how b { display: block; font: 900 15px var(--bold); color: var(--ink); }
+  .slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 12px; margin-bottom: 14px; }
+  .slot { border: 4px solid var(--ol); border-radius: 22px; padding: 10px; display: grid; gap: 7px; background: #fff; box-shadow: 0 5px 0 var(--ol); border-top: 14px solid var(--pc); }
   .slot.off { opacity: .45; }
   .slot .top { display: flex; gap: 8px; align-items: center; }
-  .slot .av { width: 50px; height: 50px; border-radius: 16px; display: grid; place-items: center; font-size: 28px; background: #fff; box-shadow: 0 3px 0 color-mix(in srgb, var(--pc) 45%, #fff); border: 0; flex: 0 0 auto; }
-  .slot .chn { font-size: 12px; color: var(--muted); text-align: center; }
-  .slot input { width: 100%; border: 2px solid var(--line); border-radius: 12px; padding: 6px 8px; font: inherit; font-size: 15px; }
+  .slot .av { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-size: 30px; background: #fff; border: 4px solid var(--ol); box-shadow: 0 3px 0 var(--ol); flex: 0 0 auto; }
+  .slot .chn { font: 900 12px var(--bold); text-align: center; margin-top: 2px; }
+  .slot input { width: 100%; border: 3px solid var(--ol); border-radius: 12px; padding: 6px 8px; font: 700 15px var(--bold); }
   .slot .seg { display: flex; gap: 4px; }
-  .slot .seg button { flex: 1; border: 2px solid var(--line); background: #fff; border-radius: 12px; padding: 5px 0; font-size: 13px; }
-  .slot .seg button.on { background: var(--pc); color: #fff; border-color: transparent; }
-  .opts2 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; font-size: 15px; }
-  .opts2 button { border: 2px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 14px; }
-  .opts2 button.on { background: #A07BFF; color: #fff; border-color: transparent; }
-  .go { border: 0; font-family: var(--round); font-size: 21px; padding: 14px 36px; border-radius: 999px; background: linear-gradient(180deg, #FFE27A, #FFBE2E); color: #7A4A00; box-shadow: 0 7px 0 #EBA100; }
-  .go:active { transform: translateY(5px); box-shadow: 0 2px 0 #EBA100; }
-  .go.alt { background: #fff; box-shadow: 0 7px 0 var(--line); color: var(--ink2); border: 2px solid var(--line); font-size: 18px; }
-  .gos { display: flex; gap: 10px; flex-wrap: wrap; }
+  .slot .seg button { flex: 1; border: 3px solid var(--ol); background: #fff; border-radius: 12px; padding: 4px 0; font: 900 12.5px var(--bold); }
+  .slot .seg button.on { background: var(--pc); color: #fff; -webkit-text-stroke: 3px var(--ol); paint-order: stroke fill; }
+  .opts2 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; font: 900 15px var(--bold); }
+  .opts2 button { border: 3px solid var(--ol); background: #fff; border-radius: 999px; padding: 5px 14px; font: 900 14px var(--bold); box-shadow: 0 3px 0 var(--ol); }
+  .opts2 button.on { background: var(--sky); color: #fff; -webkit-text-stroke: 3px var(--ol); paint-order: stroke fill; }
+  .go { border: 5px solid var(--ol); font: 900 24px var(--bold); padding: 12px 36px; border-radius: 22px; background: linear-gradient(180deg, #7DF09A 0 48%, #38D16A 48%); color: #fff; -webkit-text-stroke: 6px var(--ol); paint-order: stroke fill; box-shadow: 0 8px 0 var(--ol); }
+  .go:active { transform: translateY(6px); box-shadow: 0 2px 0 var(--ol); }
+  .go.alt { background: linear-gradient(180deg, #fff 0 48%, #EDE6FF 48%); color: var(--ink); -webkit-text-stroke: 0; font-size: 19px; }
+  .gos { display: flex; gap: 12px; flex-wrap: wrap; }
 
   .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 70; overflow: hidden; }
-  .confetti i { position: absolute; top: -20px; width: 11px; height: 15px; border-radius: 4px; animation: fall linear forwards; }
+  .confetti i { position: absolute; top: -20px; width: 13px; height: 17px; border-radius: 4px; border: 2.5px solid var(--ol); animation: fall linear forwards; }
   @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 
   @media (max-width: 760px) {
-    #brand { left: 8px; top: 8px; padding: 5px 10px 6px 6px; border-radius: 18px; gap: 6px; } #brand .logo { width: 34px; height: 34px; font-size: 20px; border-radius: 12px; } #brand h1 { font-size: 16px; } #brand .chip { font-size: 11px; }
-    #tools { right: 8px; top: 10px; grid-template-columns: repeat(3, auto); gap: 4px; } .tb { height: 30px; padding: 0 9px; font-size: 12px; } .tb .t { display: none; }
-    #zoom { top: auto; bottom: 160px; right: 8px; flex-direction: column; } #zoom .tb { width: 34px; height: 34px; }
-    .pcard { width: calc(50vw - 12px); padding: 6px 8px; border-radius: 18px; }
-    .pcard.p0 { left: 8px; top: 86px; } .pcard.p1 { right: 8px; top: 86px; left: auto; } .pcard.p2 { left: 8px; top: 152px; } .pcard.p3 { right: 8px; top: 152px; }
-    .pcard .av { width: 36px; height: 36px; font-size: 20px; border-radius: 12px; } .pcard .money { font-size: 17px; } .pcard .sub, .pcard .chips { display: none; } .pcard .nm { font-size: 12px; } .pcard .row { margin-top: 4px; }
+    #brand { left: 8px; top: 8px; padding: 5px 10px 6px 6px; border-radius: 16px; gap: 6px; border-width: 3px; } #brand .logo { width: 36px; height: 36px; font-size: 20px; border-width: 3px; } #brand h1 { font-size: 17px; -webkit-text-stroke: 5px var(--ol); } #brand .chip { font-size: 11px; }
+    #tools { right: 8px; top: 10px; grid-template-columns: repeat(3, auto); gap: 4px; } .tb { height: 32px; padding: 0 8px; font-size: 12px; border-width: 2.5px; } .tb .t { display: none; }
+    #zoom { top: auto; bottom: 170px; right: 8px; flex-direction: column; } #zoom .tb { width: 36px; height: 36px; }
+    .pcard { width: calc(50vw - 14px); border-width: 3px; box-shadow: 0 4px 0 var(--ol); }
+    .pcard .hd { padding: 3px 8px 3px 50px; font-size: 12px; } .pcard .av { width: 40px; height: 40px; font-size: 22px; top: -10px; left: 4px; border-width: 3px; }
+    .pcard.p0 { left: 8px; top: 92px; } .pcard.p1 { right: 8px; top: 92px; left: auto; } .pcard.p2 { left: 8px; top: 166px; } .pcard.p3 { right: 8px; top: 166px; }
+    .pcard .money { font-size: 19px; -webkit-text-stroke: 5px var(--ol); } .pcard .sub, .pcard .chips { display: none; } .pcard .bd { padding: 4px 8px 0; }
     #log, .cloud { display: none; } #menuBtns { bottom: 8px; right: 8px; grid-template-columns: 1fr; } #menuBtns .tb { height: 30px; }
-    #dock { bottom: 14px; } #rollBtn { font-size: 19px; padding: 12px 34px; } #turnTxt { font-size: 13px; }
+    #dock { bottom: 14px; } #rollBtn { font-size: 21px; padding: 10px 32px; } #turnTxt { font-size: 13px; }
   }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
-<div id="bg"><span class="cloud" style="left:6%;top:12%">☁️</span><span class="cloud" style="right:22%;top:6%;animation-delay:-3s;font-size:48px">☁️</span><span class="cloud" style="left:30%;bottom:8%;animation-delay:-5s;font-size:40px">⭐</span><span class="cloud" style="right:8%;bottom:30%;animation-delay:-2s;font-size:44px">🌈</span></div>
+<div id="bg"><div class="cloud" style="left:5%;top:14%"></div><div class="cloud" style="right:20%;top:8%;animation-delay:-3s;transform:scale(.8)"></div><div class="cloud" style="left:24%;bottom:10%;animation-delay:-5s;transform:scale(.7)"></div><div class="cloud" style="right:6%;bottom:34%;animation-delay:-2s"></div></div>
 <div id="scene" aria-label="3D 大富翁棋盤：拖曳旋轉、滾輪或雙指縮放、點格子看說明"></div>
 
 <header id="brand" class="glass"><span class="logo">🎲</span><div><h1>四維自學大富翁</h1><span class="chip" id="roundChip">第 1 回合</span></div></header>
@@ -220,8 +223,8 @@ const FONT = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif', RFO
 
 // ===================== 遊戲資料 =====================
 const GROUPS = {
-  base: { name: '學科學習平台', c: '#FF9F43' }, high: { name: '高中線上課程', c: '#FFC93D' }, mooc: { name: '大學先修課程', c: '#FF7EB6' }, open: { name: '開放式課程', c: '#B678F5' },
-  world: { name: '國際線上課程', c: '#5AB8FF' }, art: { name: '藝術與音樂', c: '#3DD6B5' }, code: { name: '程式設計', c: '#7C83FF' }, db: { name: '圖書與資料庫', c: '#5FCB6B' }
+  base: { name: '學科學習平台', c: '#FF9F1C' }, high: { name: '高中線上課程', c: '#FFC300' }, mooc: { name: '大學先修課程', c: '#F15BB5' }, open: { name: '開放式課程', c: '#9B5DE5' },
+  world: { name: '國際線上課程', c: '#2EC4F1' }, art: { name: '藝術與音樂', c: '#00C9A7' }, code: { name: '程式設計', c: '#4361EE' }, db: { name: '圖書與資料庫', c: '#38D16A' }
 };
 const T = (t, name, extra = {}) => Object.assign({ t, name }, extra);
 const TILES = [
@@ -301,7 +304,7 @@ const QUIZ = [
   ['判斷一份資料可不可信，要看什麼？', ['作者、時間、證據與目的', '字數多寡', '圖片好不好看', '按讚數'], '誰寫的、什麼時候寫的、有沒有證據、目的是什麼。'],
   ['寫自學動機時，最重要的是寫出？', ['為什麼想學這個主題', '字數越多越好', '老師可能喜歡的答案', '別人的動機'], '「為什麼」比「做什麼」更重要，連結你的經驗與方向。']
 ];
-const PCOL = ['#FF7EB6', '#5AB8FF', '#FFB81C', '#3DD6B5'];
+const PCOL = ['#FF4D6D', '#2EC4F1', '#FFC300', '#38D16A'];
 
 // ===================== 狀態 =====================
 const KEY = 'swsh-monopoly-v1';
@@ -378,8 +381,8 @@ function renderPlayers() {
   S.ps.forEach((p, k) => {
     const d = document.createElement('div'); d.className = `pcard glass p${k}` + (S.ps[S.cur] === p && !S.over ? ' turn' : '') + (p.out ? ' out' : ''); d.style.setProperty('--pc', p.c);
     const mine = Object.entries(S.own).filter(([, o]) => o.p === p.id);
-    d.innerHTML = `<span class="tag">回合中</span><div class="row"><span class="av">${p.av}</span><div><div class="nm"><i></i>${esc(p.name)}${p.bot ? '・電腦' : ''}</div><div class="money">${p.m.toLocaleString()} <small>⚡</small></div><div class="sub">總資產 ${assets(p).toLocaleString()}・主題 ${mine.length}</div></div></div>
-      <div class="chips">${mine.map(([i, o]) => `<span title="${TILES[i].name}" style="background:${GROUPS[TILES[i].g].c}">${o.lv ? o.lv : ''}</span>`).join('')}</div>${p.jail ? '<div class="st">🧩 卡關中</div>' : ''}${p.out ? '<div class="st">暫時休學</div>' : ''}`;
+    d.innerHTML = `<span class="tag">輪到我！</span><span class="av">${p.av}</span><div class="hd">${esc(p.name)}${p.bot ? '・電腦' : ''}</div><div class="bd"><div class="money">${p.m.toLocaleString()} <small>⚡</small></div><div class="sub">總資產 ${assets(p).toLocaleString()}・資源 ${mine.length}</div>
+      <div class="chips">${mine.map(([i, o]) => `<span title="${TILES[i].name}" style="background:${GROUPS[TILES[i].g].c}">${o.lv ? o.lv : ''}</span>`).join('')}</div>${p.jail ? '<div class="st">🧩 卡關中</div>' : ''}${p.out ? '<div class="st">暫時休學</div>' : ''}</div>`;
     box.appendChild(d);
   });
   $('#roundChip').textContent = `第 ${Math.min(S.round, S.maxR || S.round)} 回合` + (S.maxR ? ` / ${S.maxR}` : '・無限制') + (S.pot ? `・寶庫 ${S.pot}⚡` : '');
@@ -409,7 +412,25 @@ const narrow = () => innerWidth < innerHeight;
 const camera = new THREE.PerspectiveCamera(narrow() ? 55 : 38, innerWidth / innerHeight, 1, 2000);
 const tex = (w, h, draw) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); if (renderer) t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.encoding = THREE.sRGBEncoding; return t; };
 const matCache = {};
-const MAT = (color, o) => { if (o) return new THREE.MeshStandardMaterial(Object.assign({ color, roughness: 0.45, metalness: 0 }, o)); const k = String(color); return matCache[k] || (matCache[k] = new THREE.MeshStandardMaterial({ color, roughness: 0.45, metalness: 0 })); };
+const GRAD = (() => { const t = new THREE.DataTexture(new Uint8Array([120, 120, 120, 255, 200, 200, 200, 255, 255, 255, 255, 255]), 3, 1, THREE.RGBAFormat); t.minFilter = t.magFilter = THREE.NearestFilter; t.generateMipmaps = false; t.needsUpdate = true; return t; })();
+const toonM = (o = {}) => { o = Object.assign({}, o); delete o.roughness; delete o.metalness; return new THREE.MeshToonMaterial(Object.assign({ gradientMap: GRAD }, o)); };
+const pop = c => { const col = new THREE.Color(c), h = {}; col.getHSL(h); if (h.s > 0.12 && h.l < 0.97) col.setHSL(h.h, Math.min(1, h.s * 1.25 + 0.18), Math.max(0.12, h.l * 0.93)); return col; };
+const MAT = (color, o) => { if (o) return toonM(Object.assign({ color: pop(color) }, o)); const k = String(color); return matCache[k] || (matCache[k] = toonM({ color: pop(color) })); };
+const OL_MAT = new THREE.MeshBasicMaterial({ color: 0x2B1F3A, side: THREE.BackSide });
+function addOutlines(root, t = 0.085) {
+  root.updateMatrixWorld(true);
+  const list = []; root.traverse(o => { if (o.isMesh && !o.userData.isOL && !o.userData.noOL) list.push(o); });
+  const ws = new THREE.Vector3(), q = new THREE.Quaternion(), p = new THREE.Vector3();
+  list.forEach(m => {
+    const g = m.geometry, ty = g.type; if (ty === 'PlaneGeometry' || ty === 'RingGeometry' || ty === 'CircleGeometry') return;
+    const mat = Array.isArray(m.material) ? m.material[0] : m.material; if (mat.transparent) return;
+    if (!g.boundingBox) g.computeBoundingBox(); const size = g.boundingBox.getSize(new THREE.Vector3()), c = g.boundingBox.getCenter(new THREE.Vector3());
+    m.matrixWorld.decompose(p, q, ws); const sx = size.x * Math.abs(ws.x), sy = size.y * Math.abs(ws.y), sz = size.z * Math.abs(ws.z);
+    if (Math.max(sx, sy, sz) < 0.16) return;
+    const md = Math.max(sx, sy, sz), tw = Math.min(0.3, Math.max(t, 0.05 + 0.06 * md)) * (t < 0.08 ? 0.8 : 1), sc = new THREE.Vector3(1 + 2 * tw / Math.max(0.02, sx), 1 + 2 * tw / Math.max(0.02, sy), 1 + 2 * tw / Math.max(0.02, sz));
+    const h = new THREE.Mesh(g, OL_MAT); h.userData.isOL = true; h.scale.copy(sc); h.position.set(c.x * (1 - sc.x), c.y * (1 - sc.y), c.z * (1 - sc.z)); h.castShadow = false; h.receiveShadow = false; h.raycast = () => {}; m.add(h);
+  });
+}
 const mesh = (g, m, x = 0, y = 0, z = 0, cast = true) => { const o = new THREE.Mesh(g, m); o.position.set(x, y, z); o.castShadow = cast; o.receiveShadow = true; return o; };
 const geoCache = {};
 function rbox(w, h, d, r = 0.4) {
@@ -430,11 +451,11 @@ const Cy = (g, rt, rb, h, c, x, y, z, seg = 24) => { const m = mesh(new THREE.Cy
 const Sp = (g, r, c, x, y, z, sx = 1, sy = 1, sz = 1) => { const m = mesh(SPH, MAT(c), x, y, z); m.scale.set(r * sx, r * sy, r * sz); g.add(m); return m; };
 const To = (g, R, r, c, x, y, z, arc = Math.PI * 2) => { const m = mesh(new THREE.TorusGeometry(R, r, 12, 32, arc), MAT(c), x, y, z); g.add(m); return m; };
 const Co = (g, r, h, c, x, y, z, seg = 24) => { const m = mesh(new THREE.ConeGeometry(r, h, seg), MAT(c), x, y, z); g.add(m); return m; };
-const Pl = (g, w, h, map, x, y, z) => { const m = mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ map, roughness: 0.6 }), x, y, z, false); g.add(m); return m; };
+const Pl = (g, w, h, map, x, y, z) => { const m = mesh(new THREE.PlaneGeometry(w, h), toonM({ map, roughness: 0.6 }), x, y, z, false); g.add(m); return m; };
 // 可愛表情：眼睛、反光、腮紅、微笑（面向 +z）
 function face(g, y, z, s = 1, x0 = 0) {
-  [-1, 1].forEach(k => { Sp(g, 0.13 * s, '#2B2340', x0 + k * 0.26 * s, y, z, 1, 1.15, 0.5); Sp(g, 0.045 * s, '#FFFFFF', x0 + k * 0.26 * s + 0.04 * s, y + 0.05 * s, z + 0.06 * s); Sp(g, 0.12 * s, '#FF9EB8', x0 + k * 0.45 * s, y - 0.17 * s, z - 0.02, 1.2, 0.7, 0.3); });
-  const m = To(g, 0.1 * s, 0.028 * s, '#2B2340', x0, y - 0.13 * s, z + 0.01, Math.PI); m.rotation.z = Math.PI;
+  [-1, 1].forEach(k => { Sp(g, 0.17 * s, '#FFFFFF', x0 + k * 0.27 * s, y + 0.03 * s, z, 1, 1.25, 0.45); Sp(g, 0.1 * s, '#2B1F3A', x0 + k * 0.25 * s, y + 0.01 * s, z + 0.05 * s, 1, 1.25, 0.5); Sp(g, 0.04 * s, '#FFFFFF', x0 + k * 0.25 * s + 0.04 * s, y + 0.07 * s, z + 0.1 * s); Sp(g, 0.11 * s, '#FF7FA8', x0 + k * 0.5 * s, y - 0.2 * s, z - 0.03, 1.2, 0.7, 0.3); });
+  Sp(g, 0.1 * s, '#C8325A', x0, y - 0.22 * s, z + 0.01, 1.4, 0.75, 0.4); Sp(g, 0.05 * s, '#FF8FB0', x0, y - 0.26 * s, z + 0.05 * s, 1.4, 0.6, 0.4);
 }
 const spinners = [];
 
@@ -468,7 +489,7 @@ const MODELS = {
     Pl(s, 2.5, 1.5, tex(256, 154, (x, W, H) => { x.fillStyle = '#2B2D42'; x.fillRect(0, 0, W, H); const C = ['#FF7EB6', '#7FE3FF', '#FFD95A', '#A3F7BF']; for (let k = 0; k < 7; k++) { x.fillStyle = C[k % 4]; x.fillRect(14 + (k % 3) * 12, 14 + k * 19, 40 + (k * 37) % 120, 9); } x.fillStyle = '#7FE3FF'; for (let k = 0; k < 6; k++) x.fillRect(150 + k * 14, 120 - k * 14, 10, k * 14 + 8); }), 0, 0.9, 0.07);
     Bx(g, 2.2, 0.04, 0.9, '#B1B5C3', 0, 0.2, 0.3, 0.02); },
   pot(g) { Cy(g, 1.05, 0.95, 1.25, '#FF8A65', 0, 0.62, 0, 32); Cy(g, 1.12, 1.12, 0.16, '#FF6F47', 0, 1.3, 0, 32); Sp(g, 0.2, '#FFFFFF', 0, 1.48, 0); [-1, 1].forEach(k => { const h = To(g, 0.26, 0.08, '#FF6F47', k * 1.1, 0.95, 0, Math.PI); h.rotation.z = k > 0 ? -Math.PI / 2 : Math.PI / 2; });
-    const steam = [0, 1, 2].map(k => { const s = Sp(g, 0.3, '#FFFFFF', -0.3 + k * 0.3, 1.9 + k * 0.4, 0); s.material = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.7 }); return s; }); spinners.push({ steam }); face(g, 0.7, 1.0, 0.75); },
+    const steam = [0, 1, 2].map(k => { const s = Sp(g, 0.3, '#FFFFFF', -0.3 + k * 0.3, 1.9 + k * 0.4, 0); s.material = toonM({ color: 0xffffff, transparent: true, opacity: 0.7 }); return s; }); spinners.push({ steam }); face(g, 0.7, 1.0, 0.75); },
   piggy(g) { Sp(g, 1.0, '#FFB3CF', 0, 1.05, 0, 1.25, 1, 1); const sn = Cy(g, 0.32, 0.32, 0.28, '#FF8FB8', 0, 1.0, 1.15); sn.rotation.x = Math.PI / 2; [-1, 1].forEach(k => { Sp(g, 0.06, '#C2557F', k * 0.11, 1.0, 1.3); const e = Co(g, 0.25, 0.4, '#FF9EC7', k * 0.5, 1.95, 0.3, 12); e.rotation.z = -k * 0.4; });
     [[-0.6, -0.4], [0.6, -0.4], [-0.6, 0.4], [0.6, 0.4]].forEach(([x, z]) => Cy(g, 0.18, 0.18, 0.4, '#FF9EC7', x, 0.2, z)); face(g, 1.35, 0.95, 0.7); const coin = Cy(g, 0.38, 0.38, 0.1, '#FFD54F', 0, 2.6, 0); coin.rotation.x = Math.PI / 2; spinners.push({ o: coin, spin: 2, bob: 1 }); },
   shoe(g) { Bx(g, 2.6, 0.32, 1.1, '#FFFFFF', 0, 0.16, 0, 0.14); Sp(g, 0.8, '#FF7A59', -0.4, 0.68, 0, 1.55, 0.75, 0.68); Sp(g, 0.55, '#FF7A59', 0.75, 0.5, 0, 1.1, 0.5, 0.95); Cy(g, 0.42, 0.45, 0.6, '#FF9B7F', -0.8, 1.15, 0);
@@ -523,20 +544,23 @@ function tileXZ(i) {
 }
 const tileObjs = [], decoObjs = [];
 let pickables = [];
-const SPECIAL_BG = { show: '#FFE8E0', start: '#FFE3F0', jail: '#E3F3FF', library: '#E6FAEE', audit: '#FFF3D1', chance: '#FFF6D6', reflect: '#F3EAFF', quiz: '#E2FAF3', teacher: '#FFEEE2', monster: '#F4E8FF' };
+const SPECIAL_BG = { show: '#FF8A5B', start: '#FF4D6D', jail: '#2EC4F1', library: '#38D16A', audit: '#FFC300', chance: '#FFC300', reflect: '#9B5DE5', quiz: '#00C9A7', teacher: '#38D16A', monster: '#9B5DE5' };
 function tileTexture(i) {
   const t = TILES[i], corner = i % 7 === 0, W = corner ? 384 : 256, H = 384;
   return tex(W, H, (x) => {
     const bg = t.t === 'topic' ? GROUPS[t.g].c : SPECIAL_BG[t.t];
-    x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H);
-    x.globalAlpha = t.t === 'topic' ? 0.16 : 1; x.fillStyle = bg; rr(x, 8, 8, W - 16, H - 16, 28); x.fill(); x.globalAlpha = 1;
-    x.save(); x.setLineDash([12, 10]); x.lineWidth = 4; x.strokeStyle = t.t === 'topic' ? bg : '#FFFFFF'; rr(x, 14, 14, W - 28, H - 28, 24); x.stroke(); x.restore();
-    x.textAlign = 'center'; x.textBaseline = 'middle';
-    x.fillStyle = '#4A3F6B'; x.font = `400 ${corner ? 50 : 36}px ${RFONT}`;
+    x.fillStyle = '#2B1F3A'; x.fillRect(0, 0, W, H); x.fillStyle = '#FFF8E7'; rr(x, 8, 8, W - 16, H - 16, 26); x.fill();
+    x.fillStyle = bg; x.globalAlpha = 0.18; rr(x, 8, 8, W - 16, 200, 26); x.fill(); x.globalAlpha = 1;
+    x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round';
+    const txt = (str, y, size) => { x.font = `900 ${size}px ${FONT}`; x.lineWidth = size * 0.28; x.strokeStyle = '#FFFFFF'; x.strokeText(str, W / 2, y); x.fillStyle = '#2B1F3A'; x.fillText(str, W / 2, y); };
     if (t.t === 'topic') {
-      wrap(x, t.name, W / 2, 262, W - 36, 40);
-      x.fillStyle = GROUPS[t.g].c; rr(x, 34, 316, W - 68, 50, 25); x.fill(); x.fillStyle = '#fff'; x.font = `400 30px ${RFONT}`; x.fillText(`${t.price} ⚡`, W / 2, 342);
-    } else { x.fillText(t.name, W / 2, corner ? 296 : 276); if (t.sub) { x.fillStyle = '#9B7BFF'; x.font = `700 28px ${FONT}`; x.fillText(t.sub, W / 2, corner ? 346 : 330); } }
+      x.font = `900 34px ${FONT}`; const lines = []; let line = ''; for (const ch of t.name) { if (x.measureText(line + ch).width > W - 34 && line) { lines.push(line); line = ch; } else line += ch; } lines.push(line);
+      lines.forEach((l, k) => txt(l, 262 + (k - (lines.length - 1) / 2) * 38, 34));
+      x.fillStyle = bg; rr(x, 30, 312, W - 60, 54, 18); x.fill(); x.lineWidth = 6; x.strokeStyle = '#2B1F3A'; x.stroke();
+      x.font = `900 32px ${FONT}`; x.lineWidth = 9; x.strokeText(`${t.price} ⚡`, W / 2, 340); x.fillStyle = '#FFFFFF'; x.fillText(`${t.price} ⚡`, W / 2, 340);
+    } else { x.fillStyle = bg; rr(x, 20, 236, W - 40, corner ? 128 : 120, 22); x.fill(); x.lineWidth = 6; x.strokeStyle = '#2B1F3A'; x.stroke();
+      x.font = `900 ${corner ? 48 : 34}px ${FONT}`; x.lineWidth = 11; x.strokeText(t.name, W / 2, corner ? 280 : 274); x.fillStyle = '#FFFFFF'; x.fillText(t.name, W / 2, corner ? 280 : 274);
+      if (t.sub) { x.font = `900 ${corner ? 28 : 24}px ${FONT}`; x.fillStyle = '#2B1F3A'; x.fillText(t.sub, W / 2, corner ? 334 : 322); } }
   });
 }
 let deckC, deckR, dice;
@@ -546,52 +570,51 @@ function buildScene() {
   renderer.outputEncoding = THREE.sRGBEncoding; renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   
   $('#scene').appendChild(renderer.domElement);
-  scene.add(new THREE.HemisphereLight(0xFFFFFF, 0xD9C9F0, 0.55));
-  const sun = new THREE.DirectionalLight(0xFFF4EA, 0.8); sun.position.set(30, 70, 40); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+  scene.add(new THREE.HemisphereLight(0xFFFFFF, 0xB9C8FF, 0.5));
+  const sun = new THREE.DirectionalLight(0xFFFFFF, 0.95); sun.position.set(30, 70, 40); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
   Object.assign(sun.shadow.camera, { left: -45, right: 45, top: 45, bottom: -45, near: 10, far: 160 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03; sun.shadow.radius = 5; scene.add(sun);
   const fill = new THREE.DirectionalLight(0xD9E8FF, 0.22); fill.position.set(-40, 30, -20); scene.add(fill);
   // 底座：三層糖果蛋糕
-  scene.add(mesh(rbox(67, 2.4, 67, 1.2), MAT(0xC7B2FF), 0, -2.4, 0, false));
-  scene.add(mesh(rbox(65, 0.8, 65, 0.4), MAT(0xFFC9E2), 0, -1.05, 0, false));
-  scene.add(mesh(rbox(62.5, 1.4, 62.5, 0.7), MAT(0xFFFBF5), 0, -0.1, 0));
+  scene.add(mesh(rbox(67, 2.4, 67, 1.2), MAT(0x4361EE), 0, -2.4, 0, false));
+  scene.add(mesh(rbox(65, 0.8, 65, 0.4), MAT(0xFFD60A), 0, -1.05, 0, false));
+  scene.add(mesh(rbox(62.5, 1.4, 62.5, 0.7), MAT(0xFFF4D6), 0, -0.1, 0));
   for (let k = 0; k < 44; k++) { const a = k / 44 * Math.PI * 2, r = 33.6; const sq = Math.max(Math.abs(Math.cos(a)), Math.abs(Math.sin(a))); Sp(scene, 0.45, ['#FF8FC3', '#FFCB45', '#6CC4FF', '#5EDDBE', '#B79BFF'][k % 5], Math.cos(a) * r / sq, -1.05, Math.sin(a) * r / sq); }
   // 中央
   const mid = tex(1024, 1024, (x, W, H) => {
-    const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#E2FBF2'); g.addColorStop(1, '#EAF2FF'); x.fillStyle = g; x.fillRect(0, 0, W, H);
-    x.save(); x.globalAlpha = 0.55; x.strokeStyle = '#FFFFFF'; x.lineWidth = 26; for (let k = -W; k < W * 2; k += 70) { x.beginPath(); x.moveTo(k, 0); x.lineTo(k - H, H); x.stroke(); } x.restore();
-    x.fillStyle = 'rgba(255,255,255,.6)'; for (let k = 0; k < 40; k++) { x.beginPath(); x.arc((k * 197) % W, (k * 311) % H, 6 + k % 5, 0, 7); x.fill(); }
-    x.textAlign = 'center'; x.textBaseline = 'middle';
-    x.fillStyle = '#9B7BFF'; x.font = `700 40px ${FONT}`; x.fillText('選主題・寫紀錄・拿成果・上台發表', W / 2, 330);
-    x.setLineDash([18, 14]); x.strokeStyle = 'rgba(167,139,250,.55)'; x.lineWidth = 6; x.beginPath(); x.arc(W / 2, 640, 180, 0, Math.PI * 2); x.stroke();
+    for (let k = 0; k < 16; k++) { x.fillStyle = k % 2 ? '#7BE495' : '#6AD887'; x.fillRect(k * 64, 0, 64, H); }
+    x.fillStyle = 'rgba(255,255,255,.35)'; for (let k = 0; k < 60; k++) { const a = (k * 197) % W, b = (k * 311) % H; x.beginPath(); x.moveTo(a, b); x.lineTo(a + 6, b - 16); x.lineTo(a + 12, b); x.fill(); }
+    x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round';
+    x.font = `900 42px ${FONT}`; x.lineWidth = 12; x.strokeStyle = '#2B1F3A'; x.strokeText('選資源・寫紀錄・拿成果・上台發表', W / 2, 330); x.fillStyle = '#FFFFFF'; x.fillText('選資源・寫紀錄・拿成果・上台發表', W / 2, 330);
+    x.fillStyle = '#FFF4D6'; x.beginPath(); x.arc(W / 2, 640, 190, 0, Math.PI * 2); x.fill(); x.lineWidth = 12; x.strokeStyle = '#2B1F3A'; x.stroke();
   });
-  const midP = mesh(new THREE.PlaneGeometry(36, 36), new THREE.MeshStandardMaterial({ map: mid, roughness: 0.8 }), 0, 0.62, 0, false); midP.rotation.x = -Math.PI / 2; scene.add(midP);
+  const midP = mesh(new THREE.PlaneGeometry(36, 36), toonM({ map: mid, roughness: 0.8 }), 0, 0.62, 0, false); midP.rotation.x = -Math.PI / 2; scene.add(midP);
   // 立體標題字牌
-  const ttl = tex(1024, 200, (x, W, H) => { x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `400 128px ${RFONT}`; x.lineJoin = 'round'; x.lineWidth = 26; x.strokeStyle = '#FFFFFF'; x.strokeText('四維自學大富翁', W / 2, H / 2 + 6); const tg = x.createLinearGradient(160, 0, 860, 0); tg.addColorStop(0, '#FF6FAE'); tg.addColorStop(.5, '#A07BFF'); tg.addColorStop(1, '#4FB2FF'); x.fillStyle = tg; x.fillText('四維自學大富翁', W / 2, H / 2 + 6); });
+  const ttl = tex(1024, 200, (x, W, H) => { x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = `900 124px ${FONT}`; x.lineJoin = 'round'; x.lineWidth = 30; x.strokeStyle = '#2B1F3A'; x.strokeText('四維自學大富翁', W / 2, H / 2 + 12); x.strokeText('四維自學大富翁', W / 2, H / 2 + 4); const tg = x.createLinearGradient(0, 40, 0, 170); tg.addColorStop(0, '#FFF27A'); tg.addColorStop(.55, '#FFD60A'); tg.addColorStop(1, '#FF9F1C'); x.fillStyle = tg; x.fillText('四維自學大富翁', W / 2, H / 2 + 4); });
   const sign = new THREE.Group(); sign.position.set(0, 0.62, -8.5); scene.add(sign);
-  Bx(sign, 27, 0.6, 3.2, '#FFFFFF', 0, 0.3, 0, 0.28); const tp = new THREE.Mesh(new THREE.PlaneGeometry(26, 5.1), new THREE.MeshStandardMaterial({ map: ttl, transparent: true, roughness: 0.5 })); tp.position.set(0, 2.9, 0.2); tp.rotation.x = -0.35; sign.add(tp);
-  Bx(sign, 26.5, 4.6, 0.4, '#FFFFFF', 0, 2.6, -0.4, 0.3).rotation.x = -0.35;
+  Bx(sign, 27, 0.6, 3.2, '#FF4D6D', 0, 0.3, 0, 0.28); const tp = new THREE.Mesh(new THREE.PlaneGeometry(26, 5.1), toonM({ map: ttl, transparent: true, roughness: 0.5 })); tp.position.set(0, 2.9, 0.2); tp.rotation.x = -0.35; sign.add(tp);
+  Bx(sign, 26.5, 4.6, 0.4, '#4361EE', 0, 2.6, -0.4, 0.3).rotation.x = -0.35;
   // 格子
   TILES.forEach((t, i) => {
     const p = tileXZ(i), w = p.corner ? TD : TW - 0.3, d = TD - 0.3;
     const g = new THREE.Group(); g.position.set(p.x, 0.6, p.z); g.rotation.y = p.ry; scene.add(g);
-    const sideC = t.t === 'topic' ? new THREE.Color(GROUPS[t.g].c).lerp(new THREE.Color(0xffffff), 0.45) : new THREE.Color(SPECIAL_BG[t.t]);
+    const sideC = new THREE.Color(t.t === 'topic' ? GROUPS[t.g].c : SPECIAL_BG[t.t]);
     const base = mesh(rbox(w, 1.0, d, 0.35), MAT(sideC.getHex()), 0, 0.15, 0); g.add(base);
-    const top = mesh(new THREE.PlaneGeometry(w - 0.45, d - 0.45), new THREE.MeshStandardMaterial({ map: tileTexture(i), roughness: 0.55 }), 0, 0.67, 0, false); top.rotation.x = -Math.PI / 2; g.add(top);
+    const top = mesh(new THREE.PlaneGeometry(w - 0.45, d - 0.45), toonM({ map: tileTexture(i), roughness: 0.55 }), 0, 0.67, 0, false); top.rotation.x = -Math.PI / 2; g.add(top);
     if (t.t === 'topic') Bx(g, w - 0.7, 0.5, 1.1, GROUPS[t.g].c, 0, 0.8, -d / 2 + 0.85, 0.22);
     const mg = new THREE.Group(); const key = t.t === 'topic' ? TOPIC_MODEL[TILES.filter((q, j) => q.t === 'topic' && j < i).length] : TILE_MODEL[t.t];
     MODELS[key](mg); mg.position.set(0, 0.67, p.corner ? -1.6 : -1.15); mg.scale.setScalar(p.corner ? 1.3 : 0.95); g.add(mg);
     g.traverse(o => (o.userData.tile = i)); tileObjs[i] = g; pickables.push(base, top); mg.traverse(o => o.isMesh && pickables.push(o));
   });
   // 卡牌堆
-  [[-9.5, 2.5, '🏆', '成果專區卡', '#FFCB45'], [9.5, 2.5, '📒', '紀錄表卡', '#B678F5']].forEach(([x, z, e, n, c]) => {
+  [[-9.5, 2.5, '🏆', '成果專區卡', '#FFC300'], [9.5, 2.5, '📒', '紀錄表卡', '#9B5DE5']].forEach(([x, z, e, n, c]) => {
     const t = tex(256, 340, (cx, W, H) => { cx.fillStyle = c; rr(cx, 0, 0, W, H, 30); cx.fill(); cx.fillStyle = '#fff'; rr(cx, 16, 16, W - 32, H - 32, 22); cx.fill(); cx.fillStyle = c; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.font = '110px sans-serif'; cx.fillText(e, W / 2, 140); cx.font = `400 50px ${RFONT}`; cx.fillText(n, W / 2, 262); });
     const g = new THREE.Group(); g.position.set(x, 0.62, z); g.rotation.y = x < 0 ? 0.18 : -0.18; scene.add(g);
     for (let k = 0; k < 6; k++) { const cd = Bx(g, 6, 0.22, 8, k % 2 ? c : '#FFFFFF', 0, 0.12 + k * 0.24, 0, 0.1); cd.rotation.y = (k % 3 - 1) * 0.04; }
-    const tp = mesh(new THREE.PlaneGeometry(5.6, 7.5), new THREE.MeshStandardMaterial({ map: t }), 0, 1.6, 0, false); tp.rotation.x = -Math.PI / 2; g.add(tp);
+    const tp = mesh(new THREE.PlaneGeometry(5.6, 7.5), toonM({ map: t }), 0, 1.6, 0, false); tp.rotation.x = -Math.PI / 2; g.add(tp);
     (x < 0 ? (deckC = g) : (deckR = g));
   });
   // 樹、花叢、熱氣球、雲
-  [[-14.5, -13, '#8EE3A8'], [14.5, -13, '#FFB3D1'], [-14.5, 14.5, '#FFB3D1'], [14.5, 14.5, '#8EE3A8'], [-15.5, 1, '#B4E7FF'], [15.5, 1, '#FFE08A']].forEach(([x, z, c], k) => tree(x, z, c, k > 3 ? 0.75 : 1));
+  [[-14.5, -13, '#38D16A'], [14.5, -13, '#FF7EB6'], [-14.5, 14.5, '#FF7EB6'], [14.5, 14.5, '#38D16A'], [-15.5, 1, '#2FBF5B'], [15.5, 1, '#FFC300']].forEach(([x, z, c], k) => tree(x, z, c, k > 3 ? 0.75 : 1));
   for (let k = 0; k < 10; k++) { const a = k / 10 * Math.PI * 2; const fx = Math.cos(a) * 15.5, fz = Math.sin(a) * 15.5; if (Math.abs(fz + 8.5) < 3 && Math.abs(fx) < 14) continue; const fg = new THREE.Group(); fg.position.set(fx, 0.62, fz); scene.add(fg); Sp(fg, 0.55, '#7ED957', 0, 0.3, 0, 1, 0.6, 1); for (let j = 0; j < 5; j++) Sp(fg, 0.18, ['#FF7EB6', '#FFCB45', '#FFFFFF'][j % 3], Math.cos(j * 1.3) * 0.4, 0.62, Math.sin(j * 1.3) * 0.4); }
   const bal = new THREE.Group(); bal.position.set(-26, 22, -18); scene.add(bal);
   for (let k = 0; k < 8; k++) { const s = mesh(new THREE.SphereGeometry(3, 24, 18, k / 8 * Math.PI * 2, Math.PI / 4), MAT(k % 2 ? '#FFB3D1' : '#FFF3B0'), 0, 0, 0); bal.add(s); }
@@ -600,8 +623,9 @@ function buildScene() {
   const clouds = [];
   for (let k = 0; k < 5; k++) { const c = new THREE.Group(); c.position.set(-60 + k * 30, 26 + (k % 2) * 6, -48 - (k % 3) * 8); [[0, 0, 2.6], [2.6, -0.4, 2], [-2.4, -0.5, 1.9], [1, 1.4, 1.8]].forEach(([x, y, r]) => { const s = Sp(c, r, '#FFFFFF', x, y, 0, 1, 0.8, 0.9); s.castShadow = false; }); scene.add(c); clouds.push(c); }
   spinners.push({ clouds });
+  addOutlines(scene);
   // 骰子：圓角
-  dice = [0, 1].map(k => { const d = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), [3, 4, 1, 6, 2, 5].map(v => new THREE.MeshStandardMaterial({ map: dieFace(v), roughness: 0.3 }))); d.castShadow = true; d.position.set(k ? 2 : -2, 2.15, 6.5); d.quaternion.copy(faceQ(k ? 5 : 3, 0.3)); scene.add(d); return d; });
+  dice = [0, 1].map(k => { const d = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), [3, 4, 1, 6, 2, 5].map(v => toonM({ map: dieFace(v), roughness: 0.3 }))); d.castShadow = true; d.position.set(k ? 2 : -2, 2.15, 6.5); d.quaternion.copy(faceQ(k ? 5 : 3, 0.3)); scene.add(d); addOutlines(d, 0.1); return d; });
 }
 function dieFace(v) { return tex(160, 160, (x, W) => { const g = x.createRadialGradient(W / 2, W / 2, 10, W / 2, W / 2, W * 0.75); g.addColorStop(0, '#FFFFFF'); g.addColorStop(1, '#FFE6F2'); x.fillStyle = '#F5B3D2'; x.fillRect(0, 0, W, W); x.fillStyle = g; rr(x, 6, 6, W - 12, W - 12, 34); x.fill();
   const s = W / 128, P = { 1: [[64, 64]], 2: [[36, 36], [92, 92]], 3: [[34, 34], [64, 64], [94, 94]], 4: [[36, 36], [92, 36], [36, 92], [92, 92]], 5: [[34, 34], [94, 34], [64, 64], [34, 94], [94, 94]], 6: [[36, 30], [92, 30], [36, 64], [92, 64], [36, 98], [92, 98]] }[v];
@@ -646,7 +670,7 @@ function makePawn(p) {
   const ring = mesh(new THREE.RingGeometry(1.5, 1.9, 40), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.9, side: THREE.DoubleSide }), 0, 0.05, 0, false); ring.rotation.x = -Math.PI / 2; ring.visible = false; g.add(ring);
   const star = mesh(new THREE.OctahedronGeometry(0.35), MAT('#FFD54F', { emissive: 0xFFC107, emissiveIntensity: 0.5 }), 0, 5, 0, false); star.visible = false; g.add(star);
   g.userData = { ring, body, star }; g.scale.setScalar(1.25);
-  scene.add(g); pawns[p.id] = g; return g;
+  addOutlines(g, 0.06); scene.add(g); pawns[p.id] = g; return g;
 }
 function slotPos(i, pid) { const p = tileXZ(i), k = S.ps.findIndex(q => q.id === pid), ox = (k % 2 ? 1.3 : -1.3), oz = (k < 2 ? 1.2 : 3.0) - 0.4; const c = Math.cos(p.ry), s = Math.sin(p.ry); return new THREE.Vector3(p.x + ox * c + oz * s, 1.27, p.z - ox * s + oz * c); }
 function placePawns() { S.ps.forEach(p => { const g = pawns[p.id]; g.visible = !p.out; g.position.copy(slotPos(p.pos, p.id)); g.rotation.y = tileXZ(p.pos).ry; }); }
@@ -674,6 +698,7 @@ function refreshTile(i) {
   if (o.lv === 1) house(0);
   if (o.lv === 2) { house(-0.9, 0.85); house(0.9, 0.85); }
   if (o.lv === 3) { house(-1.55, 0.7); house(1.55, 0.7); Bx(g, 1.5, 2.8, 1.5, wall, 0, 2.0, 0, 0.22); const r = Co(g, 1.1, 1.3, roofC, 0, 4.05, 0, 4); r.rotation.y = Math.PI / 4; const st = mesh(new THREE.OctahedronGeometry(0.5), MAT('#FFD54F', { emissive: 0xFFC107, emissiveIntensity: 0.5 }), 0, 5.2, 0); g.add(st); spinners.push({ o: st, spin: 2, bob: 1 }); }
+  addOutlines(g);
   g.traverse(m => (m.userData.tile = i));
   if (!reduceMotion) { g.scale.setScalar(0.01); animate(520, u => { const e = 1 - Math.pow(1 - u, 3); g.scale.setScalar(Math.max(0.01, e + Math.sin(u * Math.PI) * 0.25)); }); }
 }
@@ -911,7 +936,7 @@ Promise.race([document.fonts ? Promise.all([document.fonts.load(`400 60px Huninn
   if (!renderer) { document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;z-index:99;background:#fff;padding:20px;text-align:center">這台裝置無法顯示 3D 棋盤，請改用電腦或較新的手機瀏覽器開啟。</div>'); return; }
   buildScene(); setupControls(); requestAnimationFrame(loop); openSetup();
 });
-window.__game = { get S() { return S; } };
+window.__game = { get S() { return S; }, scene };
 })();
 </script>
 </body>
