@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大富翁風格樣本</title>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;700;900&family=Noto+Serif+TC:wght@700;900&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box} body{margin:0;background:#eee;font-family:'Noto Sans TC',sans-serif}
+.s{width:1000px;height:620px;position:relative;overflow:hidden;margin:0 auto 20px}
+.lbl{position:absolute;left:50%;top:14px;transform:translateX(-50%);font:900 15px 'Noto Sans TC';padding:4px 16px;border-radius:999px;background:rgba(0,0,0,.65);color:#fff;z-index:9}
+.title{position:absolute;left:30px;top:26px}
+.p{position:absolute;width:210px;top:120px;padding:12px 14px}
+.p.r{right:30px} .p.l{left:30px}
+.board{position:absolute;left:250px;top:120px;width:500px;height:330px}
+.tiles{position:absolute;left:50%;bottom:118px;transform:translateX(-50%);display:flex;gap:8px}
+.t{width:86px;height:118px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:8px 4px;text-align:center;font-size:12.5px}
+.t .ic{font-size:34px;line-height:1}
+.btn{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);padding:13px 40px;font-size:22px}
+.dlg{position:absolute;left:50%;top:150px;transform:translateX(-50%);width:330px;padding:14px 16px}
+.pawn{font-size:40px;position:absolute}
+
+/* A 動森手帳風 */
+.A{background:#F7F1DE;background-image:linear-gradient(#EADFBF 1px,transparent 1px),linear-gradient(90deg,#EADFBF 1px,transparent 1px);background-size:26px 26px;font-family:'Huninn'}
+.A .title{background:#FFFBEF;border:4px solid #7FC97F;border-radius:22px;padding:8px 18px;box-shadow:0 5px 0 #5FA85F;font-size:26px;color:#4E7A3A}
+.A .title small{display:block;font-size:13px;color:#A68B5B}
+.A .p{background:#FFFBEF;border-radius:26px;border:3px dashed #D6C39A;box-shadow:0 6px 0 #E3D3AE;color:#5C4A2E}
+.A .p b{font-size:24px;color:#4E7A3A}
+.A .board{background:#9FD98B;border-radius:40px;border:10px solid #C79A63;box-shadow:inset 0 0 0 6px #B48553,0 10px 0 #9C7244}
+.A .t{background:#FFFBEF;border-radius:16px;border:3px solid #E3D3AE;color:#5C4A2E;box-shadow:0 5px 0 #D6C39A}
+.A .t span{background:#7FC97F;color:#fff;border-radius:999px;padding:0 8px;font-size:11px}
+.A .btn{background:#FFD95A;border:4px solid #fff;border-radius:999px;box-shadow:0 6px 0 #D9A92B;color:#6B4F1D;font-family:'Huninn'}
+.A .dlg{background:#FFFBEF;border-radius:30px;border:4px solid #fff;box-shadow:0 0 0 4px #7FC97F,0 10px 0 #5FA85F;color:#5C4A2E}
+.A .dlg h3{margin:0 0 6px;font-weight:400;color:#4E7A3A}
+
+/* B 甜點馬卡龍風 */
+.B{background:linear-gradient(180deg,#FFE9F2,#FFF6E9);font-family:'Huninn'}
+.B::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#FF9EC7 2px,transparent 2.5px),radial-gradient(#8FD3FF 2px,transparent 2.5px),radial-gradient(#FFD95A 2px,transparent 2.5px);background-size:60px 60px,80px 80px,70px 70px;background-position:0 0,30px 20px,10px 40px;opacity:.5}
+.B .title{background:#fff;border-radius:999px;padding:10px 24px;font-size:26px;color:#E65C9C;box-shadow:0 6px 0 #FFB3D1;border:3px solid #FFD6E7}
+.B .title::after{content:"";position:absolute;left:12px;right:12px;top:-8px;height:16px;background:radial-gradient(circle at 10px 16px,#FFB3D1 9px,transparent 10px) 0 0/22px 16px repeat-x}
+.B .title small{display:block;font-size:13px;color:#C29A73}
+.B .p{background:#FFF8EE;border-radius:30px;border:6px solid #F2D2A9;box-shadow:inset 0 0 0 3px #fff,0 6px 0 #E6BE8C;color:#8A5A44}
+.B .p b{font-size:24px;color:#E65C9C}
+.B .board{background:linear-gradient(135deg,#C9F2E4,#E3F3FF);border-radius:36px;border:10px solid #fff;box-shadow:0 0 0 6px #FFC4DD,0 14px 0 #F7A9CB}
+.B .t{border-radius:22px;color:#7A5A7A;box-shadow:inset 0 -6px 0 rgba(0,0,0,.06),0 4px 0 rgba(0,0,0,.08)}
+.B .t:nth-child(1){background:#FFD6E7}.B .t:nth-child(2){background:#D9F2FF}.B .t:nth-child(3){background:#FFF1B8}.B .t:nth-child(4){background:#DDF7E8}.B .t:nth-child(5){background:#EBDDFF}
+.B .t span{font-size:11px;color:#fff;background:rgba(0,0,0,.18);border-radius:999px;padding:0 8px}
+.B .btn{background:linear-gradient(180deg,#FFB3D1,#FF8FC3);border:0;border-radius:999px;box-shadow:0 7px 0 #E66FA6,inset 0 4px 0 rgba(255,255,255,.5);color:#fff;font-family:'Huninn'}
+.B .dlg{background:#fff;border-radius:32px;box-shadow:0 0 0 6px #FFD6E7,0 12px 0 #FFB3D1;color:#7A5A7A}
+.B .dlg h3{margin:0 0 6px;font-weight:400;color:#E65C9C}
+
+/* C 夢幻玻璃星空風 */
+.C{background:radial-gradient(circle at 20% 20%,#FFD6EC,transparent 45%),radial-gradient(circle at 80% 15%,#D6E4FF,transparent 45%),radial-gradient(circle at 60% 90%,#E3D6FF,transparent 50%),linear-gradient(160deg,#FCE8F6,#E9E6FF)}
+.C::before{content:"✦ ✧ ✦";position:absolute;right:120px;top:70px;color:#fff;font-size:22px;letter-spacing:20px;opacity:.9}
+.C .title{background:rgba(255,255,255,.55);backdrop-filter:blur(10px);border:1.5px solid rgba(255,255,255,.9);border-radius:20px;padding:10px 20px;box-shadow:0 10px 30px rgba(140,110,200,.2)}
+.C .title{font-family:'Noto Serif TC';font-weight:900;font-size:26px;color:#5A4A8A}
+.C .title small{display:block;font:italic 700 13px 'Playfair Display';color:#C08AB8;letter-spacing:2px}
+.C .p{background:rgba(255,255,255,.55);backdrop-filter:blur(10px);border:1.5px solid rgba(255,255,255,.95);border-radius:22px;box-shadow:0 10px 30px rgba(140,110,200,.18);color:#5A4A8A}
+.C .p b{font:900 24px 'Noto Serif TC';color:#8B5FD0}
+.C .board{background:linear-gradient(135deg,rgba(255,255,255,.75),rgba(255,255,255,.45));border-radius:30px;border:1.5px solid #fff;box-shadow:0 0 0 8px rgba(255,255,255,.35),0 20px 40px rgba(140,110,200,.25)}
+.C .t{background:rgba(255,255,255,.8);border-radius:14px;border:1.5px solid #fff;box-shadow:0 6px 16px rgba(140,110,200,.15);color:#5A4A8A;font-weight:700}
+.C .t span{font:italic 700 11px 'Playfair Display';color:#C08AB8}
+.C .btn{background:linear-gradient(135deg,#FF9ACB,#B79BFF);border:1.5px solid #fff;border-radius:999px;box-shadow:0 10px 26px rgba(183,155,255,.45);color:#fff;font-family:'Noto Serif TC';font-weight:900;letter-spacing:3px}
+.C .dlg{background:rgba(255,255,255,.8);backdrop-filter:blur(14px);border:1.5px solid #fff;border-radius:24px;box-shadow:0 20px 50px rgba(140,110,200,.25);color:#5A4A8A}
+.C .dlg h3{margin:0 0 6px;font-family:'Noto Serif TC';color:#8B5FD0}
+
+/* D 繪本色鉛筆風 */
+.D{background:#FFFDF6;font-family:'Huninn'}
+.D::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 15% 30%,rgba(255,170,190,.35),transparent 30%),radial-gradient(ellipse at 85% 70%,rgba(140,200,255,.35),transparent 30%),radial-gradient(ellipse at 60% 15%,rgba(255,220,120,.35),transparent 25%)}
+.D .title{border:3px solid #3B3553;border-radius:18px 24px 16px 26px;padding:8px 18px;background:#FFE8A3;font-size:26px;color:#3B3553;transform:rotate(-1.5deg);box-shadow:5px 5px 0 #3B3553}
+.D .title small{display:block;font-size:13px}
+.D .p{border:3px solid #3B3553;border-radius:24px 18px 26px 16px;background:#fff;box-shadow:5px 5px 0 #3B3553;color:#3B3553}
+.D .p.r{transform:rotate(1.5deg)} .D .p.l{transform:rotate(-1.5deg)}
+.D .p b{font-size:24px}
+.D .board{border:3px solid #3B3553;border-radius:30px;background:#DDF3D4;box-shadow:7px 7px 0 #3B3553}
+.D .t{border:3px solid #3B3553;border-radius:14px 18px 12px 16px;background:#fff;color:#3B3553;box-shadow:3px 3px 0 #3B3553}
+.D .t:nth-child(odd){transform:rotate(-2deg)} .D .t:nth-child(even){transform:rotate(2deg)}
+.D .t span{background:#FF9EB5;border:2px solid #3B3553;border-radius:999px;padding:0 6px;font-size:11px}
+.D .btn{background:#FF9EB5;border:3px solid #3B3553;border-radius:999px;box-shadow:5px 5px 0 #3B3553;color:#3B3553;font-family:'Huninn'}
+.D .dlg{border:3px solid #3B3553;border-radius:26px;background:#fff;box-shadow:7px 7px 0 #3B3553;color:#3B3553;transform:translateX(-50%) rotate(-1deg)}
+.D .dlg h3{margin:0 0 6px;font-weight:400}
+</style></head><body>
+<script>
+const tiles=[['💻','因材網','60'],['🎓','磨課師','140'],['📒','紀錄表卡',''],['🎤','成果發表會',''],['📚','四維 WebPAC','400']];
+const themes=[['A','A　動森手帳風（森林、木頭、方格手帳）'],['B','B　甜點馬卡龍風（糖霜、餅乾邊、彩色糖粒）'],['C','C　夢幻玻璃星空風（和「鏡中番薯」同系列）'],['D','D　繪本色鉛筆風（手繪粗框、歪歪的可愛）']];
+themes.forEach(([k,n])=>{document.write(`<section class="s ${k}" id="${k}"><div class="lbl">${n}</div>
+<div class="title">四維自學大富翁<small>Self-Learning Party ・ 第 3 回合 / 15</small></div>
+<div class="p l"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:38px">✏️</span><div>鉛筆小黃<br><b>1,460 ⚡</b></div></div><div style="font-size:12px;margin-top:6px">📝 因材網 ・ 🎓 磨課師</div></div>
+<div class="p r"><div style="display:flex;gap:10px;align-items:center"><span style="font-size:38px">🧴</span><div>膠水阿黏<br><b>1,220 ⚡</b></div></div><div style="font-size:12px;margin-top:6px">📒 Scratch</div></div>
+<div class="board"></div>
+<div class="tiles">${tiles.map(([i,n,p])=>`<div class="t"><div class="ic">${i}</div><div>${n}</div>${p?`<span>${p} ⚡</span>`:'<span>特殊格</span>'}</div>`).join('')}</div>
+<div class="pawn" style="left:330px;top:390px">✏️</div><div class="pawn" style="left:600px;top:390px">🧴</div>
+<div class="dlg"><h3>📒 抽到一張紀錄表卡！</h3>每週都帶紀錄表，課堂結束前請老師核章 —— <b>+120 ⚡</b></div>
+<button class="btn">🎲 擲骰子</button></section>`)});
+</script>
+</body></html>

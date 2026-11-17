@@ -187,12 +187,12 @@
 <div id="setup">
   <div class="sc">
     <h2>四維自學大富翁 🎲</h2>
-    <p class="lead">擲骰子走遍校園，<b>選修</b>你有興趣的自學主題，一路<b>寫紀錄、產出成果、上台發表</b>！<br>同學走到你的主題，要向你「請教」並支付交流能量。遊戲結束時，總能量最高的人就是本局的<b>自學大師</b>。</p>
+    <p class="lead">擲骰子走遍校園，把<b>因材網、磨課師、WebPAC</b> 等自學資源加入你的計畫，一路<b>寫紀錄、產出成果、上台發表</b>！<br>同學走到你的主題，要向你「請教」並支付交流能量。遊戲結束時，總能量最高的人就是本局的<b>自學大師</b>。</p>
     <div class="how">
-      <div><b>🎲 擲骰前進</b>經過「起點」可領 200 學習能量</div>
-      <div><b>📗 選修主題</b>花能量買下主題，再回來就能升級</div>
-      <div><b>🌱 四個階段</b>擬定計畫 → 每週紀錄 → 產出成果 → 成果發表</div>
-      <div><b>💡 卡片與測驗</b>靈感卡、反思卡、自學小測驗，答對有獎勵</div>
+      <div><b>🎲 擲骰前進</b>經過「擬定計畫」可領 200 學習能量</div>
+      <div><b>💻 自學資源</b>選修因材網、磨課師、WebPAC 等平台，再回來就能升級</div>
+      <div><b>🌱 四個階段</b>擬定計畫 → 落實執行 → 產出成果 → 成果發表</div>
+      <div><b>🏆 卡片與測驗</b>成果專區卡、紀錄表卡、自學小測驗，答對有獎勵</div>
     </div>
     <div class="slots" id="slots"></div>
     <div class="opts2">遊戲回合：<span id="roundOpts"></span></div>
@@ -220,68 +220,68 @@ const FONT = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif', RFO
 
 // ===================== 遊戲資料 =====================
 const GROUPS = {
-  nat: { name: '自然科普', c: '#5FCB6B' }, hum: { name: '人文社會', c: '#FFA94D' }, art: { name: '藝術創作', c: '#FF7EB6' }, lang: { name: '語言溝通', c: '#3FB6F0' },
-  tech: { name: '科技程式', c: '#7C83FF' }, life: { name: '生活技能', c: '#FFC93D' }, sport: { name: '運動健康', c: '#FF7A59' }, media: { name: '影音創作', c: '#B678F5' }
+  base: { name: '學科學習平台', c: '#FF9F43' }, high: { name: '高中線上課程', c: '#FFC93D' }, mooc: { name: '大學先修課程', c: '#FF7EB6' }, open: { name: '開放式課程', c: '#B678F5' },
+  world: { name: '國際線上課程', c: '#5AB8FF' }, art: { name: '藝術與音樂', c: '#3DD6B5' }, code: { name: '程式設計', c: '#7C83FF' }, db: { name: '圖書與資料庫', c: '#5FCB6B' }
 };
 const T = (t, name, extra = {}) => Object.assign({ t, name }, extra);
 const TILES = [
-  T('start', '起點', { icon: '🚩', sub: '擬定新計畫', desc: '每經過一次，領取 200 學習能量。新的一圈，就是新的計畫！' }),
-  T('topic', '植物觀察日記', { g: 'nat', price: 60, tip: '每週固定拍照記錄同一株植物，比較生長變化，最後做成觀察圖鑑。' }),
-  T('chance', '靈感卡', { icon: '💡' }),
-  T('topic', '海洋塑膠調查', { g: 'nat', price: 80, tip: '到海邊撿拾並分類塑膠垃圾，用圖表呈現數據，提出減塑建議。' }),
+  T('start', '擬定計畫', { icon: '📝', sub: '第 1-2 週・起點', desc: '確立自學主題與 18 週進度規劃，填妥計畫申請表並請指導教師簽名。每經過一次，領取 200 學習能量！' }),
+  T('topic', '因材網', { g: 'base', price: 60, url: 'https://adl.edu.tw/', tip: '教育部的適性學習平台，可以針對弱點單元重新學習，打好主題需要的學科基礎。' }),
+  T('chance', '成果專區卡', { icon: '🏆' }),
+  T('topic', '均一教育平台', { g: 'base', price: 80, url: 'https://www.junyiacademy.org/', tip: '免費的影片與練習題，適合自學數學、自然等學科，進度可以自己掌控。' }),
   T('quiz', '自學小測驗', { icon: '❓' }),
-  T('topic', '花蓮小吃史', { g: 'hum', price: 100, tip: '訪談在地老店，整理小吃的歷史與故事，做成一本小誌。' }),
-  T('topic', '老照片說故事', { g: 'hum', price: 120, tip: '蒐集家族或社區老照片，對照今昔，寫成地方記憶專題。' }),
-  T('jail', '卡關休息站', { icon: '🧩', sub: '只是路過', desc: '被送來這裡的人要休息一回合；也可以挑戰測驗提早脫困。' }),
-  T('topic', '手機攝影構圖', { g: 'art', price: 140, tip: '每週練一種構圖法，18 週後完成一組主題攝影作品。' }),
-  T('reflect', '反思卡', { icon: '💭' }),
-  T('topic', '水彩插畫', { g: 'art', price: 160, tip: '從基礎筆觸練起，最後完成 6 張系列插畫並辦小展覽。' }),
-  T('teacher', '指導老師面談', { icon: '👩‍🏫', desc: '和指導老師聊聊進度，獲得建議與 120 學習能量。' }),
-  T('topic', '英文 Podcast', { g: 'lang', price: 180, tip: '每週錄一集 3 分鐘英文 Podcast，分享生活或興趣。' }),
-  T('topic', '日語五十音', { g: 'lang', price: 200, tip: '用 App 與歌曲學五十音，最後完成自我介紹影片。' }),
-  T('library', '圖書館寶庫', { icon: '📚', sub: '寶庫能量', desc: '停在這裡可以領走寶庫裡累積的能量（再加 50）。' }),
-  T('topic', 'Scratch 小遊戲', { g: 'tech', price: 220, tip: '設計一款小遊戲，請同學試玩並根據回饋修改。' }),
-  T('chance', '靈感卡', { icon: '💡' }),
-  T('topic', 'Python 資料分析', { g: 'tech', price: 240, tip: '找政府開放資料，用 Python 做出圖表並解讀趨勢。' }),
-  T('quiz', '自學小測驗', { icon: '❓' }),
-  T('topic', '料理實驗室', { g: 'life', price: 260, tip: '研究一道料理的科學原理，紀錄每次實驗的配方與成果。' }),
-  T('topic', '理財小達人', { g: 'life', price: 280, tip: '記帳 18 週，分析消費習慣並訂出存錢計畫。' }),
-  T('audit', '審核關卡', { icon: '🛂', sub: '答題過關', desc: '回答一題自主學習測驗：答對獲得 150；答錯要到卡關休息站。' }),
-  T('topic', '跑步訓練計畫', { g: 'sport', price: 300, tip: '設定 5 公里目標，每週記錄配速與心得，調整訓練方式。' }),
-  T('reflect', '反思卡', { icon: '💭' }),
-  T('topic', '籃球戰術分析', { g: 'sport', price: 320, tip: '觀看比賽影片，整理戰術並畫成圖解，分享給球隊。' }),
-  T('monster', '拖延怪獸', { icon: '👾', desc: '被拖延怪獸咬了一口！支付 100 能量到圖書館寶庫。' }),
-  T('topic', '微電影製作', { g: 'media', price: 350, tip: '從劇本、拍攝到剪輯，完成一部 3 分鐘微電影。' }),
-  T('topic', '自架個人網站', { g: 'media', price: 400, tip: '學 HTML 與 CSS，把自主學習歷程做成作品集網站。' })
+  T('topic', '臺北酷課雲', { g: 'high', price: 100, url: 'https://cooc.tp.edu.tw/', tip: '高中各科的線上課程與學習資源，可以預習或延伸課堂內容。' }),
+  T('topic', '學習吧 LearnMode', { g: 'high', price: 120, url: 'https://www.learnmode.net/', tip: '線上學習平台，有課程、作業與學習紀錄，方便追蹤自己的進度。' }),
+  T('jail', '卡關休息站', { icon: '🧩', sub: '只是路過', desc: '忘了帶紀錄表、沒有核章或沒到核定地點，就會被送來這裡休息一回合；也可以挑戰測驗提早脫困。' }),
+  T('topic', '磨課師 MOOCs', { g: 'mooc', price: 140, url: 'https://taiwanmooc.org/', tip: '臺灣各大學開設的線上課程，可以提早接觸大學的學習內容。' }),
+  T('reflect', '紀錄表卡', { icon: '📒' }),
+  T('topic', '大學先修課程認證', { g: 'mooc', price: 160, url: 'https://apc.cloud.ncnu.edu.tw/', tip: '全國大學先修課程認證平台，修課成果可以成為學習歷程的亮點。' }),
+  T('teacher', '每週核章', { icon: '✅', sub: '第 4-16 週', desc: '每週攜帶紀錄表詳實記錄收穫與困惑，課堂結束前由現場指導教師核章確認。獲得 120 學習能量！' }),
+  T('topic', '台灣開放式課程聯盟', { g: 'open', price: 180, url: 'http://www.tocwc.org.tw/', tip: '各大學公開的完整課程影片與講義，可以依興趣挑一門系統性地學。' }),
+  T('topic', 'ShareCourse 學聯網', { g: 'open', price: 200, url: 'http://www.sharecourse.net/', tip: '多元主題的線上課程平台，適合找專題需要的入門課。' }),
+  T('library', '圖書資訊中心', { icon: '📚', sub: '能量寶庫', desc: '主題發想、填表遇到問題，都可以來圖資中心找老師諮詢（總機轉 517）！停在這裡可以領走寶庫裡累積的能量（再加 50）。' }),
+  T('topic', 'Coursera', { g: 'world', price: 220, url: 'https://www.coursera.org/', tip: '國際大學的線上課程（英文），挑戰看看用英文學新知識。' }),
+  T('chance', '成果專區卡', { icon: '🏆' }),
+  T('topic', 'edX', { g: 'world', price: 240, url: 'https://www.edx.org/', tip: '哈佛、MIT 等名校的線上課程（英文），適合想深入某個領域的你。' }),
+  T('show', '成果發表會', { icon: '🎤', sub: '第 17-18 週', desc: '彙整學期成果作品與自我反思，參與成果分享並上傳到高中學習歷程平台！獲得 100 能量，每個已到「成果發表」的主題再加 50。' }),
+  T('topic', '嘎老師 Miss Ga', { g: 'art', price: 260, url: 'https://www.youtube.com/@MissGa', tip: '用輕鬆的影片學樂理與音樂知識，適合音樂類的自學主題。' }),
+  T('topic', 'Kadenze', { g: 'art', price: 280, url: 'https://www.kadenze.com/', tip: '藝術、設計與音樂科技的線上課程，讓創作主題更有深度。' }),
+  T('audit', '審核核定', { icon: '🛂', sub: '第 3 週', desc: '自主學習推動小組審查計畫：回答一題測驗，答對獲得 150；答錯要到卡關休息站修改計畫。' }),
+  T('topic', 'Scratch', { g: 'code', price: 300, url: 'https://scratch.mit.edu/', tip: '用積木寫程式，做出小遊戲或動畫，是程式自學的好起點。' }),
+  T('reflect', '紀錄表卡', { icon: '📒' }),
+  T('topic', 'Code.org', { g: 'code', price: 320, url: 'https://code.org/', tip: '有系統的程式學習關卡，從基礎邏輯一路學到網頁與 App。' }),
+  T('monster', '拖延怪獸', { icon: '👾', desc: '一直滑手機、明天再說……被拖延怪獸咬了一口！支付 100 能量到圖書資訊中心寶庫。' }),
+  T('topic', '電子書服務平台', { g: 'db', price: 350, url: 'https://ebook.nlpi.edu.tw/', tip: '國立公共資訊圖書館的電子書，免費借閱，查資料超方便。' }),
+  T('topic', '四維 WebPAC', { g: 'db', price: 400, url: 'http://opac.swsh.hlc.edu.tw/', tip: '查詢校內實體圖書、專業期刊與主題書單，自主學習文獻搜尋好幫手！' })
 ];
 const N = TILES.length;
-const LV = [{ n: '擬定計畫', e: '📝', m: 0.12 }, { n: '每週紀錄', e: '📒', m: 0.3 }, { n: '產出成果', e: '🎨', m: 0.6 }, { n: '成果發表', e: '🏆', m: 1.0 }];
+const LV = [{ n: '擬定計畫', e: '📝', m: 0.12 }, { n: '落實執行', e: '📒', m: 0.3 }, { n: '產出成果', e: '🎨', m: 0.6 }, { n: '成果發表', e: '🏆', m: 1.0 }];
 const upCost = t => Math.round(t.price * 0.6 / 10) * 10;
 const groupOf = g => TILES.map((t, i) => i).filter(i => TILES[i].g === g);
 const ownsGroup = (pid, g) => groupOf(g).every(i => S.own[i] && S.own[i].p === pid);
 const rentOf = i => { const t = TILES[i], o = S.own[i]; let r = Math.round(t.price * LV[o.lv].m / 5) * 5; if (ownsGroup(o.p, t.g)) r = Math.round(r * 1.5 / 5) * 5; return Math.max(10, r); };
 
 const CHANCE = [
-  { t: '在學校 WebPAC 找到超實用的書！', e: '前進到「圖書館寶庫」', act: { to: 14 } },
-  { t: '和指導老師討論後豁然開朗！', e: '+150 能量', act: { m: 150 } },
-  { t: '把主題縮小、聚焦，效率大增！', e: '再擲一次骰子', act: { again: true } },
-  { t: '參加學長姐成果分享，靈感爆發', e: '+100 能量', act: { m: 100 } },
-  { t: '跨領域混搭出新點子！', e: '前進 3 格', act: { step: 3 } },
-  { t: '找到一門免費的線上課程', e: '+80 能量', act: { m: 80 } },
-  { t: '熬夜趕進度，隔天效率超差', e: '後退 2 格', act: { step: -2 } },
-  { t: '作品投稿中學生網站獲獎！', e: '+200 能量', act: { m: 200 } },
-  { t: '準備好計畫書，直奔審核！', e: '前進到「審核關卡」', act: { to: 21 } }
+  { t: '在四維 WebPAC 查到超實用的主題書單！', e: '前進到「圖書資訊中心」', act: { to: 14 } },
+  { t: '瀏覽學生成果作品專區，看到學長姐的簡報架構', e: '+100 能量', act: { m: 100 } },
+  { t: '自學心得投稿中學生網站，小論文得獎！', e: '+200 能量', act: { m: 200 } },
+  { t: '用因材網補強了主題需要的基礎', e: '+80 能量', act: { m: 80 } },
+  { t: '在磨課師修完一門大學先修課', e: '+150 能量', act: { m: 150 } },
+  { t: '用 Scratch 做出第一個作品原型', e: '前進 3 格', act: { step: 3 } },
+  { t: '把主題縮小、聚焦，進度超順！', e: '再擲一次骰子', act: { again: true } },
+  { t: '作品準備好了，報名成果分享', e: '前進到「成果發表會」', act: { to: 18 } },
+  { t: '計畫申請表寫好了，家長與指導教師都簽名', e: '前進到「審核核定」', act: { to: 21 } }
 ];
 const REFLECT = [
-  { t: '每週都有寫紀錄表並請老師核章', e: '+120 能量', act: { m: 120 } },
-  { t: '連續兩週沒寫紀錄，進度落後……', e: '支付 100 到圖書館寶庫', act: { m: -100, pot: true } },
+  { t: '每週都帶紀錄表，課堂結束前請老師核章', e: '+120 能量', act: { m: 120 } },
+  { t: '連續兩週沒寫紀錄，進度落後……', e: '支付 100 到圖資中心寶庫', act: { m: -100, pot: true } },
   { t: '忘記帶紀錄表、也沒到核定地點', e: '前往「卡關休息站」', act: { jail: true } },
-  { t: '寫下本週的困惑，並找到解法', e: '+80 能量', act: { m: 80 } },
-  { t: '拖延症發作，一直滑手機', e: '支付 80 到圖書館寶庫', act: { m: -80, pot: true } },
-  { t: '幫同學解答問題，教學相長', e: '每位同學給你 30 能量', act: { each: 30 } },
-  { t: '計畫太大做不完，重新規劃', e: '回到「起點」（領 200）', act: { to: 0 } },
-  { t: '誠實標註哪裡用了 AI，獲得老師肯定', e: '+60 能量', act: { m: 60 } },
-  { t: '把成果上傳學習歷程平台', e: '+100 能量', act: { m: 100 } }
+  { t: '在紀錄表寫下本週的困惑，並找到解法', e: '+80 能量', act: { m: 80 } },
+  { t: '只寫「今天有學習」，紀錄太簡略', e: '支付 60 到圖資中心寶庫', act: { m: -60, pot: true } },
+  { t: '在紀錄表幫同學解答問題，教學相長', e: '每位同學給你 30 能量', act: { each: 30 } },
+  { t: '計畫太大做不完，回頭重新規劃', e: '回到「擬定計畫」（領 200）', act: { to: 0 } },
+  { t: '誠實標註哪裡用了 AI，獲得指導教師肯定', e: '+60 能量', act: { m: 60 } },
+  { t: '把成果與反思上傳高中學習歷程平台', e: '+100 能量', act: { m: 100 } }
 ];
 const QUIZ = [
   ['自主學習和自習最大的不同是？', ['自己決定主題、規劃進度並產出成果', '在教室安靜寫作業', '讀考試範圍', '由老師指定題目'], '自主學習要自己選主題、訂目標、排進度，最後發表成果。'],
@@ -498,12 +498,19 @@ const MODELS = {
     const C = ['#FF7EB6', '#6CC4FF', '#FFCB45', '#5EDDBE', '#B79BFF', '#FF8A5B', '#7ED957'];
     [0.3, 1.9].forEach((y, r) => { let x = -1.5; for (let k = 0; x < 1.4; k++) { const w = 0.28 + (k * 7 % 3) * 0.06, h = 1.0 + (k * 5 % 4) * 0.1; const b = Bx(g, w, h, 0.75, C[(k + r * 3) % 7], x + w / 2, y + h / 2, -0.15, 0.05); if (k % 5 === 4) b.rotation.z = 0.25; x += w + 0.04; } });
     Sp(g, 0.32, '#FFE27A', 1.55, 3.7, 0.1); Cy(g, 0.06, 0.06, 0.6, '#B9B6CC', 1.55, 3.35, 0.1); },
+gradcap(g) { Cy(g, 0.75, 0.85, 0.7, '#3B3553', 0, 0.9, 0); const top = Bx(g, 2.4, 0.16, 2.4, '#3B3553', 0, 1.33, 0, 0.05); top.rotation.y = Math.PI / 4; Sp(g, 0.14, '#FFC93D', 0, 1.45, 0); const ts = Cy(g, 0.03, 0.03, 1.0, '#FFC93D', 0.8, 1.0, 0.8, 6); Cy(g, 0.12, 0.05, 0.35, '#FFC93D', 0.8, 0.45, 0.8, 10); Bx(g, 1.4, 0.12, 1.0, '#FFFDF5', -0.6, 0.06, 0.6, 0.04); To(g, 0.15, 0.05, '#FF7EB6', -0.6, 0.12, 0.6).rotation.x = Math.PI / 2; },
+  medal(g) { [-0.35, 0.35].forEach((x, k) => { const r = Bx(g, 0.5, 1.5, 0.08, k ? '#5AB8FF' : '#FF7EB6', x, 2.4, -0.05, 0.04); r.rotation.z = k ? -0.3 : 0.3; }); const m = Cy(g, 0.85, 0.85, 0.2, '#FFC93D', 0, 1.4, 0, 32); m.rotation.x = Math.PI / 2; const st = mesh(new THREE.OctahedronGeometry(0.4), MAT('#FFFFFF'), 0, 1.4, 0.14); st.scale.z = 0.3; g.add(st); Cy(g, 0.9, 1.0, 0.3, '#FFE9A8', 0, 0.15, 0); face(g, 1.1, 0.13, 0.55); spinners.push({ o: m, wobble: 1 }); },
+  globe(g) { CHAR_MODEL.globe(g); },
+  musicnote(g) { const n = new THREE.Group(); n.position.set(0, 0.2, 0); g.add(n); Sp(n, 0.45, '#3DD6B5', -0.5, 0.5, 0, 1.25, 0.9, 0.9); Sp(n, 0.45, '#3DD6B5', 0.7, 0.8, 0, 1.25, 0.9, 0.9); Cy(n, 0.09, 0.09, 2.2, '#3DD6B5', -0.03, 1.6, 0, 10); Cy(n, 0.09, 0.09, 2.2, '#3DD6B5', 1.18, 1.9, 0, 10); const bar = Bx(n, 1.3, 0.3, 0.2, '#3DD6B5', 0.58, 2.85, 0, 0.08); bar.rotation.z = 0.25; spinners.push({ o: n, wobble: 1 }); },
+  ebook(g) { const t = new THREE.Group(); t.position.y = 1.3; t.rotation.x = -0.35; g.add(t); Bx(t, 2.0, 2.6, 0.18, '#5A6B8C', 0, 0, 0, 0.18); Pl(t, 1.7, 2.2, tex(170, 220, (x, W, H) => { x.fillStyle = '#FFFDF5'; x.fillRect(0, 0, W, H); x.fillStyle = '#5FCB6B'; x.fillRect(14, 14, W - 28, 40); x.fillStyle = '#C9C2E4'; for (let k = 0; k < 8; k++) x.fillRect(14, 70 + k * 17, W - 28 - (k % 3) * 20, 8); }), 0, 0, 0.1); Bx(g, 1.8, 0.3, 0.4, '#C99A6C', 0, 0.15, 0.6, 0.1); },
+  books(g) { const C = ['#FF7EB6', '#5AB8FF', '#FFC93D', '#5FCB6B', '#B678F5']; for (let k = 0; k < 4; k++) { const b = Bx(g, 2.4 - k * 0.15, 0.45, 1.7 - k * 0.08, C[k], 0, 0.25 + k * 0.47, 0, 0.1); b.rotation.y = (k % 2 ? 0.15 : -0.1); Bx(g, 2.3 - k * 0.15, 0.36, 1.6 - k * 0.08, '#FFFDF5', 0.08, 0.25 + k * 0.47, 0, 0.05).rotation.y = b.rotation.y; } const mg = new THREE.Group(); mg.position.set(0.3, 2.6, 0); mg.rotation.z = 0.5; g.add(mg); To(mg, 0.5, 0.1, '#5A5394', 0, 0, 0); Cy(mg, 0.08, 0.1, 0.9, '#C99A6C', 0, -0.95, 0, 10); spinners.push({ o: mg, bob: 1 }); },
+  stage(g) { Bx(g, 3.2, 0.5, 2.0, '#C99A6C', 0, 0.25, 0, 0.12); [-1, 1].forEach(k => { const c = Bx(g, 0.7, 2.6, 0.25, '#F0534F', k * 1.3, 1.8, -0.7, 0.12); c.rotation.z = -k * 0.08; }); Bx(g, 3.4, 0.5, 0.35, '#F0534F', 0, 3.05, -0.7, 0.12); Cy(g, 0.06, 0.06, 1.4, '#9AA3B8', 0, 1.2, 0.2, 8); Sp(g, 0.24, '#3B3553', 0, 2.0, 0.2, 1, 1.3, 1); for (let k = 0; k < 5; k++) Sp(g, 0.13, '#FFE27A', -1.2 + k * 0.6, 3.4, -0.6); },
   audit(g) { Bx(g, 2.0, 0.08, 1.5, '#FFFFFF', -0.6, 0.06, 0.3, 0.02); Pl(g, 1.0, 1.0, tex(100, 100, (x) => { x.strokeStyle = '#F0534F'; x.lineWidth = 7; x.beginPath(); x.arc(50, 50, 40, 0, 7); x.stroke(); x.fillStyle = '#F0534F'; x.font = `900 30px ${FONT}`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('通過', 50, 52); }), -0.6, 0.11, 0.3).rotation.x = -Math.PI / 2;
     const st = new THREE.Group(); st.position.set(0.9, 0, -0.3); g.add(st); Bx(st, 1.4, 0.45, 1.4, '#F0534F', 0, 0.3, 0, 0.18); Cy(st, 0.18, 0.25, 1.0, '#C99A6C', 0, 1.0, 0); Sp(st, 0.42, '#C99A6C', 0, 1.7, 0); spinners.push({ o: st, stamp: 1 });
     Cy(g, 0.15, 0.15, 1.6, '#9AA3B8', -1.8, 0.8, -1.2, 10); const arm = Bx(g, 3.2, 0.22, 0.22, '#FFFFFF', -0.25, 1.5, -1.2, 0.08); arm.rotation.z = 0.15; for (let k = 0; k < 4; k++) Bx(g, 0.35, 0.24, 0.24, '#F0534F', -1.3 + k * 0.8, 1.5 + k * 0.12, -1.2, 0.05); }
 };
-const TILE_MODEL = { start: 'start', jail: 'jail', library: 'library', audit: 'audit', chance: 'bulb', reflect: 'thought', quiz: 'question', teacher: 'teacher', monster: 'monster' };
-const TOPIC_MODEL = ['plant', 'ocean', 'noodle', 'photo', 'camera', 'palette', 'mic', 'torii', 'controller', 'laptop', 'pot', 'piggy', 'shoe', 'basketball', 'clapper', 'monitor'];
+const TILE_MODEL = { start: 'start', jail: 'jail', library: 'library', audit: 'audit', chance: 'medal', reflect: 'ebook', quiz: 'question', teacher: 'teacher', monster: 'monster', show: 'stage' };
+const TOPIC_MODEL = ['laptop', 'monitor', 'thought', 'plant', 'gradcap', 'medal', 'clapper', 'mic', 'globe', 'gradcap', 'musicnote', 'palette', 'controller', 'monitor', 'ebook', 'books'];
 
 // 棋盤座標
 const TW = 6, TD = 9, C = 22.5;
@@ -516,7 +523,7 @@ function tileXZ(i) {
 }
 const tileObjs = [], decoObjs = [];
 let pickables = [];
-const SPECIAL_BG = { start: '#FFE3F0', jail: '#E3F3FF', library: '#E6FAEE', audit: '#FFF3D1', chance: '#FFF6D6', reflect: '#F3EAFF', quiz: '#E2FAF3', teacher: '#FFEEE2', monster: '#F4E8FF' };
+const SPECIAL_BG = { show: '#FFE8E0', start: '#FFE3F0', jail: '#E3F3FF', library: '#E6FAEE', audit: '#FFF3D1', chance: '#FFF6D6', reflect: '#F3EAFF', quiz: '#E2FAF3', teacher: '#FFEEE2', monster: '#F4E8FF' };
 function tileTexture(i) {
   const t = TILES[i], corner = i % 7 === 0, W = corner ? 384 : 256, H = 384;
   return tex(W, H, (x) => {
@@ -576,7 +583,7 @@ function buildScene() {
     g.traverse(o => (o.userData.tile = i)); tileObjs[i] = g; pickables.push(base, top); mg.traverse(o => o.isMesh && pickables.push(o));
   });
   // 卡牌堆
-  [[-9.5, 2.5, '💡', '靈感卡', '#FFCB45'], [9.5, 2.5, '💭', '反思卡', '#B678F5']].forEach(([x, z, e, n, c]) => {
+  [[-9.5, 2.5, '🏆', '成果專區卡', '#FFCB45'], [9.5, 2.5, '📒', '紀錄表卡', '#B678F5']].forEach(([x, z, e, n, c]) => {
     const t = tex(256, 340, (cx, W, H) => { cx.fillStyle = c; rr(cx, 0, 0, W, H, 30); cx.fill(); cx.fillStyle = '#fff'; rr(cx, 16, 16, W - 32, H - 32, 22); cx.fill(); cx.fillStyle = c; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.font = '110px sans-serif'; cx.fillText(e, W / 2, 140); cx.font = `400 50px ${RFONT}`; cx.fillText(n, W / 2, 262); });
     const g = new THREE.Group(); g.position.set(x, 0.62, z); g.rotation.y = x < 0 ? 0.18 : -0.18; scene.add(g);
     for (let k = 0; k < 6; k++) { const cd = Bx(g, 6, 0.22, 8, k % 2 ? c : '#FFFFFF', 0, 0.12 + k * 0.24, 0, 0.1); cd.rotation.y = (k % 3 - 1) * 0.04; }
@@ -703,9 +710,9 @@ async function showTile(i) {
   if (t.t === 'topic') {
     const o = S.own[i], g = GROUPS[t.g];
     const rows = LV.map((l, k) => `<tr><td>${l.e} ${l.n}${o && o.lv === k ? ' ⬅ 目前' : ''}</td><td>${Math.max(10, Math.round(t.price * l.m / 5) * 5)} ⚡</td></tr>`).join('');
-    await ask({ icon: '📗', tag: `${g.name}・自學主題`, title: t.name, color: g.c + '33', ink: g.c, btn: g.c,
-      html: `選修價格 <b>${t.price} ⚡</b>・升級一階 <b>${upCost(t)} ⚡</b><br>擁有者：${o ? `${P(o.p).av} ${esc(P(o.p).name)}（${LV[o.lv].n}）` : '尚未被選修'}<table>${rows}</table><div style="font-size:12px;color:#9089A8">同學走到這裡要支付的交流費；同一領域兩格都擁有時 ×1.5</div><div class="tip">💡 <b>自學小點子：</b>${t.tip}</div>`, buttons: [{ t: '知道了', v: 1, main: true }] });
-  } else await ask({ icon: t.icon, tag: '特殊格', title: t.name, html: t.desc || { chance: '抽一張靈感卡：好點子、好資源、好機會！', reflect: '抽一張反思卡：檢視自己的學習習慣。', quiz: '回答一題自主學習小測驗，答對 +100 能量。' }[t.t], buttons: [{ t: '知道了', v: 1, main: true }] });
+    await ask({ icon: '📗', tag: `${g.name}・自學資源`, title: t.name, color: g.c + '33', ink: g.c, btn: g.c,
+      html: `選修價格 <b>${t.price} ⚡</b>・升級一階 <b>${upCost(t)} ⚡</b><br>擁有者：${o ? `${P(o.p).av} ${esc(P(o.p).name)}（${LV[o.lv].n}）` : '尚未被選修'}<table>${rows}</table><div style="font-size:12px;color:#9089A8">同學走到這裡要支付的交流費；同一領域兩格都擁有時 ×1.5</div><div class="tip">💡 ${t.tip}</div>`, buttons: [{ t: '前往網站 ↗', v: 'url' }, { t: '知道了', v: 1, main: true }] }).then(v => { if (v === 'url') window.open(t.url, '_blank', 'noopener'); });
+  } else await ask({ icon: t.icon, tag: '特殊格', title: t.name, html: t.desc || { chance: '抽一張成果專區卡：學長姐成果、好資源、好機會！', reflect: '抽一張紀錄表卡：檢視自己每週的紀錄與學習習慣。', quiz: '回答一題自主學習小測驗，答對 +100 能量。' }[t.t], buttons: [{ t: '知道了', v: 1, main: true }] });
   busyInfo = false;
 }
 
@@ -735,7 +742,7 @@ async function moveSteps(p, n) {
   const dir = n < 0 ? -1 : 1;
   for (let k = 0; k < Math.abs(n); k++) {
     p.pos = (p.pos + dir + N) % N; await hopTo(p, p.pos);
-    if (dir > 0 && p.pos === 0) { money(p, 200, '經過起點，擬定新計畫'); toast('經過起點！+200 學習能量'); }
+    if (dir > 0 && p.pos === 0) { money(p, 200, '經過「擬定計畫」，展開新的一輪'); toast('回到擬定計畫！+200 學習能量'); }
   }
   SFX.arrive();
 }
@@ -754,9 +761,9 @@ async function drawCard(p, kind) {
   if (!S[deck].length) S[deck] = shuffle(list.map((c, i) => i));
   const c = list[S[deck].pop()], col = kind === 'c' ? '#FFC93D' : '#B678F5';
   SFX.card(); const dk = kind === 'c' ? deckC : deckR; if (dk) animate(400, u => (dk.position.y = 0.62 + Math.sin(u * Math.PI) * 1.5));
-  await ask({ icon: kind === 'c' ? '💡' : '💭', tag: kind === 'c' ? '靈感卡' : '反思卡', title: kind === 'c' ? '抽到一張靈感卡！' : '抽到一張反思卡！', color: kind === 'c' ? '#FFF6D6' : '#F3EAFF', ink: kind === 'c' ? '#A86B00' : '#7B2CBF', btn: col,
+  await ask({ icon: kind === 'c' ? '🏆' : '📒', tag: kind === 'c' ? '成果專區卡' : '紀錄表卡', title: kind === 'c' ? '抽到一張成果專區卡！' : '抽到一張紀錄表卡！', color: kind === 'c' ? '#FFF6D6' : '#F3EAFF', ink: kind === 'c' ? '#A86B00' : '#7B2CBF', btn: col,
     html: `<div class="card3d" style="background:${col}">${c.t}<div style="margin-top:8px;font-size:17px;background:rgba(255,255,255,.25);border-radius:10px;padding:4px">${c.e}</div></div>`, buttons: [{ t: '好！', v: 1, main: true }], bot: 1 });
-  log(`${p.av} ${esc(p.name)} 抽到${kind === 'c' ? '💡' : '💭'}「${c.t}」`);
+  log(`${p.av} ${esc(p.name)} 抽到${kind === 'c' ? '🏆' : '📒'}「${c.t}」`);
   const a = c.act;
   if (a.m) { money(p, a.m); if (a.pot && a.m < 0) S.pot += -a.m; }
   if (a.each) S.ps.filter(q => q !== p && !q.out).forEach(q => { money(q, -a.each); money(p, a.each); });
@@ -771,7 +778,7 @@ async function resolve(p, fromCard) {
     const o = S.own[i], g = GROUPS[t.g];
     if (!o) {
       const can = p.m >= t.price;
-      const v = await ask({ icon: '📗', tag: `${g.name}・自學主題`, title: `要選修「${t.name}」嗎？`, color: g.c + '33', ink: g.c, btn: g.c,
+      const v = await ask({ icon: '📗', tag: `${g.name}・自學資源`, title: `把「${t.name}」加入自學計畫？`, color: g.c + '33', ink: g.c, btn: g.c,
         html: `花費 <b>${t.price} ⚡</b> 選修這個主題，進入「📝 擬定計畫」階段。<br>之後再走到這裡，就能繼續深耕升級！<div class="tip">💡 ${t.tip}</div>${can ? '' : '<div class="tip" style="background:#FFF0F5">能量不足，這次先觀望吧！</div>'}`,
         buttons: can ? [{ t: '先不要', v: 0 }, { t: `選修（${t.price}⚡）`, v: 1, main: true }] : [{ t: '好吧', v: 0, main: true }], bot: () => (can && p.m - t.price >= 150 ? 1 : 0) });
       if (v) { money(p, -t.price); S.own[i] = { p: p.id, lv: 0 }; refreshTile(i); SFX.kaching(); log(`${p.av} ${esc(p.name)} 選修了 <b style="color:${g.c}">${t.name}</b>`); if (ownsGroup(p.id, t.g)) toast(`${p.name} 集滿「${g.name}」！交流費 ×1.5`); }
@@ -786,15 +793,16 @@ async function resolve(p, fromCard) {
     } else {
       const ow = P(o.p), r = rentOf(i);
       await ask({ icon: ow.av, tag: '向同學請教', title: `${ow.name} 的「${t.name}」`, color: g.c + '33', ink: g.c, btn: g.c,
-        html: `${esc(ow.name)} 已經在這個主題走到「${LV[o.lv].e} ${LV[o.lv].n}」。<br>你向他請教，支付交流費 <b>${r} ⚡</b>，他也因為教學相長獲得能量！`, buttons: [{ t: `支付 ${r}⚡`, v: 1, main: true }], bot: 1 });
+        html: `${esc(ow.name)} 已經在這個主題走到「${LV[o.lv].e} ${LV[o.lv].n}」。<br>你向對方請教，支付交流費 <b>${r} ⚡</b>，對方也因為教學相長獲得能量！`, buttons: [{ t: `支付 ${r}⚡`, v: 1, main: true }], bot: 1 });
       money(p, -r, `向 ${esc(ow.name)} 請教 ${t.name}`); money(ow, r);
     }
   } else if (t.t === 'chance') await drawCard(p, 'c');
   else if (t.t === 'reflect') await drawCard(p, 'r');
   else if (t.t === 'quiz') { if (await quiz(p)) money(p, 100, '答對自學小測驗'); }
-  else if (t.t === 'teacher') { await ask({ icon: '👩‍🏫', tag: '指導老師面談', title: '老師給了你好建議！', html: '「先把範圍縮小，每週完成一個小目標。」<br>獲得 120 學習能量。', buttons: [{ t: '謝謝老師', v: 1, main: true }], bot: 1 }); money(p, 120, '和指導老師面談'); }
-  else if (t.t === 'library') { const g = S.pot + 50; await ask({ icon: '📚', tag: '圖書館寶庫', title: `領取寶庫能量 ${g} ⚡`, html: '找到好書、好資料庫，大家拖延時繳的能量也都歸你了！', buttons: [{ t: '領取', v: 1, main: true }], bot: 1 }); S.pot = 0; money(p, g, '在圖書館寶庫找到寶藏'); }
+  else if (t.t === 'teacher') { await ask({ icon: '✅', tag: '落實執行・第 4-16 週', title: '每週核章完成！', html: '你帶著紀錄表詳實記錄了收穫與困惑，課堂結束前請現場指導教師核章。<br>獲得 120 學習能量。', color: '#E9FBEF', ink: '#20A36B', btn: '#3DD6B5', buttons: [{ t: '繼續加油', v: 1, main: true }], bot: 1 }); money(p, 120, '每週紀錄表核章'); }
+  else if (t.t === 'library') { const g = S.pot + 50; await ask({ icon: '📚', tag: '圖書資訊中心', title: `領取寶庫能量 ${g} ⚡`, html: '找圖資中心老師諮詢主題、查館藏與資料庫，大家拖延時繳的能量也都歸你了！<br><small>（四維高中圖資中心：(03) 856-1455 轉 517）</small>', buttons: [{ t: '領取', v: 1, main: true }], bot: 1 }); S.pot = 0; money(p, g, '在圖書資訊中心找到寶藏'); }
   else if (t.t === 'monster') { await ask({ icon: '👾', tag: '拖延怪獸', title: '被拖延怪獸咬了一口！', html: '一直滑手機、明天再說……<br>支付 100 能量到圖書館寶庫。', color: '#F5E9FF', buttons: [{ t: '下次不拖延了', v: 1, main: true }], bot: 1 }); money(p, -100, '被拖延怪獸咬'); S.pot += 100; }
+  else if (t.t === 'show') { const n = Object.values(S.own).filter(o => o.p === p.id && o.lv === 3).length, g = 100 + n * 50; await ask({ icon: '🎤', tag: '成果發表會・第 17-18 週', title: '上台分享你的學習成果！', html: `彙整成果作品與自我反思，並上傳到高中學習歷程平台。<br>獲得 100 能量${n ? `，另外你有 ${n} 個主題已完成發表，再加 ${n * 50}！` : '。'}`, color: '#FFE8E0', ink: '#D84315', btn: '#FF8A65', buttons: [{ t: '領取', v: 1, main: true }], bot: 1 }); money(p, g, '在成果發表會分享'); }
   else if (t.t === 'audit') { if (await quiz(p, '審核關卡')) money(p, 150, '通過計畫審核'); else await goJail(p); }
   else if (t.t === 'jail' && !fromCard) toast('只是路過卡關休息站～');
   renderPlayers();
