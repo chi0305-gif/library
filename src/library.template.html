@@ -120,6 +120,11 @@ ol.rank a { font-size: 12.5px; font-weight: 700; background: var(--sky2); border
 .book { display: flex; gap: 10px; align-items: center; background: #fff; border-radius: 16px; padding: 10px; }
 .book .cv { width: 44px; height: 60px; border-radius: 6px 10px 10px 6px; flex: 0 0 auto; box-shadow: inset 5px 0 0 rgba(0, 0, 0, .1); display: grid; place-items: center; font-size: 20px; }
 .book b { display: block; font-size: 15px; } .book small { color: var(--ink2); display: block; }
+.nb { display: grid; gap: 10px; }
+.nbk { display: flex; gap: 12px; background: #fff; border-radius: 18px; padding: 12px; border: 2px solid var(--line); }
+.nbk .cv { width: 62px; height: 86px; border-radius: 6px 12px 12px 6px; flex: 0 0 auto; box-shadow: inset 6px 0 0 rgba(0, 0, 0, .1); display: grid; place-items: center; font-size: 28px; }
+.nbk b { font-size: 16px; } .nbk dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; margin: 6px 0; font-size: 13px; }
+.nbk dt { font-weight: 900; color: var(--ink2); } .nbk dd { margin: 0; } .nbk p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ink); }
 .timeline { display: grid; gap: 9px; }
 .timeline .st { display: grid; grid-template-columns: 52px 1fr; gap: 10px; align-items: start; background: #fff; border-radius: 18px; padding: 10px 12px; }
 .timeline .st .n { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 24px; }
@@ -181,7 +186,7 @@ details.script { background: #fff; border-radius: 14px; padding: 10px 14px; } de
   <button type="button" data-open="xiner"><b>💗</b>心情選書</button>
   <button type="button" data-open="xiaosi"><b>📱</b>自學・電子書</button>
   <button type="button" data-open="portal"><b>🌀</b>數位資源</button>
-  <button type="button" data-open="cabin"><b>🏡</b>自主學習</button>
+  <button type="button" data-open="pod"><b>🚀</b>夢想艙</button>
   <button type="button" data-open="expo"><b>🎨</b>主題書展</button>
   <button type="button" data-open="radio"><b>📻</b>廣播電台</button>
   <button type="button" data-open="gacha"><b>🎁</b>幸運書籤</button>
@@ -215,7 +220,7 @@ const CONFIG = {
   rankTitle: '本月借閱排行榜',
   rank: [
     { t: '原子習慣', a: '詹姆斯．克利爾' }, { t: '被討厭的勇氣', a: '岸見一郎、古賀史健' }, { t: '解憂雜貨店', a: '東野圭吾' },
-    { t: '小王子', a: '聖修伯里' }, { t: '人類大歷史', a: '哈拉瑞' }
+    { t: '人類大歷史', a: '哈拉瑞' }, { t: '刻意練習', a: '安德斯．艾瑞克森、羅伯特．普爾' }
   ],
   expoDemo: true,
   expo: {
@@ -224,20 +229,23 @@ const CONFIG = {
     books: [
       { t: '奇萊前書', a: '楊牧', c: '#8EDDC0', e: '⛰️' }, { t: '山風海雨', a: '楊牧', c: '#8FD3FF', e: '🌊' },
       { t: '複眼人', a: '吳明益', c: '#BBA8FF', e: '👁️' }, { t: '家離水邊那麼近', a: '吳明益', c: '#FFE07A', e: '🏞️' },
-      { t: '永遠的山', a: '陳列', c: '#FFB48F', e: '🏔️' }
+      { t: '冷海情深', a: '夏曼．藍波安', c: '#FFB48F', e: '🐟' }
+    ],
+    // 推薦新書：書名、作者、出版社、出版年、類別、適合誰、簡介
+    newBooks: [
+      { t: '蛤蟆先生去看心理師', a: '羅伯．狄保德', pub: '三采文化', y: '2020', cat: '心理・成長', who: '最近心情卡卡、想更了解自己的你', c: '#8EDDC0', e: '🐸',
+        intro: '《柳林風聲》裡愛熱鬧的蛤蟆先生陷入憂鬱，在朋友鼓勵下開始接受心理諮商。用溫暖的童話故事，帶你認識情緒、看見自己。' },
+      { t: '我可能錯了', a: '比約恩．納提科．林德布勞', pub: '先覺出版', y: '2022', cat: '心靈・人生', who: '容易鑽牛角尖、想學會放下的你', c: '#FFE07A', e: '🌿',
+        intro: '瑞典的商界菁英放下一切，到泰國森林出家當了 17 年僧侶。回到俗世後，他用「我可能錯了」這句話，教我們放下執著、溫柔面對生命。' },
+      { t: '單車失竊記', a: '吳明益', pub: '麥田出版', y: '2015', cat: '小說・臺灣文學', who: '喜歡歷史、老物件與家族故事的你', c: '#8FD3FF', e: '🚲',
+        intro: '一台失蹤的老腳踏車，牽出一段家族記憶與二戰時期的臺灣歷史。本書入圍 2018 年國際布克獎長名單。' }
     ]
   },
-  // 不可不讀廣播電台：src 放音檔網址（mp3），留空會顯示「音檔準備中」並提供文字稿
+  // 不可不讀廣播電台：src 放音檔網址（mp3），留空會顯示「音檔準備中」
   radio: [
-    { ep: 'EP.01', t: '《小王子》：什麼是「馴服」？', hosts: '悠紀 & 智幼', src: '',
-      script: '悠紀：歡迎收聽不可不讀廣播電台！我是悠紀。<br>智幼：我是智幼～今天要聊的是好多人小時候讀過、長大再讀卻哭了的《小王子》。<br>悠紀：書裡狐狸說，「馴服」就是建立關係。你願意為一個人花時間，他對你就變得獨一無二。<br>智幼：所以讀書其實也是一種馴服吧？你花時間讀一本書，它就變成「你的書」了。<br>悠紀：說得好！下課來圖書館，找一本可以馴服的書吧！',
-      quote: '真正重要的東西，用眼睛是看不見的。', from: '《小王子》聖修伯里' },
-    { ep: 'EP.02', t: '《原子習慣》：每天進步 1%', hosts: '悠紀 & 智幼', src: '',
-      script: '智幼：悠紀，你的自主學習計畫進度還好嗎？<br>悠紀：嗯⋯⋯第 8 週了還在第 3 週的進度（笑）。<br>智幼：那你一定要聽這集！《原子習慣》說，不要只訂大目標，要設計一個讓自己容易做到的系統。<br>悠紀：像是每天固定 15 分鐘、把書放在書包最上面？<br>智幼：對！小小的習慣累積起來，就是巨大的改變。',
-      quote: '你不會提升到目標的水準，而是會跌落到系統的水準。', from: '《原子習慣》詹姆斯．克利爾' },
-    { ep: 'EP.03', t: '《被討厭的勇氣》：課題分離', hosts: '悠紀 & 智幼', src: '',
-      script: '悠紀：今天的書名很嗆喔，《被討厭的勇氣》。<br>智幼：其實它很溫柔！它用對話的方式告訴我們：別人怎麼看你，是別人的課題；你要怎麼活，才是你的課題。<br>悠紀：所以選自主學習主題的時候，不用一直擔心「這樣會不會很奇怪」？<br>智幼：沒錯，勇敢選你真正好奇的東西吧！',
-      quote: '重要的不是被給予了什麼，而是如何運用被給予的東西。', from: '《被討厭的勇氣》岸見一郎、古賀史健' }
+    { ep: 'EP.01', t: '《小王子》：什麼是「馴服」？', src: '', quote: '真正重要的東西，用眼睛是看不見的。', from: '《小王子》聖修伯里' },
+    { ep: 'EP.02', t: '《追風箏的孩子》：友情與救贖', src: '', quote: '為你，千千萬萬遍。', from: '《追風箏的孩子》卡勒德．胡賽尼' },
+    { ep: 'EP.03', t: '《蘇菲的世界》：一封信開啟的哲學冒險', src: '', quote: '你是誰？', from: '《蘇菲的世界》喬斯坦．賈德' }
   ],
   // 自主學習
   sdl: {
@@ -250,26 +258,33 @@ const CONFIG = {
     ]
   }
 };
-// 14 個常用學術資源
+// 14 個常用學術資源（數位資源傳送門）
 const RESOURCES = [
   { n: '華藝線上圖書館', d: '期刊論文・學位論文，寫小論文必備', u: 'https://www.airitilibrary.com/', e: '📰', c: '#FFD6E5' },
   { n: '原住民族數位典藏', d: '臺灣原住民族資訊資源網：文化、語言、影音', u: 'https://www.tipp.org.tw/', e: '🪶', c: '#FFE9C7' },
   { n: '臺大出版中心電子書', d: '臺大出版的人文、科普好書', u: 'https://press.ntu.edu.tw/', e: '🎓', c: '#DDF1FF' },
-  { n: '國資圖電子書服務平台', d: '辦借書證就能借電子書，手機也能讀', u: 'https://ebook.nlpi.edu.tw/', e: '📱', c: '#D7F5EA' },
   { n: '國立公共資訊圖書館', d: '電子雜誌、資料庫、線上展覽', u: 'https://www.nlpi.edu.tw/', e: '🏛️', c: '#ECE6FF' },
-  { n: '臺灣華文電子書庫', d: '國家圖書館：免費閱讀的華文電子書', u: 'https://taiwanebook.ncl.edu.tw/', e: '📖', c: '#FFF3C4' },
+  { n: '國圖期刊文獻資訊網', d: '查期刊文章、報紙索引的入口', u: 'https://tpl.ncl.edu.tw/', e: '🗞️', c: '#FFF3C4' },
   { n: '臺灣博碩士論文知識加值系統', d: '查大學研究所的論文，找研究方法', u: 'https://ndltd.ncl.edu.tw/', e: '🔬', c: '#DDF1FF' },
   { n: '國圖臺灣鄉土文獻', d: '臺灣記憶：老照片、古文書、地方誌', u: 'https://tm.ncl.edu.tw/', e: '🗺️', c: '#D7F5EA' },
   { n: '漢籍全文資料庫', d: '中研院：經史子集古籍全文檢索', u: 'http://hanchi.ihp.sinica.edu.tw/', e: '📜', c: '#FFE9C7' },
   { n: '國家文化記憶庫', d: '臺灣各地的人物、故事與文化資產', u: 'https://memory.culture.tw/', e: '🏮', c: '#FFD6E5' },
   { n: '電影與文學資料庫', d: '影視與文學作品的跨界資料', u: 'https://taiwancinema.bamid.gov.tw/', e: '🎬', c: '#ECE6FF' },
-  { n: '圓夢繪本資料庫', d: '文化部兒童文化館：線上繪本', u: 'https://children.moc.gov.tw/', e: '🖍️', c: '#FFF3C4' },
-  { n: '中學生網站', d: '小論文・讀書心得比賽投稿平台', u: 'https://www.shs.edu.tw/', e: '🏆', c: '#D7F5EA' },
-  { n: '教育部重編國語辭典', d: '查字詞、成語、讀音的好幫手', u: 'https://dict.revised.moe.edu.tw/', e: '🔤', c: '#DDF1FF' }
+  { n: '科技大觀園', d: '國科會科普平台：最新科學新知', u: 'https://scitechvista.nat.gov.tw/', e: '🧪', c: '#D7F5EA' },
+  { n: 'Google 學術搜尋', d: '一次搜尋全世界的學術文章', u: 'https://scholar.google.com.tw/', e: '🌐', c: '#DDF1FF' },
+  { n: '中學生網站', d: '小論文・讀書心得比賽投稿平台', u: 'https://www.shs.edu.tw/', e: '🏆', c: '#FFF3C4' },
+  { n: '教育部重編國語辭典', d: '查字詞、成語、讀音的好幫手', u: 'https://dict.revised.moe.edu.tw/', e: '🔤', c: '#FFE9C7' }
+];
+// 電子書庫（小四的平板）
+const EBOOKS = [
+  { n: '國資圖電子書服務平台', d: '辦國資圖借書證就能借，手機、平板都能讀。', u: 'https://ebook.nlpi.edu.tw/', e: '📱', c: '#D7F5EA' },
+  { n: '臺灣雲端書庫', d: '用公共圖書館借書證登入，免費借電子書和雜誌。', u: 'https://www.ebookservice.tw/', e: '☁️', c: '#DDF1FF' },
+  { n: '臺灣華文電子書庫', d: '國家圖書館建置，免登入就能線上閱讀。', u: 'https://taiwanebook.ncl.edu.tw/', e: '📖', c: '#FFF3C4' },
+  { n: '圓夢繪本資料庫', d: '文化部兒童文化館：精彩的原創線上繪本。', u: 'https://children.moc.gov.tw/', e: '🖍️', c: '#FFD6E5' }
 ];
 // 心靈書籤：金句＋推薦書
 const QUOTES = [
-  { q: '真正重要的東西，用眼睛是看不見的。', s: '聖修伯里《小王子》', b: '小王子' },
+  { q: '千里之行，始於足下。', s: '《老子》第六十四章', b: '老子' },
   { q: '當你真心渴望某樣東西時，整個宇宙都會聯合起來幫助你完成。', s: '保羅．科爾賀《牧羊少年奇幻之旅》', b: '牧羊少年奇幻之旅' },
   { q: '我們唯一能決定的，是如何運用被賦予的時間。', s: '托爾金《魔戒》', b: '魔戒' },
   { q: '決定我們成為什麼樣的人，不是我們的能力，而是我們的選擇。', s: 'J.K. 羅琳《哈利波特：消失的密室》', b: '哈利波特' },
@@ -279,14 +294,14 @@ const QUOTES = [
   { q: '路漫漫其修遠兮，吾將上下而求索。', s: '屈原〈離騷〉', b: '楚辭' },
   { q: '學而不思則罔，思而不學則殆。', s: '《論語．為政》', b: '論語' },
   { q: '我們都在陰溝裡，但仍有人仰望星空。', s: '王爾德《溫夫人的扇子》', b: '王爾德童話與戲劇選' },
-  { q: '重要的不是被給予了什麼，而是如何運用被給予的東西。', s: '岸見一郎、古賀史健《被討厭的勇氣》', b: '被討厭的勇氣' },
-  { q: '你不會提升到目標的水準，而是會跌落到系統的水準。', s: '詹姆斯．克利爾《原子習慣》', b: '原子習慣' }
+  { q: '不積跬步，無以至千里。', s: '《荀子．勸學》', b: '荀子' },
+  { q: '人生而自由，卻無往不在枷鎖之中。', s: '盧梭《社會契約論》', b: '社會契約論' }
 ];
 const MOODS = {
-  adv: { n: '🧭 冒險充電型', c: '#8FD3FF', say: '你的心裡住著一個想去遠方的旅人！這幾本書會帶你翻山越嶺～', books: [['牧羊少年奇幻之旅', '保羅．科爾賀'], ['魔戒', '托爾金'], ['少年Pi的奇幻漂流', '楊．馬泰爾']] },
-  heal: { n: '🍵 溫暖療癒型', c: '#FFB48F', say: '辛苦了！先讓自己喘口氣，這幾本書像熱可可一樣溫暖。', books: [['解憂雜貨店', '東野圭吾'], ['小王子', '聖修伯里'], ['佐賀的超級阿嬤', '島田洋七']] },
-  think: { n: '🔭 深度思考型', c: '#BBA8FF', say: '你喜歡把事情想得透透的，這幾本書會陪你一起想。', books: [['被討厭的勇氣', '岸見一郎、古賀史健'], ['蘇菲的世界', '喬斯坦．賈德'], ['人類大歷史', '哈拉瑞']] },
-  brave: { n: '🚀 行動勇氣型', c: '#8EDDC0', say: '你已經準備好出發了！這幾本書幫你把熱情變成行動。', books: [['原子習慣', '詹姆斯．克利爾'], ['恆毅力', '安琪拉．達克沃斯'], ['心態致勝', '卡蘿．杜維克']] }
+  adv: { n: '🧭 冒險充電型', c: '#8FD3FF', say: '你的心裡住著一個想去遠方的旅人！這幾本書會帶你翻山越嶺～', books: [['環遊世界八十天', '凡爾納'], ['金銀島', '史蒂文生'], ['納尼亞傳奇', 'C.S. 路易斯']] },
+  heal: { n: '🍵 溫暖療癒型', c: '#FFB48F', say: '辛苦了！先讓自己喘口氣，這幾本書像熱可可一樣溫暖。', books: [['佐賀的超級阿嬤', '島田洋七'], ['夏日庭院', '湯本香樹實'], ['獅子的點心', '小川糸']] },
+  think: { n: '🔭 深度思考型', c: '#BBA8FF', say: '你喜歡把事情想得透透的，這幾本書會陪你一起想。', books: [['快思慢想', '康納曼'], ['正義：一場思辨之旅', '邁可．桑德爾'], ['槍炮、病菌與鋼鐵', '賈德．戴蒙']] },
+  brave: { n: '🚀 行動勇氣型', c: '#8EDDC0', say: '你已經準備好出發了！這幾本書幫你把熱情變成行動。', books: [['恆毅力', '安琪拉．達克沃斯'], ['心態致勝', '卡蘿．杜維克'], ['深度工作力', '卡爾．紐波特']] }
 };
 const QUIZ = [
   { q: '今天的心情，像哪一種天氣？', o: [['☀️ 大晴天，想出門', 'adv'], ['🌧️ 有點下雨', 'heal'], ['⛅ 多雲，想很多', 'think'], ['🌈 雨後彩虹', 'brave']] },
@@ -483,10 +498,10 @@ function buildScene() {
   scene.fog = new THREE.Fog(0xCDEBFF, 220, 900);
   scene.add(new THREE.HemisphereLight(0xF4FBFF, 0xB89878, 0.42));
   const sun = new THREE.DirectionalLight(0xFFF2DC, 1.15); sun.position.set(30, 60, 45); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera, { left: -34, right: 34, top: 34, bottom: -34, near: 5, far: 160 }); sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.03; sun.shadow.radius = 5; scene.add(sun);
+  Object.assign(sun.shadow.camera, { left: -40, right: 40, top: 40, bottom: -40, near: 5, far: 160 }); sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.03; sun.shadow.radius = 5; scene.add(sun);
   const fill = new THREE.DirectionalLight(0xDDE8FF, 0.38); fill.position.set(-40, 25, 30); scene.add(fill);
-  const warm1 = new THREE.PointLight(0xFFD6A0, 0.55, 22, 2); warm1.position.set(0, 3.8, 0.5); scene.add(warm1);
-  const warm2 = new THREE.PointLight(0xFFE3B8, 0.4, 20, 2); warm2.position.set(0, 8.6, -2); scene.add(warm2);
+  const warm1 = new THREE.PointLight(0xFFD6A0, 0.6, 30, 2); warm1.position.set(0, 4.9, -0.4); scene.add(warm1);
+  const warm2 = new THREE.PointLight(0xFFE3B8, 0.45, 28, 2); warm2.position.set(0, 11.2, -4.2); scene.add(warm2);
 
   // 遠景：花蓮的海與中央山脈
   const sea = mesh(new THREE.CircleGeometry(700, 48), new THREE.MeshStandardMaterial({ color: '#7FD0E6', roughness: 0.4 }), 0, -26, 0, false); sea.rotation.x = -Math.PI / 2; scene.add(sea);
@@ -497,18 +512,18 @@ function buildScene() {
 
   // 漂浮小島
   const isle = G(scene);
-  const top0 = mesh(new THREE.CylinderGeometry(26, 26, 1.6, 64), MAT('#9AD98C'), 0, -0.8, 0); top0.scale.z = 0.78; isle.add(top0);
-  const soil = mesh(new THREE.CylinderGeometry(26.2, 24, 3.2, 64), MAT('#F2CFA0'), 0, -3.0, 0); soil.scale.z = 0.78; isle.add(soil);
-  const rock = mesh(new THREE.ConeGeometry(23, 16, 9), new THREE.MeshStandardMaterial({ color: '#D9B48A', roughness: 1, flatShading: true }), 0, -12.6, 0); rock.rotation.x = Math.PI; rock.scale.z = 0.78; isle.add(rock);
-  for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2; Sp(isle, 0.5 + (i % 3) * 0.25, ['#FFD6E5', '#FFFFFF', '#FFE07A', '#D7F5EA'][i % 4], Math.cos(a) * 25.6, -0.05, Math.sin(a) * 25.6 * 0.78, 1, 0.6, 1); }
+  const top0 = mesh(new THREE.CylinderGeometry(31, 31, 1.6, 64), MAT('#9AD98C'), 0, -0.8, 0); top0.scale.z = 0.78; isle.add(top0);
+  const soil = mesh(new THREE.CylinderGeometry(31.2, 28.5, 3.2, 64), MAT('#F2CFA0'), 0, -3.0, 0); soil.scale.z = 0.78; isle.add(soil);
+  const rock = mesh(new THREE.ConeGeometry(27.5, 18, 9), new THREE.MeshStandardMaterial({ color: '#D9B48A', roughness: 1, flatShading: true }), 0, -12.6, 0); rock.rotation.x = Math.PI; rock.scale.z = 0.78; isle.add(rock);
+  for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2; Sp(isle, 0.5 + (i % 3) * 0.25, ['#FFD6E5', '#FFFFFF', '#FFE07A', '#D7F5EA'][i % 4], Math.cos(a) * 30.6, -0.05, Math.sin(a) * 30.6 * 0.78, 1, 0.6, 1); }
   ANIM.push(t => { isle.position.y = Math.sin(t * 0.6) * 0.12; });
   const W = G(isle); // 地面上的所有東西
 
   // 小路
-  for (let i = 0; i < 7; i++) { const s = mesh(new THREE.CylinderGeometry(0.95 + (i % 2) * 0.2, 1.0, 0.16, 12), MAT(i % 2 ? '#FFF3DD' : '#F7E6C8'), (i % 2 - 0.5) * 0.7, 0.05, 6.6 + i * 1.75); W.add(s); }
+  for (let i = 0; i < 7; i++) { const s = mesh(new THREE.CylinderGeometry(0.95 + (i % 2) * 0.2, 1.0, 0.16, 12), MAT(i % 2 ? '#FFF3DD' : '#F7E6C8'), (i % 2 - 0.5) * 0.7, 0.05, 9.4 + i * 1.75); W.add(s); }
 
   // ===== 圖書館主體（剖面娃娃屋） =====
-  const L = G(W, 0, 0, -1);
+  const L = G(W, 0, 0, -1.6); L.scale.setScalar(1.3);
   const WALL = '#FFF4E4', WALL2 = '#FFE4EC', FLOOR1 = '#F6D7A8', FLOOR2 = '#E9D6F7';
   Bx(L, 21, 0.5, 13, '#E7C08F', 0, 0.15, 0, 0.2);
   const fl1 = tex(512, 320, (c, w, h) => { c.fillStyle = FLOOR1; c.fillRect(0, 0, w, h); c.strokeStyle = 'rgba(160,110,60,.25)'; c.lineWidth = 3; for (let y = 0; y < h; y += 32) { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); for (let x = (y / 32 % 2) * 64; x < w; x += 128) { c.beginPath(); c.moveTo(x, y); c.lineTo(x, y + 32); c.stroke(); } } });
@@ -603,7 +618,7 @@ function buildScene() {
   const lampN = G(nook, -2.1, 0, 0.6); Cy(lampN, 0.4, 0.5, 0.2, '#FFE07A', 0, 0.1, 0); Cy(lampN, 0.06, 0.06, 2.6, '#FFFFFF', 0, 1.4, 0, 8); const shade = Co(lampN, 0.7, 0.8, '#FFF3C4', 0, 2.9, 0, 20); shade.material = MAT('#FFF3C4', { emissive: 0xFFE3A0, emissiveIntensity: 0.5 });
   const hearts = []; for (let i = 0; i < 3; i++) { const h = G(nook, 0, 3, 0.3); Sp(h, 0.12, '#FF8FB8', -0.08, 0, 0); Sp(h, 0.12, '#FF8FB8', 0.08, 0, 0); const c = Co(h, 0.16, 0.2, '#FF8FB8', 0, -0.12, 0, 12); c.rotation.z = Math.PI; hearts.push(h); }
   ANIM.push(t => hearts.forEach((h, i) => { const u = (t * 0.35 + i / 3) % 1; h.position.set(0.5 + Math.sin(u * 6 + i) * 0.3, 2.8 + u * 2.2, 0.4); h.scale.setScalar(Math.sin(u * Math.PI) * 1.2); }));
-  hot('xiner', nook, 4.2, '心兒｜心情選書', '💗', '#FFD6E5');
+  hot('xiner', nook, 3.9, '心兒｜心情選書', '💗', '#FFD6E5');
 
   // ===== 二樓 =====
   bookcase(L, -6.4, 5.25, -5.3, 5.6, 3.6, 3, 0, '#F4D6B8'); bookcase(L, 5.6, 5.25, -5.3, 6.0, 3.6, 3);
@@ -633,7 +648,7 @@ function buildScene() {
   hot('radio', rad, 3.4, '不可不讀廣播電台', '📻', '#FFE1D0');
 
   // ===== 漂浮書本傳送門（左側） =====
-  const por = G(W, -16.4, 0, 1.0);
+  const por = G(W, -21.6, 0, 1.0);
   Cy(por, 2.4, 2.8, 0.5, '#BBA8FF', 0, 0.25, 0, 40); Cy(por, 2.0, 2.0, 0.2, '#ECE6FF', 0, 0.55, 0, 40);
   const ring = G(por, 0, 5.0, 0); ring.rotation.y = 0.5; To(ring, 3.0, 0.38, '#BBA8FF', 0, 0, 0); To(ring, 3.0, 0.14, '#FFFFFF', 0, 0, 0.3);
   const swirl = mesh(new THREE.CircleGeometry(2.7, 48), new THREE.MeshStandardMaterial({ map: tex(256, 256, (c, w) => { const gr = c.createRadialGradient(w / 2, w / 2, 10, w / 2, w / 2, w / 2); gr.addColorStop(0, '#FFFFFF'); gr.addColorStop(0.45, '#D9CCFF'); gr.addColorStop(1, '#9FD8FF'); c.fillStyle = gr; c.fillRect(0, 0, w, w); c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 6; for (let i = 0; i < 5; i++) { c.beginPath(); for (let a = 0; a < 8; a += 0.1) { const r = a * 14; c.lineTo(w / 2 + Math.cos(a + i * 1.25) * r, w / 2 + Math.sin(a + i * 1.25) * r); } c.stroke(); } }), emissive: new THREE.Color('#C9BBFF'), emissiveIntensity: 0.35, transparent: true, opacity: 0.92, side: THREE.DoubleSide }), 0, 0, 0, false); ring.add(swirl);
@@ -645,27 +660,43 @@ function buildScene() {
     sparks.forEach((s, i) => { const u = (t * 0.3 + i / sparks.length) % 1, a = i * 2.3 + t * 0.4; s.position.set(Math.cos(a) * 1.8 * u, 1 + u * 7, Math.sin(a) * 1.8 * u); s.scale.setScalar(Math.sin(u * Math.PI)); s.rotation.y = t * 3; }); });
   hot('portal', por, 9.2, '數位資源傳送門', '🌀', '#ECE6FF');
 
-  // ===== 自習室小木屋（右側） =====
-  const cab = G(W, 16.6, 0, 1.4); cab.rotation.y = -0.5;
-  Bx(cab, 6.4, 0.5, 5.4, '#D9AE80', 0, 0.25, 0, 0.15);
-  for (let i = 0; i < 7; i++) { Cy(cab, 0.34, 0.34, 5.6, i % 2 ? '#D49A66' : '#C98E5C', 0, 0.85 + i * 0.6, -2.2, 12).rotation.z = Math.PI / 2; [-1, 1].forEach(k => { const lg = Cy(cab, 0.34, 0.34, 4.4, i % 2 ? '#D49A66' : '#C98E5C', k * 2.6, 0.85 + i * 0.6, 0, 12); lg.rotation.x = Math.PI / 2; }); }
-  for (let i = 0; i < 7; i++) { if (i < 4) { [-1, 1].forEach(k => { const lg = Cy(cab, 0.34, 0.34, 1.6, i % 2 ? '#D49A66' : '#C98E5C', k * 1.9, 0.85 + i * 0.6, 2.2, 12); lg.rotation.z = Math.PI / 2; }); } else { const lg = Cy(cab, 0.34, 0.34, 5.6, i % 2 ? '#D49A66' : '#C98E5C', 0, 0.85 + i * 0.6, 2.2, 12); lg.rotation.z = Math.PI / 2; } }
-  Bx(cab, 1.9, 2.4, 0.2, '#8FD3FF', 0, 1.7, 2.3, 0.15); Sp(cab, 0.1, '#FFE07A', 0.6, 1.7, 2.45);
-  const winT = mesh(rbox(1.2, 1.1, 0.1, 0.1), MAT('#FFF1B8', { emissive: 0xFFD27A, emissiveIntensity: 0.6 }), 2.0, 2.6, 2.45); cab.add(winT);
-  const winL = mesh(rbox(1.2, 1.1, 0.1, 0.1), MAT('#FFF1B8', { emissive: 0xFFD27A, emissiveIntensity: 0.6 }), -2.0, 2.6, 2.45); cab.add(winL);
-  ANIM.push(t => { winT.material.emissiveIntensity = 0.5 + Math.sin(t * 1.7) * 0.15; winL.material.emissiveIntensity = 0.5 + Math.sin(t * 1.7 + 1) * 0.15; });
-  [-1, 1].forEach(k => { const r = Bx(cab, 3.9, 0.45, 6.4, '#8EDDC0', k * 1.55, 5.6, 0, 0.18); r.rotation.z = -k * 0.62; });
-  const tri = new THREE.Shape(); tri.moveTo(-2.9, 0); tri.lineTo(2.9, 0); tri.lineTo(0, 2.1); tri.lineTo(-2.9, 0); [2.2, -2.5].forEach(z => cab.add(mesh(new THREE.ExtrudeGeometry(tri, { depth: 0.3, bevelEnabled: false }), MAT('#D49A66'), 0, 4.55, z)));
-  Cy(cab, 0.35, 0.4, 1.6, '#B07D52', 1.6, 6.6, -1.0, 10);
-  const smoke = []; for (let i = 0; i < 3; i++) { const s = mesh(SPH, MAT('#FFFFFF', { transparent: true, opacity: 0.8 }), 1.6, 7.5, -1.0, false); cab.add(s); smoke.push(s); }
-  ANIM.push(t => smoke.forEach((s, i) => { const u = (t * 0.25 + i / 3) % 1; s.position.set(1.6 + u * 0.8, 7.5 + u * 2.6, -1.0); s.scale.setScalar(0.25 + u * 0.45); s.material.opacity = 0.85 * (1 - u); }));
-  const csT = tex(512, 160, (c, w, h) => { c.fillStyle = '#FFF4E4'; rr(c, 4, 4, w - 8, h - 8, 40); c.fill(); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 74px ${RF}`; c.fillText('自習室小木屋', w / 2, h / 2 + 3); });
-  Bx(cab, 4.0, 1.25, 0.18, '#C98E5C', 0, 4.15, 2.6, 0.1); Pl(cab, 3.8, 1.15, csT, 0, 4.15, 2.7);
-  plant(cab, -2.6, 3.4, 0.6, 0.5, '#FFE07A'); const desk2 = G(cab, 2.4, 0.5, 3.5); Bx(desk2, 1.6, 0.15, 0.9, '#FFFFFF', 0, 0.9, 0); [-0.6, 0.6].forEach(x => Cy(desk2, 0.06, 0.06, 0.85, '#FFFFFF', x, 0.42, 0, 6)); Bx(desk2, 0.6, 0.1, 0.45, '#FF8FB8', -0.2, 1.03, 0, 0.03);
-  hot('cabin', cab, 8.4, '自習室小木屋', '🏡', '#FFE9C7');
+  // ===== 自主學習夢想艙（前方草地的膠囊太空艙） =====
+  const pod = G(W, 13.2, 0, 13.6); pod.rotation.y = -0.55;
+  Cy(pod, 3.9, 4.2, 0.35, '#BBA8FF', 0, 0.18, 0, 48); Cy(pod, 3.3, 3.3, 0.12, '#ECE6FF', 0, 0.4, 0, 48);
+  const padL = []; for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, l = mesh(SPH, MAT('#FFF3B0', { emissive: 0xFFE38A, emissiveIntensity: 0.6 }), Math.cos(a) * 3.7, 0.4, Math.sin(a) * 3.7, false); l.scale.setScalar(0.14); pod.add(l); padL.push(l); }
+  ANIM.push(t => padL.forEach((l, i) => { l.material.emissiveIntensity = 0.3 + Math.max(0, Math.sin(t * 3 - i * 0.6)) * 0.7; }));
+  const hov = mesh(new THREE.RingGeometry(1.2, 2.6, 40), new THREE.MeshBasicMaterial({ color: '#C9F2FF', transparent: true, opacity: 0.5, side: THREE.DoubleSide }), 0, 0.52, 0, false); hov.rotation.x = -Math.PI / 2; pod.add(hov);
+  const ship = G(pod, 0, 3.4, 0);
+  // 三支可愛小腳
+  [0, 2.1, 4.2].forEach(a => { const lg = Cy(pod, 0.14, 0.18, 2.6, '#FFFFFF', Math.cos(a) * 1.9, 1.55, Math.sin(a) * 1.4, 10); lg.rotation.set(Math.sin(a) * 0.35, 0, -Math.cos(a) * 0.35); Sp(pod, 0.42, '#FFB48F', Math.cos(a) * 2.35, 0.55, Math.sin(a) * 1.75, 1, 0.45, 1); });
+  // 膠囊本體
+  const bodyC = Cy(ship, 2.0, 2.0, 3.6, '#FFFFFF', 0, 0, 0, 40); bodyC.rotation.z = Math.PI / 2;
+  Sp(ship, 2.0, '#FF9EC4', -1.8, 0, 0, 1.05, 1, 1); Sp(ship, 2.0, '#8EDDC0', 1.8, 0, 0, 1.05, 1, 1);
+  [-1.75, 1.75].forEach(x => { const b = To(ship, 2.02, 0.16, '#FFE07A', x, 0, 0); b.rotation.y = Math.PI / 2; });
+  const belt = To(ship, 2.05, 0.1, '#BBA8FF', 0, 0, 0); belt.rotation.y = Math.PI / 2; belt.scale.set(1, 1, 1);
+  // 圓窗
+  [-1.0, 1.0].forEach((x, k) => { const w = G(ship, x, 0.35, 2.02); To(w, 0.55, 0.13, '#FFE07A', 0, 0, 0); const gl = mesh(new THREE.CircleGeometry(0.55, 32), MAT('#BEE9FF', { emissive: 0x9EDCFF, emissiveIntensity: 0.45, roughness: 0.2 }), 0, 0, 0.02, false); w.add(gl); Sp(w, 0.12, '#FFFFFF', -0.2, 0.2, 0.06, 1, 1, 0.3); const st = mesh(new THREE.OctahedronGeometry(0.16), MAT(k ? '#FF9EC4' : '#FFE07A', { emissive: k ? 0xFF9EC4 : 0xFFE07A, emissiveIntensity: 0.5 }), 0.12, -0.15, 0.08, false); w.add(st); ANIM.push(t => { st.rotation.y = t * 2 + k; }); });
+  // 艙門＋小階梯
+  const door = Bx(ship, 1.1, 1.4, 0.24, '#8EDDC0', 0, -0.75, 1.92, 0.4); door.rotation.x = 0.35; Sp(ship, 0.08, '#FFE07A', 0.32, -0.7, 2.08);
+  for (let i = 0; i < 3; i++) Bx(pod, 1.3, 0.22, 0.6, ['#FFE07A', '#FFB48F', '#FF9EC4'][i], 0, 0.55 + i * 0.5, 3.6 - i * 0.55, 0.08);
+  // 玻璃頂罩＋小星星
+  const dome = mesh(new THREE.SphereGeometry(1.15, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: '#E3F6FF', transparent: true, opacity: 0.45, roughness: 0.1, depthWrite: false }), 0, 1.65, 0, false); ship.add(dome); To(ship, 1.15, 0.1, '#BBA8FF', 0, 1.65, 0).rotation.x = Math.PI / 2;
+  const domeStar = mesh(new THREE.OctahedronGeometry(0.45), MAT('#FFE07A', { emissive: 0xFFD54F, emissiveIntensity: 0.7 }), 0, 2.2, 0, false); ship.add(domeStar);
+  // 天線
+  const ant2 = Cy(ship, 0.05, 0.05, 1.4, '#BBA8FF', 1.55, 2.0, 0, 8); ant2.rotation.z = -0.4; const tip = Sp(ship, 0.2, '#FF8FB8', 1.85, 2.65, 0); tip.material = MAT('#FF8FB8', { emissive: 0xFF6FA0, emissiveIntensity: 0.6 });
+  // 小翅膀
+  [-1, 1].forEach(k => { const f = Co(ship, 0.55, 1.2, '#BBA8FF', -2.9, k * 0.9, 0, 4); f.rotation.z = Math.PI / 2 + k * 0.5; f.scale.z = 0.35; });
+  // 招牌
+  const podT = tex(640, 160, (c, w, h) => { c.fillStyle = '#FFFFFF'; rr(c, 4, 4, w - 8, h - 8, 70); c.fill(); c.lineWidth = 9; c.strokeStyle = '#BBA8FF'; rr(c, 14, 14, w - 28, h - 28, 60); c.stroke(); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 70px ${RF}`; c.fillText('🚀 自主學習夢想艙', w / 2, h / 2 + 3); });
+  const sgP = G(pod, 0, 7.6, 0.4); Bx(sgP, 4.8, 1.25, 0.2, '#ECE6FF', 0, 0, 0, 0.25); Pl(sgP, 4.6, 1.15, podT, 0, 0, 0.12); ANIM.push(t => { sgP.position.y = 7.6 + Math.sin(t * 1.6 + 0.6) * 0.22; });
+  // 環繞的星星
+  const pStars = []; for (let i = 0; i < 5; i++) { const s = mesh(new THREE.OctahedronGeometry(0.22), MAT(['#FFE07A', '#FF9EC4', '#8FD3FF', '#8EDDC0', '#BBA8FF'][i], { emissive: 0xFFF3C4, emissiveIntensity: 0.35 }), 0, 0, 0, false); pod.add(s); pStars.push(s); }
+  ANIM.push(t => { ship.position.y = 3.4 + Math.sin(t * 1.6) * 0.22; ship.rotation.z = Math.sin(t * 0.9) * 0.03; hov.material.opacity = 0.3 + Math.sin(t * 1.6) * 0.15; hov.scale.setScalar(1 + Math.sin(t * 1.6) * 0.06); domeStar.rotation.y = t * 1.5; tip.material.emissiveIntensity = 0.3 + Math.abs(Math.sin(t * 3)) * 0.7;
+    pStars.forEach((s, i) => { const a = t * 0.6 + i / 5 * Math.PI * 2; s.position.set(Math.cos(a) * 3.4, 3.6 + Math.sin(a * 2 + i) * 1.2, Math.sin(a) * 2.6); s.rotation.y = t * 2; }); });
+  hot('pod', pod, 10.4, '自主學習夢想艙', '🚀', '#ECE6FF');
 
   // ===== 扭蛋機（前院） =====
-  const gac = G(W, -8.6, 0, 9.4); gac.rotation.y = 0.35;
+  const gac = G(W, -12.4, 0, 12.6); gac.rotation.y = 0.4;
   Bx(gac, 2.4, 2.4, 2.2, '#FF8FB8', 0, 1.2, 0, 0.35); Bx(gac, 2.5, 0.3, 2.3, '#FFFFFF', 0, 2.45, 0, 0.12);
   const glass = mesh(SPH, new THREE.MeshStandardMaterial({ color: '#E8F6FF', transparent: true, opacity: 0.32, roughness: 0.1, metalness: 0, depthWrite: false }), 0, 3.75, 0, false); glass.scale.setScalar(1.3); gac.add(glass);
   const caps = []; for (let i = 0; i < 14; i++) { const cg = G(gac, Math.cos(i * 2.4) * (0.35 + (i % 3) * 0.25), 3.05 + (i / 14) * 1.3 + (i % 2) * 0.1, Math.sin(i * 2.4) * (0.35 + (i % 3) * 0.25)); const cc = ['#FFE07A', '#8EDDC0', '#8FD3FF', '#BBA8FF', '#FFB48F'][i % 5]; const tp = mesh(new THREE.SphereGeometry(0.28, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), MAT(cc), 0, 0, 0); cg.add(tp); const bt = mesh(new THREE.SphereGeometry(0.28, 16, 8, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), MAT('#FFFFFF'), 0, 0, 0); cg.add(bt); cg.rotation.set(i, i * 2, 0); caps.push(cg); }
@@ -680,22 +711,22 @@ function buildScene() {
   hot('gacha', gac, 6.0, '今日幸運書籤', '🎁', '#FFF3C4');
 
   // ===== 前院裝飾 =====
-  tree(W, -20.5, -6, 1.1, '#8EDB8A', '#FF8FB8'); tree(W, 21.5, -7, 1.0, '#A5E39A', '#FFB13B'); tree(W, -13, -10.5, 0.9, '#9FE0B0'); tree(W, 13, -11, 0.85, '#8EDB8A', '#FF7A7A'); tree(W, 19.5, 9, 0.8, '#A5E39A'); tree(W, -21, 6.5, 0.75, '#9FE0B0', '#FFE07A');
+  tree(W, -23, -8, 1.1, '#8EDB8A', '#FF8FB8'); tree(W, 22, -8.5, 1.05, '#A5E39A', '#FFB13B'); tree(W, -16, -14.5, 0.9, '#9FE0B0'); tree(W, 16.5, -14.5, 0.85, '#8EDB8A', '#FF7A7A'); tree(W, 24, 7, 0.85, '#A5E39A'); tree(W, -25.5, 8.5, 0.75, '#9FE0B0', '#FFE07A'); tree(W, 19, 1.5, 0.95, '#9FE0B0', '#FF8FB8'); tree(W, -28, -2, 0.8, '#A5E39A');
   const bushC = ['#FF9EC4', '#FFE07A', '#BBA8FF', '#FFFFFF'];
-  [[-4.5, 8], [4.5, 8], [-3.6, 14.2], [3.8, 14.5], [10, 12], [-14.5, 13.2], [13, 15], [8.5, 6.5], [-22, 0.5], [23, 2]].forEach(([x, z], i) => { const b = G(W, x, 0, z); Sp(b, 0.9, '#7FD07E', 0, 0.55, 0, 1.25, 0.8, 1); for (let k = 0; k < 6; k++) { const a = k / 6 * Math.PI * 2; Sp(b, 0.16, bushC[(i + k) % 4], Math.cos(a) * 0.85, 0.85 + (k % 2) * 0.25, Math.sin(a) * 0.7); } });
+  [[-5.2, 10.5], [5.2, 10.5], [-3.8, 17.5], [3.8, 18], [-14, 19], [6.5, 21], [22, 12], [-26, 2.5], [26.5, 2], [-20, 15], [24, -3], [-27, -7]].forEach(([x, z], i) => { const b = G(W, x, 0, z); Sp(b, 0.9, '#7FD07E', 0, 0.55, 0, 1.25, 0.8, 1); for (let k = 0; k < 6; k++) { const a = k / 6 * Math.PI * 2; Sp(b, 0.16, bushC[(i + k) % 4], Math.cos(a) * 0.85, 0.85 + (k % 2) * 0.25, Math.sin(a) * 0.7); } });
   // 長椅＋路燈
   const bench = (x, z, ry) => { const b = G(W, x, 0, z); b.rotation.y = ry; for (let k = 0; k < 3; k++) Bx(b, 2.6, 0.16, 0.34, '#FFB48F', 0, 0.75, -0.36 + k * 0.36, 0.06); Bx(b, 2.6, 0.5, 0.16, '#FFB48F', 0, 1.25, -0.56, 0.06); [-1, 1].forEach(k => Bx(b, 0.16, 0.75, 1.0, '#FFFFFF', k * 1.1, 0.37, -0.1, 0.05)); };
-  bench(6.2, 11.2, -0.3); bench(-12.5, 4.2, 0.5);
+  bench(-7.6, 18.5, 0.25); bench(-19, 9.5, 0.6);
   const lamp = (x, z) => { const l = G(W, x, 0, z); Cy(l, 0.35, 0.42, 0.3, '#BBA8FF', 0, 0.15, 0); Cy(l, 0.1, 0.12, 3.6, '#BBA8FF', 0, 2.0, 0, 8); const b = Sp(l, 0.42, '#FFF3C4', 0, 4.1, 0); b.material = MAT('#FFF3C4', { emissive: 0xFFE3A0, emissiveIntensity: 0.6 }); Co(l, 0.5, 0.4, '#BBA8FF', 0, 4.6, 0, 16); };
-  lamp(-4.4, 12.4); lamp(4.4, 12.4); lamp(11.6, 6.2);
+  lamp(-4.6, 14.2); lamp(4.6, 14.2); lamp(-17.5, 6.5);
   // 信箱
-  const mb = G(W, 3.8, 0, 16.2); Cy(mb, 0.1, 0.1, 1.4, '#C9976A', 0, 0.7, 0, 8); Bx(mb, 1.0, 0.75, 0.8, '#8FD3FF', 0, 1.6, 0, 0.3); Bx(mb, 0.06, 0.45, 0.2, '#FF8FB8', 0.53, 1.85, 0, 0.02);
+  const mb = G(W, 4.4, 0, 20.6); Cy(mb, 0.1, 0.1, 1.4, '#C9976A', 0, 0.7, 0, 8); Bx(mb, 1.0, 0.75, 0.8, '#8FD3FF', 0, 1.6, 0, 0.3); Bx(mb, 0.06, 0.45, 0.2, '#FF8FB8', 0.53, 1.85, 0, 0.02);
   // 書本造型的告示牌
-  const bk = G(W, -4.2, 0, 16.4); bk.rotation.y = 0.15; const bkT = tex(512, 256, (c, w, h) => { c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, w, h); c.fillStyle = '#E9E2D6'; c.fillRect(w / 2 - 3, 0, 6, h); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.font = `400 42px ${RF}`; c.fillText('歡迎光臨', w / 4, 110); c.fillText('四維圖書館', w * 3 / 4, 110); c.font = `700 24px ${FONT}`; c.fillStyle = '#E0679A'; c.fillText('點點角色試試看', w / 4, 170); c.fillText('一起來讀書吧！', w * 3 / 4, 170); });
+  const bk = G(W, -3.6, 0, 21.6); bk.rotation.y = 0.15; const bkT = tex(512, 256, (c, w, h) => { c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, w, h); c.fillStyle = '#E9E2D6'; c.fillRect(w / 2 - 3, 0, 6, h); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.font = `400 42px ${RF}`; c.fillText('歡迎光臨', w / 4, 110); c.fillText('四維圖書館', w * 3 / 4, 110); c.font = `700 24px ${FONT}`; c.fillStyle = '#E0679A'; c.fillText('點點角色試試看', w / 4, 170); c.fillText('一起來讀書吧！', w * 3 / 4, 170); });
   [-1, 1].forEach(k => Cy(bk, 0.09, 0.09, 1.6, '#C9976A', k * 1.4, 0.8, 0, 8)); Bx(bk, 3.6, 1.9, 0.22, '#FF8FB8', 0, 2.1, -0.05, 0.12); Pl(bk, 3.4, 1.7, bkT, 0, 2.1, 0.08);
   // 蝴蝶
   const bfs = []; for (let i = 0; i < 4; i++) { const b = G(W); [-1, 1].forEach(s => { const w = mesh(new THREE.CircleGeometry(0.32, 12), new THREE.MeshStandardMaterial({ color: ['#FF9EC4', '#FFE07A', '#BBA8FF', '#8FD3FF'][i], side: THREE.DoubleSide }), s * 0.28, 0, 0, false); w.rotation.y = s * 0.6; b.add(w); }); bfs.push(b); }
-  ANIM.push(t => bfs.forEach((b, i) => { const a = t * 0.3 + i * 1.6; b.position.set(Math.cos(a) * (8 + i * 2.5), 2.6 + Math.sin(t * 1.7 + i) * 0.8, 8 + Math.sin(a) * 4); b.rotation.y = -a; b.children.forEach((w, j) => (w.rotation.y = (j ? 1 : -1) * (0.2 + Math.abs(Math.sin(t * 10 + i)) * 1.0))); }));
+  ANIM.push(t => bfs.forEach((b, i) => { const a = t * 0.3 + i * 1.6; b.position.set(Math.cos(a) * (9 + i * 3), 2.8 + Math.sin(t * 1.7 + i) * 0.8, 11 + Math.sin(a) * 5); b.rotation.y = -a; b.children.forEach((w, j) => (w.rotation.y = (j ? 1 : -1) * (0.2 + Math.abs(Math.sin(t * 10 + i)) * 1.0))); }));
 
   // 合併所有書本
   scene.updateMatrixWorld(true);
@@ -716,8 +747,8 @@ function buildScene() {
 function preset() {
   const p = portrait();
   camera.fov = p ? 50 : 32; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
-  Object.assign(cam, p ? { tYaw: 0.2, tPitch: 0.3, tDist: 60 } : { tYaw: 0.18, tPitch: 0.2, tDist: Math.max(56, 58 * Math.max(1, 1.5 / camera.aspect)) });
-  camTarget.set(p ? -0.5 : 0, p ? 5.2 : 6.0, p ? 1.5 : 0);
+  Object.assign(cam, p ? { tYaw: 0.16, tPitch: 0.3, tDist: 76 } : { tYaw: 0.12, tPitch: 0.2, tDist: Math.max(56, 58 * Math.max(1, 1.55 / camera.aspect)) });
+  camTarget.set(p ? 1 : 0, p ? 6.4 : 7.6, p ? 2.5 : 1);
 }
 function updateCam(t) {
   const k = reduceMotion ? 1 : 0.08;
@@ -739,28 +770,29 @@ function setupControls() {
   cv.addEventListener('pointermove', e => {
     if (!ptrs.has(e.pointerId)) { if (e.pointerType === 'mouse') { const id = pickAt(e.clientX, e.clientY); cv.classList.toggle('hover', !!id); hoverId = id; } return; }
     const pr = ptrs.get(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch) cam.tDist = THREE.MathUtils.clamp(cam.tDist * pinch / d, 30, 130); pinch = d; return; }
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch) cam.tDist = THREE.MathUtils.clamp(cam.tDist * pinch / d, 30, 150); pinch = d; return; }
     if (!moved && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) moved = true;
     if (moved) { cam.tYaw = THREE.MathUtils.clamp(cam.tYaw - (e.clientX - pr.x) * 0.006, -1.1, 1.1); cam.tPitch = THREE.MathUtils.clamp(cam.tPitch + (e.clientY - pr.y) * 0.004, 0.08, 1.05); }
   });
   const up = e => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = 0; if (!ptrs.size && !moved && e.type === 'pointerup') { const id = pickAt(e.clientX, e.clientY); if (id) poke(id); } };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('pointerleave', () => { hoverId = null; cv.classList.remove('hover'); });
-  cv.addEventListener('wheel', e => { e.preventDefault(); cam.tDist = THREE.MathUtils.clamp(cam.tDist * (e.deltaY > 0 ? 1.1 : 0.9), 30, 130); }, { passive: false });
+  cv.addEventListener('wheel', e => { e.preventDefault(); cam.tDist = THREE.MathUtils.clamp(cam.tDist * (e.deltaY > 0 ? 1.1 : 0.9), 30, 150); }, { passive: false });
 }
 let hoverId = null;
 
 // ---- 場景標籤 ----
 const pinEls = {};
 function buildPins() {
-  Object.entries(HOTS).forEach(([id, h]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'pin'; b.innerHTML = `<i style="background:${h.col}">${h.icon}</i><span class="lt">${esc(h.label)}</span>`; b.setAttribute('aria-label', h.label); b.onclick = () => poke(id); $('#pins').appendChild(b); pinEls[id] = b; });
+  scene.updateMatrixWorld(true); const ws = new THREE.Vector3();
+  Object.entries(HOTS).forEach(([id, h]) => { h.ay *= h.g.getWorldScale(ws).y; const b = document.createElement('button'); b.type = 'button'; b.className = 'pin'; b.innerHTML = `<i style="background:${h.col}">${h.icon}</i><span class="lt">${esc(h.label)}</span>`; b.setAttribute('aria-label', h.label); b.onclick = () => poke(id); $('#pins').appendChild(b); pinEls[id] = b; });
 }
 const v3 = new THREE.Vector3();
 function updatePins() {
   Object.entries(HOTS).forEach(([id, h]) => { h.g.getWorldPosition(v3); v3.y += h.ay; v3.project(camera); const el = pinEls[id]; if (v3.z > 1) { el.classList.add('hide'); return; } el.classList.remove('hide'); el.style.transform = `translate(${(v3.x * 0.5 + 0.5) * innerWidth}px, ${(-v3.y * 0.5 + 0.5) * innerHeight}px) translate(-50%, -100%)`; });
 }
 function bubble(id, text) {
-  const h = HOTS[id]; if (!h) return; h.g.getWorldPosition(v3); v3.y += h.ay + 1.8; v3.project(camera);
+  const h = HOTS[id]; if (!h) return; h.g.getWorldPosition(v3); v3.y += h.ay + 2.2; v3.project(camera);
   const b = document.createElement('div'); b.className = 'bubble'; b.textContent = text; b.style.left = (v3.x * 0.5 + 0.5) * innerWidth + 'px'; b.style.top = (-v3.y * 0.5 + 0.5) * innerHeight + 'px'; document.body.appendChild(b); setTimeout(() => b.remove(), 1300);
 }
 
@@ -768,7 +800,7 @@ function bubble(id, text) {
 const REACT = {
   dede: ['汪汪！', 'woof', ['dede']], xiner: ['想看什麼書呢？', 'giggle', ['xiner']], xiaosi: ['一起來自學吧！', 'tap', ['xiaosi']],
   expo: ['新書展開幕囉！', 'giggle', ['sisi', 'juanmao']], opac: ['嗶！查詢機啟動', 'tap', []], portal: ['咻～傳送中！', 'whoosh', []],
-  cabin: ['叩叩，歡迎進來', 'pop', []], radio: ['ON AIR 📻', 'radio', []], gacha: ['今天的運氣如何？', 'pop', []]
+  pod: ['3、2、1，夢想啟航！', 'whoosh', []], radio: ['ON AIR 📻', 'radio', []], gacha: ['今天的運氣如何？', 'pop', []]
 };
 let busy = false;
 function poke(id) {
@@ -807,16 +839,15 @@ const PANELS = {
   dede() {
     const st = openStatus(), wd = new Date().getDay();
     const rows = CONFIG.hours.map(h => `<tr class="${h.d.includes(wd) ? 'today' : ''}"><td>${esc(h.label)}${h.d.includes(wd) ? '（今天）' : ''}</td><td>${h.open ? `${h.open} – ${h.close}` : esc(h.note || '休館')}</td></tr>`).join('');
-    const rk = CONFIG.rank.map((b, i) => `<li><span class="m">${['🥇', '🥈', '🥉'][i] || i + 1}</span><span class="t"><b>${esc(b.t)}</b><small>${esc(b.a)}</small></span><a href="${opacUrl(b.t)}" target="_blank" rel="noopener" data-q="${esc(b.t)}">查館藏</a></li>`).join('');
+    const rk = CONFIG.rank.map((b, i) => `<li><span class="m">${['🥇', '🥈', '🥉'][i] || i + 1}</span><span class="t"><b>${esc(b.t)}</b><small>${esc(b.a)}</small></span></li>`).join('');
     frame({ hc: '#FFF3C4', av: IMG.dede, tag: '🐶 櫃檯值班中', title: 'DeDe 的開館小報', say: '汪！我是 DeDe～今天也趴在櫃檯等你來借書 🐾',
       body: `<div class="sec"><h3>⏰ 今日開館時間 ${demoTag(CONFIG.hoursDemo)}</h3><p><span class="status ${st.open ? '' : 'closed'}">${st.open ? '現在開館中' : '目前休館中'}</span></p><table class="hours">${rows}</table></div>
       <div class="sec"><h3>🏆 ${esc(CONFIG.rankTitle)} ${demoTag(CONFIG.rankDemo)}</h3><ol class="rank">${rk}</ol></div>
       <div class="foot">📍 ${esc(CONFIG.contact.addr)}・☎️ <a href="${CONFIG.contact.telLink}">${esc(CONFIG.contact.tel)}</a></div>` });
-    sheet.querySelectorAll('ol.rank a').forEach(a => a.onclick = e => { e.preventDefault(); opacGo(a.dataset.q); });
   },
   opac() {
     frame({ hc: '#DDF1FF', av: '🔍', tag: 'WebPAC', title: '館藏查詢機', say: '輸入書名、作者或關鍵字，按下查詢就幫你找書！',
-      body: `<form class="sec" id="qf"><div class="search"><select id="qt" aria-label="查詢欄位"><option>書名</option><option>作者</option><option>關鍵字</option></select><input id="qi" placeholder="例如：原子習慣" aria-label="查詢關鍵字" enterkeyhint="search"><button class="btn" type="submit">查詢</button></div></form>
+      body: `<form class="sec" id="qf"><div class="search"><select id="qt" aria-label="查詢欄位"><option>書名</option><option>作者</option><option>關鍵字</option></select><input id="qi" placeholder="例如：小論文" aria-label="查詢關鍵字" enterkeyhint="search"><button class="btn" type="submit">查詢</button></div></form>
       <div class="sec"><h3>🔥 熱門關鍵字</h3><div class="chips">${['自主學習', '小論文', '花蓮', '心理學', '程式設計', '輕小說', '學測', '繪本'].map(k => `<button class="chip" type="button">${k}</button>`).join('')}</div></div>
       <div class="sec"><h3>💡 找書小撇步</h3><div class="grid"><div class="card"><span class="ic">📇</span><b>記下索書號</b><span>查到書後記下索書號，依號碼到書架上找。</span></div><div class="card"><span class="ic">🙋</span><b>找不到？問館員</b><span>書被借走了可以預約，櫃檯老師很樂意幫忙！</span></div><div class="card"><span class="ic">🔁</span><b>換個關鍵字</b><span>試試同義詞、作者名或主題詞，結果會更多。</span></div></div></div>
       <p class="row" style="margin-top:14px"><a class="btn ghost" href="${CONFIG.opacHome}" target="_blank" rel="noopener">🏫 直接開啟 WebPAC 首頁</a></p>` });
@@ -830,35 +861,35 @@ const PANELS = {
       if (step < QUIZ.length) {
         const q = QUIZ[step];
         frame({ hc: '#FFD6E5', av: IMG.xiner, tag: '💗 心靈書籤・心情選書', title: '心兒的心情選書', say: '回答 3 個小問題，我幫你找一本適合現在心情的書 ❤️',
-          body: `<div class="quiz sec"><div class="dots">${QUIZ.map((_, i) => `<i class="${i <= step ? 'on' : ''}"></i>`).join('')}</div><div class="q">Q${step + 1}. ${q.q}</div><div class="opts">${q.o.map((o, i) => `<button type="button" data-k="${o[1]}">${o[0]}</button>`).join('')}</div></div>` });
+          body: `<div class="quiz sec"><div class="dots">${QUIZ.map((_, i) => `<i class="${i <= step ? 'on' : ''}"></i>`).join('')}</div><div class="q">Q${step + 1}. ${q.q}</div><div class="opts">${q.o.map(o => `<button type="button" data-k="${o[1]}">${o[0]}</button>`).join('')}</div></div>` });
         sheet.querySelectorAll('.opts button').forEach(b => b.onclick = () => { SFX.pop(); score[b.dataset.k]++; step++; render(); });
       } else {
         const k = Object.keys(score).sort((a, b) => score[b] - score[a])[0], m = MOODS[k];
         SFX.sparkle();
         frame({ hc: m.c + '66', av: IMG.xiner, tag: '💗 你的心情選書結果', title: m.n, say: m.say,
-          body: `<div class="sec"><h3>📚 心兒推薦給你</h3><div class="grid">${m.books.map((b, i) => `<div class="book">${bookCover(b[0], i)}<div><b>《${esc(b[0])}》</b><small>${esc(b[1])}</small><small><a href="#" data-q="${esc(b[0])}">🔍 查館藏</a></small></div></div>`).join('')}</div></div>
-          <div class="sec row"><button class="btn" type="button" id="again">🔄 再測一次</button><button class="btn alt" type="button" id="toGacha">🎁 抽今日心靈書籤</button></div>` });
-        sheet.querySelectorAll('a[data-q]').forEach(a => a.onclick = e => { e.preventDefault(); opacGo(a.dataset.q); });
+          body: `<div class="sec"><h3>📚 心兒推薦給你</h3><div class="grid">${m.books.map((b, i) => `<div class="book">${bookCover(b[0], i)}<div><b>《${esc(b[0])}》</b><small>${esc(b[1])}</small></div></div>`).join('')}</div></div>
+          <div class="sec row"><button class="btn" type="button" id="again">🔄 再測一次</button></div>` });
         $('#again').onclick = () => { step = 0; Object.keys(score).forEach(s => score[s] = 0); render(); };
-        $('#toGacha').onclick = () => { dlg.close(); poke('gacha'); };
       }
     };
     render();
   },
   xiaosi() {
-    frame({ hc: '#D7F5EA', av: IMG.xiaosi, tag: '📱 小四的平板', title: '自主學習 × 電子書庫', say: '先訂好目標，後面就會很順利唷！選一個入口出發吧 ⭐',
-      body: `<div class="sec grid"><button class="card" type="button" id="goCabin" style="background:#FFF3C4"><span class="ic">🏡</span><b>自主學習專區</b><span>時程、計畫申請表、學長姐成果展牆，一次看。</span></button><button class="card" type="button" id="goPortal" style="background:#ECE6FF"><span class="ic">🌀</span><b>電子書庫・數位資源</b><span>華藝、臺大出版、國資圖電子書等 14 個資源。</span></button></div>
-      <div class="sec"><h3>⚡ 小四推薦：手機就能讀</h3><div class="grid res">${RESOURCES.filter((_, i) => [3, 5, 0].includes(i)).map(r => `<a class="card" href="${r.u}" target="_blank" rel="noopener"><span class="ic" style="background:${r.c}">${r.e}</span><span><b>${esc(r.n)}</b><span>${esc(r.d)}</span></span></a>`).join('')}</div></div>` });
-    $('#goCabin').onclick = () => PANELS.cabin(); $('#goPortal').onclick = () => PANELS.portal();
+    const steps = [['🪪', '辦一張借書證', '到國資圖或花蓮縣的公共圖書館申辦（也有線上申辦）。'], ['📲', '下載閱讀 App', '依平台指示安裝閱讀器，手機、平板、電腦都能用。'], ['📚', '登入借書', '一次可借好幾本，到期會自動歸還，不怕逾期！']];
+    frame({ hc: '#D7F5EA', av: IMG.xiaosi, tag: '📱 小四的平板', title: '電子書庫', say: '書包太重？平板裡就有一整座圖書館！跟著三步驟開始借電子書吧 ⭐',
+      body: `<div class="sec"><h3>📲 借電子書 3 步驟</h3><div class="timeline">${steps.map((s, i) => `<div class="st"><div class="n" style="background:${['#D7F5EA', '#DDF1FF', '#FFF3C4'][i]}">${s[0]}</div><div><small>STEP ${i + 1}</small><b>${s[1]}</b><p>${s[2]}</p></div></div>`).join('')}</div></div>
+      <div class="sec"><h3>📖 免費電子書平台</h3><div class="grid res">${EBOOKS.map(r => `<a class="card" href="${r.u}" target="_blank" rel="noopener"><span class="ic" style="background:${r.c}">${r.e}</span><span><b>${esc(r.n)}</b><span>${esc(r.d)}</span></span></a>`).join('')}</div></div>
+      <div class="sec"><h3>🧭 想去更多地方</h3><div class="chips"><button class="chip" type="button" id="goPod">🚀 自主學習夢想艙</button><button class="chip" type="button" id="goPortal">🌀 數位資源傳送門</button></div></div>` });
+    $('#goPod').onclick = () => PANELS.pod(); $('#goPortal').onclick = () => PANELS.portal();
   },
   portal() {
-    frame({ hc: '#ECE6FF', av: '🌀', tag: '漂浮書本傳送門', title: '數位資源與電子書', say: '穿過傳送門，就能到達 14 個學術資源世界！點卡片直接前往 ✨',
+    frame({ hc: '#ECE6FF', av: '🌀', tag: '漂浮書本傳送門', title: '數位資源傳送門', say: '穿過傳送門，就能到達 14 個學術資源世界！點卡片直接前往 ✨',
       body: `<div class="sec grid res">${RESOURCES.map(r => `<a class="card" href="${r.u}" target="_blank" rel="noopener"><span class="ic" style="background:${r.c}">${r.e}</span><span><b>${esc(r.n)}</b><span>${esc(r.d)}</span></span></a>`).join('')}</div>
-      <div class="foot">部分資料庫需在校內網路或以借書證登入使用，有問題歡迎到櫃檯詢問。</div>` });
+      <div class="foot">部分資料庫需在校內網路或登入後使用，有問題歡迎到櫃檯詢問。</div>` });
   },
-  cabin() {
+  pod() {
     const S = CONFIG.sdl, steps = [['✏️', '#FFD6E5', '第 1-2 週', '擬定計畫', '確立自學主題與 18 週進度，填好計畫申請表並請指導老師簽名。'], ['🔍', '#DDF1FF', '第 3 週', '審核核定', '推動小組審查計畫內容，通過後依核定地點到圖資中心或專科教室研習。'], ['🏃', '#D7F5EA', '第 4-16 週', '落實執行', '每週帶著紀錄表，寫下收穫與困惑，下課前請現場老師核章。'], ['🎉', '#FFF3C4', '第 17-18 週', '成果發表', '整理成果與自我反思，參加成果分享，並上傳到學習歷程平台！']];
-    frame({ hc: '#FFE9C7', av: IMG.juanmao, tag: '🏡 自習室小木屋', title: '自主學習專區', say: '不知道主題怎麼選？先看看學長姐做了什麼！🌀',
+    frame({ hc: '#ECE6FF', av: IMG.juanmao, tag: '🚀 前方草地', title: '自主學習夢想艙', say: '捲毛：歡迎登艙！不知道主題怎麼選？先看看學長姐做了什麼 🌀',
       body: `<div class="sec"><h3>🗓️ 學期實施時程</h3><div class="timeline">${steps.map(s => `<div class="st"><div class="n" style="background:${s[1]}">${s[0]}</div><div><small>${s[2]}</small><b>${s[3]}</b><p>${s[4]}</p></div></div>`).join('')}</div></div>
       <div class="sec"><h3>🤝 大專校院共好計畫時程</h3><div class="grid">${S.gonghao.map(g => `<div class="card"><span class="ic">${g.e}</span><b>${esc(g.t)}</b><span>${esc(g.d)}</span></div>`).join('')}</div></div>
       <div class="sec"><h3>📥 計畫書表單下載</h3><a class="card" href="${S.form}" target="_blank" rel="noopener" style="background:#FFF3C4"><span class="ic">📄</span><b>學生自主學習計畫申請表</b><span>自學動機・18 週進度規劃・設備場地需求（填完請指導老師簽名）</span></a></div>
@@ -866,12 +897,10 @@ const PANELS = {
   },
   expo() {
     const E = CONFIG.expo;
-    frame({ hc: '#D7F5EA', av: IMG.sisi, tag: '🎨 2F 展區', title: '當期主題書展', say: '思思：這期的書展是我和捲毛一起選的！捲毛：⋯⋯（點頭）很好看。',
-      body: `<div class="sec"><h3>📌 ${esc(E.title)} ${demoTag(CONFIG.expoDemo)}</h3><p style="margin:0 0 4px;font-weight:700;color:var(--ink2)">🗓️ ${esc(E.period)}・📍 ${esc(E.place)}</p><p style="margin:0;line-height:1.7">${esc(E.intro)}</p></div>
-      <div class="sec grid">${E.books.map((b, i) => `<div class="book"><div class="cv" style="background:${b.c}">${b.e}</div><div><b>《${esc(b.t)}》</b><small>${esc(b.a)}</small><small><a href="#" data-q="${esc(b.t)}">🔍 查館藏</a></small></div></div>`).join('')}</div>
-      <div class="sec"><button class="card" type="button" id="goRadio" style="background:#FFE1D0"><span class="ic">📻</span><b>不可不讀廣播電台</b><span>聽悠紀和智幼聊好書，還有文字稿與好書金句。</span></button></div>` });
-    sheet.querySelectorAll('a[data-q]').forEach(a => a.onclick = e => { e.preventDefault(); opacGo(a.dataset.q); });
-    $('#goRadio').onclick = () => PANELS.radio();
+    frame({ hc: '#D7F5EA', av: IMG.sisi, tag: '🎨 2F 展區', title: '主題書展・新書推薦', say: '思思：這期的書展是我和捲毛一起選的！捲毛：⋯⋯（點頭）很好看。',
+      body: `<div class="sec"><h3>📌 ${esc(E.title)} ${demoTag(CONFIG.expoDemo)}</h3><p style="margin:0 0 4px;font-weight:700;color:var(--ink2)">🗓️ ${esc(E.period)}・📍 ${esc(E.place)}</p><p style="margin:0 0 10px;line-height:1.7">${esc(E.intro)}</p>
+      <div class="grid">${E.books.map(b => `<div class="book"><div class="cv" style="background:${b.c}">${b.e}</div><div><b>《${esc(b.t)}》</b><small>${esc(b.a)}</small></div></div>`).join('')}</div></div>
+      <div class="sec"><h3>📗 推薦新書 ${demoTag(CONFIG.expoDemo)}</h3><div class="nb">${E.newBooks.map(b => `<article class="nbk"><div class="cv" style="background:${b.c}">${b.e}</div><div><b>《${esc(b.t)}》</b><dl><dt>作者</dt><dd>${esc(b.a)}</dd><dt>出版</dt><dd>${esc(b.pub)}・${esc(b.y)}</dd><dt>類別</dt><dd>${esc(b.cat)}</dd><dt>適合</dt><dd>${esc(b.who)}</dd></dl><p>${esc(b.intro)}</p></div></article>`).join('')}</div></div>` });
   },
   radio() { renderRadio(0); },
   gacha() { gachaPanel(); }
@@ -882,15 +911,14 @@ let audio = null, curEp = 0;
 function stopAudio() { if (audio) { audio.pause(); audio = null; } const r = sheet.querySelector('.radio'); r && r.classList.remove('on'); }
 function renderRadio(i) {
   stopAudio(); curEp = i; const E = CONFIG.radio[i];
-  frame({ hc: '#FFE1D0', av: '📻', tag: '🎙️ ON AIR', title: '不可不讀廣播電台', say: `主持人：悠紀 & 智幼｜每集 5 分鐘，帶你認識一本好書。`,
-    body: `<div class="sec radio" id="rd"><div class="scr"><small>${esc(E.ep)}・${esc(E.hosts)}</small><b>${esc(E.t)}</b></div><div class="ctl"><button class="play" id="pl" type="button" aria-label="播放">▶</button><div class="bar" id="bar"><i></i></div><div class="eq"><i></i><i></i><i></i><i></i></div></div>${E.src ? '' : '<p style="margin:8px 4px 0;font-weight:700;font-size:13px">📼 音檔準備中，先看下方文字稿吧！</p>'}</div>
+  frame({ hc: '#FFE1D0', av: '📻', tag: '🎙️ ON AIR', title: '不可不讀廣播電台', say: '每集 10 分鐘，帶你認識一本好書。',
+    body: `<div class="sec radio" id="rd"><div class="scr"><small>${esc(E.ep)}</small><b>${esc(E.t)}</b></div><div class="ctl"><button class="play" id="pl" type="button" aria-label="播放">▶</button><div class="bar" id="bar"><i></i></div><div class="eq"><i></i><i></i><i></i><i></i></div></div>${E.src ? '' : '<p style="margin:8px 4px 0;font-weight:700;font-size:13px">📼 音檔準備中，敬請期待！</p>'}</div>
     <div class="sec"><h3>📋 節目列表</h3><div class="eps">${CONFIG.radio.map((e, j) => `<button type="button" class="${j === i ? 'on' : ''}" data-i="${j}"><span>${j === i ? '🔊' : '🎧'}</span><span>${esc(e.ep)}｜${esc(e.t)}</span></button>`).join('')}</div></div>
-    <div class="sec"><details class="script" open><summary>📝 文字稿</summary><p>${E.script}</p></details></div>
     <div class="sec"><h3>✨ 本集好書金句</h3><div class="quote">「${esc(E.quote)}」<small>— ${esc(E.from)}</small></div></div>` });
   sheet.querySelectorAll('.eps button').forEach(b => b.onclick = () => { SFX.pop(); renderRadio(+b.dataset.i); });
   const rd = $('#rd'), pl = $('#pl'), bar = $('#bar');
   pl.onclick = () => {
-    if (!E.src) { SFX.radio(); rd.classList.add('on'); setTimeout(() => rd.classList.remove('on'), 1600); toast('這集的音檔還在錄製中，先看文字稿吧！'); return; }
+    if (!E.src) { SFX.radio(); rd.classList.add('on'); setTimeout(() => rd.classList.remove('on'), 1600); toast('這集的音檔還在錄製中，敬請期待！'); return; }
     if (audio && !audio.paused) { audio.pause(); pl.textContent = '▶'; rd.classList.remove('on'); return; }
     if (!audio) { audio = new Audio(E.src); audio.ontimeupdate = () => { bar.firstChild.style.width = (audio.currentTime / (audio.duration || 1) * 100) + '%'; }; audio.onended = () => { pl.textContent = '▶'; rd.classList.remove('on'); }; audio.onerror = () => toast('音檔載入失敗，請稍後再試'); }
     audio.play().then(() => { pl.textContent = '❚❚'; rd.classList.add('on'); }).catch(() => toast('無法播放音檔'));
@@ -924,8 +952,7 @@ async function gachaPanel() {
   const show = (qi, fresh) => {
     const url = drawBookmark(qi, ds), Q = QUOTES[qi];
     frame({ hc: '#FFF3C4', av: '🎁', tag: fresh ? '✨ 恭喜轉到！' : '🎁 今天已經轉過囉', title: '今日幸運書籤', say: fresh ? '這是今天專屬於你的心靈書籤，長按圖片就能存起來分享！' : '每天只能轉一次喔！這是你今天的書籤，明天再來試試手氣 🍀',
-      body: `<div class="sec mark"><img src="${url}" alt="四維心靈書籤：${esc(Q.q)}"><p>📱 手機：長按圖片 → 儲存圖片／分享<br>💻 電腦：點下方按鈕下載</p><div class="row" style="justify-content:center"><a class="btn" href="${url}" download="四維心靈書籤-${ds}.png">⬇️ 下載書籤</a><button class="btn alt" type="button" id="share" ${navigator.share ? '' : 'hidden'}>📤 分享</button><button class="btn ghost" type="button" id="findB">🔍 查《${esc(Q.b)}》</button></div></div>` });
-    $('#findB').onclick = () => opacGo(Q.b);
+      body: `<div class="sec mark"><img src="${url}" alt="四維心靈書籤：${esc(Q.q)}"><p>📱 手機：長按圖片 → 儲存圖片／分享<br>💻 電腦：點下方按鈕下載</p><div class="row" style="justify-content:center"><a class="btn" href="${url}" download="四維心靈書籤-${ds}.png">⬇️ 下載書籤</a><button class="btn alt" type="button" id="share" ${navigator.share ? '' : 'hidden'}>📤 分享</button></div></div>` });
     const sh = $('#share'); if (sh) sh.onclick = async () => { try { const blob = await (await fetch(url)).blob(), f = new File([blob], 'swsh-bookmark.png', { type: 'image/png' }); if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ files: [f], title: '四維心靈書籤', text: Q.q }); else await navigator.share({ title: '四維心靈書籤', text: `「${Q.q}」— ${Q.s}` }); } catch (e) {} };
   };
   if (done) { show(st.gacha.idx, false); return; }
@@ -983,7 +1010,7 @@ function start() {
   setTimeout(() => { $('#hint').style.opacity = 0; }, 9000);
 }
 (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]) : Promise.resolve()).then(start);
-window.__lib = { scene, cam, camera, poke, HOTS, CHARS };
+window.__lib = { scene, cam, camera, poke, HOTS, CHARS, target: camTarget };
 </script>
 </body>
 </html>
