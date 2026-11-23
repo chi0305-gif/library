@@ -139,6 +139,7 @@ ol.rank a { font-size: 12.5px; font-weight: 700; background: var(--sky2); border
 .radio .play { width: 54px; height: 54px; border-radius: 50%; border: 4px solid #fff; background: #FFE07A; font-size: 22px; flex: 0 0 auto; box-shadow: 0 4px 0 rgba(0, 0, 0, .12); }
 .radio .bar { flex: 1; height: 10px; border-radius: 9px; background: rgba(255, 255, 255, .55); overflow: hidden; cursor: pointer; }
 .radio .bar i { display: block; height: 100%; width: 0; background: #FFF6DA; }
+.radio .tm { font-weight: 900; font-size: 13px; min-width: 74px; text-align: center; }
 .radio .eq { display: flex; gap: 3px; align-items: flex-end; height: 22px; } .radio .eq i { width: 4px; background: #FFF6DA; border-radius: 3px; height: 30%; }
 .radio.on .eq i { animation: eq .8s ease-in-out infinite alternate; } .radio .eq i:nth-child(2) { animation-delay: .2s; } .radio .eq i:nth-child(3) { animation-delay: .4s; } .radio .eq i:nth-child(4) { animation-delay: .1s; }
 @keyframes eq { to { height: 100%; } }
@@ -181,7 +182,7 @@ details.script { background: #fff; border-radius: 14px; padding: 10px 14px; } de
 </header>
 
 <nav class="dock" aria-label="圖書館功能">
-  <button type="button" data-open="dede"><b>🐶</b>開館・排行</button>
+  <button type="button" data-open="dede"><b>🐶</b>開館時間</button>
   <button type="button" data-open="opac"><b>🔍</b>館藏查詢</button>
   <button type="button" data-open="xiner"><b>💗</b>心情選書</button>
   <button type="button" data-open="xiaosi"><b>📱</b>數位閱讀</button>
@@ -198,6 +199,7 @@ details.script { background: #fff; border-radius: 14px; padding: 10px 14px; } de
 <div id="loading"><div class="card"><div class="logo">📚</div><h2>四維立體圖書館</h2><p>小島正在搭建中⋯⋯</p></div></div>
 
 <script>__THREE_JS__</script>
+<script>const AUDIO = { ep01: '__AUDIO_ep01__' };</script>
 <script>
 'use strict';
 // =====================================================================
@@ -212,15 +214,9 @@ const CONFIG = {
   // 開館時間（0=週日 … 6=週六）；demo:true 會顯示「示範」標籤，確認後改成 false
   hoursDemo: true,
   hours: [
-    { d: [1, 2, 3, 4, 5], label: '週一～週五', open: '07:30', close: '17:00' },
+    { d: [1, 2, 3, 4, 5], label: '週一～週五', open: '08:00', close: '17:00' },
     { d: [6], label: '週六', open: '', close: '', note: '休館（自主學習／活動另行公告）' },
     { d: [0], label: '週日・國定假日', open: '', close: '', note: '休館' }
-  ],
-  rankDemo: true,
-  rankTitle: '本月借閱排行榜',
-  rank: [
-    { t: '原子習慣', a: '詹姆斯．克利爾' }, { t: '被討厭的勇氣', a: '岸見一郎、古賀史健' }, { t: '解憂雜貨店', a: '東野圭吾' },
-    { t: '人類大歷史', a: '哈拉瑞' }, { t: '刻意練習', a: '安德斯．艾瑞克森、羅伯特．普爾' }
   ],
   expoDemo: true,
   expo: {
@@ -243,7 +239,7 @@ const CONFIG = {
   },
   // 不可不讀廣播電台：src 放音檔網址（mp3），留空會顯示「音檔準備中」
   radio: [
-    { ep: 'EP.01', t: '《小王子》：什麼是「馴服」？', src: '', quote: '真正重要的東西，用眼睛是看不見的。', from: '《小王子》聖修伯里' },
+    { ep: 'EP.01', t: '《你真的不必討好所有人》：害怕失敗的妙藥是豁出去', src: 'audio:ep01', quote: '害怕失敗的妙藥，就是豁出去。', from: '《你真的不必討好所有人》枡野俊明' },
     { ep: 'EP.02', t: '《追風箏的孩子》：友情與救贖', src: '', quote: '為你，千千萬萬遍。', from: '《追風箏的孩子》卡勒德．胡賽尼' },
     { ep: 'EP.03', t: '《蘇菲的世界》：一封信開啟的哲學冒險', src: '', quote: '你是誰？', from: '《蘇菲的世界》喬斯坦．賈德' }
   ],
@@ -498,10 +494,11 @@ function buildScene() {
   scene.fog = new THREE.Fog(0xCDEBFF, 220, 900);
   scene.add(new THREE.HemisphereLight(0xF4FBFF, 0xB89878, 0.42));
   const sun = new THREE.DirectionalLight(0xFFF2DC, 1.15); sun.position.set(30, 60, 45); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera, { left: -40, right: 40, top: 40, bottom: -40, near: 5, far: 160 }); sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.03; sun.shadow.radius = 5; scene.add(sun);
+  Object.assign(sun.shadow.camera, { left: -42, right: 42, top: 42, bottom: -42, near: 5, far: 160 }); sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.03; sun.shadow.radius = 5; scene.add(sun);
   const fill = new THREE.DirectionalLight(0xDDE8FF, 0.38); fill.position.set(-40, 25, 30); scene.add(fill);
   const warm1 = new THREE.PointLight(0xFFD6A0, 0.6, 30, 2); warm1.position.set(0, 4.9, -0.4); scene.add(warm1);
   const warm2 = new THREE.PointLight(0xFFE3B8, 0.45, 28, 2); warm2.position.set(0, 11.2, -4.2); scene.add(warm2);
+  const warm3 = new THREE.PointLight(0xFFF0D0, 0.45, 28, 2); warm3.position.set(0, 17.6, -4.2); scene.add(warm3);
 
   // 遠景：花蓮的海與中央山脈
   const sea = mesh(new THREE.CircleGeometry(700, 48), new THREE.MeshStandardMaterial({ color: '#7FD0E6', roughness: 0.4 }), 0, -26, 0, false); sea.rotation.x = -Math.PI / 2; scene.add(sea);
@@ -529,12 +526,12 @@ function buildScene() {
   const fl1 = tex(512, 320, (c, w, h) => { c.fillStyle = FLOOR1; c.fillRect(0, 0, w, h); c.strokeStyle = 'rgba(160,110,60,.25)'; c.lineWidth = 3; for (let y = 0; y < h; y += 32) { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); for (let x = (y / 32 % 2) * 64; x < w; x += 128) { c.beginPath(); c.moveTo(x, y); c.lineTo(x, y + 32); c.stroke(); } } });
   const f1 = Pl(L, 20.2, 12.2, fl1, 0, 0.42, 0); f1.rotation.x = -Math.PI / 2; f1.receiveShadow = true;
   // 牆：後、左、右（前面打開）
-  Bx(L, 20.6, 10.2, 0.6, WALL, 0, 5.3, -6.2, 0.2);
-  [-1, 1].forEach(k => { Bx(L, 0.6, 10.2, 12.6, WALL, k * 10.0, 5.3, 0, 0.2);
-    for (let f = 0; f < 2; f++) for (let j = 0; j < 2; j++) { const wz = -3 + j * 5, wy = 2.8 + f * 5; Bx(L, 0.7, 2.4, 2.0, '#FFFFFF', k * 10.0, wy, wz, 0.25); const gl = mesh(rbox(0.3, 1.9, 1.5, 0.12), MAT('#BEE6FF', { emissive: 0xBEE6FF, emissiveIntensity: 0.25, roughness: 0.3 }), k * 10.05, wy, wz); L.add(gl); Bx(L, 0.8, 0.14, 2.3, '#FF9EC4', k * 10.0, wy - 1.3, wz, 0.06); } });
+  Bx(L, 20.6, 15.2, 0.6, WALL, 0, 7.8, -6.2, 0.2);
+  [-1, 1].forEach(k => { Bx(L, 0.6, 15.2, 12.6, WALL, k * 10.0, 7.8, 0, 0.2);
+    for (let f = 0; f < 3; f++) for (let j = 0; j < 2; j++) { const wz = -3 + j * 5, wy = 2.8 + f * 5; Bx(L, 0.7, 2.4, 2.0, '#FFFFFF', k * 10.0, wy, wz, 0.25); const gl = mesh(rbox(0.3, 1.9, 1.5, 0.12), MAT('#BEE6FF', { emissive: 0xBEE6FF, emissiveIntensity: 0.25, roughness: 0.3 }), k * 10.05, wy, wz); L.add(gl); Bx(L, 0.8, 0.14, 2.3, '#FF9EC4', k * 10.0, wy - 1.3, wz, 0.06); } });
   // 前緣柱子與腰帶
-  [-1, 1].forEach(k => { Bx(L, 0.9, 10.6, 0.9, '#FF9EC4', k * 10.0, 5.3, 6.2, 0.3); });
-  Bx(L, 21, 0.7, 0.9, '#FF9EC4', 0, 10.25, 6.2, 0.3);
+  [-1, 1].forEach(k => { Bx(L, 0.9, 15.6, 0.9, '#FF9EC4', k * 10.0, 7.8, 6.2, 0.3); });
+  Bx(L, 21, 0.7, 0.9, '#FF9EC4', 0, 15.25, 6.2, 0.3);
   // 二樓地板
   const fl2 = tex(512, 256, (c, w, h) => { c.fillStyle = FLOOR2; c.fillRect(0, 0, w, h); for (let x = 0; x < w; x += 64) for (let y = 0; y < h; y += 64) { c.fillStyle = (x + y) / 64 % 2 ? 'rgba(255,255,255,.35)' : 'rgba(187,168,255,.18)'; c.fillRect(x, y, 64, 64); } });
   Bx(L, 19.4, 0.5, 7.6, '#FFFFFF', 0, 5.0, -2.2, 0.15);
@@ -546,7 +543,7 @@ function buildScene() {
   // 樓梯（右側）
   for (let i = 0; i < 9; i++) Bx(L, 2.4, 0.5, 0.75, ['#FFE07A', '#FFB48F', '#8EDDC0', '#8FD3FF', '#BBA8FF'][i % 5], 7.9, 0.55 + i * 0.52, 5.4 - i * 0.48, 0.12);
   // 屋頂（三角形斜屋頂＋屋簷）
-  const roof = G(L, 0, 10.6, 0);
+  const roof = G(L, 0, 15.6, 0);
   [-1, 1].forEach(k => { const r = Bx(roof, 11.8, 0.6, 14.4, k < 0 ? '#FF8FB8' : '#FF9EC4', k * 5.15, 2.4, -0.1, 0.25); r.rotation.z = -k * 0.46; });
   const gable = new THREE.Shape(); gable.moveTo(-10, 0); gable.lineTo(10, 0); gable.lineTo(0, 4.7); gable.lineTo(-10, 0);
   const gb = mesh(new THREE.ExtrudeGeometry(gable, { depth: 0.5, bevelEnabled: true, bevelThickness: 0.12, bevelSize: 0.12, bevelSegments: 3 }), MAT('#FFF4E4'), 0, -0.05, 6.0); roof.add(gb);
@@ -561,12 +558,12 @@ function buildScene() {
   ANIM.push(t => { eg.rotation.z = Math.sin(t * 1.2) * 0.04; });
   // 招牌
   const signT = tex(1024, 200, (c, w, h) => { c.fillStyle = '#FFFFFF'; rr(c, 6, 6, w - 12, h - 12, 90); c.fill(); c.lineWidth = 10; c.strokeStyle = '#FFB2C8'; rr(c, 16, 16, w - 32, h - 32, 80); c.stroke(); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 92px ${RF}`; c.fillText('四維圖書資訊中心', w / 2, h / 2 + 4); });
-  const sg = mesh(rbox(8.4, 1.7, 0.3, 0.3), MAT('#FFE07A'), 0, 11.45, 6.95); L.add(sg); Pl(L, 8.1, 1.58, signT, 0, 11.45, 7.12);
+  const sg = mesh(rbox(8.4, 1.7, 0.3, 0.3), MAT('#FFE07A'), 0, 16.45, 6.95); L.add(sg); Pl(L, 8.1, 1.58, signT, 0, 16.45, 7.12);
   // 屋頂上的花蓮藍天白雲小裝飾
   const deco = G(roof, 0, 4.7, -0.5);
   const sunD = G(deco, -5.5, 2.6, 0); Cy(deco, 0.06, 0.06, 2.6, '#C9976A', -5.5, 1.3, 0, 6); Sp(sunD, 0.75, '#FFD54F', 0, 0, 0, 1, 1, 0.5); for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, r = Co(sunD, 0.16, 0.42, '#FFB13B', Math.cos(a) * 1.05, Math.sin(a) * 1.05, 0, 8); r.rotation.z = a - Math.PI / 2; } [-1, 1].forEach(k => Sp(sunD, 0.07, '#5B4636', k * 0.25, 0.1, 0.36)); ANIM.push(t => { sunD.rotation.z = Math.sin(t) * 0.15; });
   const c1 = G(deco, 4.6, 2.3, 0.4); Cy(deco, 0.06, 0.06, 2.3, '#C9976A', 4.6, 1.15, 0.4, 6); cloud(c1, 0, 0, 0, 0.55); ANIM.push(t => { c1.position.y = 2.3 + Math.sin(t * 1.4) * 0.15; });
-  const c2 = cloud(L, -13.5, 15.5, 2, 0.9), c3 = cloud(L, 13.5, 16.5, -2, 1.1); ANIM.push(t => { c2.position.y = 15.5 + Math.sin(t * 0.9) * 0.4; c3.position.y = 16.5 + Math.sin(t * 0.8 + 1) * 0.4; });
+  const c2 = cloud(L, -13.5, 20.5, 2, 0.9), c3 = cloud(L, 13.5, 21.5, -2, 1.1); ANIM.push(t => { c2.position.y = 20.5 + Math.sin(t * 0.9) * 0.4; c3.position.y = 21.5 + Math.sin(t * 0.8 + 1) * 0.4; });
   // 旗子
   const fg = G(roof, 0, 4.6, -0.5); Cy(fg, 0.06, 0.06, 2.4, '#FFFFFF', 0, 1.2, 0, 8); const flag = mesh(new THREE.PlaneGeometry(1.4, 0.9, 6, 1), new THREE.MeshStandardMaterial({ color: '#7CC56B', side: THREE.DoubleSide }), 0.72, 2.0, 0, false); fg.add(flag); Sp(fg, 0.1, '#FFE07A', 0, 2.45, 0);
   const fp = flag.geometry.attributes.position, fx0 = Array.from({ length: fp.count }, (_, i) => fp.getX(i));
@@ -577,7 +574,7 @@ function buildScene() {
   bookcase(L, -9.0, 0.4, -1.6, 4.2, 3.4, 3, Math.PI / 2, '#F4D6B8');
   // 地毯
   const rug = mesh(new THREE.CircleGeometry(2.8, 40), MAT('#FFD6E5'), 5.2, 0.45, -1.2, false); rug.rotation.x = -Math.PI / 2; L.add(rug); const rug2 = mesh(new THREE.RingGeometry(2.2, 2.45, 40), MAT('#FFFFFF'), 5.2, 0.46, -1.2, false); rug2.rotation.x = -Math.PI / 2; L.add(rug2);
-  plant(L, -8.6, 4.6, 0.95, 0.4); plant(L, 9.1, -4.9, 0.8, 0.4, '#8FD3FF'); plant(L, -9.0, -4.8, 0.7, 5.25, '#BBA8FF');
+  plant(L, 9.1, -4.9, 0.8, 0.4, '#8FD3FF'); plant(L, -9.0, -4.8, 0.7, 5.25, '#BBA8FF');
 
   // 櫃檯＋DeDe
   const desk = G(L, -5.6, 0.4, 1.2);
@@ -588,7 +585,7 @@ function buildScene() {
   const dd = dachshund(); dd.g.position.set(-0.2, 2.02, 0.1); dd.g.rotation.y = 0.55; dd.g.scale.setScalar(0.95); desk.add(dd.g); CHARS.dede = dd;
   const hoursT = tex(256, 160, (c, w, h) => { c.fillStyle = '#FFFFFF'; rr(c, 4, 4, w - 8, h - 8, 20); c.fill(); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.font = `400 34px ${RF}`; c.fillText('今日開館', w / 2, 52); c.font = `900 40px ${FONT}`; c.fillStyle = '#FF7FA8'; c.fillText('OPEN', w / 2, 112); });
   const hs = G(desk, 1.2, 2.05, -0.2); Bx(hs, 1.3, 0.85, 0.12, '#FFE07A', 0, 0.55, 0, 0.05).rotation.x = -0.2; Pl(hs, 1.15, 0.72, hoursT, 0, 0.56, 0.08).rotation.x = -0.2;
-  hot('dede', desk, 3.1, '開館・排行', '🐶', '#FFE07A');
+  hot('dede', desk, 3.1, '開館時間', '🐶', '#FFE07A');
 
   // 中央查詢機
   const kiosk = G(L, -0.6, 0.4, 3.4);
@@ -647,6 +644,56 @@ function buildScene() {
   ANIM.push(t => { notes.forEach((n, i) => { const u = (t * 0.4 + i / 3) % 1; n.position.set(-0.6 + Math.sin(u * 5 + i) * 0.5 - u * 0.6, 2.4 + u * 2.4, 0.3); n.scale.setScalar(Math.sin(u * Math.PI) * 1.1); }); rb.scale.y = 1 + Math.abs(Math.sin(t * 4)) * 0.025; });
   hot('radio', rad, 3.4, '不可不讀廣播電台', '📻', '#FFE1D0');
 
+  // ===== 三樓：視聽區・電腦檢索區・舒服沙發區 =====
+  const FLOOR3 = '#DDF1FF';
+  const fl3 = tex(512, 256, (c, w, h) => { c.fillStyle = FLOOR3; c.fillRect(0, 0, w, h); c.fillStyle = 'rgba(255,255,255,.55)'; for (let x = 0; x < w; x += 48) for (let y = 0; y < h; y += 48) { c.beginPath(); c.arc(x + 24, y + 24, 5, 0, 7); c.fill(); } });
+  Bx(L, 19.4, 0.5, 7.6, '#FFFFFF', 0, 10.0, -2.2, 0.15);
+  const f3 = Pl(L, 19.2, 7.4, fl3, 0, 10.27, -2.2); f3.rotation.x = -Math.PI / 2; f3.receiveShadow = true;
+  Bx(L, 19.4, 0.4, 0.4, '#8FD3FF', 0, 9.75, 1.6, 0.15);
+  for (let i = 0; i < 17; i++) Cy(L, 0.08, 0.08, 1.1, '#FFFFFF', -8.8 + i * 1.1, 10.8, 1.45, 8);
+  Bx(L, 18.6, 0.18, 0.25, '#FFB48F', 0, 11.38, 1.45, 0.08);
+  const F3 = G(L, 0, 10.25, 0);
+  // 視聽區（左）
+  const av = G(F3, -6.2, 0, 0);
+  Bx(av, 4.6, 2.9, 0.3, '#FFFFFF', 0, 2.6, -5.6, 0.2);
+  const tvT = tex(512, 300, (c, w, h) => { const gr = c.createLinearGradient(0, 0, w, h); gr.addColorStop(0, '#8FD3FF'); gr.addColorStop(0.5, '#BBA8FF'); gr.addColorStop(1, '#FF9EC4'); c.fillStyle = gr; c.fillRect(0, 0, w, h); c.fillStyle = 'rgba(255,255,255,.35)'; for (let i = 0; i < 6; i++) { c.beginPath(); c.arc(60 + i * 85, 60 + (i % 2) * 170, 40 + (i % 3) * 14, 0, 7); c.fill(); } c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(w / 2, h / 2, 62, 0, 7); c.fill(); c.fillStyle = '#FF7FA8'; c.beginPath(); c.moveTo(w / 2 - 18, h / 2 - 30); c.lineTo(w / 2 + 32, h / 2); c.lineTo(w / 2 - 18, h / 2 + 30); c.closePath(); c.fill(); c.fillStyle = 'rgba(255,255,255,.85)'; rr(c, 40, h - 34, w - 80, 10, 5); c.fill(); c.fillStyle = '#FFE07A'; rr(c, 40, h - 34, (w - 80) * 0.4, 10, 5); c.fill(); });
+  const tv = Pl(av, 4.2, 2.5, tvT, 0, 2.6, -5.43, { emissive: new THREE.Color('#FFFFFF'), emissiveIntensity: 0.12 }); tv.material.emissiveMap = tvT;
+  ANIM.push(t => { tv.material.emissiveIntensity = 0.12 + Math.sin(t * 2.2) * 0.05; });
+  Bx(av, 4.0, 0.8, 1.1, '#FFB48F', 0, 0.4, -5.1, 0.2);
+  [-2.6, 2.6].forEach(x => { const sp = G(av, x, 0, -5.0); Bx(sp, 0.8, 1.8, 0.8, '#FFFFFF', 0, 0.9, 0, 0.2); [0.55, 1.3].forEach((y, i) => { const r = mesh(new THREE.CircleGeometry(0.22 + i * 0.05, 24), MAT('#BBA8FF'), 0, y, 0.41, false); sp.add(r); }); });
+  [[-1.3, -2.2, '#FF9EC4'], [1.3, -2.2, '#FFE07A']].forEach(([x, z, c]) => { const s = G(av, x, 0, z); Sp(s, 0.95, c, 0, 0.55, 0, 1.1, 0.6, 1.05); Sp(s, 0.75, c, 0, 1.0, -0.6, 1.05, 0.75, 0.5);
+    const hp = G(s, 0, 1.25, 0.1); hp.rotation.x = -0.9; To(hp, 0.32, 0.06, '#5B4636', 0, 0, 0, Math.PI); [-1, 1].forEach(k => Cy(hp, 0.14, 0.14, 0.12, '#8FD3FF', k * 0.32, 0, 0, 16).rotation.z = Math.PI / 2); });
+  const avNotes = []; for (let i = 0; i < 2; i++) { const n = G(av, (i ? 1 : -1) * 2.3, 3.4 + i * 0.6, -4.6); n.scale.setScalar(0.8); Sp(n, 0.14, ['#FF9EC4', '#8FD3FF'][i], 0, 0, 0, 1.2, 0.9, 0.9); Cy(n, 0.03, 0.03, 0.45, ['#FF9EC4', '#8FD3FF'][i], 0.14, 0.22, 0, 6); avNotes.push(n); }
+  ANIM.push(t => avNotes.forEach((n, i) => { const u = (t * 0.35 + i / 2) % 1; n.position.set((i ? 1 : -1) * (2.0 + u * 0.6), 2.0 + u * 2.2, -4.6); n.scale.setScalar(Math.sin(u * Math.PI)); }));
+  // 電腦檢索區（中）
+  const pc = G(F3, 0.2, 0, -3.4);
+  Bx(pc, 5.6, 0.22, 1.5, '#FFFFFF', 0, 1.35, 0, 0.08); [-2.5, 2.5].forEach(x => Bx(pc, 0.22, 1.3, 1.3, '#BBA8FF', x, 0.65, 0, 0.06));
+  const pcT = tex(256, 170, (c, w, h) => { c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, w, h); c.fillStyle = '#8FD3FF'; c.fillRect(0, 0, w, 30); c.fillStyle = '#FFFFFF'; c.beginPath(); [16, 34, 52].forEach(x => { c.moveTo(x + 6, 15); c.arc(x, 15, 6, 0, 7); }); c.fill(); c.strokeStyle = '#BBA8FF'; c.lineWidth = 6; rr(c, 24, 54, w - 48, 34, 17); c.stroke(); c.fillStyle = '#B5A595'; c.font = `700 18px ${FONT}`; c.fillText('🔍 搜尋', 40, 77); c.fillStyle = '#ECE6FF'; [104, 126, 148].forEach(y => { rr(c, 24, y, w - 48 - (y % 3) * 20, 12, 6); c.fill(); }); });
+  const scrs = [];
+  [-1.8, 0, 1.8].forEach((x, i) => { const m = G(pc, x, 1.46, -0.25); Cy(m, 0.22, 0.28, 0.08, '#E9E2D6', 0, 0.04, 0, 16); Cy(m, 0.06, 0.06, 0.5, '#E9E2D6', 0, 0.3, -0.05, 8); Bx(m, 1.4, 0.95, 0.12, ['#FF9EC4', '#8EDDC0', '#FFE07A'][i], 0, 0.95, 0, 0.1); const s = Pl(m, 1.22, 0.78, pcT, 0, 0.95, 0.07, { emissive: new THREE.Color('#FFFFFF'), emissiveIntensity: 0.15 }); s.material.emissiveMap = pcT; scrs.push(s); Bx(pc, 1.1, 0.06, 0.38, '#FFFFFF', x, 1.49, 0.35, 0.03); Sp(pc, 0.1, '#FFFFFF', x + 0.75, 1.5, 0.35, 1, 0.5, 1.3);
+    const st = G(pc, x, 0, 1.45); Cy(st, 0.42, 0.42, 0.18, ['#FF9EC4', '#8EDDC0', '#FFE07A'][i], 0, 0.85, 0, 20); Cy(st, 0.07, 0.07, 0.75, '#BBA8FF', 0, 0.4, 0, 8); Cy(st, 0.32, 0.36, 0.06, '#BBA8FF', 0, 0.04, 0, 16); });
+  ANIM.push(t => scrs.forEach((s, i) => { s.material.emissiveIntensity = 0.12 + Math.max(0, Math.sin(t * 1.5 + i * 2)) * 0.12; }));
+  // 舒服沙發區（右）
+  const so = G(F3, 6.0, 0, -2.6);
+  const rug3 = mesh(new THREE.CircleGeometry(2.6, 40), MAT('#FFF3C4'), 0, 0.03, 0.4, false); rug3.rotation.x = -Math.PI / 2; so.add(rug3);
+  Bx(so, 4.6, 0.9, 1.6, '#8EDDC0', 0, 0.55, -1.8, 0.35); Bx(so, 4.6, 1.5, 0.6, '#8EDDC0', 0, 1.15, -2.45, 0.28);
+  Bx(so, 1.6, 0.9, 2.6, '#8EDDC0', 2.1, 0.55, -0.1, 0.35); Bx(so, 0.6, 1.3, 2.8, '#8EDDC0', 2.55, 1.05, -0.2, 0.28);
+  Bx(so, 0.6, 1.25, 1.6, '#7FD0B4', -2.3, 0.95, -1.8, 0.28);
+  [[-1.3, '#FF9EC4', 0.2], [0, '#FFE07A', -0.15], [1.25, '#BBA8FF', 0.25]].forEach(([x, c, r]) => { const cu = Bx(so, 0.9, 0.85, 0.3, c, x, 1.4, -2.0, 0.15); cu.rotation.set(-0.25, 0, r); });
+  const ct = G(so, -0.2, 0, 0.6); Cy(ct, 0.85, 0.85, 0.16, '#FFFFFF', 0, 0.7, 0, 32); Cy(ct, 0.12, 0.2, 0.62, '#FFB48F', 0, 0.32, 0, 12);
+  Cy(ct, 0.17, 0.15, 0.3, '#FF9EC4', 0.35, 0.93, 0.1, 16); Bx(ct, 0.7, 0.12, 0.5, '#8FD3FF', -0.25, 0.84, -0.1, 0.03).rotation.y = 0.4;
+  const steam = []; for (let i = 0; i < 2; i++) { const s = mesh(SPH, MAT('#FFFFFF', { transparent: true, opacity: 0.7 }), 0.35, 1.2 + i * 0.4, 0.1, false); s.scale.setScalar(0.08 + i * 0.03); ct.add(s); steam.push(s); }
+  ANIM.push(t => steam.forEach((s, i) => { const u = (t * 0.5 + i / 2) % 1; s.position.set(0.35, 1.15 + u * 0.8, 0.1); s.scale.setScalar(0.06 + u * 0.08); s.material.opacity = 0.7 * (1 - u); }));
+  const fl = G(so, -2.9, 0, -1.9); Cy(fl, 0.3, 0.38, 0.15, '#FFB48F', 0, 0.08, 0, 16); Cy(fl, 0.05, 0.05, 2.8, '#FFFFFF', 0, 1.45, 0, 8); const fs = Co(fl, 0.55, 0.6, '#FFF3C4', 0, 2.95, 0, 20); fs.material = MAT('#FFF3C4', { emissive: 0xFFE3A0, emissiveIntensity: 0.55 });
+  plant(F3, -9.0, -5.2, 0.7, 0, '#8EDDC0'); plant(F3, 9.0, -5.2, 0.75, 0, '#FF9EC4');
+  // 透明小電梯（連接三層樓）
+  const el = G(L, -8.7, 0.4, 4.4);
+  Cy(el, 1.15, 1.25, 0.3, '#BBA8FF', 0, 0.15, 0, 32); Cy(el, 1.15, 1.15, 0.3, '#BBA8FF', 0, 15.0, 0, 32); Sp(el, 0.3, '#FFE07A', 0, 15.35, 0, 1, 0.6, 1);
+  const tube = mesh(new THREE.CylinderGeometry(1.0, 1.0, 14.6, 32, 1, true), new THREE.MeshStandardMaterial({ color: '#E3F6FF', transparent: true, opacity: 0.28, roughness: 0.1, side: THREE.DoubleSide, depthWrite: false }), 0, 7.6, 0, false); el.add(tube);
+  [-1, 1].forEach(k => Cy(el, 0.07, 0.07, 14.6, '#FFFFFF', k * 1.0, 7.6, 0, 8));
+  const cabin = G(el, 0, 0.3, 0); Bx(cabin, 1.5, 1.9, 1.5, '#FF9EC4', 0, 1.0, 0, 0.35); const ew = mesh(rbox(1.0, 0.9, 0.06, 0.12), MAT('#FFF3C4', { emissive: 0xFFE3A0, emissiveIntensity: 0.4 }), 0, 1.2, 0.76); cabin.add(ew); Sp(cabin, 0.12, '#FFE07A', 0, 2.05, 0);
+  ANIM.push(t => { const cyc = (t % 18) / 18, stops = [0.3, 5.3, 10.3]; let y; if (cyc < 0.2) y = stops[0]; else if (cyc < 0.3) y = stops[0] + (stops[1] - stops[0]) * ((cyc - 0.2) / 0.1); else if (cyc < 0.5) y = stops[1]; else if (cyc < 0.6) y = stops[1] + (stops[2] - stops[1]) * ((cyc - 0.5) / 0.1); else if (cyc < 0.8) y = stops[2]; else y = stops[2] + (stops[0] - stops[2]) * ((cyc - 0.8) / 0.2); cabin.position.y = y; });
+
   // ===== 漂浮書本傳送門（左側） =====
   const por = G(W, -21.6, 0, 1.0);
   Cy(por, 2.4, 2.8, 0.5, '#BBA8FF', 0, 0.25, 0, 40); Cy(por, 2.0, 2.0, 0.2, '#ECE6FF', 0, 0.55, 0, 40);
@@ -690,7 +737,7 @@ function buildScene() {
   const pStars = []; for (let i = 0; i < 5; i++) { const s = mesh(new THREE.OctahedronGeometry(0.22), MAT(['#FFE07A', '#FF9EC4', '#8FD3FF', '#8EDDC0', '#BBA8FF'][i], { emissive: 0xFFF3C4, emissiveIntensity: 0.35 }), 0, 0, 0, false); pod.add(s); pStars.push(s); }
   ANIM.push(t => { ship.position.y = 3.4 + Math.sin(t * 1.6) * 0.22; ship.rotation.z = Math.sin(t * 0.9) * 0.03; hov.material.opacity = 0.3 + Math.sin(t * 1.6) * 0.15; hov.scale.setScalar(1 + Math.sin(t * 1.6) * 0.06); domeStar.rotation.y = t * 1.5; tip.material.emissiveIntensity = 0.3 + Math.abs(Math.sin(t * 3)) * 0.7;
     pStars.forEach((s, i) => { const a = t * 0.6 + i / 5 * Math.PI * 2; s.position.set(Math.cos(a) * 3.4, 3.6 + Math.sin(a * 2 + i) * 1.2, Math.sin(a) * 2.6); s.rotation.y = t * 2; }); });
-  hot('pod', pod, 8.0, '自主學習夢想艙', '🚀', '#ECE6FF');
+  hot('pod', pod, 6.3, '自主學習夢想艙', '🚀', '#ECE6FF');
 
   // ===== 扭蛋機（前院） =====
   const gac = G(W, -12.4, 0, 12.6); gac.rotation.y = 0.4;
@@ -744,8 +791,8 @@ function buildScene() {
 function preset() {
   const p = portrait();
   camera.fov = p ? 50 : 32; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
-  Object.assign(cam, p ? { tYaw: 0.16, tPitch: 0.3, tDist: 76 } : { tYaw: 0.12, tPitch: 0.2, tDist: Math.max(56, 58 * Math.max(1, 1.55 / camera.aspect)) });
-  camTarget.set(p ? 1 : 0, p ? 6.4 : 7.6, p ? 2.5 : 1);
+  Object.assign(cam, p ? { tYaw: 0.2, tPitch: 0.28, tDist: 70 } : { tYaw: 0.12, tPitch: 0.2, tDist: Math.max(66, 68 * Math.max(1, 1.55 / camera.aspect)) });
+  camTarget.set(p ? 1 : 0, p ? 9.5 : 10.6, p ? 2.5 : 1);
 }
 function updateCam(t) {
   const k = reduceMotion ? 1 : 0.08;
@@ -836,10 +883,8 @@ const PANELS = {
   dede() {
     const st = openStatus(), wd = new Date().getDay();
     const rows = CONFIG.hours.map(h => `<tr class="${h.d.includes(wd) ? 'today' : ''}"><td>${esc(h.label)}${h.d.includes(wd) ? '（今天）' : ''}</td><td>${h.open ? `${h.open} – ${h.close}` : esc(h.note || '休館')}</td></tr>`).join('');
-    const rk = CONFIG.rank.map((b, i) => `<li><span class="m">${['🥇', '🥈', '🥉'][i] || i + 1}</span><span class="t"><b>${esc(b.t)}</b><small>${esc(b.a)}</small></span></li>`).join('');
     frame({ hc: '#FFF3C4', av: IMG.dede, tag: '🐶 櫃檯值班中', title: 'DeDe 的開館小報', say: '汪！我是 DeDe～今天也趴在櫃檯等你來借書 🐾',
       body: `<div class="sec"><h3>⏰ 今日開館時間 ${demoTag(CONFIG.hoursDemo)}</h3><p><span class="status ${st.open ? '' : 'closed'}">${st.open ? '現在開館中' : '目前休館中'}</span></p><table class="hours">${rows}</table></div>
-      <div class="sec"><h3>🏆 ${esc(CONFIG.rankTitle)} ${demoTag(CONFIG.rankDemo)}</h3><ol class="rank">${rk}</ol></div>
       <div class="foot">📍 ${esc(CONFIG.contact.addr)}・☎️ <a href="${CONFIG.contact.telLink}">${esc(CONFIG.contact.tel)}</a></div>` });
   },
   opac() {
@@ -905,19 +950,19 @@ const PANELS = {
 
 // ---- 廣播電台 ----
 let audio = null, curEp = 0;
-function stopAudio() { if (audio) { audio.pause(); audio = null; } const r = sheet.querySelector('.radio'); r && r.classList.remove('on'); }
+function stopAudio() { if (audio) { audio.ontimeupdate = audio.onended = null; audio.pause(); audio = null; } const r = sheet.querySelector('.radio'); r && r.classList.remove('on'); }
 function renderRadio(i) {
   stopAudio(); curEp = i; const E = CONFIG.radio[i];
   frame({ hc: '#FFE1D0', av: '📻', tag: '🎙️ ON AIR', title: '不可不讀廣播電台', say: '每集 10 分鐘，帶你認識一本好書。',
-    body: `<div class="sec radio" id="rd"><div class="scr"><small>${esc(E.ep)}</small><b>${esc(E.t)}</b></div><div class="ctl"><button class="play" id="pl" type="button" aria-label="播放">▶</button><div class="bar" id="bar"><i></i></div><div class="eq"><i></i><i></i><i></i><i></i></div></div>${E.src ? '' : '<p style="margin:8px 4px 0;font-weight:700;font-size:13px">📼 音檔準備中，敬請期待！</p>'}</div>
+    body: `<div class="sec radio" id="rd"><div class="scr"><small>${esc(E.ep)}</small><b>${esc(E.t)}</b></div><div class="ctl"><button class="play" id="pl" type="button" aria-label="播放">▶</button><div class="bar" id="bar"><i></i></div><span class="tm" id="tm">${E.src ? '0:00' : ''}</span><div class="eq"><i></i><i></i><i></i><i></i></div></div>${E.src ? '' : '<p style="margin:8px 4px 0;font-weight:700;font-size:13px">📼 音檔準備中，敬請期待！</p>'}</div>
     <div class="sec"><h3>📋 節目列表</h3><div class="eps">${CONFIG.radio.map((e, j) => `<button type="button" class="${j === i ? 'on' : ''}" data-i="${j}"><span>${j === i ? '🔊' : '🎧'}</span><span>${esc(e.ep)}｜${esc(e.t)}</span></button>`).join('')}</div></div>
     <div class="sec"><h3>✨ 本集好書金句</h3><div class="quote">「${esc(E.quote)}」<small>— ${esc(E.from)}</small></div></div>` });
   sheet.querySelectorAll('.eps button').forEach(b => b.onclick = () => { SFX.pop(); renderRadio(+b.dataset.i); });
-  const rd = $('#rd'), pl = $('#pl'), bar = $('#bar');
+  const rd = $('#rd'), pl = $('#pl'), bar = $('#bar'), tm = $('#tm'), fmt = s => isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}` : '--:--';
   pl.onclick = () => {
     if (!E.src) { SFX.radio(); rd.classList.add('on'); setTimeout(() => rd.classList.remove('on'), 1600); toast('這集的音檔還在錄製中，敬請期待！'); return; }
     if (audio && !audio.paused) { audio.pause(); pl.textContent = '▶'; rd.classList.remove('on'); return; }
-    if (!audio) { audio = new Audio(E.src); audio.ontimeupdate = () => { bar.firstChild.style.width = (audio.currentTime / (audio.duration || 1) * 100) + '%'; }; audio.onended = () => { pl.textContent = '▶'; rd.classList.remove('on'); }; audio.onerror = () => toast('音檔載入失敗，請稍後再試'); }
+    if (!audio) { audio = new Audio(E.src.startsWith('audio:') ? AUDIO[E.src.slice(6)] : E.src); audio.ontimeupdate = e => { const a = e.target; bar.firstChild.style.width = (a.currentTime / (a.duration || 1) * 100) + '%'; tm.textContent = `${fmt(a.currentTime)} / ${fmt(a.duration)}`; }; audio.onended = () => { pl.textContent = '▶'; rd.classList.remove('on'); }; audio.onerror = () => toast('音檔載入失敗，請稍後再試'); }
     audio.play().then(() => { pl.textContent = '❚❚'; rd.classList.add('on'); }).catch(() => toast('無法播放音檔'));
   };
   bar.onclick = e => { if (audio && audio.duration) { const r = bar.getBoundingClientRect(); audio.currentTime = (e.clientX - r.left) / r.width * audio.duration; } };
