@@ -560,11 +560,14 @@ function buildScene() {
   const emb = tex(512, 512, (c, w) => { const cx = w / 2; c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(cx, cx, 250, 0, 7); c.fill(); c.lineWidth = 22; c.strokeStyle = '#7CC56B'; c.beginPath(); c.arc(cx, cx, 226, 0, 7); c.stroke(); c.lineWidth = 6; c.strokeStyle = '#FFB2C8'; c.setLineDash([14, 12]); c.beginPath(); c.arc(cx, cx, 200, 0, 7); c.stroke(); c.setLineDash([]);
     c.fillStyle = '#E8444B'; c.beginPath(); const hx = cx, hy = 132; c.moveTo(hx, hy + 30); c.bezierCurveTo(hx - 60, hy - 10, hx - 30, hy - 55, hx, hy - 22); c.bezierCurveTo(hx + 30, hy - 55, hx + 60, hy - 10, hx, hy + 30); c.fill();
     c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 150px ${RF}`; c.fillText('四維', cx, 280); c.fillStyle = '#7CC56B'; c.font = `900 66px ${FONT}`; c.fillText('SWSH', cx, 400); });
-  const eg = G(roof, 0, 3.15, 6.75); Cy(eg, 1.55, 1.55, 0.35, '#FFE07A', 0, 0, 0, 40).rotation.x = Math.PI / 2; const ef = mesh(new THREE.CircleGeometry(1.38, 40), new THREE.MeshStandardMaterial({ map: emb, roughness: 0.6 }), 0, 0, 0.19, false); eg.add(ef);
+  const eg = G(roof, 0, 2.15, 6.75); eg.scale.setScalar(1.3); Cy(eg, 1.55, 1.55, 0.35, '#FFE07A', 0, 0, 0, 40).rotation.x = Math.PI / 2; const ef = mesh(new THREE.CircleGeometry(1.38, 40), new THREE.MeshStandardMaterial({ map: emb, roughness: 0.6 }), 0, 0, 0.19, false); eg.add(ef);
   ANIM.push(t => { eg.rotation.z = Math.sin(t * 1.2) * 0.04; });
   // 招牌
-  const signT = tex(1024, 200, (c, w, h) => { c.fillStyle = '#FFFFFF'; rr(c, 6, 6, w - 12, h - 12, 90); c.fill(); c.lineWidth = 10; c.strokeStyle = '#FFB2C8'; rr(c, 16, 16, w - 32, h - 32, 80); c.stroke(); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 92px ${RF}`; c.fillText('四維圖書資訊中心', w / 2, h / 2 + 4); });
-  const sg = mesh(rbox(8.4, 1.7, 0.3, 0.3), MAT('#FFE07A'), 0, 16.45, 6.95); L.add(sg); Pl(L, 8.1, 1.58, signT, 0, 16.45, 7.12);
+  // 山牆新設計：放大的校徽、兩側暖光圓窗、粉彩三角旗串
+  [-1, 1].forEach(k => { const w = G(roof, k * 5.1, 1.25, 6.62); To(w, 0.78, 0.16, '#FFE07A', 0, 0, 0); const gl = mesh(new THREE.CircleGeometry(0.78, 32), MAT('#FFF1B8', { emissive: 0xFFD98A, emissiveIntensity: 0.55 }), 0, 0, -0.02, false); w.add(gl); Bx(w, 1.5, 0.08, 0.06, '#FFFFFF', 0, 0, 0.04, 0.02); Bx(w, 0.08, 1.5, 0.06, '#FFFFFF', 0, 0, 0.04, 0.02); Bx(w, 1.9, 0.18, 0.4, '#FF9EC4', 0, -0.98, 0.12, 0.08); for (let i = 0; i < 4; i++) Sp(w, 0.15, ['#FFFFFF', '#FFE07A', '#FF8FB8', '#BBA8FF'][i], -0.6 + i * 0.4, -0.78, 0.2); });
+  const bunt = []; for (let i = 0; i < 19; i++) { const u = i / 18, x = -9.2 + u * 18.4, y = 14.75 - Math.sin(u * Math.PI) * 0.55; const f = mesh(new THREE.ConeGeometry(0.32, 0.7, 3), MAT(['#FF9EC4', '#FFE07A', '#8EDDC0', '#8FD3FF', '#BBA8FF'][i % 5]), x, y - 0.3, 6.9, false); f.rotation.x = Math.PI; L.add(f); bunt.push(f); }
+  const rope = new THREE.CatmullRomCurve3(Array.from({ length: 11 }, (_, i) => new THREE.Vector3(-9.6 + i * 1.92, 14.78 - Math.sin(i / 10 * Math.PI) * 0.55, 6.9))); L.add(mesh(new THREE.TubeGeometry(rope, 40, 0.04, 6), MAT('#FFFFFF'), 0, 0, 0, false));
+  ANIM.push(t => bunt.forEach((f, i) => { f.rotation.z = Math.sin(t * 2 + i * 0.7) * 0.12; }));
   // 屋頂上的花蓮藍天白雲小裝飾
   const deco = G(roof, 0, 4.7, -0.5);
   const sunD = G(deco, -5.5, 2.6, 0); Cy(deco, 0.06, 0.06, 2.6, '#C9976A', -5.5, 1.3, 0, 6); Sp(sunD, 0.75, '#FFD54F', 0, 0, 0, 1, 1, 0.5); for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, r = Co(sunD, 0.16, 0.42, '#FFB13B', Math.cos(a) * 1.05, Math.sin(a) * 1.05, 0, 8); r.rotation.z = a - Math.PI / 2; } [-1, 1].forEach(k => Sp(sunD, 0.07, '#5B4636', k * 0.25, 0.1, 0.36)); ANIM.push(t => { sunD.rotation.z = Math.sin(t) * 0.15; });
@@ -605,7 +608,7 @@ function buildScene() {
   hot('opac', kiosk, 5.3, '館藏查詢', '🔍', '#8FD3FF');
 
   // 小四抱平板
-  const xs = chibi({ hair: 'boy', blush: false }); xs.g.position.set(2.4, 0.4, 3.9); xs.g.rotation.y = -0.35; L.add(xs.g); CHARS.xiaosi = xs;
+  const xs = chibi({ hair: 'boy', blush: false }); xs.g.position.set(2.6, 10.25, 0.2); xs.g.rotation.y = -0.3; L.add(xs.g); CHARS.xiaosi = xs;
   xs.arms.forEach((a, k) => { a.rotation.x = -1.0; a.rotation.z = (k ? -1 : 1) * 0.45; });
   const tab = G(xs.body, 0, 1.75, 0.78); tab.rotation.x = -0.35; Bx(tab, 1.05, 0.75, 0.08, '#4A4560', 0, 0, 0, 0.06); const tsc = mesh(rbox(0.9, 0.6, 0.02, 0.01), MAT('#9EE6FF', { emissive: 0x9EE6FF, emissiveIntensity: 0.6 }), 0, 0, 0.05); tab.add(tsc);
   ANIM.push(t => { tsc.material.emissiveIntensity = 0.45 + Math.sin(t * 3) * 0.2; });
