@@ -184,7 +184,7 @@ details.script { background: #fff; border-radius: 14px; padding: 10px 14px; } de
   <button type="button" data-open="dede"><b>🐶</b>開館・排行</button>
   <button type="button" data-open="opac"><b>🔍</b>館藏查詢</button>
   <button type="button" data-open="xiner"><b>💗</b>心情選書</button>
-  <button type="button" data-open="xiaosi"><b>📱</b>自學・電子書</button>
+  <button type="button" data-open="xiaosi"><b>📱</b>數位閱讀</button>
   <button type="button" data-open="portal"><b>🌀</b>數位資源</button>
   <button type="button" data-open="pod"><b>🚀</b>夢想艙</button>
   <button type="button" data-open="expo"><b>🎨</b>主題書展</button>
@@ -594,7 +594,7 @@ function buildScene() {
   const dd = dachshund(); dd.g.position.set(-0.2, 2.02, 0.1); dd.g.rotation.y = 0.55; dd.g.scale.setScalar(0.95); desk.add(dd.g); CHARS.dede = dd;
   const hoursT = tex(256, 160, (c, w, h) => { c.fillStyle = '#FFFFFF'; rr(c, 4, 4, w - 8, h - 8, 20); c.fill(); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.font = `400 34px ${RF}`; c.fillText('今日開館', w / 2, 52); c.font = `900 40px ${FONT}`; c.fillStyle = '#FF7FA8'; c.fillText('OPEN', w / 2, 112); });
   const hs = G(desk, 1.2, 2.05, -0.2); Bx(hs, 1.3, 0.85, 0.12, '#FFE07A', 0, 0.55, 0, 0.05).rotation.x = -0.2; Pl(hs, 1.15, 0.72, hoursT, 0, 0.56, 0.08).rotation.x = -0.2;
-  hot('dede', desk, 3.1, 'DeDe｜開館・排行', '🐶', '#FFE07A');
+  hot('dede', desk, 3.1, '開館・排行', '🐶', '#FFE07A');
 
   // 中央查詢機
   const kiosk = G(L, -0.6, 0.4, 3.4);
@@ -612,7 +612,7 @@ function buildScene() {
   xs.arms.forEach((a, k) => { a.rotation.x = -1.0; a.rotation.z = (k ? -1 : 1) * 0.45; });
   const tab = G(xs.body, 0, 1.75, 0.78); tab.rotation.x = -0.35; Bx(tab, 1.05, 0.75, 0.08, '#4A4560', 0, 0, 0, 0.06); const tsc = mesh(rbox(0.9, 0.6, 0.02, 0.01), MAT('#9EE6FF', { emissive: 0x9EE6FF, emissiveIntensity: 0.6 }), 0, 0, 0.05); tab.add(tsc);
   ANIM.push(t => { tsc.material.emissiveIntensity = 0.45 + Math.sin(t * 3) * 0.2; });
-  hot('xiaosi', xs.g, 4.3, '小四｜自學・電子書', '📱', '#8EDDC0');
+  hot('xiaosi', xs.g, 4.3, '數位閱讀', '📱', '#8EDDC0');
 
   // 閱讀角＋心兒
   const nook = G(L, 5.2, 0.4, -1.2);
@@ -624,7 +624,7 @@ function buildScene() {
   const lampN = G(nook, -2.1, 0, 0.6); Cy(lampN, 0.4, 0.5, 0.2, '#FFE07A', 0, 0.1, 0); Cy(lampN, 0.06, 0.06, 2.6, '#FFFFFF', 0, 1.4, 0, 8); const shade = Co(lampN, 0.7, 0.8, '#FFF3C4', 0, 2.9, 0, 20); shade.material = MAT('#FFF3C4', { emissive: 0xFFE3A0, emissiveIntensity: 0.5 });
   const hearts = []; for (let i = 0; i < 3; i++) { const h = G(nook, 0, 3, 0.3); Sp(h, 0.12, '#FF8FB8', -0.08, 0, 0); Sp(h, 0.12, '#FF8FB8', 0.08, 0, 0); const c = Co(h, 0.16, 0.2, '#FF8FB8', 0, -0.12, 0, 12); c.rotation.z = Math.PI; hearts.push(h); }
   ANIM.push(t => hearts.forEach((h, i) => { const u = (t * 0.35 + i / 3) % 1; h.position.set(0.5 + Math.sin(u * 6 + i) * 0.3, 2.8 + u * 2.2, 0.4); h.scale.setScalar(Math.sin(u * Math.PI) * 1.2); }));
-  hot('xiner', nook, 3.9, '心兒｜心情選書', '💗', '#FFD6E5');
+  hot('xiner', nook, 3.9, '心情選書', '💗', '#FFD6E5');
 
   // ===== 二樓 =====
   bookcase(L, -6.4, 5.25, -5.3, 5.6, 3.6, 3, 0, '#F4D6B8'); bookcase(L, 5.6, 5.25, -5.3, 6.0, 3.6, 3);
@@ -638,7 +638,7 @@ function buildScene() {
   ss.arms[0].rotation.x = -0.5; ss.arms[0].rotation.z = 0.9;
   const jm = chibi({ hair: 'curly', sleepy: true, blush: false, tall: 1.12 }); jm.g.position.set(4.6, 0, 0.6); jm.g.rotation.y = -0.4; expo.add(jm.g); CHARS.juanmao = jm;
   const jb = G(jm.body, 0.4, 1.9, 0.62); Bx(jb, 0.7, 0.95, 0.15, '#BBA8FF', 0, 0, 0, 0.05); jm.arms[1].rotation.x = -0.9;
-  hot('expo', expo, 2.5, '思思＆捲毛｜主題書展', '🎨', '#D7F5EA');
+  hot('expo', expo, 2.5, '主題書展', '🎨', '#D7F5EA');
 
   // 復古收音機
   const rad = G(L, 6.2, 5.25, -2.0); rad.rotation.y = -0.35;
@@ -692,14 +692,11 @@ function buildScene() {
   const ant2 = Cy(ship, 0.05, 0.05, 1.4, '#BBA8FF', 1.55, 2.0, 0, 8); ant2.rotation.z = -0.4; const tip = Sp(ship, 0.2, '#FF8FB8', 1.85, 2.65, 0); tip.material = MAT('#FF8FB8', { emissive: 0xFF6FA0, emissiveIntensity: 0.6 });
   // 小翅膀
   [-1, 1].forEach(k => { const f = Co(ship, 0.55, 1.2, '#BBA8FF', -2.9, k * 0.9, 0, 4); f.rotation.z = Math.PI / 2 + k * 0.5; f.scale.z = 0.35; });
-  // 招牌
-  const podT = tex(640, 160, (c, w, h) => { c.fillStyle = '#FFFFFF'; rr(c, 4, 4, w - 8, h - 8, 70); c.fill(); c.lineWidth = 9; c.strokeStyle = '#BBA8FF'; rr(c, 14, 14, w - 28, h - 28, 60); c.stroke(); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 70px ${RF}`; c.fillText('🚀 自主學習夢想艙', w / 2, h / 2 + 3); });
-  const sgP = G(pod, 0, 7.6, 0.4); Bx(sgP, 4.8, 1.25, 0.2, '#ECE6FF', 0, 0, 0, 0.25); Pl(sgP, 4.6, 1.15, podT, 0, 0, 0.12); ANIM.push(t => { sgP.position.y = 7.6 + Math.sin(t * 1.6 + 0.6) * 0.22; });
   // 環繞的星星
   const pStars = []; for (let i = 0; i < 5; i++) { const s = mesh(new THREE.OctahedronGeometry(0.22), MAT(['#FFE07A', '#FF9EC4', '#8FD3FF', '#8EDDC0', '#BBA8FF'][i], { emissive: 0xFFF3C4, emissiveIntensity: 0.35 }), 0, 0, 0, false); pod.add(s); pStars.push(s); }
   ANIM.push(t => { ship.position.y = 3.4 + Math.sin(t * 1.6) * 0.22; ship.rotation.z = Math.sin(t * 0.9) * 0.03; hov.material.opacity = 0.3 + Math.sin(t * 1.6) * 0.15; hov.scale.setScalar(1 + Math.sin(t * 1.6) * 0.06); domeStar.rotation.y = t * 1.5; tip.material.emissiveIntensity = 0.3 + Math.abs(Math.sin(t * 3)) * 0.7;
     pStars.forEach((s, i) => { const a = t * 0.6 + i / 5 * Math.PI * 2; s.position.set(Math.cos(a) * 3.4, 3.6 + Math.sin(a * 2 + i) * 1.2, Math.sin(a) * 2.6); s.rotation.y = t * 2; }); });
-  hot('pod', pod, 10.4, '自主學習夢想艙', '🚀', '#ECE6FF');
+  hot('pod', pod, 8.0, '自主學習夢想艙', '🚀', '#ECE6FF');
 
   // ===== 扭蛋機（前院） =====
   const gac = G(W, -12.4, 0, 12.6); gac.rotation.y = 0.4;
@@ -882,7 +879,7 @@ const PANELS = {
   },
   xiaosi() {
     const steps = [['🪪', '辦一張借書證', '到國資圖或花蓮縣的公共圖書館申辦（也有線上申辦）。'], ['📲', '下載閱讀 App', '依平台指示安裝閱讀器，手機、平板、電腦都能用。'], ['📚', '登入借書', '一次可借好幾本，到期會自動歸還，不怕逾期！']];
-    frame({ hc: '#D7F5EA', av: IMG.xiaosi, tag: '📱 小四的平板', title: '電子書庫', say: '書包太重？平板裡就有一整座圖書館！跟著三步驟開始借電子書吧 ⭐',
+    frame({ hc: '#D7F5EA', av: IMG.xiaosi, tag: '📱 小四的平板', title: '數位閱讀', say: '書包太重？平板裡就有一整座圖書館！跟著三步驟開始借電子書吧 ⭐',
       body: `<div class="sec"><h3>📲 借電子書 3 步驟</h3><div class="timeline">${steps.map((s, i) => `<div class="st"><div class="n" style="background:${['#D7F5EA', '#DDF1FF', '#FFF3C4'][i]}">${s[0]}</div><div><small>STEP ${i + 1}</small><b>${s[1]}</b><p>${s[2]}</p></div></div>`).join('')}</div></div>
       <div class="sec"><h3>📖 免費電子書平台</h3><div class="grid res">${EBOOKS.map(r => `<a class="card" href="${r.u}" target="_blank" rel="noopener"><span class="ic" style="background:${r.c}">${r.e}</span><span><b>${esc(r.n)}</b><span>${esc(r.d)}</span></span></a>`).join('')}</div></div>
       <div class="sec"><h3>🧭 想去更多地方</h3><div class="chips"><button class="chip" type="button" id="goPod">🚀 自主學習夢想艙</button><button class="chip" type="button" id="goPortal">🌀 數位資源傳送門</button></div></div>` });
