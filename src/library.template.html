@@ -60,8 +60,9 @@ a { color: inherit; }
 .cface .hh { width: 3px; height: 9px; margin-left: -1.5px; background: #5B4636; } .cface .mm { width: 2px; height: 13px; margin-left: -1px; background: #E0679A; }
 .dock .cface.paused { border-color: #BBA8FF; box-shadow: 0 3px 0 #9C86E8; }
 .cface::after { content: ""; position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; margin: -2.5px; border-radius: 50%; background: #5B4636; }
-.ctxt small { display: block; font-size: 9.5px; color: var(--ink2); font-weight: 700; letter-spacing: .06em; white-space: nowrap; }
-.ctxt b { display: block; font: italic 700 21px/1.05 Georgia, "Times New Roman", serif; color: var(--ink); }
+.ctxt { width: 84px; flex: 0 0 84px; overflow: hidden; }
+.ctxt small { display: block; overflow: hidden; text-overflow: ellipsis; font-size: 9.5px; color: var(--ink2); font-weight: 700; letter-spacing: .06em; white-space: nowrap; }
+.ctxt b { display: block; font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1; font: 800 20px/1.05 var(--font); letter-spacing: .02em; color: var(--ink); }
 .dsep { width: 1px; align-self: stretch; margin: 6px 4px; background: var(--line); flex: 0 0 auto; }
 #flash { position: fixed; inset: 0; background: #F4F8FF; opacity: 0; pointer-events: none; z-index: 2; }
 .dock button:hover { background: var(--pink2); color: var(--ink); transform: translateY(-3px); }
@@ -340,6 +341,12 @@ body.walking #joy, body.walking #act { display: grid; }
 @media (pointer: coarse) { .gpad { display: flex; } #gkeys { display: none; } #gspd { bottom: auto; top: calc(196px + env(safe-area-inset-top)); font-size: 22px; } #gmap { width: 104px; height: 104px; } }
 #gres { pointer-events: auto; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(440px, 92vw); background: rgba(255, 252, 245, .95); border-radius: 28px; padding: 22px; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .5); text-align: center; animation: pop .4s cubic-bezier(.3, 1.5, .5, 1); }
 #gres[hidden] { display: none; }
+#gmeter { position: absolute; right: 26px; top: 50%; transform: translateY(-50%); width: 34px; height: 46vh; border-radius: 20px; background: rgba(20, 24, 40, .55); border: 3px solid #fff; overflow: hidden; }
+#gmeter[hidden] { display: none; } #gmeter .zone { position: absolute; left: 0; right: 0; background: rgba(124, 255, 154, .75); }
+#gmeter i { position: absolute; left: 4px; right: 4px; bottom: 4px; border-radius: 14px; background: linear-gradient(#FF8FB8, #FFD95A); opacity: .85; } #gmeter.hot { box-shadow: 0 0 0 4px #7CFF9A, 0 0 24px #7CFF9A; }
+#gtip { position: absolute; left: 50%; top: calc(64px + env(safe-area-inset-top)); transform: translateX(-50%); color: #fff; font: 900 14px var(--font); text-shadow: 0 2px 6px rgba(0, 0, 0, .6); white-space: nowrap; }
+#game.court .gpad.left button[data-k="L"], #game.court .gpad.left button[data-k="R"] { display: inline-block; } #game.court #gB { display: none; }
+@media (pointer: coarse) { #gmeter { right: auto; left: 18px; height: 38vh; } }
 #gres h3 { margin: 0 0 6px; font: 400 26px var(--round); } #gres ol { list-style: none; padding: 0; margin: 14px 0; display: grid; gap: 6px; text-align: left; }
 #gres li { display: flex; justify-content: space-between; background: #fff; border-radius: 12px; padding: 9px 12px; font-weight: 700; } #gres li.me { background: #FFE4EE; }
 body.ingame .top, body.ingame .dock, body.ingame #pins, body.ingame .ntag, body.ingame #joy, body.ingame #act, body.ingame #floors, body.ingame .hint, body.ingame .bubble { display: none !important; }
@@ -381,7 +388,7 @@ body.ingame .top, body.ingame .dock, body.ingame #pins, body.ingame .ntag, body.
     <button class="tbtn" id="bWalk" type="button" aria-label="漫步或導覽模式"></button>
     <button class="tbtn" id="bMe" type="button" aria-label="我的角色"><i data-ic="me" data-s="18"></i><span>角色</span></button>
     <button class="tbtn" id="bSound" type="button" aria-label="海浪聲開關"></button>
-    <button class="tbtn" id="bView" type="button" aria-label="重設視角"><i data-ic="cam" data-s="18"></i><span>視角</span></button>
+    <button class="tbtn" id="bView" type="button" aria-label="小島全景"><i data-ic="map" data-s="18"></i><span>全景</span></button>
   </div>
 </header>
 
@@ -428,7 +435,7 @@ body.ingame .top, body.ingame .dock, body.ingame #pins, body.ingame .ntag, body.
 <section id="setup" aria-label="建立角色"><h3>建立你的小島角色</h3><p class="s">取個名字、選擇身分，就能在小島上散步、踢球、玩小遊戲！</p><label for="nm">我的名字</label><input id="nm" maxlength="8" placeholder="例如：小維" autocomplete="off"><label style="margin-top:12px">性別</label><div class="seg" id="sg"></div><label>身分</label><div class="seg" id="sr"></div><div class="row2"><button class="btn" id="sWalk" type="button">🚶 開始漫步</button><button class="btn alt" id="sTour" type="button">🗺️ 自由參觀</button></div></section>
 <div id="joy" aria-label="移動搖桿"><i></i></div><div id="floors" aria-label="選擇樓層"></div><button id="act" type="button" aria-label="踢球、投籃或跳">⚽<br>踢球・跳</button>
 <div class="ntag" id="ntag"></div>
-<div id="game" hidden><div class="ghud"><span id="gT1"></span><span id="gT2"></span><span id="gT3"></span></div><canvas id="gmap" width="200" height="200"></canvas><div id="gbig"></div><div id="gspd"></div><div id="gkeys"></div><button id="gexit" type="button">✕ 離開遊戲</button><div class="gpad left"><button data-k="L" type="button">◀</button><button data-k="R" type="button">▶</button></div><div class="gpad right"><button data-k="A" id="gA" type="button">▲</button><button data-k="B" id="gB" type="button">▼</button></div><div id="gres" hidden></div></div>
+<div id="game" hidden><div class="ghud"><span id="gT1"></span><span id="gT2"></span><span id="gT3"></span></div><canvas id="gmap" width="200" height="200"></canvas><div id="gbig"></div><div id="gspd"></div><div id="gkeys"></div><button id="gexit" type="button">✕ 離開遊戲</button><div class="gpad left"><button data-k="L" type="button">◀</button><button data-k="R" type="button">▶</button></div><div class="gpad right"><button data-k="A" id="gA" type="button">▲</button><button data-k="B" id="gB" type="button">▼</button></div><div id="gres" hidden></div><div id="gmeter" hidden><span class="zone"></span><i></i></div><div id="gtip"></div></div>
 
 <script>__THREE_JS__</script>
 <script>const AUDIO = { ep01: '__AUDIO_ep01__' };</script>
@@ -741,14 +748,14 @@ function applyEnv(m, time) {
   const U = ENV.sky.uniforms; U.uTop.value.copy(k.top).multiplyScalar(1 - 0.42 * k.night).lerp(STORM_TOP, s * 0.85); U.uHorizon.value.copy(k.hor).multiplyScalar(1 - 0.48 * k.night).lerp(STORM_HOR, s * 0.85); U.uSun.value.copy(k.sun).multiplyScalar(1 - s); U.uSunDir.value.copy(dir); U.uNight.value = k.night * (1 - s); U.uTime.value = time;
   scene.fog.color.copy(U.uHorizon.value);
   ENV.water.uniforms.uLight.value.copy(k.water).multiplyScalar(1 - 0.42 * k.night); ENV.water.uniforms.uDeep.value.copy(k.water).multiply(_c.setRGB(0.68, 0.8, 0.86)); ENV.water.uniforms.uTime.value = time;
-  ENV.sun.color.copy(k.sun); ENV.sun.intensity = k.sunI * SUN_K * (1 - 0.55 * s) * (1 - 0.55 * k.night); renderer.toneMappingExposure = 0.92 - 0.3 * k.night; if ((k.night > 0.5) !== ENV.nightUI) { ENV.nightUI = k.night > 0.5; document.body.classList.toggle('night', ENV.nightUI); } ENV.sun.position.copy(dir).multiplyScalar(100);
+  ENV.sun.color.copy(k.sun); ENV.sun.intensity = k.sunI * SUN_K * (1 - 0.55 * s) * (1 - 0.55 * k.night); renderer.toneMappingExposure = 0.92 - 0.3 * k.night;  ENV.sun.position.copy(dir).multiplyScalar(100);
   ENV.hemi.color.copy(k.hs); ENV.hemi.groundColor.copy(k.hg); ENV.hemiBase = k.hI * HEMI_K * (1 - 0.25 * s) * (1 - 0.5 * k.night);
   ENV.fill.intensity = 0.1 + 0.2 * (1 - k.night);
   ENV.warm.forEach((l, i) => { l.intensity = ENV.warmBase[i] * (1 + 0.6 * n); });
   ENV.lampLights.forEach(l => { l.intensity = 1.3 * n; }); ENV.front.intensity = 0.3 * n;
   ENV.glass.emissiveIntensity = n * 1.3; ENV.glass.opacity = 0.16 + 0.12 * n;
   ENV.bulbs.forEach(b => { b.emissiveIntensity = 0.3 + n * 2.6; });
-  if (ENV.rimMat) ENV.rimMat.emissiveIntensity = 0.15 + n * 3.0; if (ENV.rimLights) ENV.rimLights.forEach(l => { l.intensity = 0.9 * n; });
+  if (ENV.rimMat) ENV.rimMat.emissiveIntensity = 0.15 + n * 4.5; if (ENV.rimGlow) ENV.rimGlow.opacity = 0.95 * n; if (ENV.pod) { ENV.pod.light.intensity = 2.6 * n; ENV.pod.glow.material.opacity = 0.55 * n; ENV.pod.beam.material.opacity = 0.07 * n; ENV.pod.n = n; } if (ENV.rimLights) ENV.rimLights.forEach(l => { l.intensity = 0.9 * n; });
   if (ENV.poolMat) ENV.poolMat.opacity = 0.75 * n;
   ENV.spills.forEach(sp => { sp.opacity = 0.28 * n; });
   ENV.glows.forEach(g => { g.m.emissiveIntensity = g.base * (1 + 0.35 * n); });
@@ -776,11 +783,14 @@ function weather(t) {
 // 島嶼時鐘：從 10:00 開始，每秒走 10 分鐘（一天 144 秒）
 let simMin = 600, clockRun = true;
 const periodOf = h => h < 5 ? '深夜好眠' : h < 8 ? '清晨閱讀' : h < 12 ? '上午學習' : h < 16 ? '午後創作' : h < 17 ? '午後雷陣雨' : h < 19 ? '黃昏散步' : h < 23 ? '夜晚觀星' : '深夜好眠';
+const CK = {};
+function setTxt(id, s) { if (CK[id] !== s) { CK[id] = s; $('#' + id).textContent = s; } }
 function updateClock() {
   const h = simMin / 60, hh = Math.floor(h), mm = Math.floor(simMin % 60);
-  $('#ctime').textContent = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`; $('#cper').textContent = periodOf(h); $('#ctag').textContent = clockRun ? '島嶼時間' : '島嶼時間・暫停';
-  $('#cface .hh').style.transform = `rotate(${(h % 12) * 30}deg)`; $('#cface .mm').style.transform = `rotate(${mm * 6}deg)`; $('#cface').classList.toggle('paused', !clockRun);
-  document.querySelectorAll('[data-t]').forEach(b => b.classList.toggle('on', Math.abs(((h - +b.dataset.t) + 36) % 24 - 12) < 0.5));
+  setTxt('ctime', `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`); setTxt('cper', periodOf(h)); setTxt('ctag', clockRun ? '島嶼時間' : '島嶼時間・暫停');
+  $('#cface .hh').style.transform = `rotate(${(h % 12) * 30}deg)`; $('#cface .mm').style.transform = `rotate(${(simMin % 60) * 6}deg)`;
+  if (CK.run !== clockRun) { CK.run = clockRun; $('#cface').classList.toggle('paused', !clockRun); }
+  const on = [...document.querySelectorAll('[data-t]')].map(b => Math.abs(((h - +b.dataset.t) + 36) % 24 - 12) < 0.5).join(); if (CK.on !== on) { CK.on = on; document.querySelectorAll('[data-t]').forEach(b => b.classList.toggle('on', Math.abs(((h - +b.dataset.t) + 36) % 24 - 12) < 0.5)); }
 }
 
 // ---- 原創可愛圖示（SVG） ----
@@ -1033,7 +1043,7 @@ const GINFO = {
 };
 const GK = { L: ['a', 'arrowleft'], R: ['d', 'arrowright'], A: ['w', 'arrowup'], B: ['s', 'arrowdown'], X: [' ', 'shift'] };
 const gIn = k => !!GAME.btn[k] || GK[k].some(c => GAME.keys[c]);
-function skyFor(S, top, hor) { const m = new THREE.ShaderMaterial({ uniforms: { uTop: { value: new THREE.Color(top) }, uHorizon: { value: new THREE.Color(hor) }, uSunDir: { value: new THREE.Vector3(0.5, 0.45, 0.4) }, uSun: { value: new THREE.Color('#FFF1DE') }, uNight: { value: 0 }, uTime: { value: 0 } }, vertexShader: SKY_VS, fragmentShader: SKY_FS, side: THREE.BackSide, depthWrite: false, fog: false, toneMapped: false }); const s = new THREE.Mesh(new THREE.SphereGeometry(1500, 32, 16), m); s.frustumCulled = false; s.renderOrder = -10; S.add(s); }
+function skyFor(S, top, hor) { const m = new THREE.ShaderMaterial({ uniforms: { uTop: { value: new THREE.Color(top) }, uHorizon: { value: new THREE.Color(hor) }, uSunDir: { value: new THREE.Vector3(0.5, 0.45, 0.4) }, uSun: { value: new THREE.Color('#FFF1DE') }, uNight: { value: 0 }, uTime: { value: 0 } }, vertexShader: SKY_VS, fragmentShader: SKY_FS, side: THREE.BackSide, depthWrite: false, fog: false, toneMapped: false }); const s = new THREE.Mesh(new THREE.SphereGeometry(1500, 32, 16), m); s.frustumCulled = false; s.renderOrder = -10; S.add(s); return m; }
 function sceneLights(S, span) { S.add(new THREE.HemisphereLight(0xEAF6FF, 0x6B7A4A, 0.62)); const sun = new THREE.DirectionalLight(0xFFF2DC, 1.3); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -span, right: span, top: span, bottom: -span, near: 1, far: 420 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.05; S.add(sun); S.add(sun.target); return sun; }
 // ---- 模型 ----
 function makeCar(col) {
@@ -1129,14 +1139,14 @@ function startGame(kind, crew, lv = 1) {
   if (kind === 'race') startRace(crew); else startDrone(crew);
   GAME.act.t = -3.6; GAME.act.cd = 4; GAME.act.crew = crew; GAME.act.lv = lv;
 }
-function exitGame() { gSoundStop(); GAME.act = null; document.body.classList.remove('ingame'); $('#game').hidden = true; $('#gres').hidden = true; $('#gbig').textContent = ''; SFX.duck(false); }
+function exitGame() { gSoundStop(); if (GAME.act && GAME.act.cleanup) GAME.act.cleanup(); GAME.act = null; GAME.prevBtn = {}; document.body.classList.remove('ingame'); $('#game').hidden = true; $('#gres').hidden = true; $('#gbig').textContent = ''; SFX.duck(false); }
 function countdown(A) { if (A.t < 0) { const n = Math.ceil(-A.t); if (n !== A.cd && n <= 3) { A.cd = n; $('#gbig').textContent = n; SFX.tap(); } return false; } if (A.cd !== 0) { A.cd = 0; $('#gbig').textContent = 'GO!'; SFX.chime(); setTimeout(() => { if (GAME.act === A) $('#gbig').textContent = ''; }, 700); } return true; }
 function finishGame(kind, rows, myT) {
   const A = GAME.act; A.over = true; const bk = kind === 'drone' ? 'drone' + A.lv : kind, best = store.get().best || {}, isBest = !best[bk] || myT < best[bk]; if (isBest) { best[bk] = myT; store.set({ best }); }
   if (kind === 'drone' && A.lv > droneCleared()) { store.set({ droneLv: A.lv }); }
   rows.sort((a, b) => a.v - b.v); SFX.sparkle();
-  const nextLv = kind === 'drone' && A.lv < 3 ? A.lv + 1 : 0;
-  $('#gres').innerHTML = `<h3>🏆 ${kind === 'drone' ? `第 ${A.lv} 關「${DLV[A.lv].name}」過關！` : GINFO[kind].t + ' 完成！'}</h3><p style="margin:0;font-weight:700;color:var(--ink2)">你的成績 <b style="color:#E0679A;font-size:20px">${fmtT(myT)}</b>${isBest ? '　🎉 新紀錄！' : `　最佳 ${fmtT(best[bk])}`}</p><ol>${rows.map((r, i) => `<li class="${r.me ? 'me' : ''}"><span>${['🥇', '🥈', '🥉'][i] || (i + 1) + '.'} ${esc(r.n)}</span><span>${r.est ? '≈ ' : ''}${fmtT(r.v)}</span></li>`).join('')}</ol><div class="row" style="justify-content:center">${nextLv ? `<button class="btn" id="gNext" type="button">🚀 前往第 ${nextLv} 關</button>` : kind === 'drone' ? '<p style="width:100%;margin:0 0 6px;font-weight:900;color:#E0679A">🎖️ 三關全破！你是王牌飛行員！</p>' : ''}<button class="btn ${nextLv ? 'ghost' : ''}" id="gAgain" type="button">🔁 再玩一次</button><button class="btn alt" id="gShare" type="button">📨 揪團挑戰</button><button class="btn ghost" id="gBack" type="button">🏝️ 回到小島</button></div>`;
+  const nextLv = kind === 'drone' && A.lv < 4 ? A.lv + 1 : 0;
+  $('#gres').innerHTML = `<h3>🏆 ${kind === 'drone' ? `第 ${A.lv} 關「${DLV[A.lv].name}」過關！` : GINFO[kind].t + ' 完成！'}</h3><p style="margin:0;font-weight:700;color:var(--ink2)">你的成績 <b style="color:#E0679A;font-size:20px">${fmtT(myT)}</b>${isBest ? '　🎉 新紀錄！' : `　最佳 ${fmtT(best[bk])}`}</p><ol>${rows.map((r, i) => `<li class="${r.me ? 'me' : ''}"><span>${['🥇', '🥈', '🥉'][i] || (i + 1) + '.'} ${esc(r.n)}</span><span>${r.est ? '≈ ' : ''}${fmtT(r.v)}</span></li>`).join('')}</ol><div class="row" style="justify-content:center">${nextLv ? `<button class="btn" id="gNext" type="button">🚀 前往第 ${nextLv} 關${nextLv === 4 ? '・無人機足球賽' : ''}</button>` : kind === 'drone' ? '' : ''}<button class="btn ${nextLv ? 'ghost' : ''}" id="gAgain" type="button">🔁 再玩一次</button><button class="btn alt" id="gShare" type="button">📨 揪團挑戰</button><button class="btn ghost" id="gBack" type="button">🏝️ 回到小島</button></div>`;
   $('#gres').hidden = false; $('#gAgain').onclick = () => startGame(kind, A.crew, A.lv); if (nextLv) $('#gNext').onclick = () => startGame(kind, A.crew, nextLv); $('#gBack').onclick = exitGame; $('#gShare').onclick = () => shareChallenge(kind);
 }
 function shareChallenge(kind) {
@@ -1149,7 +1159,7 @@ function gameLobby(kind) {
   frame({ hc: I.hc, av: I.e, tag: '🎮 揪團小遊戲', title: I.t, say: I.say, body: `<div class="sec"><h3>👥 揪團隊友（點選要一起出發的同學）</h3><div class="chips" id="crew">${CREW.map((c, i) => `<button type="button" class="chip on" data-i="${i}" style="--c:${c.c}">● ${c.n}</button>`).join('')}</div></div>
     ${ch ? `<div class="sec"><div class="card" style="background:#FFF3C4"><b>📨 ${esc(ch.n)} 向你發出挑戰！</b><span>目標成績 ${fmtT(ch.v)}，${esc(ch.n)} 的分身會跟你一起比賽，打敗他吧！</span></div></div>` : ''}
     <div class="sec"><h3>🎯 玩法</h3><p style="margin:0;line-height:1.8">${I.keys}<br>📱 手機／平板：用畫面左右兩側的大按鈕操作${kind === 'race' ? '（車子會自動前進）' : '（無人機會自動前飛）'}。<br>🏅 我的最佳成績：<b>${best ? fmtT(best) : '還沒有紀錄'}</b></p></div>
-    ${kind === 'drone' ? `<div class="sec"><h3>🗺️ 選擇關卡（過關才能解鎖下一關）</h3><div class="grid" id="lvs">${[1, 2, 3].map(l => { const lock = l > droneCleared() + 1, b = (store.get().best || {})['drone' + l]; return `<button class="card lvc ${l === Math.min(3, droneCleared() + 1) ? 'on' : ''}" type="button" data-l="${l}" ${lock ? 'disabled' : ''}><span class="ic">${lock ? '🔒' : ['🛫', '⛰️', '🌪️'][l - 1]}</span><b>第 ${l} 關・${DLV[l].name}</b><span>${DLV[l].d}</span><small>${l <= droneCleared() ? `✅ 已過關${b ? '・最佳 ' + fmtT(b) : ''}` : lock ? '先通過上一關' : '挑戰中'}</small></button>`; }).join('')}</div></div>` : ''}
+    ${kind === 'drone' ? `<div class="sec"><h3>🗺️ 選擇關卡（過關才能解鎖下一關）</h3><div class="grid" id="lvs">${[1, 2, 3, 4].map(l => { const lock = l > droneCleared() + 1, b = (store.get().best || {})['drone' + l]; return `<button class="card lvc ${l === Math.min(4, droneCleared() + 1) ? 'on' : ''}" type="button" data-l="${l}" ${lock ? 'disabled' : ''}><span class="ic">${lock ? '🔒' : ['🛫', '⛰️', '🌪️', '⚽'][l - 1]}</span><b>第 ${l} 關・${DLV[l].name}</b><span>${DLV[l].d}</span><small>${l <= droneCleared() ? `✅ 已過關${b ? '・最佳 ' + fmtT(b) : ''}` : lock ? '先通過上一關' : '挑戰中'}</small></button>`; }).join('')}</div></div>` : ''}
     <div class="sec row"><button class="btn" id="gStart" type="button">🚀 開始遊戲</button><button class="btn alt" id="gInvite" type="button">📨 揪團挑戰連結</button></div>` });
   sheet.querySelectorAll('#crew .chip').forEach(b => b.onclick = () => { b.classList.toggle('on'); SFX.pop(); });
   sheet.querySelectorAll('#lvs .lvc').forEach(b => b.onclick = () => { if (b.disabled) return; SFX.pop(); sheet.querySelectorAll('#lvs .lvc').forEach(x => x.classList.toggle('on', x === b)); });
@@ -1204,6 +1214,7 @@ function updRace(dt, t) {
 function spinWheels(g, v, dt, steer) { g.userData.wheels.forEach((o, i) => { o.s.rotation.x += v * dt / 0.48; if (i < 2) o.w.rotation.y = steer * 0.4; }); }
 // ---- 無人機 ----
 function startDrone(crew) {
+  if ((GAME.lv || 1) === 4) return startSoccer(crew);
   const D = GAME.cache.drone || (GAME.cache.drone = buildDroneWorld()); D.bots.forEach(b => D.S.remove(b.g)); D.bots = [];
   if (D.me) D.S.remove(D.me.g); if (D.arrow) D.S.remove(D.arrow);
   const t0 = D.PP[1].clone().sub(D.PP[0]).normalize(), dg = makeDrone('#3A4250', '#FF8FB8'); dg.scale.setScalar(1.3); linearize(dg); D.S.add(dg);
@@ -1216,7 +1227,7 @@ function startDrone(crew) {
   GAME.cam.position.set(me.p.x - Math.sin(me.yaw) * 12, me.p.y + 5, me.p.z - Math.cos(me.yaw) * 12);
 }
 const ringFrac = k => (10 + k * 19) / 240;
-const DLV = { 1: { name: '新手試飛', N: 6, t: 75, move: 0, sc: 1, d: '6 個固定光環・限時 75 秒' }, 2: { name: '山谷穿梭', N: 9, t: 110, move: 1, sc: 1, d: '9 個上下浮動的光環・限時 110 秒' }, 3: { name: '極限挑戰', N: 12, t: 140, move: 2, sc: 0.8, d: '12 個會飄移的小光環・限時 140 秒' } };
+const DLV = { 4: { name: '無人機足球賽', N: 0, t: 90, move: 0, sc: 1, d: '夜間燈光球場 2 對 2・90 秒進球多者勝' }, 1: { name: '新手試飛', N: 6, t: 75, move: 0, sc: 1, d: '6 個固定光環・限時 75 秒' }, 2: { name: '山谷穿梭', N: 9, t: 110, move: 1, sc: 1, d: '9 個上下浮動的光環・限時 110 秒' }, 3: { name: '極限挑戰', N: 12, t: 140, move: 2, sc: 0.8, d: '12 個會飄移的小光環・限時 140 秒' } };
 const droneCleared = () => (store.get().droneLv || 0);
 function droneFail() { const A = GAME.act; SFX.hmm(); $('#gres').innerHTML = `<h3>😵 第 ${A.lv} 關 挑戰失敗</h3><p style="margin:0;font-weight:700;color:var(--ink2)">穿過 ${A.me.next} / ${A.N} 個光環，時間就用完了，再試一次吧！</p><div class="row" style="justify-content:center;margin-top:14px"><button class="btn" id="gAgain" type="button">🔁 再挑戰</button><button class="btn ghost" id="gBack" type="button">🏝️ 回到小島</button></div>`; $('#gres').hidden = false; $('#gAgain').onclick = () => startGame('drone', A.crew, A.lv); $('#gBack').onclick = exitGame; }
 function updDrone(dt, t) {
@@ -1257,6 +1268,7 @@ function setupGameInput() {
   addEventListener('keyup', e => { GAME.keys[e.key.toLowerCase()] = false; }, true);
   document.querySelectorAll('.gpad button').forEach(b => { const k = b.dataset.k; b.addEventListener('pointerdown', e => { e.preventDefault(); b.setPointerCapture(e.pointerId); GAME.btn[k] = true; b.classList.add('on'); }); const off = () => { GAME.btn[k] = false; b.classList.remove('on'); }; b.addEventListener('pointerup', off); b.addEventListener('pointercancel', off); b.addEventListener('lostpointercapture', off); });
   $('#gexit').onclick = exitGame;
+  renderer.domElement.addEventListener('pointerdown', () => { if (GAME.act && GAME.act.tap) GAME.act.tap(); });
 }
 
 // =====================================================================
@@ -1378,6 +1390,187 @@ function memoPlay(lv) {
       if (cards[a].k === cards[b].k) { WG.done++; SFX.chime(); [a, b].forEach(k => els[k].classList.add('ok')); $('#wN').textContent = `配對 ${WG.done} / ${L.pairs}`;
         if (WG.done === L.pairs) { WG.over = true; clearInterval(WG.iv); const r = wgBest('memo' + lv, WG.flips); setTimeout(() => wgEnd('全部配對成功！', [`${L.n}難度・翻牌 ${WG.flips} 次完成 🎉`, r.isNew ? '🏅 新紀錄！翻牌次數最少' : `🏅 最佳紀錄 ${r.best} 次`], () => memoPlay(lv), `我在 SWSH 數位閱讀基地「記憶翻翻樂（${L.n}）」只翻了 ${WG.flips} 次，來挑戰我！`), 600); } }
       else { WG.lock = true; setTimeout(() => { [a, b].forEach(k => els[k].classList.remove('up')); WG.lock = false; }, 850); } } });
+}
+
+// =====================================================================
+//  ⚽ 無人機足球賽（第 4 關）・🏀 投籃大賽・🏐 排球對打
+// =====================================================================
+const radialT = (col = '255,230,170') => tex(128, 128, (c, w) => { const g = c.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2); g.addColorStop(0, `rgba(${col},1)`); g.addColorStop(0.35, `rgba(${col},.45)`); g.addColorStop(1, `rgba(${col},0)`); c.fillStyle = g; c.fillRect(0, 0, w, w); });
+const glowSprite = (col, s, op = 1) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialT(col), transparent: true, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false })); sp.scale.setScalar(s); return sp; };
+function buildArena() {
+  const S = new THREE.Scene(); S.fog = new THREE.Fog('#0B1430', 140, 480);
+  const sky = skyFor(S, '#060B22', '#1E2C5E'); sky.uniforms.uNight.value = 1; sky.uniforms.uSun.value.set('#000000');
+  S.add(new THREE.HemisphereLight(0x7F93D8, 0x1A2030, 0.55));
+  const ground = mesh(new THREE.PlaneGeometry(1400, 1400), MAT('#152038'), 0, -0.05, 0, false); ground.rotation.x = -Math.PI / 2; S.add(ground);
+  const AW = 60, AD = 36;
+  const turf = tex(1024, 614, (c, w, h) => { for (let i = 0; i < 12; i++) { c.fillStyle = i % 2 ? '#2E8A4E' : '#36985A'; c.fillRect(i * w / 12, 0, w / 12 + 1, h); } c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 6; c.strokeRect(14, 14, w - 28, h - 28); c.beginPath(); c.moveTo(w / 2, 14); c.lineTo(w / 2, h - 14); c.stroke(); c.beginPath(); c.arc(w / 2, h / 2, 80, 0, 7); c.stroke(); [14, w - 14].forEach((x, k) => { c.strokeRect(k ? x - 130 : x, h / 2 - 150, 130, 300); }); c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(w / 2, h / 2, 8, 0, 7); c.fill(); });
+  const fl = Pl(S, AW, AD, turf, 0, 0.02, 0); fl.rotation.x = -Math.PI / 2; fl.receiveShadow = true;
+  Bx(S, AW + 6, 0.5, AD + 6, '#3A4560', 0, -0.2, 0, 0.1);
+  // 玻璃牆＋霓虹邊框
+  const glass = new THREE.MeshStandardMaterial({ color: '#BFE6FF', transparent: true, opacity: 0.08, roughness: 0.05, metalness: 0.3, side: THREE.DoubleSide, depthWrite: false });
+  const neon = c => new THREE.MeshBasicMaterial({ color: c, toneMapped: false });
+  [[0, AD / 2, AW, 0], [0, -AD / 2, AW, 0], [AW / 2, 0, AD, Math.PI / 2], [-AW / 2, 0, AD, Math.PI / 2]].forEach(([x, z, w, r], k) => { const p = mesh(new THREE.PlaneGeometry(w, 18), glass, x, 9, z, false); p.rotation.y = r; S.add(p);
+    const top = mesh(new THREE.BoxGeometry(w, 0.18, 0.18), neon(k < 2 ? '#5FE3FF' : '#FF7FC8'), x, 18, z, false); top.rotation.y = r; S.add(top); const bot = mesh(new THREE.BoxGeometry(w, 0.14, 0.14), neon(k < 2 ? '#5FE3FF' : '#FF7FC8'), x, 0.4, z, false); bot.rotation.y = r; S.add(bot); });
+  [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([a, b]) => S.add(mesh(new THREE.BoxGeometry(0.2, 18, 0.2), neon('#FFFFFF'), a * AW / 2, 9, b * AD / 2, false)));
+  // 光環球門（左＝我隊守、右＝對手守）
+  const goals = [-1, 1].map(s => { const g = G(S, s * (AW / 2 - 1), 0, 0), col = s < 0 ? '#FF7FC8' : '#5FB8FF';
+    Cy(g, 0.25, 0.35, 7, '#D8DEE8', 0, 3.5, 0, 12); const ring = mesh(new THREE.TorusGeometry(3.4, 0.38, 16, 48), new THREE.MeshStandardMaterial({ color: col, emissive: new THREE.Color(col), emissiveIntensity: 1.6 }), 0, 8.4, 0, false); ring.rotation.y = Math.PI / 2; g.add(ring);
+    const disc = mesh(new THREE.CircleGeometry(3.2, 40), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.12, side: THREE.DoubleSide, depthWrite: false, toneMapped: false }), 0, 8.4, 0, false); disc.rotation.y = Math.PI / 2; g.add(disc);
+    const gl = glowSprite(s < 0 ? '255,140,210' : '120,190,255', 14, 0.55); gl.position.set(0, 8.4, 0); g.add(gl); const pl = new THREE.PointLight(col, 1.4, 30, 2); pl.position.set(-s * 1.5, 8.4, 0); g.add(pl); return { ring, disc, s }; });
+  // 照明塔
+  const spots = [];
+  [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([a, b], i) => { const x = a * (AW / 2 + 9), z = b * (AD / 2 + 9), tw = G(S, x, 0, z); Cy(tw, 0.5, 0.7, 30, '#59627A', 0, 15, 0, 10); Bx(tw, 5, 3, 0.6, '#2A3040', 0, 30, 0, 0.2).lookAt(0, 30, 0);
+    const pan = mesh(new THREE.PlaneGeometry(4.4, 2.4), new THREE.MeshBasicMaterial({ color: '#FFFBEA', toneMapped: false }), 0, 30, 0, false); pan.lookAt(-x, 0, -z); pan.position.add(new THREE.Vector3(-x, 0, -z).normalize().multiplyScalar(0.4)); tw.add(pan);
+    const gs = glowSprite('255,248,220', 16, 0.9); gs.position.copy(pan.position); tw.add(gs);
+    const sp = new THREE.SpotLight(0xFFF4E0, 1.6, 170, 0.62, 0.55, 1.2); sp.position.set(x, 30, z); sp.target.position.set(-a * 6, 0, -b * 4); if (i < 2) { sp.castShadow = true; sp.shadow.mapSize.set(1024, 1024); } S.add(sp); S.add(sp.target); spots.push(sp); });
+  // 看台、觀眾、LED 廣告
+  const d = new THREE.Object3D(), crowd = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 8, 6), new THREE.MeshStandardMaterial({ roughness: 0.8 }), 900); let q = 0;
+  [-1, 1].forEach(s => { for (let r = 0; r < 7; r++) { Bx(S, AW + 4, 1, 2.2, ['#2C3450', '#343D5C'][r % 2], 0, 0.5 + r, s * (AD / 2 + 4 + r * 2.2), 0.06); for (let i = 0; i < 64 && q < 900; i++) { d.position.set(-AW / 2 + 1 + i * (AW - 2) / 63 + (Math.random() - 0.5) * 0.4, 1.5 + r + 0.4, s * (AD / 2 + 4 + r * 2.2)); d.updateMatrix(); crowd.setMatrixAt(q, d.matrix); crowd.setColorAt(q, new THREE.Color(['#FF8FB8', '#5AB8F0', '#FFD95A', '#8EDDC0', '#FFFFFF', '#B48BE6'][q % 6]).convertSRGBToLinear()); q++; } } });
+  crowd.count = q; S.add(crowd);
+  const ledT = tex(1024, 64, (c, w, h) => { c.fillStyle = '#0A0F26'; c.fillRect(0, 0, w, h); c.font = `900 40px ${FONT}`; c.textBaseline = 'middle'; ['SWSH DRONE CUP', '四維無人機足球賽', '⚽ GO GO GO!', 'SWSH 數位閱讀基地'].forEach((s, i) => { c.fillStyle = ['#5FE3FF', '#FF7FC8', '#FFD95A', '#8EDDC0'][i]; c.fillText(s, 20 + i * 256, h / 2); }); }); ledT.wrapS = THREE.RepeatWrapping;
+  const ledM = new THREE.MeshBasicMaterial({ map: ledT, toneMapped: false }); [-1, 1].forEach(s => { const b = mesh(new THREE.PlaneGeometry(AW, 1.6), ledM, 0, 1.2, s * (AD / 2 + 0.25), false); b.rotation.y = s > 0 ? Math.PI : 0; S.add(b); });
+  // 球
+  const ball = G(S, 0, 7, 0); const bm = mesh(new THREE.SphereGeometry(1.3, 28, 20), new THREE.MeshStandardMaterial({ color: '#FFFFFF', emissive: new THREE.Color('#FFE68A'), emissiveIntensity: 0.45, roughness: 0.3 }), 0, 0, 0); ball.add(bm);
+  ball.add(mesh(new THREE.IcosahedronGeometry(1.55, 1), new THREE.MeshBasicMaterial({ color: '#FFD95A', wireframe: true, toneMapped: false }), 0, 0, 0, false)); const bl = new THREE.PointLight(0xFFE08A, 1.3, 20, 2); ball.add(bl); const bg = glowSprite('255,230,140', 7, 0.5); ball.add(bg);
+  // 煙火彩帶
+  const conf = []; for (let i = 0; i < 70; i++) { const m = mesh(new THREE.BoxGeometry(0.35, 0.35, 0.05), new THREE.MeshBasicMaterial({ color: ['#FF7FC8', '#5FB8FF', '#FFD95A', '#8EDDC0', '#FFFFFF'][i % 5], toneMapped: false }), 0, -50, 0, false); S.add(m); conf.push({ m, v: new THREE.Vector3() }); }
+  linearize(S); ledM.color.set('#FFFFFF');
+  return { S, AW, AD, goals, ball, ledT, conf, drones: [] };
+}
+function cagedDrone(col, acc) { const g = makeDrone(col, acc); const cage = mesh(new THREE.IcosahedronGeometry(1.9, 1), new THREE.MeshBasicMaterial({ color: acc, wireframe: true, transparent: true, opacity: 0.8, toneMapped: false }), 0, 0, 0, false); g.add(cage); const gl = glowSprite(acc === '#FF7FC8' ? '255,140,210' : acc === '#5FB8FF' ? '120,190,255' : '255,230,140', 5, 0.35); g.add(gl); g.scale.setScalar(0.85); linearize(g); return g; }
+function startSoccer(crew) {
+  const Ar = GAME.cache.arena || (GAME.cache.arena = buildArena()); Ar.drones.forEach(g => Ar.S.remove(g)); Ar.drones = [];
+  const add = (col, acc) => { const g = cagedDrone(col, acc); Ar.S.add(g); Ar.drones.push(g); return g; };
+  const mk = (n, team, x, z, me, col, acc) => ({ n, team, me, g: add(col, acc), p: new THREE.Vector3(x, 6, z), v: new THREE.Vector3(), yaw: team > 0 ? Math.PI / 2 : -Math.PI / 2, spd: 0, vy: 0, turn: 0, home: new THREE.Vector3(x, 6, z) });
+  const me = mk(ME.name || '我', 1, -14, 0, true, '#3A4250', '#FF7FC8');
+  const pl = [me]; if (crew[0]) pl.push(mk(crew[0].n, 1, -16, 8, false, '#E8EEF4', '#FF7FC8'));
+  pl.push(mk('飛魚', -1, 14, -5, false, '#2B2B30', '#5FB8FF'), mk('閃電', -1, 16, 6, false, '#2B2B30', '#5FB8FF'));
+  pl.forEach((d, i) => { d.role = d.me ? 'me' : (i % 2 ? 'atk' : 'def'); });
+  if (Ar.arrow) Ar.S.remove(Ar.arrow); const ar = new THREE.Mesh(new THREE.ConeGeometry(0.45, 1.3, 12), new THREE.MeshBasicMaterial({ color: '#FFD95A', toneMapped: false })); ar.geometry.rotateX(Math.PI / 2); Ar.S.add(ar); Ar.arrow = ar;
+  const bp = new THREE.Vector3(0, 7, 0), bv = new THREE.Vector3();
+  GAME.cam.fov = 66; GAME.cam.updateProjectionMatrix(); Ar.conf.forEach(c => { c.m.position.set(0, -50, 0); c.v.set(0, 0, 0); });
+  GAME.act = { kind: 'drone', soccer: true, S: Ar.S, Ar, me, pl, bp, bv, sc: [0, 0], pause: 0, update: updSoccer, N: 0, lv: 4, bots: [] };
+  GAME.cam.position.set(-24, 10, 0);
+}
+function soccerReset(A) { A.bp.set(0, 7, 0); A.bv.set(0, 0, 0); A.pl.forEach(d => { d.p.copy(d.home); d.v.set(0, 0, 0); d.spd = 0; d.vy = 0; d.yaw = d.team > 0 ? Math.PI / 2 : -Math.PI / 2; }); }
+function updSoccer(dt, t) {
+  const A = GAME.act, Ar = A.Ar, me = A.me, AW = Ar.AW, AD = Ar.AD; A.t += dt; const go = countdown(A) && !A.over; const LIM = 90;
+  Ar.ledT.offset.x = (t * 0.05) % 1;
+  if (A.pause > 0) { A.pause -= dt; if (A.pause <= 0) { soccerReset(A); $('#gbig').textContent = ''; } }
+  const live = go && A.pause <= 0;
+  // 我的無人機
+  const turn = (gIn('L') ? 1 : 0) - (gIn('R') ? 1 : 0); me.turn += (turn - me.turn) * Math.min(1, dt * 6); me.yaw += me.turn * dt * 2.0;
+  me.spd += ((live ? (gIn('X') ? 22 : 13) : 0) - me.spd) * Math.min(1, dt * 2.2); me.vy += ((live ? (gIn('A') ? 10 : gIn('B') ? -10 : 0) : 0) - me.vy) * Math.min(1, dt * 4);
+  me.v.set(Math.sin(me.yaw) * me.spd, me.vy, Math.cos(me.yaw) * me.spd);
+  // 電腦
+  const b = A.bp; A.pl.forEach(d => { if (d.me) return; const goalX = d.team > 0 ? AW / 2 : -AW / 2, own = -goalX; let tg;
+    const toGoal = new THREE.Vector3(goalX - b.x, 8.4 - b.y, -b.z).normalize();
+    if (d.role === 'def' && Math.sign(b.x) === Math.sign(own) && Math.abs(b.x) > 4) tg = b.clone().lerp(new THREE.Vector3(own * 0.92, 8, 0), 0.45);
+    else { tg = b.clone().addScaledVector(toGoal, -2.4); if (d.p.distanceTo(tg) < 2.2) tg = b.clone().addScaledVector(toGoal, 1.5); }
+    const mx = live ? (d.team > 0 ? 11.5 : 12.5) : 0, want = tg.sub(d.p); const L = want.length(); if (L > 0.01) want.multiplyScalar(Math.min(mx, L * 2.2) / L);
+    d.v.lerp(want, Math.min(1, dt * 2.4)); if (d.v.lengthSq() > 0.5) d.yaw = Math.atan2(d.v.x, d.v.z); });
+  // 移動、邊界、碰撞
+  A.pl.forEach(d => { d.p.addScaledVector(d.v, dt); d.p.x = Math.max(-AW / 2 + 1.5, Math.min(AW / 2 - 1.5, d.p.x)); d.p.z = Math.max(-AD / 2 + 1.5, Math.min(AD / 2 - 1.5, d.p.z)); d.p.y = Math.max(1.6, Math.min(16.5, d.p.y));
+    const n = b.clone().sub(d.p), dist = n.length(), R = 2.75; if (dist < R && dist > 0.01) { n.divideScalar(dist); b.copy(d.p).addScaledVector(n, R); const rel = d.v.dot(n) - A.bv.dot(n); if (rel > 0) { A.bv.addScaledVector(n, rel * 1.35 + 3); if (t - (A.kt || 0) > 0.25) { A.kt = t; SFX.tap(); } } }
+    A.pl.forEach(o => { if (o === d) return; const m = d.p.clone().sub(o.p), l = m.length(); if (l < 3 && l > 0.01) d.p.addScaledVector(m, (3 - l) / l * 0.5); }); });
+  // 球
+  if (live) { A.bv.y -= 3.2 * dt; A.bv.multiplyScalar(Math.exp(-0.32 * dt)); b.addScaledVector(A.bv, dt); }
+  const BR = 1.3; if (b.y < BR) { b.y = BR; A.bv.y = Math.abs(A.bv.y) * 0.75; } if (b.y > 17.5) { b.y = 17.5; A.bv.y = -Math.abs(A.bv.y) * 0.8; }
+  if (Math.abs(b.z) > AD / 2 - BR) { b.z = Math.sign(b.z) * (AD / 2 - BR); A.bv.z *= -0.8; }
+  if (Math.abs(b.x) > AW / 2 - 1.6 && A.pause <= 0) { const s = Math.sign(b.x), inRing = Math.hypot(b.y - 8.4, b.z) < 3.2;
+    if (inRing && live) { const myGoal = s > 0; A.sc[myGoal ? 0 : 1]++; A.pause = 2.6; SFX.sparkle(); $('#gbig').textContent = myGoal ? '⚽ GOAL!' : '😱 對手得分'; const gr = Ar.goals[s > 0 ? 1 : 0]; gr.flash = t;
+      Ar.conf.forEach(c => { c.m.position.set(s * (AW / 2 - 2), 9, 0); c.v.set(-s * (4 + Math.random() * 10), 6 + Math.random() * 10, (Math.random() - 0.5) * 18); }); A.ct = t; }
+    else { b.x = s * (AW / 2 - 1.6); A.bv.x *= -0.8; } }
+  Ar.goals.forEach(g => { const f = t - (g.flash || -9); g.ring.material.emissiveIntensity = 1.6 + (f < 2 ? Math.abs(Math.sin(f * 14)) * 3 : Math.sin(t * 2) * 0.3); g.disc.material.opacity = f < 2 ? 0.45 : 0.12; });
+  if (A.ct != null) Ar.conf.forEach(c => { c.v.y -= 9 * dt; c.m.position.addScaledVector(c.v, dt); c.m.rotation.x += dt * 6; c.m.rotation.y += dt * 4; });
+  Ar.ball.position.copy(b); Ar.ball.rotation.x += A.bv.z * dt * 0.5; Ar.ball.rotation.z -= A.bv.x * dt * 0.5;
+  A.pl.forEach(d => { d.g.position.copy(d.p); d.g.rotation.set(0, d.yaw, 0); const sp = d.me ? d.spd : d.v.length(); d.g.userData.body.rotation.set(sp / 22 * 0.3, 0, d.me ? -d.turn * 0.35 : 0); d.g.userData.props.forEach((q, i) => q.rotation.y += dt * (40 + sp * 2) * (i % 2 ? 1 : -1)); });
+  Ar.arrow.position.copy(me.p).add(new THREE.Vector3(0, 2.8, 0)); Ar.arrow.lookAt(b);
+  // 鏡頭
+  const fw = new THREE.Vector3(Math.sin(me.yaw), 0, Math.cos(me.yaw)), want = me.p.clone().addScaledVector(fw, -10).add(new THREE.Vector3(0, 4.5, 0)); want.x = Math.max(-AW / 2 - 6, Math.min(AW / 2 + 6, want.x)); want.z = Math.max(-AD / 2 - 6, Math.min(AD / 2 + 6, want.z));
+  GAME.cam.position.lerp(want, 1 - Math.exp(-dt * 4)); GAME.cam.lookAt(me.p.clone().lerp(b, 0.3).add(new THREE.Vector3(0, 1, 0)));
+  gSoundSet(me.spd + Math.abs(me.vy));
+  const left = Math.max(0, LIM - Math.max(0, A.t));
+  $('#gT1').textContent = `⚽ 我隊 ${A.sc[0]} : ${A.sc[1]} 對手`; $('#gT2').textContent = '第 4 關・無人機足球賽'; $('#gT3').textContent = `⏳ ${Math.ceil(left)} 秒`; $('#gspd').textContent = me.p.distanceTo(b) < 6 ? '撞球進對面的藍色光環！' : '';
+  if ((A.mt = (A.mt || 0) + dt) > 0.1) { A.mt = 0; const cv = $('#gmap'), c = cv.getContext('2d'), w = cv.width, sx = (w - 20) / AW, f = p => [10 + (p.x + AW / 2) * sx, w / 2 + p.z * sx]; c.clearRect(0, 0, w, w); c.fillStyle = 'rgba(46,138,78,.85)'; c.fillRect(10, w / 2 - AD / 2 * sx, AW * sx, AD * sx); c.strokeStyle = '#fff'; c.lineWidth = 2; c.strokeRect(10, w / 2 - AD / 2 * sx, AW * sx, AD * sx); c.fillStyle = '#FF7FC8'; c.fillRect(6, w / 2 - 12, 5, 24); c.fillStyle = '#5FB8FF'; c.fillRect(w - 11, w / 2 - 12, 5, 24);
+    A.pl.forEach(d => { const [x, y] = f(d.p); c.fillStyle = d.team > 0 ? '#FF7FC8' : '#5FB8FF'; c.beginPath(); c.arc(x, y, d.me ? 6 : 4.5, 0, 7); c.fill(); if (d.me) { c.strokeStyle = '#fff'; c.stroke(); } }); const [x, y] = f(b); c.fillStyle = '#FFD95A'; c.beginPath(); c.arc(x, y, 4, 0, 7); c.fill(); }
+  if (left <= 0 && go && !A.over) { A.over = true; const [a, o] = A.sc, win = a > o; $('#gbig').textContent = '🏁 比賽結束'; SFX[win ? 'sparkle' : 'hmm']();
+    if (win && droneCleared() < 4) store.set({ droneLv: 4 });
+    const A0 = A; setTimeout(() => { if (GAME.act !== A0) return; $('#gbig').textContent = ''; $('#gres').innerHTML = `<h3>${win ? '🏆 恭喜獲勝！' : a === o ? '🤝 平手！' : '💪 差一點點！'}</h3><p style="margin:0;font-weight:900;font-size:22px">我隊 ${a} : ${o} 對手</p><p style="margin:6px 0 0;font-weight:700;color:var(--ink2)">${win ? '🎖️ 你通過了全部四個關卡，是 SWSH 無人機足球冠軍！' : '再挑戰一次，把球撞進對面的藍色光環吧！'}</p><div class="row" style="justify-content:center;margin-top:14px"><button class="btn" id="gAgain" type="button">🔁 再踢一場</button><button class="btn alt" id="gShare" type="button">📨 揪團挑戰</button><button class="btn ghost" id="gBack" type="button">🏝️ 回到小島</button></div>`; $('#gres').hidden = false;
+      $('#gAgain').onclick = () => startGame('drone', A0.crew, 4); $('#gBack').onclick = exitGame; $('#gShare').onclick = () => wgShare(`我在 SWSH 數位閱讀基地的無人機足球賽踢出 ${a}:${o}，來跟我比一場！`); }, 1300); }
+}
+// ---- 球場小遊戲共用 ----
+function courtGame(kind) {
+  const W = WALK.W, wp = v => W.localToWorld(v.clone());
+  if (dlg.open) dlg.close(); document.body.classList.add('ingame'); $('#game').hidden = false; $('#gres').hidden = true; $('#game').classList.add('court'); GAME.keys = {}; GAME.btn = {};
+  GAME.cam.fov = 52; GAME.cam.aspect = innerWidth / innerHeight; GAME.cam.updateProjectionMatrix(); $('#gmap').style.display = 'none'; $('#gspd').textContent = '';
+  if (WALK.g) WALK.g.visible = false;
+  const av = chibi(lookOf(ME.g, ME.role)); av.g.scale.setScalar(1.15); linearize(av.g); W.add(av.g);
+  const A = { kind, S: scene, W, wp, av, t: -3.6, cd: 4, score: 0, cleanup() { W.remove(av.g); (A.objs || []).forEach(o => W.remove(o)); if (WALK.g) WALK.g.visible = true; $('#game').classList.remove('court'); $('#gmap').style.display = ''; $('#gmeter').hidden = true; $('#gtip').textContent = ''; GAME.cam.fov = 62; GAME.cam.updateProjectionMatrix(); } };
+  GAME.act = A; SFX.duck(true); return A;
+}
+const pressed = k => { const now = gIn(k), was = GAME.prevBtn[k]; GAME.prevBtn[k] = now; return now && !was; };
+GAME.prevBtn = {};
+function courtEnd(A, title, lines, key, val) {
+  A.over = true; const best = store.get().best || {}, isNew = !best[key] || val > best[key]; if (isNew) { best[key] = val; store.set({ best }); } SFX.sparkle();
+  $('#gres').innerHTML = `<h3>${title}</h3>${lines.map(l => `<p style="margin:4px 0;font-weight:700">${l}</p>`).join('')}<p style="margin:6px 0 0;font-weight:900;color:#E0679A">${isNew ? '🎉 新紀錄！' : `🏅 最佳紀錄 ${best[key]}`}</p><div class="row" style="justify-content:center;margin-top:12px"><button class="btn" id="gAgain" type="button">🔁 再玩一次</button><button class="btn alt" id="gShare" type="button">📨 揪團挑戰</button><button class="btn ghost" id="gBack" type="button">🏝️ 回到小島</button></div>`;
+  $('#gres').hidden = false; $('#gAgain').onclick = () => { exitGame(); (A.kind === 'bball' ? startBball : startVball)(); }; $('#gBack').onclick = exitGame; $('#gShare').onclick = () => wgShare(`我在 SWSH 數位閱讀基地的${A.kind === 'bball' ? '投籃大賽' : '排球對打'}拿到 ${val} 分，來挑戰我！`);
+}
+// ---- 🏀 投籃大賽 ----
+const HOOP_L = new THREE.Vector3(-24.7, 4.8, -28);
+function startBball() {
+  const A = courtGame('bball'), W = A.W; A.lim = 60; A.streak = 0; A.made = 0; A.shots = 0; A.ph = 0; A.flight = null; A.update = updBball; A.tap = () => { A.tapped = true; };
+  const bl = G(W); Sp(bl, 0.45, '#FF8A3D', 0, 0, 0); To(bl, 0.45, 0.03, '#5B3324', 0, 0, 0); To(bl, 0.45, 0.03, '#5B3324', 0, 0, 0).rotation.y = Math.PI / 2; linearize(bl); A.ball = bl; A.objs = [bl];
+  const ring = mesh(new THREE.RingGeometry(0.7, 1.0, 32), new THREE.MeshBasicMaterial({ color: '#FFD95A', transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false }), 0, 0.12, 0, false); ring.rotation.x = -Math.PI / 2; W.add(ring); A.objs.push(ring); A.spotRing = ring;
+  $('#gA').innerHTML = '🏀<small>投籃</small>'; $('#gkeys').textContent = '⌨️ 空白鍵／↑ 投籃・看準力道條的綠色區域！'; $('#gmeter').hidden = false; bbSpot(A);
+}
+function bbSpot(A) { const a = (Math.random() - 0.5) * 2.2, d = 4.6 + Math.random() * 4.6; A.spot = new THREE.Vector3(HOOP_L.x + Math.cos(a) * d, 0, HOOP_L.z + Math.sin(a) * d); A.d = d; A.pts = d > 7.4 ? 3 : 2;
+  A.ideal = 0.3 + (d - 4.6) / 4.6 * 0.42; A.tol = 0.075; A.av.g.position.copy(A.spot); A.av.g.rotation.y = Math.atan2(HOOP_L.x - A.spot.x, HOOP_L.z - A.spot.z); A.spotRing.position.set(A.spot.x, 0.12, A.spot.z);
+  A.ball.position.copy(A.spot).add(new THREE.Vector3(0, 3.3, 0)); A.ball.visible = true; A.phase = 'aim'; A.ph = Math.random() * 6;
+  const z = $('#gmeter .zone'); z.style.bottom = (A.ideal - A.tol) * 100 + '%'; z.style.height = A.tol * 200 + '%'; $('#gtip').textContent = `${A.pts} 分球・距離 ${A.d.toFixed(1)} 公尺`; }
+function updBball(dt, t) {
+  const A = GAME.act; A.t += dt; const go = countdown(A) && !A.over, left = Math.max(0, A.lim - Math.max(0, A.t));
+  const fire = pressed('A') || pressed('X') || A.tapped; A.tapped = false;
+  if (A.phase === 'aim') { A.ph += dt * (2.6 + A.made * 0.08); A.pow = 0.5 - Math.cos(A.ph) * 0.5; $('#gmeter i').style.height = A.pow * 100 + '%'; $('#gmeter').classList.toggle('hot', Math.abs(A.pow - A.ideal) < A.tol);
+    A.av.arms.forEach(a => { a.rotation.x = -2.6; }); if (go && fire) { const err = A.pow - A.ideal, ok = Math.abs(err) < A.tol; A.shots++; A.flight = { t0: t, from: A.ball.position.clone(), to: HOOP_L.clone().add(new THREE.Vector3(ok ? 0 : Math.sign(err) * (0.9 + Math.abs(err) * 4), ok ? 0.25 : 0.4, ok ? 0 : (Math.random() - 0.5) * 0.8)), ok, dur: 0.85 + A.d * 0.035 }; A.phase = 'fly'; SFX.pop(); A.av.arms.forEach(a => { a.rotation.x = -3.1; }); } }
+  else if (A.phase === 'fly') { const F = A.flight, u = Math.min(1, (t - F.t0) / F.dur); A.ball.position.lerpVectors(F.from, F.to, u); A.ball.position.y += Math.sin(u * Math.PI) * (3.2 + A.d * 0.25); A.ball.rotation.x -= dt * 10;
+    if (u >= 1) { A.phase = 'after'; A.at = t; if (F.ok) { A.streak++; A.made++; const bonus = A.streak >= 3 ? 1 : 0; A.score += A.pts + bonus; SFX.sparkle(); $('#gbig').textContent = A.streak >= 3 ? `🔥 ${A.streak} 連進！` : 'SWISH!'; } else { A.streak = 0; SFX.hmm(); $('#gbig').textContent = F.to.x > HOOP_L.x ? '太大力了！' : '力道不夠～'; } A.fall = new THREE.Vector3(F.ok ? 0 : 3 + Math.random() * 2, F.ok ? -2 : 3, (Math.random() - 0.5) * 3); } }
+  else if (A.phase === 'after') { const u = t - A.at; A.fall.y -= 14 * dt; A.ball.position.addScaledVector(A.fall, dt); if (A.ball.position.y < 0.45) { A.ball.position.y = 0.45; A.fall.y = Math.abs(A.fall.y) * 0.5; } if (u > 1.0) { $('#gbig').textContent = ''; if (left > 0) bbSpot(A); } }
+  const p = A.wp(A.spot), h = A.wp(HOOP_L), back = p.clone().sub(h).setY(0).normalize(); const side = new THREE.Vector3(-back.z, 0, back.x); GAME.cam.position.lerp(p.clone().addScaledVector(back, 8.5).addScaledVector(side, 2.6).add(new THREE.Vector3(0, 6.6, 0)), 1 - Math.exp(-dt * 5)); GAME.cam.lookAt(h.clone().add(new THREE.Vector3(0, -0.6, 0)));
+  $('#gT1').textContent = `🏀 得分 ${A.score}`; $('#gT2').textContent = `命中 ${A.made}/${A.shots}${A.streak >= 2 ? `・🔥${A.streak}` : ''}`; $('#gT3').textContent = `⏳ ${Math.ceil(left)} 秒`;
+  if (left <= 0 && go && !A.over && A.phase !== 'fly') courtEnd(A, '⏰ 投籃大賽結束！', [`得到 ${A.score} 分，命中 ${A.made} / ${A.shots} 球`, A.made >= 10 ? '🏆 神射手！' : A.made >= 5 ? '👍 手感不錯！' : '多練習就會越來越準！'], 'bball', A.score);
+}
+// ---- 🏐 排球對打 ----
+const VB = { c: new THREE.Vector3(30, 0, -16), px: 24.2, ax: 35.8, z0: -20, z1: -12 };
+function startVball() {
+  const A = courtGame('vball'), W = A.W; A.lives = 3; A.rally = 0; A.update = updVball; A.tap = () => { A.tapped = true; }; A.pz = -16; A.az = -16;
+  const ai = chibi(lookOf('m', 'student', 1)); ai.g.scale.setScalar(1.15); linearize(ai.g); W.add(ai.g); A.ai = ai;
+  const bl = G(W); Sp(bl, 0.42, '#FFFFFF', 0, 0, 0); [['#FFE07A', 0], ['#8FD3FF', Math.PI / 3], ['#FF9EC4', -Math.PI / 3]].forEach(([c, r]) => { const bb = To(bl, 0.42, 0.07, c, 0, 0, 0); bb.rotation.set(Math.PI / 2, r, 0); }); linearize(bl); A.ball = bl;
+  const mk = mesh(new THREE.RingGeometry(0.9, 1.25, 32), new THREE.MeshBasicMaterial({ color: '#FF8FB8', transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false }), 0, 0.14, 0, false); mk.rotation.x = -Math.PI / 2; W.add(mk); A.mark = mk; A.objs = [ai.g, bl, mk];
+  $('#gA').innerHTML = '🏐<small>擊球</small>'; $('#gkeys').textContent = '⌨️ ←→ 左右移動・空白鍵／↑ 擊球（球快落地時按，越接近地面越完美！）'; vbServe(A, 1.9);
+}
+function vbServe(A, dur) { A.from = new THREE.Vector3(VB.ax - 0.6, 3.4, A.az); A.to = new THREE.Vector3(VB.px, 0.8, VB.z0 + 0.8 + Math.random() * (VB.z1 - VB.z0 - 1.6)); A.dur = dur; A.t0 = null; A.side = 'me'; A.hit = false; A.mark.visible = true; A.mark.position.set(A.to.x, 0.14, A.to.z); }
+function vbReturn(A, perfect) { A.from = A.ball.position.clone(); A.aiTo = new THREE.Vector3(VB.ax, 0.8, VB.z0 + 0.8 + Math.random() * (VB.z1 - VB.z0 - 1.6)); A.to = A.aiTo.clone(); A.dur = perfect ? 0.85 : 1.25; A.t0 = null; A.side = 'ai'; A.mark.visible = false; }
+function updVball(dt, t) {
+  const A = GAME.act; A.t += dt; const go = countdown(A) && !A.over, fire = pressed('A') || pressed('X') || A.tapped; A.tapped = false;
+  const mv = (gIn('R') ? 1 : 0) - (gIn('L') ? 1 : 0); A.pz = Math.max(VB.z0 + 0.5, Math.min(VB.z1 - 0.5, A.pz + mv * dt * 8.5));
+  if (go && !A.over) { if (A.t0 == null) A.t0 = t; const u = Math.min(1, (t - A.t0) / A.dur), apex = A.side === 'me' ? 6.5 : 7;
+    A.ball.position.lerpVectors(A.from, A.to, u); A.ball.position.y += Math.sin(u * Math.PI) * apex; A.ball.rotation.x += dt * 8;
+    if (A.side === 'me') { const near = Math.abs(A.pz - A.to.z) < 1.5;
+      if (fire && !A.hit) { if (u > 0.62 && near) { const perfect = u > 0.86; A.rally++; A.score += perfect ? 2 : 1; SFX[perfect ? 'sparkle' : 'chime'](); $('#gbig').textContent = perfect ? '✨ 完美擊球！' : '好球！'; setTimeout(() => { if (GAME.act === A) $('#gbig').textContent = ''; }, 600); A.hit = true; A.av.arms.forEach(a => { a.rotation.x = -2.8; }); setTimeout(() => A.av.arms.forEach(a => { a.rotation.x = 0; }), 300); vbReturn(A, perfect); }
+        else { $('#gtip').textContent = u <= 0.62 ? '太早了！等球落下再按' : '要站到粉紅圈裡面喔！'; } }
+      if (u >= 1 && A.side === 'me') { A.lives--; SFX.hmm(); $('#gbig').textContent = '😵 漏接！'; setTimeout(() => { if (GAME.act === A) $('#gbig').textContent = ''; }, 800); if (A.lives <= 0) { courtEnd(A, '🏐 排球對打結束！', [`連續對打 ${A.rally} 次，得到 ${A.score} 分`, A.rally >= 15 ? '🏆 排球高手！' : A.rally >= 6 ? '👍 很會接球！' : '多練習抓準擊球時機！'], 'vball', A.score); } else { A.az = A.ai.g.position.z; vbServe(A, Math.max(1.05, 1.9 - A.rally * 0.05)); } } }
+    else { A.az += Math.max(-dt * 9, Math.min(dt * 9, A.aiTo.z - A.az)); if (u >= 1) { A.ai.arms.forEach(a => { a.rotation.x = -2.8; }); setTimeout(() => A.ai.arms.forEach(a => { a.rotation.x = 0; }), 300); A.from = A.ball.position.clone(); SFX.tap(); vbServe(A, Math.max(1.05, 1.9 - A.rally * 0.05)); A.from = A.ball.position.clone(); } } }
+  A.av.g.position.set(VB.px - 0.6, 0, A.pz); A.av.g.rotation.y = Math.PI / 2; A.ai.g.position.set(VB.ax + 0.6, 0, A.az); A.ai.g.rotation.y = -Math.PI / 2;
+  const sw = Math.sin(t * 12) * 0.5 * Math.abs(mv); A.av.legs[0].rotation.x = sw; A.av.legs[1].rotation.x = -sw;
+  A.mark.material.opacity = Math.abs(A.pz - A.to.z) < 1.5 ? 1 : 0.55; A.mark.material.color.set(Math.abs(A.pz - A.to.z) < 1.5 ? '#8EDDC0' : '#FF8FB8');
+  const cp = A.wp(new THREE.Vector3(VB.px - 11, 8.2, A.pz * 0.35 + VB.c.z * 0.65)); GAME.cam.position.lerp(cp, 1 - Math.exp(-dt * 5)); GAME.cam.lookAt(A.wp(new THREE.Vector3(VB.c.x + 1, 2.2, VB.c.z)));
+  $('#gT1').textContent = `🏐 得分 ${A.score}`; $('#gT2').textContent = `對打 ${A.rally} 次`; $('#gT3').textContent = '❤️'.repeat(Math.max(0, A.lives)) + '🤍'.repeat(3 - Math.max(0, A.lives));
+}
+function courtLobby(kind) {
+  const best = (store.get().best || {})[kind], I = kind === 'bball' ? { e: '🏀', t: '投籃大賽', hc: '#FFE1D0', say: '60 秒內看準力道條，投進越多球分數越高！三分線外的球可以拿 3 分，連進 3 球還有加分喔～', how: '畫面右側的力道條上下跑動，在<b>綠色區域</b>時按「投籃」（空白鍵／↑／手機右下按鈕）。' } : { e: '🏐', t: '排球對打', hc: '#D7F5EA', say: '和阿哲隔網對打！移動到粉紅色落點圈，球快落地時按擊球，看你能連續對打幾次。', how: '←→（手機左下按鈕）左右移動，站進落點圈（變綠色），等球快落地時按「擊球」。越晚擊球越完美（+2 分），漏接 3 次就結束。' };
+  frame({ hc: I.hc, av: I.e, tag: '🎮 球場小遊戲', title: I.t, say: I.say, body: `<div class="sec"><h3>🎯 玩法</h3><p style="margin:0;line-height:1.8">${I.how}<br>🏅 我的最佳成績：<b>${best ? best + ' 分' : '還沒有紀錄'}</b></p></div><div class="sec row"><button class="btn" id="cStart" type="button">🚀 開始遊戲</button></div>` });
+  $('#cStart').onclick = () => (kind === 'bball' ? startBball : startVball)();
 }
 
 // ---------- 角色：四維 IP（黏土小人） ----------
@@ -1502,8 +1695,8 @@ function buildScene() {
   const soil = mesh(new THREE.CylinderGeometry(52.2, 48, 3.2, 96), MAT('#F2CFA0'), 0, -3.0, 0); soil.scale.z = 0.78; isle.add(soil);
   const rock = mesh(new THREE.ConeGeometry(46, 26, 9), new THREE.MeshStandardMaterial({ color: '#D9B48A', roughness: 1, flatShading: true }), 0, -17.6, 0); rock.rotation.x = Math.PI; rock.scale.z = 0.78; isle.add(rock);
   for (let i = 0; i < 46; i++) { const a = i / 46 * Math.PI * 2; Sp(isle, 0.5 + (i % 3) * 0.25, ['#FFD6E5', '#FFFFFF', '#FFE07A', '#D7F5EA'][i % 4], Math.cos(a) * 51.6, -0.05, Math.sin(a) * 51.6 * 0.78, 1, 0.6, 1); }
-  { ENV.rimMat = new THREE.MeshStandardMaterial({ color: '#FFE9B8', emissive: new THREE.Color('#ffc777'), emissiveIntensity: 0.15, roughness: 0.4 }); const NB = 48, bulbs = new THREE.InstancedMesh(new THREE.SphereGeometry(0.22, 10, 8), ENV.rimMat, NB), poles = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.05, 0.05, 0.9, 6), MAT('#FFFFFF'), NB), d = new THREE.Object3D();
-    for (let i = 0; i < NB; i++) { const a = i / NB * Math.PI * 2, x = Math.cos(a) * 50.4, z = Math.sin(a) * 50.4 * 0.78; d.position.set(x, 0.45, z); d.updateMatrix(); poles.setMatrixAt(i, d.matrix); d.position.y = 1.0; d.updateMatrix(); bulbs.setMatrixAt(i, d.matrix); } isle.add(poles); isle.add(bulbs); ENV.rimLights = []; for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, pl = new THREE.PointLight(0xFFC777, 0, 26, 2); pl.position.set(Math.cos(a) * 48, 2.5, Math.sin(a) * 48 * 0.78); isle.add(pl); ENV.rimLights.push(pl); } }
+  { ENV.rimMat = new THREE.MeshStandardMaterial({ color: '#FFE9B8', emissive: new THREE.Color('#ffc777'), emissiveIntensity: 0.15, roughness: 0.4 }); const NB = 48, bulbs = new THREE.InstancedMesh(new THREE.SphereGeometry(0.3, 12, 10), ENV.rimMat, NB), poles = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.05, 0.05, 0.9, 6), MAT('#FFFFFF'), NB), d = new THREE.Object3D();
+    for (let i = 0; i < NB; i++) { const a = i / NB * Math.PI * 2, x = Math.cos(a) * 50.4, z = Math.sin(a) * 50.4 * 0.78; d.position.set(x, 0.45, z); d.updateMatrix(); poles.setMatrixAt(i, d.matrix); d.position.y = 1.0; d.updateMatrix(); bulbs.setMatrixAt(i, d.matrix); } isle.add(poles); isle.add(bulbs); ENV.rimGlow = new THREE.SpriteMaterial({ map: radialT('255,214,140'), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }); for (let i = 0; i < NB; i++) { const a = i / NB * Math.PI * 2, sp = new THREE.Sprite(ENV.rimGlow); sp.position.set(Math.cos(a) * 50.4, 1.0, Math.sin(a) * 50.4 * 0.78); sp.scale.setScalar(3.4); isle.add(sp); } ENV.rimLights = []; for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, pl = new THREE.PointLight(0xFFC777, 0, 26, 2); pl.position.set(Math.cos(a) * 48, 2.5, Math.sin(a) * 48 * 0.78); isle.add(pl); ENV.rimLights.push(pl); } }
   ANIM.push(t => { isle.position.y = Math.sin(t * 0.6) * 0.12; });
   const W = G(isle); // 地面上的所有東西
 
@@ -1797,7 +1990,10 @@ function buildScene() {
   const pod = G(W, 28.5, 0, 1.0); pod.rotation.y = -0.75; pod.scale.setScalar(1.45);
   Cy(pod, 3.9, 4.2, 0.35, '#BBA8FF', 0, 0.18, 0, 48); Cy(pod, 3.3, 3.3, 0.12, '#ECE6FF', 0, 0.4, 0, 48);
   const padL = []; for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, l = mesh(SPH, MAT('#FFF3B0', { emissive: 0xFFE38A, emissiveIntensity: 0.6 }), Math.cos(a) * 3.7, 0.4, Math.sin(a) * 3.7, false); l.scale.setScalar(0.14); pod.add(l); padL.push(l); }
-  ANIM.push(t => padL.forEach((l, i) => { l.material.emissiveIntensity = 0.3 + Math.max(0, Math.sin(t * 3 - i * 0.6)) * 0.7; }));
+  ANIM.push(t => padL.forEach((l, i) => { l.material.emissiveIntensity = (0.3 + Math.max(0, Math.sin(t * 3 - i * 0.6)) * 0.7) * (1 + 3 * ((ENV.pod && ENV.pod.n) || 0)); }));
+  { const pl = new THREE.PointLight(0xFFB8E8, 0, 36, 2); pl.position.set(0, 6, 0); pod.add(pl); const gl = glowSprite('255,190,235', 12, 0); gl.position.set(0, 3.6, 0); pod.add(gl);
+    const beam = mesh(new THREE.CylinderGeometry(3.2, 4.4, 9, 32, 1, true), new THREE.MeshBasicMaterial({ color: '#FFC6EE', transparent: true, opacity: 0, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }), 0, 4.6, 0, false); pod.add(beam); ENV.pod = { light: pl, glow: gl, beam, n: 0 };
+    const pls = []; for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, s = glowSprite('255,240,170', 1.4, 0); s.position.set(Math.cos(a) * 3.7, 0.5, Math.sin(a) * 3.7); pod.add(s); pls.push(s); } ANIM.push(t => pls.forEach((s, i) => { s.material.opacity = ((ENV.pod && ENV.pod.n) || 0) * (0.4 + Math.max(0, Math.sin(t * 3 - i * 0.6)) * 0.6); })); }
   const hov = mesh(new THREE.RingGeometry(1.2, 2.6, 40), new THREE.MeshBasicMaterial({ color: '#C9F2FF', transparent: true, opacity: 0.5, side: THREE.DoubleSide }), 0, 0.52, 0, false); hov.rotation.x = -Math.PI / 2; pod.add(hov);
   const ship = G(pod, 0, 3.4, 0);
   // 三支可愛小腳
@@ -1889,7 +2085,12 @@ function buildScene() {
     const rim = To(hg, 0.55, 0.06, '#FF7A3D', 1.9, 4.8, 0); rim.rotation.x = Math.PI / 2; const net = mesh(new THREE.CylinderGeometry(0.55, 0.36, 0.8, 12, 3, true), new THREE.MeshBasicMaterial({ color: '#FFFFFF', wireframe: true }), 1.9, 4.38, 0, false); hg.add(net); });
   const ball = G(bb, 3.2, 0.62, 2.6); Sp(ball, 0.42, '#FF8A3D', 0, 0, 0); To(ball, 0.42, 0.025, '#5B3324', 0, 0, 0); To(ball, 0.42, 0.025, '#5B3324', 0, 0, 0).rotation.y = Math.PI / 2; To(ball, 0.42, 0.025, '#5B3324', 0, 0, 0).rotation.x = Math.PI / 2;
   ANIM.push(t => { ball.position.y = 0.62 + Math.abs(Math.sin(t * 3)) * 1.3; ball.rotation.z = -t * 2; });
-  // 排球場
+  // 排球場（排球對打）
+  const vb = courtBase(30, -16, 16, 9, (c, w, h) => { c.fillStyle = '#8EDDC0'; c.fillRect(0, 0, w, h); c.fillStyle = '#FFE9A8'; c.fillRect(10, 10, w - 20, h - 20); c.strokeStyle = '#FFFFFF'; c.lineWidth = 7; c.strokeRect(10, 10, w - 20, h - 20); c.beginPath(); c.moveTo(w / 2, 10); c.lineTo(w / 2, h - 10); c.stroke(); [-1, 1].forEach(k => { c.beginPath(); c.moveTo(w / 2 + k * w / 6, 10); c.lineTo(w / 2 + k * w / 6, h - 10); c.stroke(); }); });
+  [-1, 1].forEach(k => { Cy(vb, 0.14, 0.18, 4.0, '#FFFFFF', 0, 2.2, k * 5.3, 10); Sp(vb, 0.2, '#FF8FB8', 0, 4.25, k * 5.3); });
+  { const nT = tex(256, 64, (c, w, h) => { c.strokeStyle = '#FFFFFF'; c.lineWidth = 2; for (let x = 0; x <= w; x += 10) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, h); c.stroke(); } for (let y = 0; y <= h; y += 10) { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); } c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, w, 7); }); const vn = mesh(new THREE.PlaneGeometry(10.6, 1.3), new THREE.MeshStandardMaterial({ map: nT, transparent: true, alphaTest: 0.3, side: THREE.DoubleSide }), 0, 3.5, 0, false); vn.rotation.y = Math.PI / 2; vb.add(vn); }
+  const vbBall = G(vb, -3, 0.42, 3); Sp(vbBall, 0.42, '#FFFFFF', 0, 0, 0); [['#FFE07A', 0], ['#8FD3FF', Math.PI / 3], ['#FF9EC4', -Math.PI / 3]].forEach(([c, r]) => { const b = To(vbBall, 0.42, 0.07, c, 0, 0, 0); b.rotation.set(Math.PI / 2, r, 0); });
+  hot('vball', vb, 5.4, '排球對打', '🏐', '#D7F5EA'); hot('bball', bb, 6.8, '投籃大賽', '🏀', '#FFE1D0');
   // 遊戲區：🚁 無人機任務、🏎️ 瘋狂賽車
   const arc = G(W, 15, 0, -28); Bx(arc, 22, 0.3, 13, '#EFE6D8', 0, 0.12, 0, 0.2);
   const signT = (txt, col) => tex(384, 96, (c, w, h) => { c.fillStyle = col; rr(c, 4, 4, w - 8, h - 8, 40); c.fill(); c.fillStyle = '#FFFFFF'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 46px ${RF}`; c.fillText(txt, w / 2, h / 2 + 2); });
@@ -1913,7 +2114,7 @@ function buildScene() {
 
   // ===== 前院裝飾 =====
   // 樹木：自動散布在大島上，避開建築、球場、步道與各設施
-  const AVOID = [[-47, -31, -15, 15], [-20, 20, -15, 8.5], [-28, 27, -37, -17.5], [-7.5, 7.5, 7, 30]], AVC = [[-27.5, 0.5, 7], [28.5, 1, 9.5], [-20.5, 12, 3.5], [14.5, 10.8, 4.5], [-10.5, 18.8, 3], [-19, 9.5, 3], [4.4, 20.6, 2], [-3.6, 21.6, 3.5], [-4.6, 14.2, 1.5], [4.6, 14.2, 1.5], [-17.5, 6.5, 1.5]];
+  const AVOID = [[20, 40, -22, -10], [-47, -31, -15, 15], [-20, 20, -15, 8.5], [-28, 27, -37, -17.5], [-7.5, 7.5, 7, 30]], AVC = [[-27.5, 0.5, 7], [28.5, 1, 9.5], [-20.5, 12, 3.5], [14.5, 10.8, 4.5], [-10.5, 18.8, 3], [-19, 9.5, 3], [4.4, 20.6, 2], [-3.6, 21.6, 3.5], [-4.6, 14.2, 1.5], [4.6, 14.2, 1.5], [-17.5, 6.5, 1.5]];
   const okAt = (x, z, m) => (x / 49.5) ** 2 + (z / 38.6) ** 2 < 1 && !AVOID.some(([a, b, c, d]) => x > a - m && x < b + m && z > c - m && z < d + m) && !AVC.some(([a, b, r]) => Math.hypot(x - a, z - b) < r + m);
   let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647; const placed = [];
   const place = (n, m, minD, fn, extra = []) => { let tries = 0, k = 0; while (k < n && tries++ < 6000) { const x = (rnd() * 2 - 1) * 50, z = (rnd() * 2 - 1) * 39; if (!okAt(x, z, m) || extra.some(([a, b, c, d]) => x > a && x < b && z > c && z < d) || placed.some(([a, b]) => Math.hypot(x - a, z - b) < minD)) continue; placed.push([x, z]); fn(x, z, k++); } };
@@ -2025,7 +2226,7 @@ function stepFlight() {
   camTarget.lerpVectors(F.t, T.t, e); cam.dist = cam.tDist = F.dist + (T.dist - F.dist) * e; cam.pitch = cam.tPitch = F.pitch + (T.pitch - F.pitch) * e; cam.yaw = cam.tYaw = F.yaw + (T.yaw - F.yaw) * e;
   if (u >= 1) { const d = FLIGHT.done; FLIGHT = null; d && d(); }
 }
-const FLY_D = { dino: 120, drone: 26, word: 26, pod: 40, portal: 36, gacha: 24, dede: 22, gallery: 26, xiner: 26, youtube: 22, board1: 22, board2: 26, board3: 22 };
+const FLY_D = { bball: 34, vball: 30, dino: 120, drone: 26, word: 26, pod: 40, portal: 36, gacha: 24, dede: 22, gallery: 26, xiner: 26, youtube: 22, board1: 22, board2: 26, board3: 22 };
 function flyToHot(id, done) {
   const h = HOTS[id]; const p = h.g.getWorldPosition(new THREE.Vector3()); p.y += h.ay * 0.45;
   let yaw = cam.yaw; const w = Math.atan2(Math.sin(yaw), Math.cos(yaw)); if (id === 'dino') { const want = Math.atan2(p.x, p.z), dy = Math.atan2(Math.sin(want - yaw), Math.cos(want - yaw)); yaw += dy; } if (h.inside && Math.abs(w) > 0.6) yaw = cam.yaw - w + Math.sign(w) * 0.35;
@@ -2088,7 +2289,7 @@ function bubble(id, text) {
 
 // 點到熱點：角色反應 → 開彈窗
 const REACT = {
-  dede: ['汪汪！', 'woof', ['dede']], xiner: ['想看什麼書呢？', 'giggle', []], youtube: ['一起來看四維頻道！', 'giggle', ['xiner']], dino: ['吼～～～！', 'roar', []], drone: ['無人機待命中！', 'whoosh', []], word: ['來玩成語大風吹！', 'chime', []], xiaosi: ['一起來自學吧！', 'tap', ['xiaosi']],
+  dede: ['汪汪！', 'woof', ['dede']], xiner: ['想看什麼書呢？', 'giggle', []], youtube: ['一起來看四維頻道！', 'giggle', ['xiner']], dino: ['吼～～～！', 'roar', []], drone: ['無人機待命中！', 'whoosh', []], bball: ['來比投籃！', 'pop', []], vball: ['一起打排球！', 'pop', []], word: ['來玩成語大風吹！', 'chime', []], xiaosi: ['一起來自學吧！', 'tap', ['xiaosi']],
   expo: ['新書展開幕囉！', 'giggle', ['sisi', 'juanmao']], opac: ['嗶！查詢機啟動', 'tap', []], portal: ['咻～傳送中！', 'whoosh', []],
   pod: ['3、2、1，夢想啟航！', 'whoosh', []], board1: ['📌 一樓公告欄', 'pop', []], gallery: ['🖼️ 閣樓小畫廊', 'sparkle', []], board2: ['📌 二樓公告欄', 'pop', []], board3: ['📌 三樓公告欄', 'pop', []], radio: ['ON AIR 📻', 'radio', []], gacha: ['今天的運氣如何？', 'pop', []]
 };
@@ -2191,7 +2392,7 @@ const PANELS = {
       <div class="sec"><h3>📗 推薦新書 ${demoTag(CONFIG.expoDemo)}</h3><div class="nb">${E.newBooks.map(b => `<article class="nbk"><div class="cv" style="background:${b.c}">${b.e}</div><div><b>《${esc(b.t)}》</b><dl><dt>作者</dt><dd>${esc(b.a)}</dd><dt>出版</dt><dd>${esc(b.pub)}・${esc(b.y)}</dd><dt>類別</dt><dd>${esc(b.cat)}</dd><dt>適合</dt><dd>${esc(b.who)}</dd></dl><p>${esc(b.intro)}</p></div></article>`).join('')}</div></div>` });
   },
   radio() { renderRadio(0); },
-  drone() { gameLobby('drone'); }, word() { wordLobby(); },
+  drone() { gameLobby('drone'); }, bball() { courtLobby('bball'); }, vball() { courtLobby('vball'); }, word() { wordLobby(); },
   youtube() { frame({ hc: '#FFE0E0', av: IMG.xiner, tag: '▶️ 三樓視聽區', title: '四維 YouTube 頻道', say: '心兒：我正在看四維的影片！校園活動、成果發表、好書介紹都在這裡，一起來看吧 ❤️', body: `<div class="sec"><a class="card" href="${CONFIG.yt}" target="_blank" rel="noopener" style="background:#FFF1F1;display:flex;gap:12px;align-items:center"><span class="ic" style="font-size:38px">▶️</span><span><b>前往「四維YT」頻道</b><span>在新分頁開啟 YouTube，記得按下訂閱喔！</span></span></a></div><p class="row"><a class="btn" href="${CONFIG.yt}" target="_blank" rel="noopener">▶️ 立即觀看</a></p>` }); },
   gallery() { frame({ hc: '#FFE9C7', av: '🖼️', tag: '🔭 三樓上方・小閣樓', title: '閣樓小畫廊', say: '在星空下的閣樓裡，掛著五幅溫暖的油畫，點畫作可以看大圖！', body: `<div class="sec posters">${PAINTINGS.map((s, i) => `<a class="poster" href="${s}" target="_blank" rel="noopener"><img src="${s}" alt="閣樓畫作 ${i + 1}"><b>${['金色林蔭道', '山野玫瑰', '櫻花天鵝', '海岸百合', '午後巷口'][i]}</b></a>`).join('')}</div>` }); },
   board1() { boardPanel(0); }, board2() { boardPanel(1); }, board3() { boardPanel(2); },
@@ -2294,7 +2495,7 @@ function loop() {
   // 熱點彈跳＋滑鼠懸停
   Object.entries(HOTS).forEach(([id, h]) => { const b = t - (bounces[id] ?? -9); const s0 = h.g.userData.s0 ?? (h.g.userData.s0 = h.g.scale.x); let s = s0 * (hoverId === id ? 1.04 : 1); if (b < 0.5) s *= 1 + Math.sin(b / 0.5 * Math.PI) * 0.08; h.g.scale.setScalar(h.g.scale.x + (s - h.g.scale.x) * 0.3); });
   if (gachaAnim) gachaAnim(t);
-  if (ENV.sky) { const dtC = Math.min(0.25, t - (ENV.lt ?? t)); ENV.lt = t; if (clockRun) simMin = (simMin + dtC * 10) % 1440; applyEnv(simMin, t); weather(t); if ((ENV.ct = (ENV.ct || 0) + dtC) > 0.2) { ENV.ct = 0; updateClock(); } }
+  if (ENV.sky) { const dtC = Math.min(0.25, t - (ENV.lt ?? t)); ENV.lt = t; if (clockRun) simMin = (simMin + dtC * 10) % 1440; applyEnv(simMin, t); weather(t); updateClock(); }
   const dtP = Math.min(0.05, t - (WALK.lt ?? t)); WALK.lt = t; stepPlay(t, dtP);
   updateCam(t); renderer.render(scene, camera); updatePins(); placeTags();
 }
