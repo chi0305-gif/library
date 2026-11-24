@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SWSH 閱讀基地</title>
+<title>SWSH 數位閱讀基地</title>
 <meta name="description" content="花蓮縣私立四維高級中學 圖書資訊中心：微縮立體圖書館互動網頁">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -193,7 +193,7 @@ details.script { background: #fff; border-radius: 14px; padding: 10px 14px; } de
 .tbtn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px 7px 9px; font-size: 13.5px; }
 .tbtn:hover { transform: translateY(-2px); box-shadow: 0 1px 0 #fff inset, 0 16px 30px -10px rgba(110, 70, 40, .35); }
 .brand h1 { white-space: nowrap; } .tbtn i { display: contents; }
-@media (max-width: 640px) { .brand h1 { font-size: 15px; } .brand small { display: none; } .tbtn { padding: 7px 9px; } .top { gap: 6px; } .tools { gap: 5px; } }
+@media (max-width: 640px) { .brand h1 { font-size: 15px; } .brand small { display: block; font-size: 8.5px; letter-spacing: .08em; } .tbtn { padding: 7px 9px; } .top { gap: 6px; } .tools { gap: 5px; } }
 .svgi { display: block; flex: 0 0 auto; overflow: visible; }
 .dock { gap: 1px; padding: 5px 7px; border-radius: 24px; }
 .dock .ic { width: 30px; height: 30px; border-radius: 11px; display: grid; place-items: center; background: var(--tile, #FFF3E6); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .06), inset 0 1px 0 rgba(255, 255, 255, .9); transition: transform .25s cubic-bezier(.3, 1.6, .5, 1); }
@@ -304,7 +304,7 @@ body.walking #joy, body.walking #act { display: grid; }
 @keyframes flip { 0%, 15% { transform: rotateY(-8deg); } 55%, 100% { transform: rotateY(-172deg); } }
 #intro .kick { letter-spacing: .32em; }
 #intro .hi { margin: 12px 0 0; font: 700 16px var(--font); letter-spacing: .3em; color: #8A7260; }
-#intro h2 { margin: 2px 0 10px; min-height: 1.15em; }
+#intro h2 { margin: 2px 0 10px; min-height: 1.15em; font-size: clamp(30px, 7.6vw, 56px); white-space: nowrap; }
 #intro h2 span.sp { width: .35em; }
 #intro .tw { margin: 0 auto; max-width: 30em; min-height: 1.6em; font: 700 16px/1.75 var(--font); color: #6B4A36; }
 #intro .tw3 { font-weight: 500; font-size: 15px; color: #7A6050; min-height: 3.5em; margin-top: 2px; margin-bottom: 14px; }
@@ -342,6 +342,25 @@ body.ingame .top, body.ingame .dock, body.ingame #pins, body.ingame .ntag, body.
 .seg { display: flex; gap: 6px; margin: 0 0 12px; } .seg button { flex: 1; border: 2px solid var(--line); background: #fff; border-radius: 14px; padding: 9px 4px; font: 900 14px var(--font); color: var(--ink2); }
 .seg button.on { border-color: #FF8FB8; background: #FFF1F6; color: var(--ink); box-shadow: 0 0 0 3px rgba(255, 143, 184, .22); }
 
+/* 成語大風吹・記憶翻翻樂 */
+.wback { text-align: center; margin: 12px 0 0; }
+.wgames .card small { display: block; margin-top: 6px; font-weight: 900; color: #C2577E; font-size: 12px; }
+.wstat { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 6px 0 10px; } .wstat span { background: #fff; border-radius: 999px; padding: 5px 12px; font-weight: 900; font-size: 13.5px; box-shadow: 0 2px 0 var(--line); } .wstat .hurry { background: #FFE0E0; color: #C0392B; }
+.wgrid { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 5px; max-width: 400px; margin: 0 auto; }
+.wgrid button { aspect-ratio: 1; border: 0; border-radius: 10px; background: #fff; font: 400 clamp(18px, 5vw, 24px) var(--round); color: var(--ink); box-shadow: 0 3px 0 var(--line); transition: transform .1s, background .2s; }
+.wgrid button.sel { background: #FFE07A; transform: scale(1.06); } .wgrid button.ok { background: #8EDDC0; color: #fff; } .wgrid button.bad { background: #FFB3B3; }
+#wList { justify-content: center; margin-top: 12px; } #wList .chip.done { background: #8EDDC0; color: #fff; border-color: transparent; text-decoration: line-through; }
+.wfill { display: flex; justify-content: center; gap: 8px; margin: 10px 0; } .wfill span { width: 62px; height: 62px; border-radius: 16px; display: grid; place-items: center; background: #fff; font: 400 34px var(--round); box-shadow: 0 4px 0 var(--line); }
+.wfill .blank, .wfill .slot { background: #FFF3C4; border: 3px dashed #F2C14E; } .wfill .ok { background: #8EDDC0 !important; color: #fff; border-color: transparent; } .wfill .bad { background: #FFB3B3 !important; }
+.wmean { text-align: center; font-weight: 700; color: var(--ink2); margin: 4px 0 12px; line-height: 1.6; }
+.wopt { font: 400 26px var(--round) !important; } .wopt.ok { background: #8EDDC0 !important; color: #fff; } .wopt.bad { background: #FFB3B3 !important; }
+.wbar { height: 8px; border-radius: 9px; background: #F0E6DA; overflow: hidden; margin-top: 12px; } .wbar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #8EDDC0, #FFD95A, #FF8FB8); transition: width .2s linear; }
+.wtiles { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 8px 0 4px; } .wtiles button { width: 56px; height: 56px; border: 0; border-radius: 14px; background: linear-gradient(#FFFFFF, #FFF3E2); font: 400 28px var(--round); color: var(--ink); box-shadow: 0 4px 0 #E9D6BE; } .wtiles button:disabled { opacity: .25; }
+.mgrid { display: grid; grid-template-columns: repeat(var(--c), 1fr); gap: 8px; } .mcard { position: relative; aspect-ratio: 1.25; border: 0; padding: 0; background: none; perspective: 600px; }
+.mcard i { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 14px; font-style: normal; backface-visibility: hidden; transition: transform .45s; box-shadow: 0 4px 0 rgba(0, 0, 0, .08); padding: 4px; text-align: center; line-height: 1.3; }
+.mcard .b { background: linear-gradient(135deg, #8EDDC0, #8FD3FF); font-size: 28px; } .mcard .f { background: #fff; transform: rotateY(180deg); font: 700 clamp(10.5px, 2.6vw, 13.5px) var(--font); color: var(--ink); }
+.mcard.up .b { transform: rotateY(180deg); } .mcard.up .f { transform: rotateY(360deg); } .mcard.ok .f { background: #E2F8EE; box-shadow: 0 0 0 3px #8EDDC0; }
+@media (max-width: 640px) { .wfill span { width: 54px; height: 54px; font-size: 28px; } .mgrid { gap: 5px; } .mcard { aspect-ratio: .95; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
@@ -351,7 +370,7 @@ body.ingame .top, body.ingame .dock, body.ingame #pins, body.ingame .ntag, body.
 <div id="flash"></div>
 
 <header class="top">
-  <div class="brand"><div class="logo" data-ic="book" data-s="28"></div><div><h1>SWSH 閱讀基地</h1></div></div>
+  <div class="brand"><div class="logo" data-ic="book" data-s="28"></div><div><h1>SWSH 數位閱讀基地</h1><small>SWSH DIGITAL READING HUB</small></div></div>
   <div class="tools">
     <button class="tbtn" id="bWalk" type="button" aria-label="漫步或導覽模式"></button>
     <button class="tbtn" id="bMe" type="button" aria-label="我的角色"><i data-ic="me" data-s="18"></i><span>角色</span></button>
@@ -566,7 +585,7 @@ const SFX = (() => {
     mVol(a); waveSched(a); wTimer = setInterval(() => waveSched(a), 500); };
   const musicStop = () => { const a = ac; playing = false; clearInterval(wTimer); if (a) mVol(a); };
   return {
-    get on() { return on; }, toggle() { on = !on; store.set({ sound: on }); if (on) { this.pop(); musicStart(); } else musicStop(); return on; },
+    get on() { return on; }, toggle() { on = !on; store.set({ sound: on }); if (on) { if (ac && ac.state === 'suspended') ac.resume(); this.pop(); musicStart(); } else { musicStop(); if (ac) setTimeout(() => { if (!on && ac.state === 'running') ac.suspend(); }, 700); } return on; },
     music: musicStart, duck(v) { duck = v; if (ac) mVol(ac); },
     pop() { tone(480, 0.12, 'sine', 0.12, 420); }, chime() { [784, 988, 1319].forEach((f, i) => tone(f, 0.4, 'triangle', 0.06, 0, i * 0.07)); },
     woof() { bark(0); bark(0.2); }, giggle() { tone(720, 0.09, 'sine', 0.09, 260); tone(820, 0.09, 'sine', 0.09, 260, 0.12); tone(940, 0.12, 'sine', 0.08, 300, 0.24); },
@@ -916,7 +935,7 @@ function openSetup() {
 }
 function closeSetup(walk) {
   ME.name = $('#nm').value.trim().slice(0, 8); store.set({ me: { name: ME.name, g: ME.g, role: ME.role } }); $('#ntag').textContent = tagText();
-  $('#setup').classList.remove('show'); SFX.sparkle(); toast(`歡迎來到 SWSH 閱讀基地，${tagText()}！`);
+  $('#setup').classList.remove('show'); SFX.sparkle(); toast(`歡迎來到 SWSH 數位閱讀基地，${tagText()}！`);
   WALK.face = Math.PI; if (walk) setWalk(true); else { WALK.on = false; document.body.classList.remove('walking'); preset(true); }
 }
 
@@ -1096,8 +1115,8 @@ function finishGame(kind, rows, myT) {
 }
 function shareChallenge(kind) {
   const best = (store.get().best || {})[kind], nm = ME.name || '同學', url = `${location.href.split('#')[0]}#c=${kind}:${best ? best.toFixed(1) : '0'}:${encodeURIComponent(nm)}`;
-  const text = best ? `我在「SWSH 閱讀基地」的${GINFO[kind].t}跑出 ${fmtT(best)}，來挑戰我吧！` : `一起來玩「SWSH 閱讀基地」的${GINFO[kind].t}！`;
-  if (navigator.share) navigator.share({ title: 'SWSH 閱讀基地揪團', text, url }).catch(() => {}); else { try { navigator.clipboard.writeText(`${text} ${url}`); toast('📨 已複製揪團連結，貼給同學就能一起挑戰！', 3200); } catch (e) { prompt('複製這個連結給同學：', url); } }
+  const text = best ? `我在「SWSH 數位閱讀基地」的${GINFO[kind].t}跑出 ${fmtT(best)}，來挑戰我吧！` : `一起來玩「SWSH 數位閱讀基地」的${GINFO[kind].t}！`;
+  if (navigator.share) navigator.share({ title: 'SWSH 數位閱讀基地揪團', text, url }).catch(() => {}); else { try { navigator.clipboard.writeText(`${text} ${url}`); toast('📨 已複製揪團連結，貼給同學就能一起挑戰！', 3200); } catch (e) { prompt('複製這個連結給同學：', url); } }
 }
 function gameLobby(kind) {
   const I = GINFO[kind], best = (store.get().best || {})[kind], ch = CHAL && CHAL.g === kind && CHAL.v > 0 ? CHAL : null;
@@ -1204,6 +1223,121 @@ function setupGameInput() {
   addEventListener('keyup', e => { GAME.keys[e.key.toLowerCase()] = false; }, true);
   document.querySelectorAll('.gpad button').forEach(b => { const k = b.dataset.k; b.addEventListener('pointerdown', e => { e.preventDefault(); b.setPointerCapture(e.pointerId); GAME.btn[k] = true; b.classList.add('on'); }); const off = () => { GAME.btn[k] = false; b.classList.remove('on'); }; b.addEventListener('pointerup', off); b.addEventListener('pointercancel', off); b.addEventListener('lostpointercapture', off); });
   $('#gexit').onclick = exitGame;
+}
+
+// =====================================================================
+//  🀄 成語大風吹（字盤找成語・成語填空・成語解謎）＋ 🃏 記憶翻翻樂
+// =====================================================================
+const IDIOMS = [
+  ['畫蛇添足', '做了多餘的事，反而壞事。'], ['守株待兔', '死守經驗、不知變通，想不勞而獲。'], ['亡羊補牢', '出了問題後及時補救，還不算太晚。'], ['對牛彈琴', '對不懂道理的人講道理，白費力氣。'],
+  ['井底之蛙', '見識狹小的人。'], ['掩耳盜鈴', '自己欺騙自己。'], ['杯弓蛇影', '疑神疑鬼，自己嚇自己。'], ['胸有成竹', '做事之前已經有完整的計畫。'],
+  ['一鳴驚人', '平時沒沒無聞，一做就有驚人表現。'], ['臥薪嘗膽', '刻苦自勵，發憤圖強。'], ['破釜沉舟', '下定決心，不留退路。'], ['狐假虎威', '倚仗別人的勢力來欺壓人。'],
+  ['刻舟求劍', '拘泥成法，不懂得隨情況改變。'], ['揠苗助長', '急於求成，反而把事情弄糟。'], ['塞翁失馬', '一時的損失，也可能帶來好處。'], ['愚公移山', '有恆心毅力，就能克服困難。'],
+  ['聞雞起舞', '把握時間，及時努力奮發。'], ['鑿壁偷光', '家境貧困仍然勤奮讀書。'], ['手不釋卷', '非常喜歡讀書，書不離手。'], ['學富五車', '讀過很多書，學問淵博。'],
+  ['溫故知新', '複習舊知識，從中得到新體會。'], ['舉一反三', '從一件事類推，懂得更多道理。'], ['循序漸進', '按照步驟，一步一步前進。'], ['鍥而不捨', '堅持到底，不輕易放棄。'],
+  ['開卷有益', '讀書總會有收穫。'], ['博覽群書', '廣泛閱讀各種書籍。'], ['廢寢忘食', '專心努力到忘了睡覺吃飯。'], ['孜孜不倦', '勤勉努力，不知疲倦。'],
+  ['滴水穿石', '持之以恆，再小的力量也能成功。'], ['半途而廢', '事情做到一半就放棄。']
+];
+const RIDDLE = { '畫蛇添足': '比賽畫動物，有人多畫了腳反而輸了', '守株待兔': '農夫守在樹旁，等兔子撞上來', '井底之蛙': '住在深處，以為天空只有圓圓一片', '掩耳盜鈴': '摀住耳朵去偷會響的東西', '對牛彈琴': '在牧場開了一場音樂會，觀眾沒反應', '狐假虎威': '小動物走在大貓前面，大家都怕牠', '刻舟求劍': '寶物掉進河裡，在船邊做記號找', '揠苗助長': '嫌秧苗長太慢，把它們拔高一點', '鑿壁偷光': '把牆打個洞，借隔壁的燈讀書', '聞雞起舞': '聽到早晨的叫聲就起來練劍', '愚公移山': '一家人決定把擋路的大山搬走', '亡羊補牢': '動物跑掉之後才去修圍欄' };
+const MEMO = [
+  ['📕《紅樓夢》', '✍️ 曹雪芹'], ['📗《西遊記》', '🐒 孫悟空'], ['📘《三國演義》', '🪭 諸葛亮'], ['📙《水滸傳》', '🗡️ 武松'], ['📕《小王子》', '🦊 狐狸'],
+  ['📗《哈利波特》', '⚡ J.K. 羅琳'], ['📘《論語》', '💬 學而時習之'], ['📙《老人與海》', '✍️ 海明威'], ['📕《唐詩三百首》', '🌙 床前明月光'], ['📗《桃花源記》', '✍️ 陶淵明'],
+  ['📘《傲慢與偏見》', '💃 伊莉莎白'], ['📙《夏洛的網》', '🕷️ 夏洛'], ['📕〈將進酒〉', '🍶 天生我材必有用'], ['📗《論語．為政》', '💬 溫故而知新']
+];
+const shuf = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = (a, n) => shuf(a).slice(0, n);
+const POOL_CH = [...new Set(IDIOMS.map(i => i[0]).join(''))];
+let WG = null;
+function wgTimer(cb) { clearInterval(WG && WG.iv); const t0 = performance.now(); WG.iv = setInterval(() => { if (!dlg.open) { clearInterval(WG.iv); return; } cb((performance.now() - t0) / 1000); }, 200); }
+function wgBest(key, val, lower = true) { const b = store.get().wbest || {}, old = b[key], better = old == null || (lower ? val < old : val > old); if (better) { b[key] = val; store.set({ wbest: b }); } return { best: better ? val : old, isNew: better }; }
+function wgShare(text) { const url = location.href.split('#')[0]; if (navigator.share) navigator.share({ title: 'SWSH 數位閱讀基地揪團', text, url }).catch(() => {}); else { try { navigator.clipboard.writeText(`${text} ${url}`); toast('📨 已複製揪團訊息，貼給同學一起挑戰！', 3000); } catch (e) {} } }
+function wgEnd(title, lines, again, shareText) {
+  clearInterval(WG.iv); SFX.sparkle();
+  frame({ hc: '#FFF3C4', av: '🏆', tag: '🀄 成語大風吹', title, say: lines[0], body: `<div class="sec">${lines.slice(1).map(l => `<p style="margin:4px 0;font-weight:700">${l}</p>`).join('')}</div><div class="sec row"><button class="btn" id="wA" type="button">🔁 再玩一次</button><button class="btn alt" id="wS" type="button">📨 揪團挑戰</button><button class="btn ghost" id="wL" type="button">🎮 選其他遊戲</button></div>` });
+  $('#wA').onclick = again; $('#wS').onclick = () => wgShare(shareText); $('#wL').onclick = () => wordLobby();
+}
+function wordLobby() {
+  clearInterval(WG && WG.iv); WG = {};
+  const b = store.get().wbest || {}, fmt = (k, u) => b[k] != null ? `最佳 ${u(b[k])}` : '還沒有紀錄';
+  frame({ hc: '#FFF3C4', av: '🀄', tag: '🎮 揪團小遊戲', title: '成語大風吹・記憶翻翻樂', say: '選一個遊戲開始挑戰！成績會記錄下來，還能揪同學一起比。',
+    body: `<div class="sec grid wgames">
+      <button class="card" type="button" data-g="grid" style="background:#FFF3C4"><span class="ic">🔍</span><b>成語連連看</b><span>在 7×7 字盤中，找出 5 個指定的成語。</span><small>${fmt('grid', v => fmtT(v))}</small></button>
+      <button class="card" type="button" data-g="fill" style="background:#FFE4EE"><span class="ic">✏️</span><b>成語填空</b><span>10 題選出缺少的字，越快答對分數越高。</span><small>${fmt('fill', v => v + ' 分')}</small></button>
+      <button class="card" type="button" data-g="scr" style="background:#DDF1FF"><span class="ic">🧩</span><b>成語解謎</b><span>看謎面提示，把散落的文字排回正確順序。</span><small>${fmt('scr', v => fmtT(v))}</small></button>
+      <button class="card" type="button" data-g="memo" style="background:#D7F5EA"><span class="ic">🃏</span><b>記憶翻翻樂</b><span>翻牌配對書名、作者、人物與名句，有限時與難度分級。</span><small>${fmt('memo1', v => v + ' 次')}</small></button></div>` });
+  sheet.querySelectorAll('[data-g]').forEach(btn => btn.onclick = () => { SFX.pop(); ({ grid: wgGrid, fill: wgFill, scr: wgScr, memo: () => memoLobby() })[btn.dataset.g](); });
+}
+// ---- 成語連連看：字盤找成語 ----
+function wgGrid() {
+  const N = 7, words = pick(IDIOMS, 5), cells = Array(N * N).fill(''), dirs = [[0, 1], [1, 0], [1, 1], [0, -1], [-1, 0]];
+  words.forEach(([w]) => { for (let tries = 0; tries < 400; tries++) { const [dr, dc] = dirs[Math.random() * (tries < 200 ? 3 : 5) | 0], r = Math.random() * N | 0, c = Math.random() * N | 0, er = r + dr * 3, ec = c + dc * 3; if (er < 0 || er >= N || ec < 0 || ec >= N) continue; let ok = true; for (let k = 0; k < 4; k++) { const v = cells[(r + dr * k) * N + c + dc * k]; if (v && v !== w[k]) { ok = false; break; } } if (!ok) continue; for (let k = 0; k < 4; k++) cells[(r + dr * k) * N + c + dc * k] = w[k]; return; } });
+  for (let i = 0; i < cells.length; i++) if (!cells[i]) cells[i] = POOL_CH[Math.random() * POOL_CH.length | 0];
+  WG = { found: new Set(), sel: [] };
+  frame({ hc: '#FFF3C4', av: '🔍', tag: '🀄 成語大風吹', title: '成語連連看', say: '依照順序點選 4 個字（直、橫、斜都可以），找出下方所有成語！',
+    body: `<div class="sec wstat"><span id="wT">⏱ 0:00.0</span><span id="wN">找到 0 / 5</span></div><div class="wgrid" style="--n:${N}">${cells.map((ch, i) => `<button type="button" data-i="${i}">${ch}</button>`).join('')}</div>
+      <div class="sec chips" id="wList">${words.map(([w, m]) => `<span class="chip" data-w="${w}" title="${m}">${w}</span>`).join('')}</div><p class="wback"><button class="chip" id="wL" type="button">← 遊戲選單</button></p>` }); $('#wL').onclick = wordLobby;
+  wgTimer(s => { WG.s = s; const e = $('#wT'); if (e) e.textContent = `⏱ ${fmtT(s)}`; });
+  const btns = [...sheet.querySelectorAll('.wgrid button')];
+  const clear = () => { WG.sel.forEach(i => btns[i].classList.remove('sel')); WG.sel = []; };
+  const line = s => { if (s.length < 2) return true; const p = s.map(i => [i / N | 0, i % N]), dr = p[1][0] - p[0][0], dc = p[1][1] - p[0][1]; if (Math.abs(dr) > 1 || Math.abs(dc) > 1) return false; return p.every((q, k) => q[0] === p[0][0] + dr * k && q[1] === p[0][1] + dc * k); };
+  btns.forEach(b => b.onclick = () => { const i = +b.dataset.i; if (WG.sel.includes(i)) { clear(); return; } WG.sel.push(i); b.classList.add('sel'); SFX.tap();
+    if (!line(WG.sel)) { clear(); WG.sel.push(i); b.classList.add('sel'); return; }
+    if (WG.sel.length === 4) { const w = WG.sel.map(k => cells[k]).join(''), hit = words.find(x => x[0] === w) || words.find(x => [...x[0]].reverse().join('') === w);
+      if (hit && !WG.found.has(hit[0])) { WG.found.add(hit[0]); WG.sel.forEach(k => btns[k].classList.add('ok')); SFX.chime(); sheet.querySelector(`[data-w="${hit[0]}"]`).classList.add('done'); $('#wN').textContent = `找到 ${WG.found.size} / 5`; toast(`✨ ${hit[0]}：${hit[1]}`, 2200);
+        WG.sel.forEach(k => btns[k].classList.remove('sel')); WG.sel = [];
+        if (WG.found.size === 5) { const s = WG.s, r = wgBest('grid', s); setTimeout(() => wgEnd('全部找到了！', [`你用 ${fmtT(s)} 找出 5 個成語 🎉`, r.isNew ? '🏅 新紀錄！' : `🏅 最佳紀錄 ${fmtT(r.best)}`, `找到的成語：${words.map(w => w[0]).join('、')}`], wgGrid, `我在 SWSH 數位閱讀基地「成語連連看」用 ${fmtT(s)} 找出 5 個成語，來挑戰我！`), 700); } }
+      else { SFX.hmm(); WG.sel.forEach(k => btns[k].classList.add('bad')); setTimeout(() => btns.forEach(x => x.classList.remove('bad')), 350); clear(); } } });
+}
+// ---- 成語填空 ----
+function wgFill() {
+  const qs = pick(IDIOMS, 10).map(([w, m]) => { const k = Math.random() * 4 | 0, ans = w[k], opts = shuf([ans, ...pick(POOL_CH.filter(c => c !== ans && !w.includes(c)), 3)]); return { w, m, k, ans, opts }; });
+  WG = { i: 0, score: 0, right: 0 };
+  const show = () => { const q = qs[WG.i], t0 = performance.now();
+    frame({ hc: '#FFE4EE', av: '✏️', tag: '🀄 成語大風吹', title: '成語填空', say: `第 ${WG.i + 1} / 10 題・目前 ${WG.score} 分（越快答對分數越高）`,
+      body: `<div class="wfill">${[...q.w].map((c, k) => `<span class="${k === q.k ? 'blank' : ''}">${k === q.k ? '？' : c}</span>`).join('')}</div><p class="wmean">💡 ${q.m}</p><div class="quiz"><div class="opts">${q.opts.map(o => `<button type="button" class="wopt">${o}</button>`).join('')}</div></div><div class="wbar"><i id="wbar"></i></div><p class="wback"><button class="chip" id="wL" type="button">← 遊戲選單</button></p>` }); $('#wL').onclick = wordLobby;
+    wgTimer(s => { const e = $('#wbar'); if (e) e.style.width = Math.max(0, 100 - s / 10 * 100) + '%'; });
+    sheet.querySelectorAll('.wopt').forEach(b => b.onclick = () => { if (WG.lock) return; WG.lock = true; clearInterval(WG.iv); const ok = b.textContent === q.ans, sec = (performance.now() - t0) / 1000;
+      sheet.querySelector('.blank').textContent = q.ans; sheet.querySelector('.blank').classList.add(ok ? 'ok' : 'bad');
+      if (ok) { WG.right++; WG.score += 10 + Math.max(0, Math.round(10 - sec)); SFX.chime(); b.classList.add('ok'); } else { SFX.hmm(); b.classList.add('bad'); sheet.querySelectorAll('.wopt').forEach(x => x.textContent === q.ans && x.classList.add('ok')); }
+      setTimeout(() => { WG.lock = false; WG.i++; if (WG.i < 10) show(); else { const r = wgBest('fill', WG.score, false); wgEnd(WG.right >= 8 ? '成語小達人！' : '完成挑戰！', [`答對 ${WG.right} / 10 題，得到 ${WG.score} 分`, r.isNew ? '🏅 新紀錄！' : `🏅 最佳紀錄 ${r.best} 分`], wgFill, `我在 SWSH 數位閱讀基地「成語填空」拿到 ${WG.score} 分，來挑戰我！`); } }, 1100); }); };
+  show();
+}
+// ---- 成語解謎：散落文字重新排列 ----
+function wgScr() {
+  const qs = pick(IDIOMS, 6); WG = { i: 0, miss: 0 }; const T0 = performance.now();
+  const show = () => { const [w, m] = qs[WG.i], tiles = shuf([...w, ...pick(POOL_CH.filter(c => !w.includes(c)), 2)]); let ans = [];
+    frame({ hc: '#DDF1FF', av: '🧩', tag: '🀄 成語大風吹', title: '成語解謎', say: `第 ${WG.i + 1} / 6 題・把字依序點進格子（有 2 個是干擾字喔）`,
+      body: `<p class="wmean">🧩 謎面：${RIDDLE[w] || m}</p><div class="wfill" id="wSlots">${[0, 1, 2, 3].map(() => '<span class="slot"></span>').join('')}</div><div class="wtiles">${tiles.map((c, i) => `<button type="button" data-i="${i}">${c}</button>`).join('')}</div><div class="sec row" style="justify-content:center"><button class="btn ghost" id="wClr" type="button">↩️ 重來</button><button class="btn ghost" id="wHint" type="button">💡 提示</button></div><div class="wstat"><span id="wT">⏱ 0:00.0</span><span>失誤 ${WG.miss}</span></div><p class="wback"><button class="chip" id="wL" type="button">← 遊戲選單</button></p>` }); $('#wL').onclick = wordLobby;
+    wgTimer(() => { const e = $('#wT'); if (e) e.textContent = `⏱ ${fmtT((performance.now() - T0) / 1000)}`; });
+    const slots = [...sheet.querySelectorAll('#wSlots .slot')], tb = [...sheet.querySelectorAll('.wtiles button')];
+    const draw = () => slots.forEach((s, k) => { s.textContent = ans[k] != null ? tiles[ans[k]] : ''; });
+    tb.forEach(b => b.onclick = () => { if (ans.length >= 4 || b.disabled) return; SFX.tap(); ans.push(+b.dataset.i); b.disabled = true; draw();
+      if (ans.length === 4) { const got = ans.map(k => tiles[k]).join(''); if (got === w) { SFX.chime(); slots.forEach(s => s.classList.add('ok')); toast(`✨ ${w}：${m}`, 2000); setTimeout(() => { WG.i++; if (WG.i < qs.length) show(); else { const s = (performance.now() - T0) / 1000 + WG.miss * 5, r = wgBest('scr', s); wgEnd('謎題全破解！', [`總成績 ${fmtT(s)}（每次失誤加 5 秒）`, r.isNew ? '🏅 新紀錄！' : `🏅 最佳紀錄 ${fmtT(r.best)}`, `解開的成語：${qs.map(q => q[0]).join('、')}`], wgScr, `我在 SWSH 數位閱讀基地「成語解謎」用 ${fmtT(s)} 破解 6 個成語，來挑戰我！`); } }, 900); }
+        else { WG.miss++; SFX.hmm(); slots.forEach(s => s.classList.add('bad')); setTimeout(() => { ans = []; tb.forEach(x => x.disabled = false); slots.forEach(s => s.classList.remove('bad')); draw(); }, 600); } } });
+    $('#wClr').onclick = () => { ans = []; tb.forEach(x => x.disabled = false); draw(); };
+    $('#wHint').onclick = () => { WG.miss++; toast(`💡 第一個字是「${w[0]}」，意思是：${m}`, 2600); }; };
+  show();
+}
+// ---- 記憶翻翻樂 ----
+const MEMO_LV = { 1: { n: '簡單', pairs: 6, cols: 4, time: 90 }, 2: { n: '普通', pairs: 8, cols: 4, time: 120 }, 3: { n: '困難', pairs: 10, cols: 5, time: 150 } };
+function memoLobby() {
+  const b = store.get().wbest || {};
+  frame({ hc: '#D7F5EA', av: '🃏', tag: '🎮 揪團小遊戲', title: '記憶翻翻樂', say: '翻開兩張卡牌，配對「書名」和它的作者、文學人物或經典名句！',
+    body: `<div class="sec grid">${[1, 2, 3].map(l => { const L = MEMO_LV[l]; return `<button class="card" type="button" data-l="${l}" style="background:${['#D7F5EA', '#FFF3C4', '#FFE4EE'][l - 1]}"><span class="ic">${'⭐'.repeat(l)}</span><b>${L.n}</b><span>${L.pairs} 組配對・限時 ${L.time} 秒</span><small>${b['memo' + l] != null ? `最少 ${b['memo' + l]} 次翻牌` : '還沒有紀錄'}</small></button>`; }).join('')}</div><div class="sec row"><button class="btn ghost" id="wL" type="button">🎮 選其他遊戲</button></div>` });
+  sheet.querySelectorAll('[data-l]').forEach(x => x.onclick = () => { SFX.pop(); memoPlay(+x.dataset.l); }); $('#wL').onclick = wordLobby;
+}
+function memoPlay(lv) {
+  const L = MEMO_LV[lv], pairs = pick(MEMO, L.pairs), cards = shuf(pairs.flatMap((p, k) => [{ k, t: p[0] }, { k, t: p[1] }]));
+  WG = { open: [], done: 0, flips: 0, lock: false };
+  frame({ hc: '#D7F5EA', av: '🃏', tag: `🃏 記憶翻翻樂・${L.n}`, title: '找出配對的卡牌', say: '書名配上它的作者、人物或名句。翻錯會蓋回去，記住位置喔！',
+    body: `<div class="sec wstat"><span id="wT">⏳ ${L.time}s</span><span id="wF">翻牌 0 次</span><span id="wN">配對 0 / ${L.pairs}</span></div><div class="mgrid" style="--c:${L.cols}">${cards.map((c, i) => `<button type="button" class="mcard" data-i="${i}"><i class="b">📚</i><i class="f">${c.t}</i></button>`).join('')}</div><p class="wback"><button class="chip" id="wL" type="button">← 選難度</button></p>` }); $('#wL').onclick = memoLobby;
+  const els = [...sheet.querySelectorAll('.mcard')];
+  wgTimer(s => { const left = Math.max(0, L.time - s), e = $('#wT'); if (e) { e.textContent = `⏳ ${Math.ceil(left)}s`; e.classList.toggle('hurry', left < 15); } if (left <= 0 && !WG.over) { WG.over = true; clearInterval(WG.iv); SFX.hmm(); wgEnd('時間到！', [`配對了 ${WG.done} / ${L.pairs} 組，再試一次吧！`, `翻牌 ${WG.flips} 次`], () => memoPlay(lv), `一起來玩 SWSH 數位閱讀基地的「記憶翻翻樂」！`); } });
+  els.forEach(el => el.onclick = () => { const i = +el.dataset.i; if (WG.lock || WG.over || el.classList.contains('up')) return; el.classList.add('up'); WG.open.push(i); WG.flips++; $('#wF').textContent = `翻牌 ${WG.flips} 次`; SFX.tap();
+    if (WG.open.length === 2) { const [a, b] = WG.open; WG.open = [];
+      if (cards[a].k === cards[b].k) { WG.done++; SFX.chime(); [a, b].forEach(k => els[k].classList.add('ok')); $('#wN').textContent = `配對 ${WG.done} / ${L.pairs}`;
+        if (WG.done === L.pairs) { WG.over = true; clearInterval(WG.iv); const r = wgBest('memo' + lv, WG.flips); setTimeout(() => wgEnd('全部配對成功！', [`${L.n}難度・翻牌 ${WG.flips} 次完成 🎉`, r.isNew ? '🏅 新紀錄！翻牌次數最少' : `🏅 最佳紀錄 ${r.best} 次`], () => memoPlay(lv), `我在 SWSH 數位閱讀基地「記憶翻翻樂（${L.n}）」只翻了 ${WG.flips} 次，來挑戰我！`), 600); } }
+      else { WG.lock = true; setTimeout(() => { [a, b].forEach(k => els[k].classList.remove('up')); WG.lock = false; }, 850); } } });
 }
 
 // ---------- 角色：四維 IP（黏土小人） ----------
@@ -1437,7 +1571,7 @@ function buildScene() {
   // ===== 一樓 =====
   const mood = G(L, 0, 0, BK + 0.9); bookcase(mood, -9.4, 0.4, 0, 5.4, 5.4, 5); bookcase(mood, -3.8, 0.4, 0, 5.4, 5.4, 5, 0, '#F4D6B8'); bookcase(mood, 1.8, 0.4, 0, 5.4, 5.4, 5); bookcase(mood, 7.4, 0.4, 0, 5.4, 5.4, 5, 0, '#F4D6B8');
   { const mT = tex(512, 96, (c, w, h) => { c.fillStyle = '#FFD6E5'; rr(c, 4, 4, w - 8, h - 8, 40); c.fill(); c.lineWidth = 6; c.strokeStyle = '#FFFFFF'; rr(c, 12, 12, w - 24, h - 24, 32); c.stroke(); c.fillStyle = '#C2577E'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 54px ${RF}`; c.fillText('💗 心情選書', w / 2, h / 2 + 3); }); Bx(mood, 8.4, 1.6, 0.2, '#FF9EC4', -1.0, 6.4, 0.45, 0.15); Pl(mood, 8.0, 1.45, mT, -1.0, 6.4, 0.57); }
-  hot('xiner', mood, 7.6, '心情選書', '💗', '#FFD6E5', { inside: true });
+  hot('xiner', mood, 2.6, '心情選書', '💗', '#FFD6E5', { inside: true });
   // 地毯
   const rug = mesh(new THREE.CircleGeometry(2.8, 40), MAT('#FFD6E5'), 5.2, 0.45, -1.2, false); rug.rotation.x = -Math.PI / 2; L.add(rug); const rug2 = mesh(new THREE.RingGeometry(2.2, 2.45, 40), MAT('#FFFFFF'), 5.2, 0.46, -1.2, false); rug2.rotation.x = -Math.PI / 2; L.add(rug2);
   plant(L, HW - 1.0, -4.0, 0.9, 0.4, '#8FD3FF'); plant(L, -HW + 1.0, BK + 1.0, 0.8, FH + 0.25, '#BBA8FF');
@@ -1670,6 +1804,26 @@ function buildScene() {
   const mat = mesh(new THREE.CylinderGeometry(1.9, 1.9, 0.12, 40), MAT('#FFF3C4'), 0, 0.06, 0.2); yard.add(mat); To(yard, 1.9, 0.1, '#FFB48F', 0, 0.12, 0.2).rotation.x = Math.PI / 2;
   for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; const pw = G(yard, Math.cos(a) * 1.25, 0.14, 0.2 + Math.sin(a) * 1.25); pw.rotation.y = a; Sp(pw, 0.13, '#FFD6E5', 0, 0, 0, 1, 0.2, 1); [-1, 0, 1].forEach(k => Sp(pw, 0.06, '#FFD6E5', k * 0.11, 0, 0.17 - Math.abs(k) * 0.04, 1, 0.2, 1)); }
   const dd = dachshund(); dd.g.position.set(0, 0.12, 0.3); dd.g.rotation.y = 0.35; dd.g.scale.setScalar(1.25); yard.add(dd.g); CHARS.dede = dd;
+  { // DeDe 的日常：發呆、伸懶腰、睡覺、散步
+    const zT = tex(64, 64, (c, w) => { c.fillStyle = '#7C8CC8'; c.font = `900 50px ${FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Z', w / 2, w / 2 + 3); });
+    const zs = [0, 1, 2].map(() => { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: zT, transparent: true, opacity: 0, depthWrite: false })); s.scale.setScalar(0.5); yard.add(s); return s; });
+    const eyeClosed = [-1, 1].map(k => { const e = Bx(dd.head, 0.16, 0.035, 0.05, '#2B2230', k * 0.22, 0.2, 0.46, 0.015); e.visible = false; return e; });
+    const eyeOpen = dd.head.children.filter(o => o.isMesh && Math.abs(o.position.y - 0.2) < 0.01 && Math.abs(Math.abs(o.position.x) - 0.22) < 0.01 && o.position.z > 0.3 && o !== eyeClosed[0] && o !== eyeClosed[1]);
+    const S = { st: 'idle', t0: 0, dur: 4, from: new THREE.Vector3(0, 0.12, 0.3), to: new THREE.Vector3(0, 0.12, 0.3), h0: 0.35, h1: 0.35, lt: 0 };
+    const pickSt = t => { const r = Math.random(); S.st = r < 0.3 ? 'idle' : r < 0.5 ? 'stretch' : r < 0.72 ? 'sleep' : 'walk'; S.t0 = t; S.from.copy(dd.g.position); S.h0 = dd.g.rotation.y;
+      if (S.st === 'walk') { let x, z; do { const a = Math.random() * Math.PI * 2, rr2 = 0.6 + Math.random() * 1.5; x = Math.cos(a) * rr2; z = 0.3 + Math.sin(a) * rr2; } while (x < -0.2 && z < -0.6); S.to.set(x, 0.12, z); S.h1 = Math.atan2(x - S.from.x, z - S.from.z); S.dur = S.from.distanceTo(S.to) / 0.8 + 0.8; }
+      else S.dur = S.st === 'sleep' ? 9 + Math.random() * 5 : S.st === 'stretch' ? 3.2 : 3 + Math.random() * 4; };
+    ANIM.push(t => { const u = (t - S.t0) / S.dur; if (u >= 1) pickSt(t); const b = dd.body, hd = dd.head; let sleep = 0;
+      b.rotation.x = 0; hd.rotation.x = 0; hd.rotation.y = 0;
+      if (S.st === 'idle') { hd.rotation.y = Math.sin(t * 0.7) * 0.5; hd.rotation.x = Math.sin(t * 0.45) * 0.12; }
+      else if (S.st === 'stretch') { const k = Math.sin(Math.min(1, u) * Math.PI); b.rotation.x = 0.3 * k; hd.rotation.x = -0.45 * k; b.position.z = -0.25 * k; }
+      else if (S.st === 'sleep') { sleep = Math.min(1, u * 5, (1 - u) * 5); hd.rotation.x = 0.45 * sleep; b.scale.x = 1 + 0.05 * sleep; }
+      else if (S.st === 'walk') { const turn = Math.min(1, (t - S.t0) / 0.6), dh = Math.atan2(Math.sin(S.h1 - S.h0), Math.cos(S.h1 - S.h0)); dd.g.rotation.y = S.h0 + dh * turn; if (turn >= 1) { const v = Math.min(1, (t - S.t0 - 0.6) / (S.dur - 0.8)); dd.g.position.lerpVectors(S.from, S.to, v); b.rotation.z = Math.sin(t * 14) * 0.06; b.position.y = (dd.baseY || 0) + Math.abs(Math.sin(t * 14)) * 0.08; } }
+      if (S.st !== 'stretch') b.position.z = 0; if (S.st !== 'walk') b.rotation.z = 0;
+      eyeOpen.forEach(e => e.visible = sleep < 0.5); eyeClosed.forEach(e => e.visible = sleep >= 0.5);
+      zs.forEach((z, i) => { const zu = (t * 0.4 + i / 3) % 1; z.position.set(dd.g.position.x + 0.5 + zu * 0.6, 1.4 + zu * 1.6, dd.g.position.z + 0.6); z.material.opacity = sleep * Math.sin(zu * Math.PI); z.scale.setScalar(0.3 + zu * 0.4); });
+      dd.sleepy = sleep > 0.5; });
+  }
   const bowl = G(yard, 1.5, 0.1, 1.3); Cy(bowl, 0.38, 0.28, 0.25, '#8FD3FF', 0, 0.12, 0, 20); Sp(bowl, 0.12, '#C98A4E', 0.08, 0.26, 0, 1, 0.5, 1); Sp(bowl, 0.1, '#C98A4E', -0.1, 0.26, 0.06, 1, 0.5, 1);
   const bone = G(yard, -1.4, 0.2, 1.3); bone.rotation.y = 0.6; Cy(bone, 0.08, 0.08, 0.6, '#FFFFFF', 0, 0, 0, 8).rotation.z = Math.PI / 2; [-0.32, 0.32].forEach(x => [-0.07, 0.07].forEach(z => Sp(bone, 0.1, '#FFFFFF', x, 0, z)));
   // 狗屋
@@ -1703,12 +1857,13 @@ function buildScene() {
   const idr = makeDrone(); idr.scale.setScalar(1.2); dp.add(idr); ANIM.push(t => { idr.position.set(Math.sin(t * 0.7) * 0.8, 3.2 + Math.sin(t * 1.6) * 0.4, 0); idr.rotation.y = t * 0.3; idr.userData.props.forEach((p, i) => p.rotation.y = t * 30 * (i % 2 ? 1 : -1)); });
   const ds = G(dp, 0, 0, 4.6); [-1.6, 1.6].forEach(x => Cy(ds, 0.07, 0.07, 1.6, '#FFFFFF', x, 0.8, 0, 6)); Bx(ds, 4.2, 1.1, 0.16, '#5AB8F0', 0, 1.9, 0, 0.1); Pl(ds, 4.0, 1.0, signT('🚁 無人機任務', '#5AB8F0'), 0, 1.9, 0.09);
   hot('drone', dp, 6.2, '無人機任務', '🚁', '#DDF1FF');
-  const rc = G(arc, 5.2, 0.3, 0); const rring = mesh(new THREE.RingGeometry(2.0, 3.9, 48), MAT('#4A4E54'), 0, 0.2, 0, false); rring.rotation.x = -Math.PI / 2; rc.add(rring);
-  [2.0, 3.9].forEach(r => { const cb = mesh(new THREE.TorusGeometry(r, 0.12, 6, 48), MAT('#E8443C'), 0, 0.24, 0, false); cb.rotation.x = Math.PI / 2; rc.add(cb); });
-  const minis = ['#FF5A7A', '#5AB8F0', '#FFC93D'].map(c => { const m = makeCar(c); m.scale.setScalar(0.32); rc.add(m); return m; });
-  ANIM.push(t => minis.forEach((m, i) => { const a = t * (1.1 + i * 0.12) + i * 2.1, r = 2.95 + (i - 1) * 0.45; m.position.set(Math.cos(a) * r, 0.22, Math.sin(a) * r); m.rotation.y = -a; }));
-  const rs = G(rc, 0, 0, 4.6); [-1.6, 1.6].forEach(x => Cy(rs, 0.07, 0.07, 1.6, '#FFFFFF', x, 0.8, 0, 6)); Bx(rs, 4.2, 1.1, 0.16, '#E8443C', 0, 1.9, 0, 0.1); Pl(rs, 4.0, 1.0, signT('🏎️ 瘋狂賽車', '#E8443C'), 0, 1.9, 0.09);
-  hot('race', rc, 4.8, '瘋狂賽車', '🏎️', '#FFE1D0');
+  const wb = G(arc, 5.2, 0.3, 0); Cy(wb, 3.8, 4.0, 0.25, '#FFE9A8', 0, 0.12, 0, 40);
+  const bk2 = G(wb, 0, 0.3, -0.6); [-1, 1].forEach(k => { const pg = Bx(bk2, 2.6, 0.2, 3.2, '#FFFFFF', k * 1.35, 0.9, 0, 0.08); pg.rotation.z = -k * 0.22; const cv = Bx(bk2, 2.7, 0.12, 3.35, '#E8443C', k * 1.38, 0.78, 0, 0.05); cv.rotation.z = -k * 0.22; });
+  const ctex = ch => tex(128, 128, (c, w) => { c.fillStyle = '#FFF6DA'; rr(c, 4, 4, w - 8, w - 8, 18); c.fill(); c.fillStyle = '#C2577E'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 78px ${RF}`; c.fillText(ch, w / 2, w / 2 + 4); });
+  const flyCh = [...'畫蛇添足守株待兔'].map((ch, i) => { const m = new THREE.MeshStandardMaterial({ map: ctex(ch), roughness: 0.6 }); const cube = new THREE.Mesh(rbox(0.9, 0.9, 0.9, 0.12), [m, m, m, m, m, m]); cube.castShadow = true; wb.add(cube); return cube; });
+  ANIM.push(t => flyCh.forEach((c, i) => { const a = t * 0.6 + i / flyCh.length * Math.PI * 2; c.position.set(Math.cos(a) * 2.3, 3.2 + Math.sin(t * 1.3 + i) * 0.6 + (i % 2) * 0.6, Math.sin(a) * 2.0 - 0.4); c.rotation.set(t + i, t * 0.7 + i, 0); }));
+  const rs = G(wb, 0, 0, 4.4); [-1.6, 1.6].forEach(x => Cy(rs, 0.07, 0.07, 1.6, '#FFFFFF', x, 0.8, 0, 6)); Bx(rs, 4.2, 1.1, 0.16, '#E8443C', 0, 1.9, 0, 0.1); Pl(rs, 4.0, 1.0, signT('🀄 成語大風吹', '#E8443C'), 0, 1.9, 0.09);
+  hot('word', wb, 5.4, '成語大風吹', '🀄', '#FFF3C4');
   // 球場旁的休息長椅與樹
   const sideBench = (x, z, ry) => { const b = G(W, x, 0, z); b.rotation.y = ry; for (let k = 0; k < 3; k++) Bx(b, 3.2, 0.16, 0.34, '#8FD3FF', 0, 0.75, -0.36 + k * 0.36, 0.06); [-1, 1].forEach(k => Bx(b, 0.16, 0.75, 1.0, '#FFFFFF', k * 1.4, 0.37, 0, 0.05)); };
   sideBench(-14, -19.6, Math.PI); sideBench(15, -20.6, Math.PI);
@@ -1788,7 +1943,7 @@ function buildScene() {
   const dmouth = G(dhead, 2.3, -0.4, 0); const fireL = new THREE.PointLight(0xFF9A3C, 0, 60, 2); dmouth.add(fireL);
   const fls = []; for (let i = 0; i < 40; i++) { const f = mesh(new THREE.IcosahedronGeometry(1, 0), new THREE.MeshBasicMaterial({ color: ['#FF5A2E', '#FF8A2E', '#FFB13B', '#FF6A3D'][i % 4], transparent: true, opacity: 0, depthWrite: false, toneMapped: false }), 0, 0, 0, false); dn0.add(f); fls.push({ f, ph: i / 40, sp: (Math.random() - 0.5) * 0.35, sv: (Math.random() - 0.5) * 0.25 }); }
   let fireT = -20; const mw = new THREE.Vector3(), fwd = new THREE.Vector3();
-  const DW = { a: -2.2, r: 84, ta: -1.6, tr: 84, lt: 0, h: 0, pause: 0 }; ENV.dinoFire = () => { fireT = clock.getElapsedTime(); }; hot('dino', dn0, 34, '海怪恐龍', '🦖', '#D9E0DC', { noPin: true });
+  const DW = { a: -2.2, r: 84, ta: -1.6, tr: 84, lt: 0, h: 0, pause: 0 }; ENV.dinoFire = () => { DW.want = true; DW.pause = Math.max(DW.pause, 6); }; hot('dino', dn0, 34, '海怪恐龍', '🦖', '#D9E0DC', { noPin: true });
   ANIM.push(t => { const ddt = Math.min(0.1, t - DW.lt); DW.lt = t; let da = Math.atan2(Math.sin(DW.ta - DW.a), Math.cos(DW.ta - DW.a));
     if (DW.pause > 0) DW.pause -= ddt; else if (Math.abs(da) < 0.02 && Math.abs(DW.tr - DW.r) < 0.6) { DW.ta = DW.a + (Math.random() < 0.5 ? -1 : 1) * (0.4 + Math.random() * 1.1); DW.tr = 70 + Math.random() * 26; DW.pause = Math.random() < 0.4 ? 2 + Math.random() * 3 : 0; }
     else { const st = 4.5 * ddt / DW.r; DW.a += Math.max(-st, Math.min(st, da)); DW.r += Math.max(-3 * ddt, Math.min(3 * ddt, DW.tr - DW.r)); }
@@ -1796,7 +1951,9 @@ function buildScene() {
     const walking = DW.pause <= 0 ? 1 : 0.15; dn0.position.set(x, SEA_Y - 7 + Math.abs(Math.sin(t * 1.4)) * 0.8 * walking, z); dn0.rotation.y = DW.h;
     dlegs.forEach((l, k) => { l.rotation.z = Math.sin(t * 1.4 + k * Math.PI) * 0.35 * walking; }); darms.forEach((r, k) => { r.rotation.z = Math.sin(t * 1.4 + k) * 0.3; }); dtail.rotation.y = Math.sin(t * 1.1) * 0.25;
     const fu = t - fireT; dneck.rotation.z = fu < 3.2 ? 0.25 : Math.sin(t * 0.7) * 0.08; dhead.rotation.z = fu < 3.2 ? -0.35 : 0;
-    if (fu > 14 + Math.random() * 0.02) fireT = t;
+    const outH = -Math.atan2(dn0.position.z, dn0.position.x);
+    if (fu > 14 && !DW.want) { DW.want = true; DW.pause = Math.max(DW.pause, 6); }
+    if (DW.want || fu < 2.8) { const dh = Math.atan2(Math.sin(outH - DW.h), Math.cos(outH - DW.h)); DW.h += dh * Math.min(1, ddt * 2.5); dn0.rotation.y = DW.h; if (DW.want && Math.abs(dh) < 0.12) { DW.want = false; fireT = t; } }
     dn0.updateMatrixWorld(); dmouth.getWorldPosition(mw); fwd.set(1, -0.35, 0).applyQuaternion(dn0.quaternion).normalize();
     const on = fu < 2.6 ? Math.min(1, fu * 4) * Math.min(1, (2.6 - fu) * 3) : 0; fireL.intensity = on * 3.5;
     fls.forEach(o => { const u = (t * 1.6 + o.ph) % 1, d = u * 42; dn0.worldToLocal(o.f.position.copy(mw).addScaledVector(fwd, d).add(new THREE.Vector3(o.sv * d, o.sp * d * 0.6 + u * u * 6, o.sp * d))); o.f.scale.setScalar((0.6 + u * 2.6) / 1); o.f.material.opacity = on * (1 - u * u) * 0.85; o.f.rotation.set(t * 3 + o.ph * 9, t * 2, 0); }); });
@@ -1827,7 +1984,7 @@ function stepFlight() {
   camTarget.lerpVectors(F.t, T.t, e); cam.dist = cam.tDist = F.dist + (T.dist - F.dist) * e; cam.pitch = cam.tPitch = F.pitch + (T.pitch - F.pitch) * e; cam.yaw = cam.tYaw = F.yaw + (T.yaw - F.yaw) * e;
   if (u >= 1) { const d = FLIGHT.done; FLIGHT = null; d && d(); }
 }
-const FLY_D = { dino: 120, drone: 30, race: 30, pod: 46, portal: 42, gacha: 30, dede: 28, gallery: 26 };
+const FLY_D = { dino: 120, drone: 30, word: 30, pod: 46, portal: 42, gacha: 30, dede: 28, gallery: 26 };
 function flyToHot(id, done) {
   const h = HOTS[id]; const p = h.g.getWorldPosition(new THREE.Vector3()); p.y += h.ay * 0.45;
   let yaw = cam.yaw; const w = Math.atan2(Math.sin(yaw), Math.cos(yaw)); if (id === 'dino') { const want = Math.atan2(p.x, p.z), dy = Math.atan2(Math.sin(want - yaw), Math.cos(want - yaw)); yaw += dy; } if (h.inside && Math.abs(w) > 0.6) yaw = cam.yaw - w + Math.sign(w) * 0.35;
@@ -1889,7 +2046,7 @@ function bubble(id, text) {
 
 // 點到熱點：角色反應 → 開彈窗
 const REACT = {
-  dede: ['汪汪！', 'woof', ['dede']], xiner: ['想看什麼書呢？', 'giggle', []], youtube: ['一起來看四維頻道！', 'giggle', ['xiner']], dino: ['吼～～～！', 'roar', []], drone: ['無人機待命中！', 'whoosh', []], race: ['引擎發動！', 'tap', []], xiaosi: ['一起來自學吧！', 'tap', ['xiaosi']],
+  dede: ['汪汪！', 'woof', ['dede']], xiner: ['想看什麼書呢？', 'giggle', []], youtube: ['一起來看四維頻道！', 'giggle', ['xiner']], dino: ['吼～～～！', 'roar', []], drone: ['無人機待命中！', 'whoosh', []], word: ['來玩成語大風吹！', 'chime', []], xiaosi: ['一起來自學吧！', 'tap', ['xiaosi']],
   expo: ['新書展開幕囉！', 'giggle', ['sisi', 'juanmao']], opac: ['嗶！查詢機啟動', 'tap', []], portal: ['咻～傳送中！', 'whoosh', []],
   pod: ['3、2、1，夢想啟航！', 'whoosh', []], board1: ['📌 一樓公告欄', 'pop', []], gallery: ['🖼️ 閣樓小畫廊', 'sparkle', []], board2: ['📌 二樓公告欄', 'pop', []], board3: ['📌 三樓公告欄', 'pop', []], radio: ['ON AIR 📻', 'radio', []], gacha: ['今天的運氣如何？', 'pop', []]
 };
@@ -1991,7 +2148,7 @@ const PANELS = {
       <div class="sec"><h3>📗 推薦新書 ${demoTag(CONFIG.expoDemo)}</h3><div class="nb">${E.newBooks.map(b => `<article class="nbk"><div class="cv" style="background:${b.c}">${b.e}</div><div><b>《${esc(b.t)}》</b><dl><dt>作者</dt><dd>${esc(b.a)}</dd><dt>出版</dt><dd>${esc(b.pub)}・${esc(b.y)}</dd><dt>類別</dt><dd>${esc(b.cat)}</dd><dt>適合</dt><dd>${esc(b.who)}</dd></dl><p>${esc(b.intro)}</p></div></article>`).join('')}</div></div>` });
   },
   radio() { renderRadio(0); },
-  drone() { gameLobby('drone'); }, race() { gameLobby('race'); },
+  drone() { gameLobby('drone'); }, word() { wordLobby(); },
   youtube() { frame({ hc: '#FFE0E0', av: IMG.xiner, tag: '▶️ 三樓視聽區', title: '四維 YouTube 頻道', say: '心兒：我正在看四維的影片！校園活動、成果發表、好書介紹都在這裡，一起來看吧 ❤️', body: `<div class="sec"><a class="card" href="${CONFIG.yt}" target="_blank" rel="noopener" style="background:#FFF1F1;display:flex;gap:12px;align-items:center"><span class="ic" style="font-size:38px">▶️</span><span><b>前往「四維YT」頻道</b><span>在新分頁開啟 YouTube，記得按下訂閱喔！</span></span></a></div><p class="row"><a class="btn" href="${CONFIG.yt}" target="_blank" rel="noopener">▶️ 立即觀看</a></p>` }); },
   gallery() { frame({ hc: '#FFE9C7', av: '🖼️', tag: '🔭 三樓上方・小閣樓', title: '閣樓小畫廊', say: '在星空下的閣樓裡，掛著五幅溫暖的油畫，點畫作可以看大圖！', body: `<div class="sec posters">${PAINTINGS.map((s, i) => `<a class="poster" href="${s}" target="_blank" rel="noopener"><img src="${s}" alt="閣樓畫作 ${i + 1}"><b>${['金色林蔭道', '山野玫瑰', '櫻花天鵝', '海岸百合', '午後巷口'][i]}</b></a>`).join('')}</div>` }); },
   board1() { boardPanel(0); }, board2() { boardPanel(1); }, board3() { boardPanel(2); },
@@ -2089,7 +2246,7 @@ function loop() {
   Object.values(CHARS).forEach(c => { if (!c.body) return; const j = t - c.jump; const jy = j < 0.6 ? Math.sin(j / 0.6 * Math.PI) * 0.9 : 0;
     if (!reduceMotion) { c.body.scale.y = 1 + Math.sin(t * 2.2 + c.ph) * 0.018; if (c.head) c.head.rotation.z = Math.sin(t * 1.1 + c.ph) * 0.06; }
     c.body.position.y = (c.baseY ?? (c.baseY = c.body.position.y)) + jy;
-    if (c.tail) c.tail.rotation.y = Math.sin(t * (j < 1.5 ? 18 : 6)) * 0.6; });
+    if (c.tail) c.tail.rotation.y = Math.sin(t * (j < 1.5 ? 18 : c.sleepy ? 1.2 : 6)) * (c.sleepy ? 0.15 : 0.6); });
   // 熱點彈跳＋滑鼠懸停
   Object.entries(HOTS).forEach(([id, h]) => { const b = t - (bounces[id] ?? -9); const s0 = h.g.userData.s0 ?? (h.g.userData.s0 = h.g.scale.x); let s = s0 * (hoverId === id ? 1.04 : 1); if (b < 0.5) s *= 1 + Math.sin(b / 0.5 * Math.PI) * 0.08; h.g.scale.setScalar(h.g.scale.x + (s - h.g.scale.x) * 0.3); });
   if (gachaAnim) gachaAnim(t);
@@ -2120,7 +2277,7 @@ addEventListener('resize', () => { if (!renderer) return; GAME.cam.aspect = inne
 function start() {
   $('#ips').innerHTML = [['xiner', '心兒', '#FF9EC4'], ['xiaosi', '小四', '#8EDDC0'], ['sisi', '思思', '#BBA8FF'], ['juanmao', '捲毛', '#8FD3FF'], ['dede', 'DeDe', '#FFD95A']].map(([k, n, c], i) => `<div class="ip" style="--i:${i};--c:${c}"><b style="background-image:url(${IMG[k]})"></b>${n}</div>`).join('');
   if (!renderer) { $('#intro').remove(); $('#stage').innerHTML = '<div class="nogl">😢 你的瀏覽器不支援 3D 顯示<br>請用下方按鈕使用圖書館的各項功能！</div>'; return; }
-  $('#ititle').innerHTML = [...'SWSH 閱讀基地'].map((c, i) => c === ' ' ? '<span class="sp"> </span>' : `<span style="--i:${i}">${c}</span>`).join('');
+  $('#ititle').innerHTML = [...'SWSH 數位閱讀基地'].map((c, i) => c === ' ' ? '<span class="sp"> </span>' : `<span style="--i:${i}">${c}</span>`).join('');
   (async () => { const lines = [['tw1', '這裡是四維高中的立體閱讀小島。'], ['tw2', '點點場景裡的物件與小夥伴，聽一集廣播、找一本好書，給自己十分鐘的靈感充電時光吧！']], wait = ms => new Promise(r => setTimeout(r, reduceMotion ? 0 : ms));
     await wait(900); for (const [id, s] of lines) { const el = $('#' + id); if (!el) return; el.classList.add('typing'); for (const ch of s) { if (!el.isConnected) return; el.textContent += ch; await wait('，。！、'.includes(ch) ? 260 : 55); } el.classList.remove('typing'); await wait(250); }
     if (!$('#tw2')) return; $('#tw2').innerHTML = $('#tw2').textContent.replace('聽一集廣播', '<mark>聽一集廣播</mark>').replace('找一本好書', '<mark>找一本好書</mark>').replace('十分鐘', '<mark>十分鐘</mark>'); const it = $('#intro'); if (it) it.classList.add('typed'); })();
@@ -2133,7 +2290,7 @@ function start() {
   $('#go').onclick = () => { INTRO_ON = false; SFX.sparkle(); SFX.music(); const it = $('#intro'); it.classList.add('out'); setTimeout(() => it.remove(), 950); openSetup(); };
 }
 (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]) : Promise.resolve()).then(start);
-window.__lib = { GAME, startGame, exitGame, scene, cam, camera, poke, HOTS, CHARS, target: camTarget, goFloor, WALK, setWalk, openSetup, closeSetup, BALL, action };
+window.__lib = { SFXstate: () => SFX.audio() ? 'on' : 'off', GAME, startGame, exitGame, scene, cam, camera, poke, HOTS, CHARS, target: camTarget, goFloor, WALK, setWalk, openSetup, closeSetup, BALL, action };
 </script>
 </body>
 </html>
