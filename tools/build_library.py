@@ -8,6 +8,8 @@ for k in ('xiner', 'xiaosi', 'sisi', 'juanmao', 'pijbo'):
     html = html.replace(f'__IMG_{k}__', 'data:image/png;base64,' + b64)
 html = html.replace('__AUDIO_ep01__', 'data:audio/mpeg;base64,' + base64.b64encode((root / 'audio/radio-ep01.mp3').read_bytes()).decode())
 assert '__AUDIO_' not in html
+for k in range(1, 6):
+    html = html.replace(f'__IMG_p{k}__', 'data:image/jpeg;base64,' + base64.b64encode((root / f'images/paintings/p{k}.jpg').read_bytes()).decode())
 assert '__THREE_JS__' not in html and '__IMG_' not in html
 for ext in ('html', 'txt'):
     (root / f'swsh-library.{ext}').write_text(html, encoding='utf-8')
