@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>四維立體圖書館｜SWSH Library Island</title>
+<title>SWSH 閱讀基地</title>
 <meta name="description" content="花蓮縣私立四維高級中學 圖書資訊中心：微縮立體圖書館互動網頁">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -271,6 +271,77 @@ body.walking #joy, body.walking #act { display: grid; }
 #setup .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } #setup .row2 .btn { justify-content: center; }
 @media (max-width: 640px) { #setup { left: 0; right: 0; top: auto; bottom: 0; width: 100%; border-radius: 26px 26px 0 0; transform: translateY(40px); padding-bottom: calc(18px + env(safe-area-inset-bottom)); } #setup.show { transform: none; } #looks { grid-template-columns: repeat(6, 1fr); gap: 5px; } .look span { display: none; } .look svg { width: 38px; height: 38px; } #intro .ip { width: 50px; } #intro .ip b { width: 46px; height: 46px; } }
 
+/* ===== 開場畫面 v2：海上的閱讀小島 ===== */
+#intro { background: linear-gradient(175deg, #79C4F5 0%, #B9E3FF 38%, #FFE0EA 70%, #FFF1D2 100%); }
+#intro .sunglow { position: absolute; left: 50%; top: 52%; width: 70vmin; height: 70vmin; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255, 244, 200, .95) 0%, rgba(255, 220, 180, .45) 35%, rgba(255, 220, 180, 0) 70%); animation: glow 6s ease-in-out infinite; }
+@keyframes glow { 50% { transform: translate(-50%, -50%) scale(1.08); opacity: .85; } }
+#intro .waves { position: absolute; left: 0; bottom: 0; width: 200%; height: 34vh; }
+#intro .waves path { animation: wave linear infinite; }
+#intro .w1 { fill: #9ED8F0; animation-duration: 18s; } #intro .w2 { fill: #7CC6E8; animation-duration: 12s; animation-direction: reverse; } #intro .w3 { fill: #5DB3DE; animation-duration: 8s; }
+@keyframes wave { to { transform: translateX(-720px); } }
+#intro .ilet { position: absolute; left: 50%; bottom: 17vh; width: 230px; height: 120px; transform: translateX(-50%); animation: float 5s ease-in-out infinite; }
+@keyframes float { 50% { transform: translate(-50%, -10px) rotate(-1.2deg); } }
+#intro .itop { position: absolute; left: 0; right: 0; bottom: 18px; height: 44px; border-radius: 50%; background: radial-gradient(ellipse at 50% 30%, #BDF0A8, #86D27E); box-shadow: 0 6px 0 #6DBA6A; }
+#intro .ibase { position: absolute; left: 30px; right: 30px; bottom: -40px; height: 70px; background: #D9B48A; clip-path: polygon(0 0, 100% 0, 60% 100%, 40% 100%); }
+#intro .ihouse { position: absolute; left: 72px; bottom: 48px; width: 86px; height: 58px; background: #FFF4E4; border-radius: 6px; box-shadow: inset -8px 0 0 #FFE4EC; z-index: 1; }
+#intro .iroof { position: absolute; left: -10px; top: -34px; width: 106px; height: 38px; background: #FF8FB8; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+#intro .iwin { position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border-radius: 50%; background: #FFE07A; box-shadow: 0 0 10px #FFE07A; } #intro .iwin.r { left: auto; right: 12px; }
+#intro .idoor { position: absolute; bottom: 0; left: 35px; width: 16px; height: 24px; border-radius: 8px 8px 0 0; background: #8FD3FF; }
+#intro .gull { position: absolute; left: -40px; width: 26px; height: 10px; border-top: 3px solid #6B7A90; border-radius: 50% 50% 0 0; animation: flyby linear infinite; }
+#intro .gull::after { content: ""; position: absolute; left: 12px; top: -3px; width: 26px; height: 10px; border-top: 3px solid #6B7A90; border-radius: 50% 50% 0 0; }
+@keyframes flyby { to { left: 110vw; } }
+#intro .letters span { position: absolute; bottom: 20vh; font: 400 24px var(--round); color: rgba(255, 255, 255, .9); text-shadow: 0 3px 8px rgba(194, 87, 126, .35); animation: lrise 9s linear infinite; opacity: 0; }
+#intro .letters span:nth-child(1) { left: 12%; animation-delay: 0s; } #intro .letters span:nth-child(2) { left: 22%; animation-delay: 2.2s; } #intro .letters span:nth-child(3) { left: 33%; animation-delay: 4.5s; } #intro .letters span:nth-child(4) { left: 64%; animation-delay: 1.2s; } #intro .letters span:nth-child(5) { left: 74%; animation-delay: 3.4s; }
+#intro .letters span:nth-child(6) { left: 86%; animation-delay: 5.8s; } #intro .letters span:nth-child(7) { left: 44%; animation-delay: 6.6s; } #intro .letters span:nth-child(8) { left: 56%; animation-delay: 7.4s; } #intro .letters span:nth-child(9) { left: 6%; animation-delay: 3.9s; } #intro .letters span:nth-child(10) { left: 92%; animation-delay: 1.8s; }
+@keyframes lrise { 0% { transform: translateY(0) rotate(0); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(-70vh) rotate(40deg); opacity: 0; } }
+#intro .hero { width: min(600px, 92vw); padding: 26px 26px 24px; margin-bottom: 10vh; }
+#intro .openbook { position: relative; width: 92px; height: 56px; margin: -4px auto 8px; perspective: 400px; }
+#intro .openbook i { position: absolute; top: 0; width: 46px; height: 56px; background: #fff; box-shadow: 0 6px 12px rgba(110, 70, 40, .18); }
+#intro .openbook .pl { left: 0; border-radius: 8px 2px 2px 8px; background: linear-gradient(90deg, #FFE4EC, #fff); transform: rotateY(8deg); transform-origin: right; }
+#intro .openbook .pr { right: 0; border-radius: 2px 8px 8px 2px; background: linear-gradient(270deg, #DDF1FF, #fff); transform: rotateY(-8deg); transform-origin: left; }
+#intro .openbook .pf { right: 0; border-radius: 2px 8px 8px 2px; background: linear-gradient(270deg, #FFF3C4, #fff); transform-origin: left; animation: flip 3.2s ease-in-out infinite; }
+#intro .openbook .p2 { animation-delay: 1.6s; background: linear-gradient(270deg, #D7F5EA, #fff); }
+@keyframes flip { 0%, 15% { transform: rotateY(-8deg); } 55%, 100% { transform: rotateY(-172deg); } }
+#intro .kick { letter-spacing: .32em; }
+#intro .hi { margin: 12px 0 0; font: 700 16px var(--font); letter-spacing: .3em; color: #8A7260; }
+#intro h2 { margin: 2px 0 10px; min-height: 1.15em; }
+#intro h2 span.sp { width: .35em; }
+#intro .tw { margin: 0 auto; max-width: 30em; min-height: 1.6em; font: 700 16px/1.75 var(--font); color: #6B4A36; }
+#intro .tw3 { font-weight: 500; font-size: 15px; color: #7A6050; min-height: 3.5em; margin-top: 2px; margin-bottom: 14px; }
+#intro .tw.typing::after { content: "▍"; color: #FF8FB8; animation: blink .8s steps(1) infinite; margin-left: 1px; }
+@keyframes blink { 50% { opacity: 0; } }
+#intro .tw mark { background: linear-gradient(transparent 55%, #FFE07A 55%); color: inherit; padding: 0 2px; border-radius: 3px; animation: hl .6s ease-out both; }
+@keyframes hl { from { background-size: 0 100%; } }
+#intro .ips { opacity: 0; transform: translateY(10px); transition: opacity .6s, transform .6s; } #intro.typed .ips { opacity: 1; transform: none; }
+#intro .go { display: none; } #intro.ready.typed .go { display: inline-flex; } #intro.ready.typed .loadbox { display: none; }
+#intro.ready .loadbox .status::after { content: " ✓"; }
+@media (max-width: 640px) { #intro .hero { padding: 22px 16px 20px; margin-bottom: 16vh; } #intro .tw { font-size: 14.5px; } #intro .tw3 { font-size: 13.5px; } #intro .ilet { transform: translateX(-50%) scale(.7); bottom: 12vh; } }
+/* 揪團小遊戲 HUD */
+#game { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
+#game[hidden] { display: none; }
+.ghud { position: absolute; top: calc(12px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
+.ghud span { background: rgba(20, 24, 40, .58); color: #fff; font: 900 14.5px var(--font); padding: 8px 13px; border-radius: 14px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); white-space: nowrap; }
+#gmap { position: absolute; right: 14px; top: calc(60px + env(safe-area-inset-top)); width: 128px; height: 128px; border-radius: 20px; background: rgba(20, 24, 40, .42); }
+#gbig { position: absolute; left: 50%; top: 36%; transform: translate(-50%, -50%); font: 400 clamp(54px, 13vw, 110px)/1 var(--round); color: #fff; text-shadow: 0 6px 0 #E0679A, 0 14px 30px rgba(0, 0, 0, .35); white-space: nowrap; }
+#gspd { position: absolute; right: 18px; bottom: calc(20px + env(safe-area-inset-bottom)); color: #fff; font: italic 900 30px Georgia, serif; text-shadow: 0 3px 8px rgba(0, 0, 0, .45); }
+#gexit { pointer-events: auto; position: absolute; left: 14px; top: calc(12px + env(safe-area-inset-top)); border: 0; border-radius: 999px; padding: 9px 16px; font: 900 14px var(--font); background: rgba(255, 255, 255, .92); color: var(--ink); box-shadow: var(--soft); }
+#gkeys { position: absolute; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); color: #fff; font: 700 13px var(--font); background: rgba(20, 24, 40, .5); padding: 6px 14px; border-radius: 999px; white-space: nowrap; }
+.gpad { position: absolute; bottom: calc(24px + env(safe-area-inset-bottom)); display: none; gap: 14px; pointer-events: auto; }
+.gpad.left { left: 16px; } .gpad.right { right: 16px; flex-direction: column-reverse; }
+.gpad button { width: 86px; height: 86px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, .9); background: rgba(255, 255, 255, .3); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: #fff; font: 900 28px/1 var(--font); text-shadow: 0 2px 4px rgba(0, 0, 0, .45); touch-action: none; user-select: none; -webkit-user-select: none; }
+.gpad button small { display: block; font-size: 12px; margin-top: 2px; }
+.gpad button.on { background: rgba(255, 143, 184, .75); }
+@media (max-width: 640px) { .ghud { top: calc(58px + env(safe-area-inset-top)); } .ghud span { font-size: 12.5px; padding: 6px 9px; } #gmap { top: calc(100px + env(safe-area-inset-top)); } }
+@media (pointer: coarse) { .gpad { display: flex; } #gkeys { display: none; } #gspd { bottom: auto; top: calc(196px + env(safe-area-inset-top)); font-size: 22px; } #gmap { width: 104px; height: 104px; } }
+#gres { pointer-events: auto; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(440px, 92vw); background: rgba(255, 252, 245, .95); border-radius: 28px; padding: 22px; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .5); text-align: center; animation: pop .4s cubic-bezier(.3, 1.5, .5, 1); }
+#gres[hidden] { display: none; }
+#gres h3 { margin: 0 0 6px; font: 400 26px var(--round); } #gres ol { list-style: none; padding: 0; margin: 14px 0; display: grid; gap: 6px; text-align: left; }
+#gres li { display: flex; justify-content: space-between; background: #fff; border-radius: 12px; padding: 9px 12px; font-weight: 700; } #gres li.me { background: #FFE4EE; }
+body.ingame .top, body.ingame .dock, body.ingame #pins, body.ingame .ntag, body.ingame #joy, body.ingame #act, body.ingame #floors, body.ingame .hint, body.ingame .bubble { display: none !important; }
+.chip.on { background: var(--c, #FF8FB8); color: #fff; border-color: transparent; }
+.seg { display: flex; gap: 6px; margin: 0 0 12px; } .seg button { flex: 1; border: 2px solid var(--line); background: #fff; border-radius: 14px; padding: 9px 4px; font: 900 14px var(--font); color: var(--ink2); }
+.seg button.on { border-color: #FF8FB8; background: #FFF1F6; color: var(--ink); box-shadow: 0 0 0 3px rgba(255, 143, 184, .22); }
+
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
@@ -280,11 +351,11 @@ body.walking #joy, body.walking #act { display: grid; }
 <div id="flash"></div>
 
 <header class="top">
-  <div class="brand"><div class="logo" data-ic="book" data-s="28"></div><div><h1>四維立體圖書館</h1><small>SWSH LIBRARY ISLAND<b>・花蓮四維高中圖資中心</b></small></div></div>
+  <div class="brand"><div class="logo" data-ic="book" data-s="28"></div><div><h1>SWSH 閱讀基地</h1></div></div>
   <div class="tools">
     <button class="tbtn" id="bWalk" type="button" aria-label="漫步或導覽模式"></button>
     <button class="tbtn" id="bMe" type="button" aria-label="我的角色"><i data-ic="me" data-s="18"></i><span>角色</span></button>
-    <button class="tbtn" id="bSound" type="button" aria-label="音樂開關"></button>
+    <button class="tbtn" id="bSound" type="button" aria-label="海浪聲開關"></button>
     <button class="tbtn" id="bView" type="button" aria-label="重設視角"><i data-ic="cam" data-s="18"></i><span>視角</span></button>
   </div>
 </header>
@@ -294,7 +365,6 @@ body.walking #joy, body.walking #act { display: grid; }
   <button type="button" class="tb" data-t="12"><i class="ic" style="--tile:#FFF6D6" data-ic="sun"></i>白天</button>
   <button type="button" class="tb" data-t="21"><i class="ic" style="--tile:#ECE6FF" data-ic="moon"></i>夜晚</button>
   <span class="dsep"></span>
-  <button type="button" data-open="dede"><i class="ic" style="--tile:#FFF3C4" data-ic="dede"></i>開館時間</button>
   <button type="button" data-open="opac"><i class="ic" style="--tile:#DDF1FF" data-ic="opac"></i>館藏查詢</button>
   <button type="button" data-open="xiner"><i class="ic" style="--tile:#FFE4EE" data-ic="xiner"></i>心情選書</button>
   <button type="button" data-open="xiaosi"><i class="ic" style="--tile:#DDF7EE" data-ic="xiaosi"></i>數位閱讀</button>
@@ -302,29 +372,38 @@ body.walking #joy, body.walking #act { display: grid; }
   <button type="button" data-open="pod"><i class="ic" style="--tile:#FFF0F5" data-ic="pod"></i>夢想艙</button>
   <button type="button" data-open="expo"><i class="ic" style="--tile:#FFF6DA" data-ic="expo"></i>主題書展</button>
   <button type="button" data-open="radio"><i class="ic" style="--tile:#FFEDE3" data-ic="radio"></i>廣播電台</button>
-  <button type="button" data-open="gacha"><i class="ic" style="--tile:#FFE9F1" data-ic="gacha"></i>幸運書籤</button>
 </nav>
 <div class="hint" id="hint">👆 點點看角色和物件！拖曳旋轉・雙指縮放</div>
 
 <dialog id="dlg"><div class="sheet" id="sheet"></div></dialog>
 
 <div id="intro" aria-label="開場畫面">
-  <div class="cl" style="top:9%;animation-duration:46s;animation-delay:-8s;--s:1.1"></div><div class="cl" style="top:24%;animation-duration:62s;animation-delay:-30s;--s:.7"></div><div class="cl" style="top:58%;animation-duration:54s;animation-delay:-18s;--s:.85"></div><div class="cl" style="top:4%;animation-duration:70s;animation-delay:-50s;--s:.55"></div>
-  <div class="isl"></div>
-  <span class="float" style="left:8%;top:22%">📚</span><span class="float" style="right:9%;top:18%;animation-delay:-1s">🎈</span><span class="float" style="left:14%;bottom:20%;animation-delay:-2s">✏️</span><span class="float" style="right:13%;bottom:24%;animation-delay:-3s">🌸</span><span class="float" style="left:46%;top:6%;animation-delay:-1.6s;font-size:26px">⭐</span>
-  <i class="spark" style="left:22%;top:12%"></i><i class="spark" style="left:78%;top:34%;animation-delay:-.8s"></i><i class="spark" style="left:30%;top:70%;animation-delay:-1.4s"></i><i class="spark" style="left:66%;top:10%;animation-delay:-2s"></i><i class="spark" style="left:88%;top:62%;animation-delay:-.4s"></i>
+  <div class="sunglow"></div>
+  <div class="cl" style="top:8%;animation-duration:52s;animation-delay:-8s;--s:1.1"></div><div class="cl" style="top:22%;animation-duration:66s;animation-delay:-30s;--s:.7"></div><div class="cl" style="top:4%;animation-duration:74s;animation-delay:-50s;--s:.5"></div>
+  <div class="gull" style="top:16%;animation-duration:22s"></div><div class="gull" style="top:24%;animation-duration:28s;animation-delay:-9s;transform:scale(.7)"></div>
+  <div class="ilet" aria-hidden="true"><div class="ihouse"><i class="iroof"></i><i class="iwin"></i><i class="iwin r"></i><i class="idoor"></i></div><div class="itop"></div><div class="ibase"></div></div>
+  <svg class="waves" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+    <path class="w1" d="M0 160 Q 180 110 360 160 T 720 160 T 1080 160 T 1440 160 T 1800 160 T 2160 160 T 2520 160 T 2880 160 V 320 H 0 Z"/>
+    <path class="w2" d="M0 200 Q 180 150 360 200 T 720 200 T 1080 200 T 1440 200 T 1800 200 T 2160 200 T 2520 200 T 2880 200 V 320 H 0 Z"/>
+    <path class="w3" d="M0 245 Q 180 205 360 245 T 720 245 T 1080 245 T 1440 245 T 1800 245 T 2160 245 T 2520 245 T 2880 245 V 320 H 0 Z"/>
+  </svg>
+  <div class="letters" aria-hidden="true"><span>讀</span><span>書</span><span>愛</span><span>想</span><span>學</span><span>夢</span><span>✦</span><span>A</span><span>文</span><span>✿</span></div>
   <div class="hero">
-    <span class="kick"><span data-ic="book" data-s="16"></span>SWSH LIBRARY ISLAND</span>
-    <h2><span style="--i:0">四</span><span style="--i:1">維</span><span style="--i:2">立</span><span style="--i:3">體</span><span style="--i:4">圖</span><span style="--i:5">書</span><span style="--i:6">館</span></h2>
-    <p class="sub">花蓮四維高中・一座會呼吸的微縮圖書館小島</p>
+    <div class="openbook" aria-hidden="true"><i class="pl"></i><i class="pr"></i><i class="pf"></i><i class="pf p2"></i></div>
+    <span class="kick">WELCOME ABOARD</span>
+    <p class="hi">歡迎來到</p>
+    <h2 id="ititle"></h2>
+    <p class="tw" id="tw1"></p>
+    <p class="tw tw3" id="tw2"></p>
     <div class="ips" id="ips"></div>
     <div class="loadbox"><div class="bar"><i id="prog"></i></div><p class="status" id="pst">小島搭建中⋯</p></div>
-    <button class="go" id="go" type="button">✨ 進入小島</button>
+    <button class="go" id="go" type="button">⛵ 登上閱讀小島</button>
   </div>
 </div>
-<section id="setup" aria-label="建立角色"><h3>建立你的小島角色</h3><p class="s">取個名字、選個造型，就能在小島上散步、和同學踢球！</p><label for="nm">我的名字</label><input id="nm" maxlength="8" placeholder="例如：小維" autocomplete="off"><div id="looks"></div><div class="row2"><button class="btn" id="sWalk" type="button">🚶 開始漫步</button><button class="btn alt" id="sTour" type="button">🗺️ 自由參觀</button></div></section>
+<section id="setup" aria-label="建立角色"><h3>建立你的小島角色</h3><p class="s">取個名字、選擇身分，就能在小島上散步、踢球、玩小遊戲！</p><label for="nm">我的名字</label><input id="nm" maxlength="8" placeholder="例如：小維" autocomplete="off"><label style="margin-top:12px">性別</label><div class="seg" id="sg"></div><label>身分</label><div class="seg" id="sr"></div><div class="row2"><button class="btn" id="sWalk" type="button">🚶 開始漫步</button><button class="btn alt" id="sTour" type="button">🗺️ 自由參觀</button></div></section>
 <div id="joy" aria-label="移動搖桿"><i></i></div><div id="floors" aria-label="選擇樓層"></div><button id="act" type="button" aria-label="踢球、投籃或跳">⚽<br>踢球・跳</button>
 <div class="ntag" id="ntag"></div>
+<div id="game" hidden><div class="ghud"><span id="gT1"></span><span id="gT2"></span><span id="gT3"></span></div><canvas id="gmap" width="200" height="200"></canvas><div id="gbig"></div><div id="gspd"></div><div id="gkeys"></div><button id="gexit" type="button">✕ 離開遊戲</button><div class="gpad left"><button data-k="L" type="button">◀</button><button data-k="R" type="button">▶</button></div><div class="gpad right"><button data-k="A" id="gA" type="button">▲</button><button data-k="B" id="gB" type="button">▼</button></div><div id="gres" hidden></div></div>
 
 <script>/**
  * @license
@@ -342,6 +421,7 @@ body.walking #joy, body.walking #act { display: grid; }
 const CONFIG = {
   // 館藏查詢：若知道 WebPAC「搜尋結果頁」網址，把關鍵字位置寫成 {q}（例如 http://opac.swsh.hlc.edu.tw/search?q={q}），
   // 即可直接跳到查詢結果；留空則會開啟 WebPAC 首頁並自動複製關鍵字。
+  yt: 'https://www.youtube.com/@%E5%9B%9B%E7%B6%ADYT',
   opacHome: 'http://opac.swsh.hlc.edu.tw/',
   opacSearch: '',
   contact: { addr: '970 花蓮市中山路一段 200 號', tel: '(03) 856-1455 轉 517', telLink: 'tel:+88638561455' },
@@ -473,23 +553,24 @@ const SFX = (() => {
   const tone = (f, d, type = 'sine', v = 0.12, slide = 0, delay = 0) => { if (!on) return; const a = ctx(); if (!a) return; const t = a.currentTime + delay, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, f + slide), t + d); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(g).connect(a.destination); o.start(t); o.stop(t + d + 0.05); };
   const noise = (d, v = 0.08, f = 1200, delay = 0, q = 1.2) => { if (!on) return; const a = ctx(); if (!a) return; const t = a.currentTime + delay, n = Math.floor(a.sampleRate * d), b = a.createBuffer(1, n, a.sampleRate), ch = b.getChannelData(0); for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / n); const s = a.createBufferSource(); s.buffer = b; const fl = a.createBiquadFilter(); fl.type = 'bandpass'; fl.frequency.value = f; fl.Q.value = q; const g = a.createGain(); g.gain.value = v; s.connect(fl).connect(g).connect(a.destination); s.start(t); };
   const bark = (delay) => { if (!on) return; const a = ctx(); if (!a) return; const t = a.currentTime + delay, o = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(260, t + 0.13); f.type = 'lowpass'; f.frequency.setValueAtTime(1800, t); f.frequency.exponentialRampToValueAtTime(500, t + 0.14); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.22, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16); o.connect(f).connect(g).connect(a.destination); o.start(t); o.stop(t + 0.2); noise(0.08, 0.05, 900, delay); };
-  // ---- 背景音樂：原創音樂盒小曲（C 大調，84 BPM，8 小節循環） ----
-  const mtof = m => 440 * Math.pow(2, (m - 69) / 12), E8 = 60 / 100 / 2;
-  const MEL = [[72, 0, 69, 72, 77, 0, 76, 74], [74, 0, 69, 74, 77, 0, 74, 72], [70, 74, 77, 74, 70, 0, 72, 74], [76, 0, 72, 0, 67, 72, 76, 79],
-    [77, 0, 76, 77, 72, 0, 69, 72], [76, 0, 72, 76, 81, 0, 79, 76], [74, 77, 74, 70, 72, 76, 79, 76], [77, 0, 72, 0, 65, 0, 0, 0]];
-  const CH = [[53, 57, 60], [50, 53, 57], [46, 50, 53], [48, 52, 55], [53, 57, 60], [45, 48, 52], [46, 50, 53], [53, 57, 60]], BASS = [41, 38, 34, 36, 41, 33, 34, 41];
-  let bus = null, mTimer = null, mNext = 0, mStep = 0, playing = false, duck = false;
-  const mBus = a => { if (bus) return bus; bus = a.createGain(); bus.gain.value = 0; const rev = a.createConvolver(), len = a.sampleRate * 1.8 | 0, ir = a.createBuffer(2, len, a.sampleRate); for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); } rev.buffer = ir; const wet = a.createGain(); wet.gain.value = 0.28; bus.connect(a.destination); bus.connect(rev).connect(wet).connect(a.destination); return bus; };
-  const mNote = (a, t, f, d, type, v, att = 0.01) => { const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + att); g.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(g).connect(bus); o.start(t); o.stop(t + d + 0.05); };
-  const mSched = a => { while (mNext < a.currentTime + 0.3) { const bar = Math.floor(mStep / 8) % 8, i = mStep % 8, m = MEL[bar][i];
-      if (m) { mNote(a, mNext, mtof(m), 0.55, 'sine', 0.085, 0.004); mNote(a, mNext, mtof(m + 12), 0.16, 'triangle', 0.02, 0.003); mNote(a, mNext + E8 * 2, mtof(m), 0.35, 'sine', 0.018, 0.004); }
-      if (i === 0 || i === 4) mNote(a, mNext, mtof(BASS[bar] + (i === 4 ? 7 : 0)), E8 * 2.2, 'triangle', 0.075, 0.01);
-      if (i === 2 || i === 6) CH[bar].forEach((n, q) => mNote(a, mNext + q * 0.012, mtof(n + 12), 0.22, 'triangle', 0.016, 0.004)); if (i === 0) CH[bar].forEach(n => mNote(a, mNext, mtof(n), E8 * 8, 'sine', 0.012, 0.4));
-      if (i % 2 === 1) mNote(a, mNext, 5200, 0.04, 'triangle', 0.004);
-      mNext += E8; mStep++; } };
-  const mVol = a => { if (bus) bus.gain.setTargetAtTime(playing && !duck ? 0.75 : 0, a.currentTime, 0.4); };
-  const musicStart = () => { if (!on || playing) return; const a = ctx(); if (!a) return; mBus(a); playing = true; mNext = a.currentTime + 0.15; mStep = 0; mVol(a); mTimer = setInterval(() => mSched(a), 90); };
-  const musicStop = () => { const a = ac; playing = false; clearInterval(mTimer); if (a) mVol(a); };
+  // ---- 背景環境音：舒服的海浪聲 ----
+  let bus = null, playing = false, duck = false, wv = null, wTimer = null, nextWave = 0;
+  const mVol = a => { if (bus) bus.gain.setTargetAtTime(playing && !duck ? 0.9 : 0, a.currentTime, 0.6); };
+  const brown = (a, sec) => { const n = a.sampleRate * sec | 0, b = a.createBuffer(2, n, a.sampleRate); for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); let l = 0; for (let i = 0; i < n; i++) { l = (l + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = l * 3.2; } const f = a.sampleRate * 0.25 | 0; for (let i = 0; i < f; i++) { const m = i / f; d[i] = d[i] * m + d[n - f + i] * (1 - m); } } return b; };
+  const white = (a, sec) => { const n = a.sampleRate * sec | 0, b = a.createBuffer(2, n, a.sampleRate); for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1; } return b; };
+  const waveSched = a => { while (nextWave < a.currentTime + 1.5) { const t = nextWave, pk = 0.55 + Math.random() * 0.35, up = 2.2 + Math.random() * 1.2;
+      wv.g.gain.setTargetAtTime(pk, t, up / 3); wv.g.gain.setTargetAtTime(0.16, t + up, 1.6);
+      wv.lp.frequency.setTargetAtTime(900 + pk * 500, t, up / 3); wv.lp.frequency.setTargetAtTime(380, t + up, 1.4);
+      wv.hg.gain.setTargetAtTime(0.05 * pk, t + up * 0.8, 0.25); wv.hg.gain.setTargetAtTime(0.004, t + up + 0.6, 1.2);
+      nextWave = t + 5.5 + Math.random() * 3.5; } };
+  const musicStart = () => { if (!on || playing) return; const a = ctx(); if (!a) return; playing = true;
+    if (!wv) { bus = a.createGain(); bus.gain.value = 0; bus.connect(a.destination);
+      const s1 = a.createBufferSource(); s1.buffer = brown(a, 6); s1.loop = true; const lp = a.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 400; lp.Q.value = 0.4; const g = a.createGain(); g.gain.value = 0.16; s1.connect(lp).connect(g).connect(bus);
+      const s2 = a.createBufferSource(); s2.buffer = white(a, 3); s2.loop = true; const bp = a.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2600; bp.Q.value = 0.6; const hg = a.createGain(); hg.gain.value = 0.004; s2.connect(bp).connect(hg).connect(bus);
+      const s3 = a.createBufferSource(); s3.buffer = brown(a, 5); s3.loop = true; const lp3 = a.createBiquadFilter(); lp3.type = 'lowpass'; lp3.frequency.value = 160; const g3 = a.createGain(); g3.gain.value = 0.22; s3.connect(lp3).connect(g3).connect(bus);
+      s1.start(); s2.start(); s3.start(); wv = { g, lp, hg }; nextWave = a.currentTime + 0.5; }
+    mVol(a); waveSched(a); wTimer = setInterval(() => waveSched(a), 500); };
+  const musicStop = () => { const a = ac; playing = false; clearInterval(wTimer); if (a) mVol(a); };
   return {
     get on() { return on; }, toggle() { on = !on; store.set({ sound: on }); if (on) { this.pop(); musicStart(); } else musicStop(); return on; },
     music: musicStart, duck(v) { duck = v; if (ac) mVol(ac); },
@@ -501,6 +582,8 @@ const SFX = (() => {
     sparkle() { [1047, 1319, 1568, 2093].forEach((f, i) => tone(f, 0.3, 'sine', 0.06, 0, i * 0.07)); },
     radio() { noise(0.3, 0.04, 3200, 0, 0.6); tone(523, 0.18, 'triangle', 0.07, 0, 0.32); tone(659, 0.18, 'triangle', 0.07, 0, 0.46); tone(784, 0.3, 'triangle', 0.07, 0, 0.6); },
     thunder(delay = 0) { if (!on) return; const a = ctx(); if (!a) return; const t = a.currentTime + delay, d = 3.4, n = a.sampleRate * d | 0, b = a.createBuffer(1, n, a.sampleRate), ch = b.getChannelData(0); let last = 0; for (let i = 0; i < n; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; ch[i] = last * 3.5; } const s = a.createBufferSource(); s.buffer = b; const lp = a.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 200; const g = a.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(1.0, t + 0.05); g.gain.exponentialRampToValueAtTime(0.4, t + 0.7); g.gain.linearRampToValueAtTime(0.6, t + 1.1); g.gain.exponentialRampToValueAtTime(0.0001, t + d); s.connect(lp).connect(g).connect(a.destination); s.start(t); noise(0.2, 0.22, 1400, delay, 0.7); },
+    roar() { if (!on) return; const a = ctx(); if (!a) return; const t = a.currentTime; [70, 104].forEach((f0, k) => { const o = a.createOscillator(), g = a.createGain(), lp = a.createBiquadFilter(), lfo = a.createOscillator(), lg = a.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f0 * 1.7, t); o.frequency.exponentialRampToValueAtTime(f0, t + 1.7); lfo.frequency.value = 23 + k * 6; lg.gain.value = 16; lfo.connect(lg).connect(o.frequency); lp.type = 'lowpass'; lp.frequency.setValueAtTime(1100, t); lp.frequency.exponentialRampToValueAtTime(260, t + 2); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.28, t + 0.12); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.2); o.connect(lp).connect(g).connect(a.destination); o.start(t); lfo.start(t); o.stop(t + 2.3); lfo.stop(t + 2.3); }); noise(1.8, 0.2, 420, 0, 0.7); },
+    audio() { return on ? ctx() : null; },
     whoosh() { noise(0.5, 0.06, 700, 0, 0.5); tone(300, 0.5, 'sine', 0.05, 600); }
   };
 })();
@@ -695,6 +778,7 @@ const IC_SVG = {
   walk: '<circle cx="17" cy="6" r="3.2" fill="#FFE1CC"/><path d="M15 10.5l-3.5 6.5 4.5 2-2 9M15.5 11l5 3.5 3.5-1M16 19l5 3.5-1 6" fill="none" stroke-width="2.4"/>',
   map: '<path d="M4 8l7-3 10 3 7-3v19l-7 3-10-3-7 3z" fill="#FFF3C4"/><path d="M11 5v19M21 8v19" stroke-width="1.6"/><circle cx="16" cy="14" r="2.4" fill="#FF8FB8" stroke-width="1.4"/>',
   me: '<circle cx="16" cy="12" r="6.5" fill="#FFE1CC"/><path d="M9.5 11c0-5 3-7.5 6.5-7.5S22.5 6 22.5 11c-4-1.6-9-1.6-13 0z" fill="#5B4636"/><path d="M6 29c0-6 4.5-9.5 10-9.5S26 23 26 29z" fill="#8FD3FF"/>',
+  wave: '<path d="M3 13c3-3 5-3 8 0s5 3 8 0 5-3 8 0" fill="none" stroke="#5AB8F0" stroke-width="2.6"/><path d="M3 20c3-3 5-3 8 0s5 3 8 0 5-3 8 0" fill="none" stroke="#8FD3FF" stroke-width="2.6"/><circle cx="24" cy="7" r="2.6" fill="#FFD95A" stroke-width="1.4"/>',
   music: '<path d="M12 23V8l13-3v15" fill="none" stroke-width="2.4"/><ellipse cx="9" cy="23.5" rx="3.6" ry="2.8" fill="#FF9EC4"/><ellipse cx="22" cy="20.5" rx="3.6" ry="2.8" fill="#8FD3FF"/>',
   mute: '<path d="M5 12h5l6-5v18l-6-5H5z" fill="#E9E2D6"/><path d="M21 12l6 8M27 12l-6 8" stroke-width="2.4"/>',
   cam: '<rect x="4" y="9" width="18" height="14" rx="4" fill="#BBA8FF"/><path d="M22 14l6-3.5v11L22 18z" fill="#D9CCFF"/><circle cx="10" cy="16" r="2.4" fill="#FFFFFF" stroke-width="1.4"/>',
@@ -705,21 +789,20 @@ const ICON = (k, s = 22) => `<svg class="svgi" width="${s}" height="${s}" viewBo
 // =====================================================================
 //  學生角色：設定名字外型、在小島上漫步、和同學踢球、投籃
 // =====================================================================
-const LOOKS = [
-  { n: '制服・短髮', hair: 'boy', hc: '#3B2B25', shirt: '#FFFFFF', pants: '#2F2F3C' },
-  { n: '制服・鮑伯頭', hair: 'bob', hc: '#4A3226', shirt: '#FFFFFF', pants: '#2F2F3C', clip: 'pink' },
-  { n: '制服・長髮', hair: 'long', hc: '#2B1F1A', shirt: '#FFFFFF', pants: '#2F2F3C', glasses: true },
-  { n: '運動服・捲髮', hair: 'curly', hc: '#5A3A28', shirt: '#8FD3FF', pants: '#3E5A9E' },
-  { n: '運動服・短髮', hair: 'boy', hc: '#2B1F1A', shirt: '#FFB48F', pants: '#3E5A9E' },
-  { n: '運動服・鮑伯頭', hair: 'bob', hc: '#7A4A2A', shirt: '#8EDDC0', pants: '#3E5A9E', clip: 'heart' }
-];
-const avatarSVG = L => `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 48c0-9 6-14 14-14s14 5 14 14z" fill="${L.shirt}" stroke="#5B4636" stroke-width="2"/><circle cx="24" cy="21" r="12" fill="#FFE1CC" stroke="#5B4636" stroke-width="2"/>${L.hair === 'long' ? `<path d="M11 21c0-9 6-14 13-14s13 5 13 14v14h-5V20H16v15h-5z" fill="${L.hc}"/>` : L.hair === 'curly' ? `<g fill="${L.hc}">${[[14, 13], [19, 9], [25, 8], [31, 10], [35, 15], [12, 19], [36, 20]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5"/>`).join('')}</g>` : L.hair === 'bob' ? `<path d="M11 24c0-11 6-16 13-16s13 5 13 16l-3 3v-9c-6 2-14 2-20 0v9z" fill="${L.hc}"/>` : `<path d="M12 19c1-8 6-11 12-11s11 3 12 11c-7-3-17-3-24 0z" fill="${L.hc}"/>`}<circle cx="20" cy="22" r="1.6" fill="#2B2230"/><circle cx="28" cy="22" r="1.6" fill="#2B2230"/><circle cx="16.5" cy="26" r="2" fill="#FFA9B8"/><circle cx="31.5" cy="26" r="2" fill="#FFA9B8"/><path d="M22 27q2 2 4 0" fill="none" stroke="#7A3B3B" stroke-width="1.6" stroke-linecap="round"/>${L.glasses ? '<g fill="none" stroke="#E9A0B8" stroke-width="1.5"><circle cx="20" cy="22" r="3.4"/><circle cx="28" cy="22" r="3.4"/></g>' : ''}</svg>`;
-const ME = Object.assign({ name: '', look: 0 }, (store.get().me || {}));
+const ROLE_N = { student: '學生', teacher: '老師', visitor: '訪客' };
+function lookOf(g, role, v = 0) {
+  const base = g === 'f' ? { hair: role === 'teacher' ? 'long' : 'bob', hc: role === 'visitor' ? '#7A4A2A' : ['#3B2B25', '#4A3226', '#2B1F1A'][v % 3], clip: role === 'student' ? (v % 2 ? 'heart' : 'pink') : undefined } : { hair: v % 2 && role === 'student' ? 'curly' : 'boy', hc: role === 'visitor' ? '#5A3A28' : ['#2B1F1A', '#3B2B25', '#4A3226'][v % 3] };
+  if (role === 'student') return Object.assign(base, { shirt: '#FFFFFF', pants: '#2F3550', bag: ['#FF8FB8', '#8FD3FF', '#FFD95A'][v % 3] });
+  if (role === 'teacher') return Object.assign(base, { shirt: '#FFFFFF', pants: '#4A4A5A', vest: g === 'f' ? '#C9A8E8' : '#7FA7D9', glasses: true, badge: true });
+  return Object.assign(base, { shirt: g === 'f' ? '#FFD27A' : '#8EDDC0', pants: '#5B7FC2', cap: g === 'f' ? '#FF9EC4' : '#FFB48F' });
+}
+const ME = Object.assign({ name: '', g: 'm', role: 'student' }, (store.get().me || {})); if (!ROLE_N[ME.role]) ME.role = 'student'; if (ME.g !== 'f') ME.g = 'm';
+const tagText = () => `${ROLE_N[ME.role]}・${ME.name || (ME.role === 'visitor' ? '小島訪客' : '無名氏')}`;
 const WALK = { on: false, W: null, isle: null, g: null, c: null, pos: new THREE.Vector3(0, 0, 12.5), face: Math.PI, keys: {}, joy: { x: 0, y: 0 }, moving: 0, ph: 0, vy: 0, y: 0, trees: [], score: 0 };
 const PSCALE = 1.15;
 // 碰撞：牆（矩形）與物件（圓）
-const SOLIDS = [[-17.7, -16.2, -12.9, 6.9], [16.2, 17.7, -12.9, 6.9], [-17.7, 17.7, -12.9, -11.5], [-16, 16, -12, -9.7], [-10.9, -3.7, -1.4, 1.3]];
-const CIRCS = [[-0.78, 2.82, 1.7], [6.76, -3.16, 2.5], [11.05, 3.86, 3.0], [-15.0, 4.12, 1.6], [-27.5, 0.5, 4.4], [28.5, 1, 6.4], [-20.5, 12, 2.1], [14.5, 10.8, 2.7], [-4.6, 14.2, 0.5], [4.6, 14.2, 0.5], [-17.5, 6.5, 0.5], [-3.6, 21.6, 1.9], [4.4, 20.6, 0.8], [-26.6, -28, 0.6], [-1.4, -28, 0.6], [15, -34.3, 0.5], [15, -21.7, 0.5], [-10.5, 18.8, 1.4], [-19, 9.5, 1.4]];
+const SOLIDS = [[-17.7, -16.2, -12.9, 6.9], [16.2, 17.7, -12.9, 6.9], [-17.7, 17.7, -12.9, -11.5], [-16, 16, -12, -9.7], [-14.7, -7.6, -1.4, 1.3]];
+const CIRCS = [[-0.78, 2.82, 1.7], [6.76, -3.16, 2.5], [11.05, 3.86, 3.0], [-15.0, 4.12, 1.6], [-27.5, 0.5, 4.4], [28.5, 1, 6.4], [-20.5, 12, 2.1], [14.5, 10.8, 2.7], [-4.6, 14.2, 0.5], [4.6, 14.2, 0.5], [-17.5, 6.5, 0.5], [-3.6, 21.6, 1.9], [4.4, 20.6, 0.8], [-26.6, -28, 0.6], [-1.4, -28, 0.6], [-10.5, 18.8, 1.4], [-19, 9.5, 1.4]];
 function collide(p, r) {
   const ex = 47.5, ez = 36.5, q = (p.x / ex) ** 2 + (p.z / ez) ** 2; if (q > 1) { const s = 1 / Math.sqrt(q); p.x *= s; p.z *= s; }
   SOLIDS.forEach(([x0, x1, z0, z1]) => { if (p.x > x0 - r && p.x < x1 + r && p.z > z0 - r && p.z < z1 + r) { const dl = p.x - (x0 - r), dr = (x1 + r) - p.x, dn = p.z - (z0 - r), df = (z1 + r) - p.z, m = Math.min(dl, dr, dn, df); if (m === dl) p.x = x0 - r; else if (m === dr) p.x = x1 + r; else if (m === dn) p.z = z0 - r; else p.z = z1 + r; } });
@@ -729,9 +812,9 @@ function collide(p, r) {
 const inLib = p => p.x > -16.3 && p.x < 16.3 && p.z > -11.6 && p.z < 6.5;
 function buildPlayer() {
   if (!WALK.W) return; if (WALK.g) WALK.W.remove(WALK.g);
-  const c = chibi(LOOKS[ME.look] || LOOKS[0]); c.g.scale.setScalar(PSCALE); linearize(c.g); WALK.W.add(c.g); WALK.g = c.g; WALK.c = c; c.g.position.copy(WALK.pos); c.g.rotation.y = WALK.face;
+  const c = chibi(lookOf(ME.g, ME.role)); c.g.scale.setScalar(PSCALE); linearize(c.g); WALK.W.add(c.g); WALK.g = c.g; WALK.c = c; c.g.position.copy(WALK.pos); c.g.rotation.y = WALK.face;
   const sh = mesh(new THREE.CircleGeometry(0.9, 24), new THREE.MeshBasicMaterial({ color: '#000000', transparent: true, opacity: 0.16, depthWrite: false }), 0, 0.04, 0, false); sh.rotation.x = -Math.PI / 2; c.g.add(sh);
-  $('#ntag').textContent = ME.name || '小島訪客';
+  $('#ntag').textContent = tagText();
 }
 // ---- 足球與同學 ----
 const BALL = { g: null, last: '', pos: new THREE.Vector3(-39.25, 0, 0), vel: new THREE.Vector3(), y: 0, vy: 0, R: 0.62 };
@@ -740,8 +823,8 @@ function buildPlay() {
   buildField();
   const W = WALK.W, b = G(W); BALL.g = b; const bm = new THREE.MeshStandardMaterial({ map: tex(256, 128, (c, w, h) => { c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, w, h); c.fillStyle = '#5B4636'; [[40, 30], [120, 64], [200, 30], [80, 100], [168, 104], [240, 90], [10, 90]].forEach(([x, y]) => { c.beginPath(); for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2 - Math.PI / 2; c.lineTo(x + Math.cos(a) * 15, y + Math.sin(a) * 15); } c.fill(); }); }), roughness: 0.6 });
   b.add(mesh(new THREE.SphereGeometry(BALL.R, 24, 16), bm, 0, 0, 0)); b.position.copy(BALL.pos);
-  [{ n: '小安', look: 4, home: [-41.5, -6] }, { n: '阿哲', look: 3, home: [-36.5, 5] }, { n: '小晴', look: 5, home: [-39, 8] }].forEach((m, i) => {
-    const c = chibi(LOOKS[m.look]); c.g.scale.setScalar(PSCALE); linearize(c.g); W.add(c.g); const pos = new THREE.Vector3(m.home[0], 0, m.home[1]); c.g.position.copy(pos);
+  [{ n: '小安', look: lookOf('f', 'student', 1), home: [-41.5, -6] }, { n: '阿哲', look: lookOf('m', 'student', 1), home: [-36.5, 5] }, { n: '小晴', look: lookOf('f', 'student', 2), home: [-39, 8] }].forEach((m, i) => {
+    const c = chibi(m.look); c.g.scale.setScalar(PSCALE); linearize(c.g); W.add(c.g); const pos = new THREE.Vector3(m.home[0], 0, m.home[1]); c.g.position.copy(pos);
     const tag = document.createElement('div'); tag.className = 'ntag mate'; tag.textContent = m.n; document.body.appendChild(tag);
     MATES.push({ c, pos, home: new THREE.Vector3(m.home[0], 0, m.home[1]), face: 0, ph: i * 2, wander: new THREE.Vector3(m.home[0], 0, m.home[1]), wt: 0, cool: 0, tag, n: m.n }); });
 }
@@ -832,14 +915,14 @@ function setupWalkInput() {
 // ---- 進場：開場畫面 → 建立角色 ----
 function openSetup() {
   const s = $('#setup'); $('#nm').value = ME.name; s.classList.add('show');
-  $('#looks').innerHTML = LOOKS.map((L, i) => `<button type="button" class="look ${i === ME.look ? 'on' : ''}" data-i="${i}" aria-label="${L.n}">${avatarSVG(L)}<span>${L.n}</span></button>`).join('');
-  $('#looks').querySelectorAll('.look').forEach(b => b.onclick = () => { SFX.pop(); ME.look = +b.dataset.i; $('#looks').querySelectorAll('.look').forEach(x => x.classList.toggle('on', x === b)); buildPlayer(); WALK.c.jump = clock.getElapsedTime(); });
+  const seg = (el, opts, key) => { el.innerHTML = opts.map(([v, l]) => `<button type="button" data-v="${v}" class="${ME[key] === v ? 'on' : ''}">${l}</button>`).join(''); el.querySelectorAll('button').forEach(b => b.onclick = () => { SFX.pop(); ME[key] = b.dataset.v; el.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); buildPlayer(); }); };
+  seg($('#sg'), [['m', '👦 男生'], ['f', '👧 女生']], 'g'); seg($('#sr'), [['student', '🎒 學生'], ['teacher', '📚 老師'], ['visitor', '🧳 訪客']], 'role');
   const p = WALK.g.getWorldPosition(new THREE.Vector3()); p.y += 2.6; const w = Math.atan2(Math.sin(cam.yaw), Math.cos(cam.yaw));
   WALK.face = 0; WALK.g.rotation.y = 0; flyTo({ t: p.add(new THREE.Vector3(portrait() ? 0 : 4.2, portrait() ? -3.4 : 0.4, 0)), dist: portrait() ? 26 : 22, pitch: 0.2, yaw: cam.yaw - w });
 }
 function closeSetup(walk) {
-  ME.name = $('#nm').value.trim().slice(0, 8); store.set({ me: { name: ME.name, look: ME.look } }); $('#ntag').textContent = ME.name || '小島訪客';
-  $('#setup').classList.remove('show'); SFX.sparkle(); toast(`歡迎來到四維立體圖書館，${ME.name || '小島訪客'}！`);
+  ME.name = $('#nm').value.trim().slice(0, 8); store.set({ me: { name: ME.name, g: ME.g, role: ME.role } }); $('#ntag').textContent = tagText();
+  $('#setup').classList.remove('show'); SFX.sparkle(); toast(`歡迎來到 SWSH 閱讀基地，${tagText()}！`);
   WALK.face = Math.PI; if (walk) setWalk(true); else { WALK.on = false; document.body.classList.remove('walking'); preset(true); }
 }
 
@@ -901,6 +984,234 @@ function fieldBall(dt) {
   else { P.z = Math.max(F.z0 - 1.6, Math.min(F.z1 + 1.6, P.z)); }
 }
 
+// =====================================================================
+//  揪團小遊戲：🚁 無人機任務、🏎️ 瘋狂賽車
+// =====================================================================
+const GAME = { act: null, cache: {}, keys: {}, btn: {}, cam: new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.3, 3200), lt: 0 };
+const CREW = [{ n: '小安', c: '#FF8FB8' }, { n: '阿哲', c: '#5AB8F0' }, { n: '小晴', c: '#FFC93D' }];
+const fmtT = s => `${Math.floor(s / 60)}:${(s % 60).toFixed(1).padStart(4, '0')}`;
+const CHAL = (() => { try { const m = decodeURIComponent(location.hash).match(/c=(race|drone):([\d.]+):([^&#]+)/); return m ? { g: m[1], v: +m[2], n: m[3].slice(0, 8) } : null; } catch (e) { return null; } })();
+const GINFO = {
+  race: { t: '瘋狂賽車', e: '🏎️', hc: '#FFE1D0', say: '三圈決勝負！壓過發光的加速板可以衝刺，小心別撞上輪胎牆～', keys: '⌨️ ↑/W 油門・↓/S 煞車・←→/AD 轉彎・空白鍵 甩尾', pad: ['加速', '煞車'] },
+  drone: { t: '無人機任務', e: '🚁', hc: '#DDF1FF', say: '駕駛無人機飛越山谷，依序穿過 12 個光環，最快完成的人獲勝！', keys: '⌨️ ←→/AD 轉向・↑/W 上升・↓/S 下降・空白鍵 加速', pad: ['上升', '下降'] }
+};
+const GK = { L: ['a', 'arrowleft'], R: ['d', 'arrowright'], A: ['w', 'arrowup'], B: ['s', 'arrowdown'], X: [' ', 'shift'] };
+const gIn = k => !!GAME.btn[k] || GK[k].some(c => GAME.keys[c]);
+function skyFor(S, top, hor) { const m = new THREE.ShaderMaterial({ uniforms: { uTop: { value: new THREE.Color(top) }, uHorizon: { value: new THREE.Color(hor) }, uSunDir: { value: new THREE.Vector3(0.5, 0.45, 0.4) }, uSun: { value: new THREE.Color('#FFF1DE') }, uNight: { value: 0 }, uTime: { value: 0 } }, vertexShader: SKY_VS, fragmentShader: SKY_FS, side: THREE.BackSide, depthWrite: false, fog: false, toneMapped: false }); const s = new THREE.Mesh(new THREE.SphereGeometry(1500, 32, 16), m); s.frustumCulled = false; s.renderOrder = -10; S.add(s); }
+function sceneLights(S, span) { S.add(new THREE.HemisphereLight(0xEAF6FF, 0x6B7A4A, 0.62)); const sun = new THREE.DirectionalLight(0xFFF2DC, 1.3); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -span, right: span, top: span, bottom: -span, near: 1, far: 420 }); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.05; S.add(sun); S.add(sun.target); return sun; }
+// ---- 模型 ----
+function makeCar(col) {
+  const g = new THREE.Group(), b = G(g, 0, 0.62, 0), paint = new THREE.MeshStandardMaterial({ color: col, roughness: 0.3, metalness: 0.45 });
+  const add = (geo, m, x, y, z) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.castShadow = true; b.add(o); return o; };
+  add(rbox(2.3, 0.62, 4.4, 0.28), paint, 0, 0, 0); add(rbox(2.0, 0.42, 1.3, 0.18), paint, 0, -0.06, 2.35);
+  add(rbox(1.7, 0.6, 1.9, 0.3), new THREE.MeshStandardMaterial({ color: '#1C2A40', roughness: 0.08, metalness: 0.7 }), 0, 0.55, -0.3);
+  Bx(b, 0.42, 0.05, 3.4, '#FFFFFF', 0, 0.33, 0.5, 0.02); Bx(b, 2.5, 0.08, 0.55, '#26262B', 0, 0.82, -2.15, 0.03); [-0.9, 0.9].forEach(x => Bx(b, 0.1, 0.42, 0.3, '#26262B', x, 0.55, -2.1, 0.03));
+  [-0.75, 0.75].forEach(x => { b.add(mesh(new THREE.SphereGeometry(0.16, 10, 8), MAT('#FFF8DC', { emissive: 0xFFF2C0, emissiveIntensity: 1 }), x, 0, 3.0, false)); b.add(mesh(new THREE.SphereGeometry(0.14, 10, 8), MAT('#FF3B3B', { emissive: 0xFF2020, emissiveIntensity: 0.8 }), x, 0.05, -2.22, false)); });
+  const wheels = []; [[-1.15, 1.35], [1.15, 1.35], [-1.15, -1.4], [1.15, -1.4]].forEach(([x, z]) => { const w = G(g, x, 0.48, z), s = G(w); const ty = Cy(s, 0.48, 0.48, 0.42, '#1A1A1D', 0, 0, 0, 20); ty.rotation.z = Math.PI / 2; const rim = Cy(s, 0.27, 0.27, 0.44, '#C8CCD2', 0, 0, 0, 10); rim.rotation.z = Math.PI / 2; wheels.push({ w, s }); });
+  g.userData = { b, wheels }; return g;
+}
+function makeDrone(col = '#3A4250', acc = '#FF8FB8') {
+  const g = new THREE.Group(), body = G(g); Bx(body, 1.2, 0.36, 1.6, col, 0, 0, 0, 0.16); Bx(body, 0.8, 0.2, 1.0, acc, 0, 0.24, 0, 0.1);
+  const props = []; [[-1, 1], [1, 1], [-1, -1], [1, -1]].forEach(([x, z], i) => { const arm = Bx(body, 1.75, 0.12, 0.16, col, x * 0.62, 0, z * 0.62, 0.05); arm.rotation.y = -Math.atan2(z, x);
+    Cy(body, 0.2, 0.2, 0.25, '#26262B', x * 1.25, 0.1, z * 1.25, 12); const p = G(body, x * 1.25, 0.27, z * 1.25); [0, Math.PI / 2].forEach(r => { const bl = Bx(p, 1.3, 0.03, 0.14, '#E8EEF4', 0, 0, 0, 0.02); bl.rotation.y = r; }); props.push(p);
+    body.add(mesh(new THREE.SphereGeometry(0.08, 8, 6), MAT(i < 2 ? '#7CFF8A' : '#FF5A5A', { emissive: i < 2 ? 0x40FF60 : 0xFF3030, emissiveIntensity: 1 }), x * 1.25, -0.08, z * 1.25, false)); });
+  const cg = G(body, 0, -0.3, 0.72); Sp(cg, 0.22, '#1C1C1F', 0, 0, 0); Sp(cg, 0.1, '#5AA8E0', 0, 0, 0.18); [-0.45, 0.45].forEach(x => Bx(body, 0.08, 0.32, 1.2, '#26262B', x, -0.32, 0, 0.03));
+  g.userData = { body, props }; return g;
+}
+// ---- 賽車場 ----
+function buildRace() {
+  const S = new THREE.Scene(); S.fog = new THREE.Fog('#D8ECF6', 180, 950); skyFor(S, '#6FB7EA', '#E4F2F8'); const sun = sceneLights(S, 70);
+  const gT = tex(256, 256, (c, w) => { c.fillStyle = '#6FA84E'; c.fillRect(0, 0, w, w); for (let i = 0; i < 2600; i++) { c.fillStyle = ['#7DB95A', '#5F9844', '#86C062', '#6AA34B'][i % 4]; c.fillRect(Math.random() * w, Math.random() * w, 2, 3); } }); gT.wrapS = gT.wrapT = THREE.RepeatWrapping; gT.repeat.set(220, 220);
+  const ground = mesh(new THREE.PlaneGeometry(2600, 2600), new THREE.MeshStandardMaterial({ map: gT, roughness: 1 }), 0, 0, 80, false); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; S.add(ground);
+  const pts = [[0, 0], [110, -20], [190, 30], [205, 120], [130, 190], [40, 150], [-30, 205], [-130, 175], [-195, 80], [-160, -10], [-80, -50]].map(([x, z]) => new THREE.Vector3(x, 0, z));
+  const curve = new THREE.CatmullRomCurve3(pts, true, 'centripetal'), N = 800, P = curve.getSpacedPoints(N).slice(0, N), TW = 16, len = curve.getLength(), seg = len / N;
+  const T = P.map((p, i) => P[(i + 1) % N].clone().sub(P[(i - 1 + N) % N]).normalize()), NR = T.map(t => new THREE.Vector3(t.z, 0, -t.x));
+  const ribbon = (o0, o1, y, mat, vs) => { const pos = [], uv = [], idx = []; for (let i = 0; i <= N; i++) { const k = i % N, p = P[k], n = NR[k]; pos.push(p.x + n.x * o0, y, p.z + n.z * o0, p.x + n.x * o1, y, p.z + n.z * o1); uv.push(0, i * vs, 1, i * vs); if (i < N) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } } const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); geo.setIndex(idx); geo.computeVertexNormals(); const m = new THREE.Mesh(geo, mat); m.receiveShadow = true; S.add(m); return m; };
+  const aT = tex(256, 256, (c, w) => { c.fillStyle = '#4A4E54'; c.fillRect(0, 0, w, w); for (let i = 0; i < 5000; i++) { const v = 58 + Math.random() * 44 | 0; c.fillStyle = `rgba(${v},${v},${v + 4},.55)`; c.fillRect(Math.random() * w, Math.random() * w, 2, 2); } c.fillStyle = '#F2F2F2'; c.fillRect(w / 2 - 3, 0, 6, w / 2); c.fillStyle = 'rgba(255,255,255,.9)'; c.fillRect(8, 0, 5, w); c.fillRect(w - 13, 0, 5, w); }); aT.wrapS = aT.wrapT = THREE.RepeatWrapping; aT.anisotropy = 8;
+  ribbon(-TW / 2, TW / 2, 0.05, new THREE.MeshStandardMaterial({ map: aT, roughness: 0.85, side: THREE.DoubleSide }), seg / 14);
+  const cT = tex(64, 64, (c, w) => { c.fillStyle = '#E8443C'; c.fillRect(0, 0, w, w / 2); c.fillStyle = '#FFFFFF'; c.fillRect(0, w / 2, w, w / 2); }); cT.wrapS = cT.wrapT = THREE.RepeatWrapping;
+  const cm = new THREE.MeshStandardMaterial({ map: cT, roughness: 0.7, side: THREE.DoubleSide }); ribbon(TW / 2, TW / 2 + 1.5, 0.1, cm, seg / 3); ribbon(-TW / 2 - 1.5, -TW / 2, 0.1, cm, seg / 3);
+  const d = new THREE.Object3D(), tyres = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.7, 0.7, 0.55, 14), new THREE.MeshStandardMaterial({ color: '#202124', roughness: 0.9 }), 1200); let q = 0;
+  for (let i = 0; i < N; i += 3) [-1, 1].forEach(s => { for (let h = 0; h < 2; h++) { const p = P[i], n = NR[i]; d.position.set(p.x + n.x * s * (TW / 2 + 5), 0.3 + h * 0.56, p.z + n.z * s * (TW / 2 + 5)); d.updateMatrix(); if (q < 1200) tyres.setMatrixAt(q++, d.matrix); } });
+  tyres.count = q; tyres.castShadow = true; S.add(tyres);
+  const stripeT = tex(64, 16, (c, w, h) => { for (let x = 0; x < w; x += 16) { c.fillStyle = (x / 16) % 2 ? '#FFFFFF' : '#E8443C'; c.fillRect(x, 0, 16, h); } });
+  const tr = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.4, 0.6, 3, 6), MAT('#7A5A3A'), 340), cr = new THREE.InstancedMesh(new THREE.ConeGeometry(3, 8, 8), new THREE.MeshStandardMaterial({ roughness: 0.9 }), 340); let tc = 0;
+  for (let k = 0; tc < 340 && k < 4000; k++) { const x = (Math.random() * 2 - 1) * 460, z = (Math.random() * 2 - 1) * 460 + 80; let ok = true; for (let i = 0; i < N; i += 8) if (Math.hypot(P[i].x - x, P[i].z - z) < TW / 2 + 16) { ok = false; break; } if (!ok) continue; const s = 0.8 + Math.random() * 0.9; d.position.set(x, 1.5 * s, z); d.scale.setScalar(s); d.updateMatrix(); tr.setMatrixAt(tc, d.matrix); d.position.y = 6.5 * s; d.updateMatrix(); cr.setMatrixAt(tc, d.matrix); cr.setColorAt(tc, new THREE.Color(['#3E7A3E', '#4C8C44', '#356B38', '#5A9A4A'][tc % 4]).convertSRGBToLinear()); tc++; }
+  tr.count = cr.count = tc; tr.castShadow = cr.castShadow = true; S.add(tr, cr); d.scale.setScalar(1);
+  for (let i = 0; i < 18; i++) { const a = i / 18 * Math.PI * 2, r = 780 + (i % 3) * 60, h = 90 + (i * 53 % 90); S.add(mesh(new THREE.ConeGeometry(150, h, 7), new THREE.MeshStandardMaterial({ color: ['#7FA6B8', '#8DB3C2', '#6E98AB'][i % 3], flatShading: true, roughness: 1 }), Math.cos(a) * r, h / 2 - 2, Math.sin(a) * r + 80, false)); }
+  const p0 = P[0], ang = Math.atan2(T[0].x, T[0].z), arch = G(S, p0.x, 0, p0.z); arch.rotation.y = ang;
+  [-1, 1].forEach(s => Bx(arch, 1.2, 9, 1.2, '#E8443C', s * (TW / 2 + 2.4), 4.5, 0, 0.2));
+  const chT = tex(512, 96, (c, w, h) => { for (let x = 0; x < w; x += 24) for (let y = 0; y < h; y += 24) { c.fillStyle = ((x + y) / 24) % 2 ? '#111' : '#FFF'; c.fillRect(x, y, 24, 24); } c.fillStyle = 'rgba(255,255,255,.95)'; c.fillRect(96, 16, 320, 64); c.fillStyle = '#E8443C'; c.font = `900 40px ${FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('SWSH GRAND PRIX', w / 2, h / 2 + 2); });
+  arch.add(mesh(new THREE.BoxGeometry(TW + 6, 2.2, 0.6), new THREE.MeshStandardMaterial({ map: chT }), 0, 9, 0));
+  const ckT = tex(128, 32, (c, w, h) => { for (let x = 0; x < w; x += 8) for (let y = 0; y < h; y += 8) { c.fillStyle = ((x + y) / 8) % 2 ? '#111' : '#FFF'; c.fillRect(x, y, 8, 8); } });
+  const line = mesh(new THREE.PlaneGeometry(TW, 2.4), new THREE.MeshStandardMaterial({ map: ckT }), p0.x, 0.08, p0.z, false); line.rotation.order = 'YXZ'; line.rotation.set(-Math.PI / 2, ang, 0); S.add(line);
+  const n0 = NR[0], stand = G(S, p0.x + n0.x * (TW / 2 + 12), 0, p0.z + n0.z * (TW / 2 + 12)); stand.rotation.y = Math.atan2(n0.x, n0.z);
+  for (let r = 0; r < 6; r++) Bx(stand, 34, 1, 2.2, ['#5B6B85', '#6C7C96'][r % 2], 0, 0.5 + r, r * 2.2, 0.08);
+  [-17, 17].forEach(x => Bx(stand, 0.6, 10, 0.6, '#FFFFFF', x, 5, 13)); Bx(stand, 36, 0.4, 15, '#FFFFFF', 0, 10.2, 6.5, 0.1);
+  const crowd = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 8, 6), new THREE.MeshStandardMaterial({ roughness: 0.8 }), 220); for (let i = 0; i < 220; i++) { const r = i % 6; d.position.set(-16 + Math.random() * 32, 1.5 + r + 0.4, r * 2.2 - 0.2); d.updateMatrix(); crowd.setMatrixAt(i, d.matrix); crowd.setColorAt(i, new THREE.Color(['#FF8FB8', '#5AB8F0', '#FFC93D', '#8EDDC0', '#FFFFFF', '#B48BE6'][i % 6]).convertSRGBToLinear()); } stand.add(crowd);
+  const arT = tex(128, 128, (c, w) => { c.fillStyle = 'rgba(0,0,0,0)'; c.fillRect(0, 0, w, w); c.strokeStyle = '#FFE14A'; c.lineWidth = 16; c.lineCap = 'round'; [20, 62].forEach(y => { c.beginPath(); c.moveTo(18, y + 40); c.lineTo(64, y); c.lineTo(110, y + 40); c.stroke(); }); });
+  const boosts = [150, 410, 650].map(i => { const p = P[i], m = mesh(new THREE.PlaneGeometry(TW * 0.5, 6), new THREE.MeshBasicMaterial({ map: arT, transparent: true, toneMapped: false, depthWrite: false }), p.x, 0.16, p.z, false); m.rotation.order = 'YXZ'; m.rotation.set(-Math.PI / 2, Math.atan2(T[i].x, T[i].z) + Math.PI, 0); S.add(m); const g = mesh(new THREE.PlaneGeometry(TW * 0.52, 6.4), new THREE.MeshBasicMaterial({ color: '#FF9A3C', transparent: true, opacity: 0.35, depthWrite: false }), p.x, 0.14, p.z, false); g.rotation.copy(m.rotation); S.add(g); return i; });
+  linearize(S); return { S, sun, curve, P, T, NR, N, TW, len, boosts, cars: [] };
+}
+// ---- 無人機山谷 ----
+function buildDroneWorld() {
+  const S = new THREE.Scene(); S.fog = new THREE.Fog('#CFE5F0', 200, 950); skyFor(S, '#5FA9E0', '#E2F0F6'); const sun = sceneLights(S, 80);
+  const pp = [[0, 0], [80, -60], [170, -30], [220, 60], [190, 160], [100, 210], [10, 170], [-70, 220], [-170, 170], [-220, 70], [-180, -30], [-90, -70]].map(([x, z]) => new THREE.Vector3(x, 0, z));
+  const path = new THREE.CatmullRomCurve3(pp, true, 'centripetal'), PP = path.getSpacedPoints(240).slice(0, 240), len = path.getLength();
+  const nz = (x, z) => 0.5 + Math.sin(x * 0.012) * Math.cos(z * 0.010) * 0.32 + Math.sin((x + z) * 0.023 + 1.3) * 0.16 + Math.sin(x * 0.051) * Math.sin(z * 0.043 + 2) * 0.08;
+  const dP = (x, z) => { let m = 1e12; for (let i = 0; i < 240; i += 2) { const dx = PP[i].x - x, dz = PP[i].z - z, dd = dx * dx + dz * dz; if (dd < m) m = dd; } return Math.sqrt(m); };
+  const H = (x, z) => { const base = 14 + nz(x, z) * 88, k = sstep(16, 75, dP(x, z)); return 1 + (base - 1) * k; };
+  const SZ = 1000, SEG = 150, geo = new THREE.PlaneGeometry(SZ, SZ, SEG, SEG); geo.rotateX(-Math.PI / 2); geo.translate(0, 0, 80);
+  const pos = geo.attributes.position; for (let i = 0; i < pos.count; i++) pos.setY(i, H(pos.getX(i), pos.getZ(i))); geo.computeVertexNormals();
+  const nrm = geo.attributes.normal, cols = [], cG = new THREE.Color('#5E9E4A'), cG2 = new THREE.Color('#86B85A'), cR = new THREE.Color('#8C8578'), cS = new THREE.Color('#F4F6F8'), cSand = new THREE.Color('#D9C9A0'), tmp = new THREE.Color();
+  for (let i = 0; i < pos.count; i++) { const x = pos.getX(i), z = pos.getZ(i), h = pos.getY(i), sl = 1 - nrm.getY(i); if (h < 2.4) tmp.copy(cSand); else if (h > 80) tmp.copy(cS); else if (sl > 0.3 || h > 58) tmp.copy(cR).lerp(cS, sstep(58, 82, h) * 0.7); else tmp.copy(cG).lerp(cG2, nz(x * 4, z * 4)); tmp.convertSRGBToLinear(); cols.push(tmp.r, tmp.g, tmp.b); }
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+  const terr = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95 })); terr.receiveShadow = true; terr.castShadow = true; S.add(terr);
+  const wat = mesh(new THREE.PlaneGeometry(SZ, SZ), new THREE.MeshStandardMaterial({ color: '#4E9CC7', roughness: 0.12, metalness: 0.25, transparent: true, opacity: 0.86 }), 0, 1.6, 80, false); wat.rotation.x = -Math.PI / 2; S.add(wat);
+  const d = new THREE.Object3D(), tr = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.35, 0.5, 2.6, 6), MAT('#6B4E33'), 600), cr = new THREE.InstancedMesh(new THREE.ConeGeometry(2.4, 7, 7), new THREE.MeshStandardMaterial({ roughness: 0.9 }), 600); let tc = 0;
+  for (let k = 0; tc < 600 && k < 6000; k++) { const x = (Math.random() * 2 - 1) * 480, z = (Math.random() * 2 - 1) * 480 + 80, h = H(x, z); if (h < 4.5 || h > 50) continue; const s = 0.8 + Math.random() * 0.8; d.position.set(x, h + 1.2 * s, z); d.scale.setScalar(s); d.updateMatrix(); tr.setMatrixAt(tc, d.matrix); d.position.y = h + 5.5 * s; d.updateMatrix(); cr.setMatrixAt(tc, d.matrix); cr.setColorAt(tc, new THREE.Color(['#2F6B3A', '#3E7A3E', '#356B38', '#4C8C44'][tc % 4]).convertSRGBToLinear()); tc++; }
+  tr.count = cr.count = tc; tr.castShadow = cr.castShadow = true; S.add(tr, cr); d.scale.setScalar(1);
+  const rings = []; for (let k = 0; k < 12; k++) { const i = (10 + k * 19) % 240, p = PP[i].clone(), t = PP[(i + 1) % 240].clone().sub(PP[(i + 239) % 240]).normalize(); p.y = 11 + (k % 3) * 6 + (k % 4 === 3 ? 8 : 0);
+    const m = new THREE.MeshStandardMaterial({ color: '#8FD3FF', emissive: new THREE.Color('#8FD3FF'), emissiveIntensity: 0.6, roughness: 0.3, transparent: true, opacity: 0.9 }); const r = new THREE.Mesh(new THREE.TorusGeometry(6, 0.55, 12, 44), m); r.position.copy(p); r.lookAt(p.clone().add(t)); S.add(r); rings.push({ p, n: t, m, r, i }); }
+  const pad = G(S, PP[0].x, 2.0, PP[0].z); Cy(pad, 7.2, 8, 2.6, '#9A9186', 0, -1.3, 0, 40); Cy(pad, 6, 6.4, 0.6, '#3E4A5A', 0, 0, 0, 40); const hT = tex(128, 128, (c, w) => { c.fillStyle = '#3E4A5A'; c.fillRect(0, 0, w, w); c.strokeStyle = '#FFD95A'; c.lineWidth = 8; c.beginPath(); c.arc(64, 64, 54, 0, 7); c.stroke(); c.fillStyle = '#FFFFFF'; c.font = '900 72px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('H', 64, 68); }); const hp = Pl(pad, 11, 11, hT, 0, 0.32, 0); hp.rotation.x = -Math.PI / 2;
+  const balloons = []; for (let i = 0; i < 5; i++) { const b = G(S, (Math.random() - 0.5) * 500, 70 + Math.random() * 50, Math.random() * 400 - 120); Sp(b, 7, ['#FF8FB8', '#FFC93D', '#5AB8F0', '#8EDDC0', '#B48BE6'][i], 0, 0, 0, 1, 1.15, 1); Bx(b, 2.4, 1.6, 2.4, '#A87A4C', 0, -11, 0, 0.2); [-1, 1].forEach(x => [-1, 1].forEach(z => Cy(b, 0.05, 0.05, 4, '#5B4636', x, -8.5, z, 4))); balloons.push(b); }
+  linearize(S); return { S, sun, path, PP, H, rings, len, balloons, bots: [] };
+}
+// ---- 遊戲流程 ----
+let gSnd = null;
+function gSound(kind) { const a = SFX.audio(); if (!a) return; const o = a.createOscillator(), o2 = a.createOscillator(), lp = a.createBiquadFilter(), g = a.createGain(); o.type = 'sawtooth'; o2.type = kind === 'race' ? 'square' : 'sawtooth'; lp.type = 'lowpass'; lp.frequency.value = 500; g.gain.value = kind === 'race' ? 0.05 : 0.025; o.connect(lp); o2.connect(lp); lp.connect(g).connect(a.destination); o.start(); o2.start(); gSnd = { o, o2, lp, g, kind }; }
+function gSoundSet(v) { if (!gSnd) return; const a = SFX.audio(); if (!a) return; const t = a.currentTime; if (gSnd.kind === 'race') { gSnd.o.frequency.setTargetAtTime(45 + v * 3.2, t, 0.05); gSnd.o2.frequency.setTargetAtTime(22 + v * 1.6, t, 0.05); gSnd.lp.frequency.setTargetAtTime(380 + v * 22, t, 0.05); } else { gSnd.o.frequency.setTargetAtTime(170 + v * 4, t, 0.05); gSnd.o2.frequency.setTargetAtTime(176 + v * 4.3, t, 0.05); gSnd.lp.frequency.setTargetAtTime(1400 + v * 30, t, 0.05); } }
+function gSoundStop() { if (gSnd) { try { gSnd.o.stop(); gSnd.o2.stop(); } catch (e) {} gSnd = null; } }
+function drawMap(pts, list) { const cv = $('#gmap'), c = cv.getContext('2d'), w = cv.width; if (!GAME.mapB || GAME.mapB.pts !== pts) { let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9; pts.forEach(p => { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); z0 = Math.min(z0, p.z); z1 = Math.max(z1, p.z); }); const s = (w - 24) / Math.max(x1 - x0, z1 - z0); GAME.mapB = { pts, f: p => [12 + (p.x - x0) * s, 12 + (p.z - z0) * s] }; }
+  const f = GAME.mapB.f; c.clearRect(0, 0, w, w); c.lineWidth = 7; c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineJoin = 'round'; c.beginPath(); pts.forEach((p, i) => { const [x, y] = f(p); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.closePath(); c.stroke();
+  list.forEach(o => { const [x, y] = f(o.p); c.fillStyle = o.c; c.beginPath(); c.arc(x, y, o.me ? 7 : 5, 0, 7); c.fill(); if (o.me) { c.strokeStyle = '#fff'; c.lineWidth = 2; c.stroke(); } }); }
+function startGame(kind, crew) {
+  if (dlg.open) dlg.close(); document.body.classList.add('ingame'); $('#game').hidden = false; $('#gres').hidden = true; GAME.keys = {}; GAME.btn = {};
+  const I = GINFO[kind]; $('#gA').innerHTML = `▲<small>${I.pad[0]}</small>`; $('#gB').innerHTML = `▼<small>${I.pad[1]}</small>`; $('#gkeys').textContent = I.keys;
+  GAME.cam.aspect = innerWidth / innerHeight; GAME.cam.updateProjectionMatrix(); renderer.toneMappingExposure = 1.0; SFX.duck(true); gSoundStop(); gSound(kind);
+  if (kind === 'race') startRace(crew); else startDrone(crew);
+  GAME.act.t = -3.6; GAME.act.cd = 4; GAME.act.crew = crew;
+}
+function exitGame() { gSoundStop(); GAME.act = null; document.body.classList.remove('ingame'); $('#game').hidden = true; $('#gres').hidden = true; $('#gbig').textContent = ''; SFX.duck(false); }
+function countdown(A) { if (A.t < 0) { const n = Math.ceil(-A.t); if (n !== A.cd && n <= 3) { A.cd = n; $('#gbig').textContent = n; SFX.tap(); } return false; } if (A.cd !== 0) { A.cd = 0; $('#gbig').textContent = 'GO!'; SFX.chime(); setTimeout(() => { if (GAME.act === A) $('#gbig').textContent = ''; }, 700); } return true; }
+function finishGame(kind, rows, myT) {
+  const A = GAME.act; A.over = true; const best = store.get().best || {}, isBest = !best[kind] || myT < best[kind]; if (isBest) { best[kind] = myT; store.set({ best }); }
+  rows.sort((a, b) => a.v - b.v); SFX.sparkle();
+  $('#gres').innerHTML = `<h3>🏆 ${GINFO[kind].t} 完成！</h3><p style="margin:0;font-weight:700;color:var(--ink2)">你的成績 <b style="color:#E0679A;font-size:20px">${fmtT(myT)}</b>${isBest ? '　🎉 新紀錄！' : `　最佳 ${fmtT(best[kind])}`}</p><ol>${rows.map((r, i) => `<li class="${r.me ? 'me' : ''}"><span>${['🥇', '🥈', '🥉'][i] || (i + 1) + '.'} ${esc(r.n)}</span><span>${r.est ? '≈ ' : ''}${fmtT(r.v)}</span></li>`).join('')}</ol><div class="row" style="justify-content:center"><button class="btn" id="gAgain" type="button">🔁 再玩一次</button><button class="btn alt" id="gShare" type="button">📨 揪團挑戰</button><button class="btn ghost" id="gBack" type="button">🏝️ 回到小島</button></div>`;
+  $('#gres').hidden = false; $('#gAgain').onclick = () => startGame(kind, A.crew); $('#gBack').onclick = exitGame; $('#gShare').onclick = () => shareChallenge(kind);
+}
+function shareChallenge(kind) {
+  const best = (store.get().best || {})[kind], nm = ME.name || '同學', url = `${location.href.split('#')[0]}#c=${kind}:${best ? best.toFixed(1) : '0'}:${encodeURIComponent(nm)}`;
+  const text = best ? `我在「SWSH 閱讀基地」的${GINFO[kind].t}跑出 ${fmtT(best)}，來挑戰我吧！` : `一起來玩「SWSH 閱讀基地」的${GINFO[kind].t}！`;
+  if (navigator.share) navigator.share({ title: 'SWSH 閱讀基地揪團', text, url }).catch(() => {}); else { try { navigator.clipboard.writeText(`${text} ${url}`); toast('📨 已複製揪團連結，貼給同學就能一起挑戰！', 3200); } catch (e) { prompt('複製這個連結給同學：', url); } }
+}
+function gameLobby(kind) {
+  const I = GINFO[kind], best = (store.get().best || {})[kind], ch = CHAL && CHAL.g === kind && CHAL.v > 0 ? CHAL : null;
+  frame({ hc: I.hc, av: I.e, tag: '🎮 揪團小遊戲', title: I.t, say: I.say, body: `<div class="sec"><h3>👥 揪團隊友（點選要一起出發的同學）</h3><div class="chips" id="crew">${CREW.map((c, i) => `<button type="button" class="chip on" data-i="${i}" style="--c:${c.c}">● ${c.n}</button>`).join('')}</div></div>
+    ${ch ? `<div class="sec"><div class="card" style="background:#FFF3C4"><b>📨 ${esc(ch.n)} 向你發出挑戰！</b><span>目標成績 ${fmtT(ch.v)}，${esc(ch.n)} 的分身會跟你一起比賽，打敗他吧！</span></div></div>` : ''}
+    <div class="sec"><h3>🎯 玩法</h3><p style="margin:0;line-height:1.8">${I.keys}<br>📱 手機／平板：用畫面左右兩側的大按鈕操作${kind === 'race' ? '（車子會自動前進）' : '（無人機會自動前飛）'}。<br>🏅 我的最佳成績：<b>${best ? fmtT(best) : '還沒有紀錄'}</b></p></div>
+    <div class="sec row"><button class="btn" id="gStart" type="button">🚀 開始遊戲</button><button class="btn alt" id="gInvite" type="button">📨 揪團挑戰連結</button></div>` });
+  sheet.querySelectorAll('#crew .chip').forEach(b => b.onclick = () => { b.classList.toggle('on'); SFX.pop(); });
+  $('#gStart').onclick = () => startGame(kind, [...sheet.querySelectorAll('#crew .chip.on')].map(b => CREW[+b.dataset.i]));
+  $('#gInvite').onclick = () => shareChallenge(kind);
+}
+// ---- 賽車 ----
+function startRace(crew) {
+  const R = GAME.cache.race || (GAME.cache.race = buildRace()); R.cars.forEach(c => R.S.remove(c)); R.cars = [];
+  const place = (k, lat) => ({ p: R.P[k].clone().addScaledVector(R.NR[k], lat), h: Math.atan2(R.T[k].x, R.T[k].z) });
+  const mk = c => { const g = makeCar(c); linearize(g); R.S.add(g); R.cars.push(g); return g; };
+  const me = Object.assign({ me: true, n: ME.name || '我', c: '#FF5A7A', g: mk('#FF5A7A'), spd: 0, i: 3, cross: 0, half: false, boost: 0, bumpT: 0, steer: 0 }, place(3, -3.5));
+  const bots = crew.map((c, k) => ({ n: c.n, c: c.c, g: mk(c.c), u: (10 + Math.floor((k + 1) / 2) * 8) / R.N, lat: (k % 2 ? -3.5 : 3.5), base: 43 + Math.random() * 3, ph: k * 2 }));
+  if (CHAL && CHAL.g === 'race' && CHAL.v > 0) bots.push({ n: `${CHAL.n}（挑戰）`, c: '#B48BE6', g: mk('#B48BE6'), u: 18 / R.N, lat: 0, fixed: 3 * R.len / CHAL.v, ph: 9 });
+  bots.forEach(b => { b.u0 = b.u; });
+  GAME.act = { kind: 'race', S: R.S, R, me, bots, update: updRace };
+  GAME.cam.position.copy(me.p).add(new THREE.Vector3(-Math.sin(me.h) * 14, 6, -Math.cos(me.h) * 14));
+}
+function updRace(dt, t) {
+  const A = GAME.act, R = A.R, me = A.me; A.t += dt; const go = countdown(A) && !A.over;
+  // 玩家
+  const steer = (gIn('L') ? 1 : 0) - (gIn('R') ? 1 : 0), gas = go && (gIn('A') || COARSE), brk = go && gIn('B'), drift = gIn('X') || (COARSE && gIn('A'));
+  me.steer += (steer - me.steer) * Math.min(1, dt * 8); me.boost -= dt;
+  let max = me.boost > 0 ? 68 : 50; const k0 = me.i; let bi = k0, bd = 1e9; for (let j = -30; j <= 30; j++) { const k = (k0 + j + R.N) % R.N, dd = me.p.distanceToSquared(R.P[k]); if (dd < bd) { bd = dd; bi = k; } }
+  if (me.i > R.N * 0.4 && me.i < R.N * 0.6) me.half = true;
+  if (me.i > R.N * 0.85 && bi < R.N * 0.15 && me.half) { me.cross++; me.half = false; if (me.cross < 3) toast(`第 ${me.cross + 1} 圈！`, 1200); }
+  me.i = bi; const lat = me.p.clone().sub(R.P[bi]).dot(R.NR[bi]);
+  if (Math.abs(lat) > R.TW / 2 + 1.5) max = 24;
+  R.boosts.forEach(b => { if (Math.abs(bi - b) < 4 && Math.abs(lat) < R.TW * 0.28 && me.boost < 1.2) { me.boost = 1.6; SFX.whoosh(); } });
+  if (gas) me.spd += (me.boost > 0 ? 55 : 24) * dt; else me.spd -= 9 * dt; if (brk) me.spd -= 48 * dt;
+  if (me.spd > max) me.spd -= (me.spd - max) * Math.min(1, dt * 2.5); me.spd = Math.max(0, me.spd);
+  me.h += me.steer * dt * (drift ? 2.3 : 1.6) * Math.min(1, me.spd / 12) * (me.spd > 40 ? 0.85 : 1); if (drift && me.spd > 20) me.spd *= 1 - dt * 0.15;
+  me.p.x += Math.sin(me.h) * me.spd * dt; me.p.z += Math.cos(me.h) * me.spd * dt;
+  const lat2 = me.p.clone().sub(R.P[bi]).dot(R.NR[bi]), wall = R.TW / 2 + 4.2; if (Math.abs(lat2) > wall) { me.p.addScaledVector(R.NR[bi], (Math.sign(lat2) * wall - lat2)); me.spd *= 0.55; if (t - me.bumpT > 0.6) { me.bumpT = t; SFX.drop(); } }
+  // 電腦隊友
+  const myProg = me.cross * R.N + me.i;
+  A.bots.forEach((b, k) => { if (!go) return; let v = b.fixed || b.base * (1 + Math.sin(t * 0.3 + b.ph) * 0.05); const prog = (b.u - b.u0 + b.u0) * R.N - 0; const diff = Math.floor(b.u) * R.N + (b.u % 1) * R.N - myProg; if (!b.fixed) { if (diff > 60) v *= 0.88; if (diff < -40) v *= 1.22; if (diff < -150) v *= 1.15; } b.u += v * dt / R.len; b.v = v; if (!b.done && Math.floor(b.u) >= 3) b.done = A.t; });
+  A.bots.forEach(b => { const u = ((b.u % 1) + 1) % 1, k = Math.floor(u * R.N) % R.N, f = u * R.N - Math.floor(u * R.N), k2 = (k + 1) % R.N, la = b.lat + Math.sin(t * 0.4 + b.ph) * 2.2; const p = R.P[k].clone().lerp(R.P[k2], f).addScaledVector(R.NR[k], la); b.p = p; b.g.position.copy(p); b.g.rotation.y = Math.atan2(R.T[k].x, R.T[k].z); spinWheels(b.g, b.v || 0, dt, 0);
+    const dd = me.p.distanceTo(p); if (dd < 3.3 && dd > 0.01) { me.p.addScaledVector(me.p.clone().sub(p).setY(0).normalize(), 3.3 - dd); me.spd *= 0.96; } });
+  me.g.position.copy(me.p); me.g.rotation.y = me.h; me.g.userData.b.rotation.z = -me.steer * Math.min(1, me.spd / 40) * 0.06; spinWheels(me.g, me.spd, dt, me.steer);
+  // 鏡頭與光影
+  const fw = new THREE.Vector3(Math.sin(me.h), 0, Math.cos(me.h)), want = me.p.clone().addScaledVector(fw, -12).add(new THREE.Vector3(0, 5, 0));
+  GAME.cam.position.lerp(want, 1 - Math.exp(-dt * 5)); GAME.cam.lookAt(me.p.clone().addScaledVector(fw, 8).add(new THREE.Vector3(0, 1.4, 0)));
+  const fov = 62 + me.spd * 0.22; if (Math.abs(GAME.cam.fov - fov) > 0.2) { GAME.cam.fov += (fov - GAME.cam.fov) * 0.1; GAME.cam.updateProjectionMatrix(); }
+  R.sun.position.set(me.p.x + 60, 120, me.p.z + 40); R.sun.target.position.copy(me.p); gSoundSet(me.spd);
+  // HUD
+  const all = [{ n: me.n, prog: myProg + (A.over ? 1e6 : 0), me: true }].concat(A.bots.map(b => ({ n: b.n, prog: Math.floor(b.u) * R.N + (b.u % 1) * R.N }))); all.sort((a, b) => b.prog - a.prog); const rank = all.findIndex(x => x.me) + 1;
+  $('#gT1').textContent = `🏁 第 ${Math.min(3, me.cross + 1)}/3 圈`; $('#gT2').textContent = `名次 ${rank}/${all.length}`; $('#gT3').textContent = `⏱ ${fmtT(Math.max(0, A.t))}`; $('#gspd').textContent = `${Math.round(me.spd * 3.6)} km/h`;
+  if ((A.mt = (A.mt || 0) + dt) > 0.1) { A.mt = 0; drawMap(R.P, A.bots.map(b => ({ p: b.p || R.P[0], c: b.c })).concat([{ p: me.p, c: '#FF5A7A', me: true }])); }
+  if (me.cross >= 3 && !A.over) { const myT = A.t; const rows = [{ n: me.n, v: myT, me: true }].concat(A.bots.map(b => b.done ? { n: b.n, v: b.done } : { n: b.n, v: A.t + (3 - b.u + b.u0 * 0) * R.len / (b.v || 40), est: true })); $('#gbig').textContent = '🏁 FINISH'; const A0 = A; setTimeout(() => { if (GAME.act !== A0) return; $('#gbig').textContent = ''; finishGame('race', rows, myT); }, 1200); A.over = true; }
+}
+function spinWheels(g, v, dt, steer) { g.userData.wheels.forEach((o, i) => { o.s.rotation.x += v * dt / 0.48; if (i < 2) o.w.rotation.y = steer * 0.4; }); }
+// ---- 無人機 ----
+function startDrone(crew) {
+  const D = GAME.cache.drone || (GAME.cache.drone = buildDroneWorld()); D.bots.forEach(b => D.S.remove(b.g)); D.bots = [];
+  if (D.me) D.S.remove(D.me.g); if (D.arrow) D.S.remove(D.arrow);
+  const t0 = D.PP[1].clone().sub(D.PP[0]).normalize(), dg = makeDrone('#3A4250', '#FF8FB8'); dg.scale.setScalar(1.3); linearize(dg); D.S.add(dg);
+  const me = { me: true, n: ME.name || '我', g: dg, p: new THREE.Vector3(D.PP[0].x, 3.4, D.PP[0].z), yaw: Math.atan2(t0.x, t0.z), spd: 0, vy: 0, next: 0, prev: null, bumpT: 0, turn: 0 }; D.me = me;
+  D.rings.forEach(r => { r.m.color.set('#8FD3FF'); r.m.emissive.set('#8FD3FF'); r.m.opacity = 0.9; });
+  const ar = new THREE.Mesh(new THREE.ConeGeometry(0.55, 1.6, 12), new THREE.MeshBasicMaterial({ color: '#FFD95A', toneMapped: false })); ar.geometry.rotateX(Math.PI / 2); D.S.add(ar); D.arrow = ar;
+  const bots = crew.map((c, k) => { const g = makeDrone('#E8EEF4', c.c); g.scale.setScalar(1.2); linearize(g); D.S.add(g); return { n: c.n, c: c.c, g, u: -0.004 * (k + 1), base: 23 + Math.random() * 2.5, ph: k * 1.7, off: (k - 1) * 3 }; });
+  if (CHAL && CHAL.g === 'drone' && CHAL.v > 0) { const g = makeDrone('#2B2B30', '#B48BE6'); g.scale.setScalar(1.2); linearize(g); D.S.add(g); bots.push({ n: `${CHAL.n}（挑戰）`, c: '#B48BE6', g, u: 0, fixed: D.len * (12 * 19 / 240) / CHAL.v, ph: 4, off: 0 }); }
+  D.bots = bots; GAME.act = { kind: 'drone', S: D.S, D, me, bots, update: updDrone };
+  GAME.cam.position.set(me.p.x - Math.sin(me.yaw) * 12, me.p.y + 5, me.p.z - Math.cos(me.yaw) * 12);
+}
+const ringFrac = k => (10 + k * 19) / 240;
+function updDrone(dt, t) {
+  const A = GAME.act, D = A.D, me = A.me; A.t += dt; const go = countdown(A) && !A.over;
+  const turn = (gIn('L') ? 1 : 0) - (gIn('R') ? 1 : 0), up = gIn('A'), dn = gIn('B'), boost = gIn('X');
+  me.turn += (turn - me.turn) * Math.min(1, dt * 6); me.yaw += me.turn * dt * 1.6;
+  const tsp = go ? (boost ? 36 : 24) : 0; me.spd += (tsp - me.spd) * Math.min(1, dt * 1.8);
+  const tvy = go ? (up ? 13 : dn ? -13 : 0) : 0; me.vy += (tvy - me.vy) * Math.min(1, dt * 4);
+  me.p.x += Math.sin(me.yaw) * me.spd * dt; me.p.z += Math.cos(me.yaw) * me.spd * dt; me.p.y += me.vy * dt;
+  me.p.x = Math.max(-470, Math.min(470, me.p.x)); me.p.z = Math.max(-390, Math.min(550, me.p.z)); me.p.y = Math.min(140, me.p.y);
+  const gh = Math.max(D.H(me.p.x, me.p.z), 1.6, Math.hypot(me.p.x - D.PP[0].x, me.p.z - D.PP[0].z) < 7.2 ? 2.4 : 0) + 1.2; if (me.p.y < gh) { me.p.y = gh; if (go && me.spd > 10 && t - me.bumpT > 0.8) { me.bumpT = t; me.spd *= 0.35; me.vy = 6; SFX.drop(); toast('💥 小心地形！', 900); } }
+  // 光環
+  if (me.next < 12) { const R0 = D.rings[me.next], loc = me.p.clone().sub(R0.p), al = loc.dot(R0.n), latd = loc.clone().addScaledVector(R0.n, -al).length();
+    if (me.prev !== null && me.prev < 0 && al >= 0 && latd < 6.2) { me.next++; SFX.sparkle(); R0.m.color.set('#7CFF9A'); R0.m.emissive.set('#7CFF9A'); R0.m.opacity = 0.25; me.prev = null; if (me.next < 12) toast(`✨ 光環 ${me.next}/12`, 800); }
+    else me.prev = al; }
+  D.rings.forEach((r, k) => { if (k === me.next) { r.m.color.set('#FFD95A'); r.m.emissive.set('#FFD95A'); r.m.emissiveIntensity = 0.8 + Math.sin(t * 6) * 0.4; r.r.rotation.z = t; } else if (k > me.next) r.m.emissiveIntensity = 0.4; });
+  if (me.next < 12) { D.arrow.visible = true; D.arrow.position.copy(me.p).add(new THREE.Vector3(0, 2.6, 0)); D.arrow.lookAt(D.rings[me.next].p); } else D.arrow.visible = false;
+  me.g.position.copy(me.p); me.g.rotation.set(0, me.yaw, 0); me.g.userData.body.rotation.set(me.spd / 36 * 0.25, 0, -me.turn * 0.35); me.g.userData.props.forEach((p, i) => p.rotation.y += dt * (40 + me.spd) * (i % 2 ? 1 : -1));
+  // 電腦隊友
+  A.bots.forEach((b, k) => { let v = b.fixed || b.base * (1 + Math.sin(t * 0.35 + b.ph) * 0.06); if (!go) v = 0; const myU = me.next >= 12 ? 2 : ringFrac(Math.max(0, me.next - 1)); if (!b.fixed && go) { if (b.u - myU > 0.08) v *= 0.88; if (b.u - myU < -0.08) v *= 1.1; } b.u += v * dt / D.len; b.v = v;
+    const u = ((b.u % 1) + 1) % 1, p = D.path.getPointAt(u), tg = D.path.getTangentAt(u); const kk = Math.floor(u * 12), hy = 11 + (kk % 3) * 6 + (kk % 4 === 3 ? 8 : 0); p.y = hy + Math.sin(t * 0.8 + b.ph) * 1.5; p.x += tg.z * b.off; p.z -= tg.x * b.off;
+    b.p = p; b.g.position.copy(p); b.g.rotation.y = Math.atan2(tg.x, tg.z); b.g.userData.body.rotation.x = 0.15; b.g.userData.props.forEach((q, i) => q.rotation.y += dt * 50 * (i % 2 ? 1 : -1));
+    b.rings = Math.max(0, Math.min(12, Math.floor((b.u * 240 - 10) / 19) + 1)); if (!b.done && b.u >= ringFrac(11) + 0.004) b.done = A.t; });
+  D.balloons.forEach((b, i) => { b.position.y += Math.sin(t * 0.3 + i) * 0.02; b.position.x += 0.03; });
+  const fw = new THREE.Vector3(Math.sin(me.yaw), 0, Math.cos(me.yaw)), want = me.p.clone().addScaledVector(fw, -11).add(new THREE.Vector3(0, 4 + me.vy * 0.08, 0));
+  GAME.cam.position.lerp(want, 1 - Math.exp(-dt * 4)); GAME.cam.lookAt(me.p.clone().addScaledVector(fw, 9).add(new THREE.Vector3(0, 0.5, 0)));
+  D.sun.position.set(me.p.x + 70, me.p.y + 130, me.p.z + 50); D.sun.target.position.copy(me.p); gSoundSet(me.spd + Math.abs(me.vy));
+  const all = [{ me: true, s: me.next * 1000 - (me.next < 12 ? me.p.distanceTo(D.rings[me.next].p) : -1e5) }].concat(A.bots.map(b => ({ s: b.rings * 1000 + (b.u * 1000 % 1000) / 10 }))); all.sort((a, b) => b.s - a.s); const rank = all.findIndex(x => x.me) + 1;
+  $('#gT1').textContent = `💫 光環 ${me.next}/12`; $('#gT2').textContent = `名次 ${rank}/${all.length}`; $('#gT3').textContent = `⏱ ${fmtT(Math.max(0, A.t))}`; $('#gspd').textContent = `高度 ${Math.round(me.p.y - 1.6)} m`;
+  if ((A.mt = (A.mt || 0) + dt) > 0.1) { A.mt = 0; drawMap(D.PP, A.bots.map(b => ({ p: b.p || D.PP[0], c: b.c })).concat(D.rings.filter((r, k) => k === me.next).map(r => ({ p: r.p, c: '#FFD95A' }))).concat([{ p: me.p, c: '#FF5A7A', me: true }])); }
+  if (me.next >= 12 && !A.over) { A.over = true; const myT = A.t; const rows = [{ n: me.n, v: myT, me: true }].concat(A.bots.map(b => b.done ? { n: b.n, v: b.done } : { n: b.n, v: A.t + Math.max(0, ringFrac(11) - b.u) * D.len / (b.v || 22), est: true })); $('#gbig').textContent = '🎉 任務完成'; const A0 = A; setTimeout(() => { if (GAME.act !== A0) return; $('#gbig').textContent = ''; finishGame('drone', rows, myT); }, 1200); }
+}
+function setupGameInput() {
+  addEventListener('keydown', e => { if (!GAME.act) return; const k = e.key.toLowerCase(); if (k === 'escape') { exitGame(); return; } if (Object.values(GK).some(a => a.includes(k))) { e.preventDefault(); GAME.keys[k] = true; } }, true);
+  addEventListener('keyup', e => { GAME.keys[e.key.toLowerCase()] = false; }, true);
+  document.querySelectorAll('.gpad button').forEach(b => { const k = b.dataset.k; b.addEventListener('pointerdown', e => { e.preventDefault(); b.setPointerCapture(e.pointerId); GAME.btn[k] = true; b.classList.add('on'); }); const off = () => { GAME.btn[k] = false; b.classList.remove('on'); }; b.addEventListener('pointerup', off); b.addEventListener('pointercancel', off); b.addEventListener('lostpointercapture', off); });
+  $('#gexit').onclick = exitGame;
+}
+
 // ---------- 角色：四維 IP（黏土小人） ----------
 function chibi(o) {
   const SK = '#FFE1CC', HAIR = o.hc || '#3B2B25', SHIRT = o.shirt || '#FFFFFF', PANTS = o.pants || '#2F2F3C';
@@ -908,6 +1219,9 @@ function chibi(o) {
   const s = o.tall || 1;
   const legs = [-1, 1].map(k => { const p = G(body, k * 0.27, 1.0 * s, 0); Cy(p, 0.21, 0.19, 0.85 * s, PANTS, 0, -0.42 * s, 0, 14); Sp(p, 0.25, '#FFFFFF', 0, -0.9 * s, 0.07, 1, 0.6, 1.35); return p; });
   Cy(body, 0.5, 0.62, 1.15, SHIRT, 0, 1.5 * s + 0.05, 0, 24);
+  if (o.vest) Cy(body, 0.54, 0.66, 0.95, o.vest, 0, 1.42 * s, 0, 24);
+  if (o.bag) { Bx(body, 1.0, 1.15, 0.5, o.bag, 0, 1.6 * s, -0.72, 0.22); Bx(body, 0.7, 0.4, 0.12, '#FFFFFF', 0, 1.35 * s, -1.0, 0.06); [-1, 1].forEach(k => Bx(body, 0.12, 1.0, 0.08, o.bag, k * 0.32, 1.65 * s, 0.5, 0.03)); }
+  if (o.badge) { Bx(body, 0.34, 0.42, 0.06, '#FFFFFF', -0.24, 1.42 * s, 0.6, 0.04); Bx(body, 0.26, 0.08, 0.07, '#FF8FB8', -0.24, 1.56 * s, 0.62, 0.02); }
   Cy(body, 0.63, 0.63, 0.16, PANTS, 0, 1.0 * s + 0.03, 0, 24);
   [-1, 1].forEach(k => { const c = mesh(rbox(0.42, 0.1, 0.3, 0.04), MAT('#FFFFFF'), k * 0.2, 2.06 * s, 0.4); c.rotation.z = -k * 0.45; c.rotation.y = k * 0.3; body.add(c); });
   [0, 1, 2].forEach(k => Sp(body, 0.045, '#C9C2BC', 0, 1.85 * s - k * 0.26, 0.56));
@@ -928,6 +1242,7 @@ function chibi(o) {
   if (o.hair === 'bob') [-1, 1].forEach(k => Sp(head, 1, HAIR, k * 0.86, -0.28, 0.05, 0.3, 0.72, 0.62));
   if (o.hair === 'boy') [-1, 1].forEach(k => Sp(head, 1, HAIR, k * 0.92, 0.05, -0.05, 0.22, 0.5, 0.5));
   if (o.hair === 'long') { [-1, 1].forEach(k => Sp(head, 1, HAIR, k * 0.86, -0.6, 0.0, 0.3, 1.05, 0.55)); Sp(head, 1, HAIR, 0, -0.95, -0.42, 1.0, 1.15, 0.5); }
+  if (o.cap) { const cp = mesh(new THREE.SphereGeometry(1.02, 24, 12, 0, Math.PI * 2, 0, Math.PI * 0.5), MAT(o.cap), 0, 0.3, -0.04); cp.scale.set(1.12, 0.92, 1.1); head.add(cp); const br = Cy(head, 0.78, 0.78, 0.08, o.cap, 0, 0.35, 0.8, 24); br.scale.z = 0.55; Sp(head, 0.1, '#FFFFFF', 0, 1.2, -0.04); }
   if (o.glasses) { [-1, 1].forEach(k => { To(head, 0.21, 0.035, '#E9A0B8', k * 0.36, -0.02, 1.0); }); Bx(head, 0.2, 0.04, 0.04, '#E9A0B8', 0, 0.02, 1.02, 0.02); }
   if (o.clip === 'heart') { const h = G(head, -0.55, 0.52, 0.62); h.rotation.z = 0.3; Sp(h, 0.13, '#E8444B', -0.08, 0.05, 0); Sp(h, 0.13, '#E8444B', 0.08, 0.05, 0); const c = Co(h, 0.17, 0.22, '#E8444B', 0, -0.1, 0, 16); c.rotation.z = Math.PI; }
   if (o.clip === 'pink') { const c = Bx(head, 0.32, 0.1, 0.08, '#FF9EC4', 0.52, 0.5, 0.66, 0.04); c.rotation.z = -0.5; }
@@ -1126,13 +1441,15 @@ function buildScene() {
 
   BLD_BOX = new THREE.Box3(new THREE.Vector3(-HW * 1.3 - 0.5, -1, -1.6 + BK * 1.3 - 0.5), new THREE.Vector3(HW * 1.3 + 0.5, (FH * 3 + 0.6 + RISE) * 1.3, -1.6 + FR * 1.3));
   // ===== 一樓 =====
-  bookcase(L, -9.4, 0.4, BK + 0.9, 5.4, 5.4, 5); bookcase(L, -3.8, 0.4, BK + 0.9, 5.4, 5.4, 5, 0, '#F4D6B8'); bookcase(L, 1.8, 0.4, BK + 0.9, 5.4, 5.4, 5); bookcase(L, 7.4, 0.4, BK + 0.9, 5.4, 5.4, 5, 0, '#F4D6B8');
+  const mood = G(L, 0, 0, BK + 0.9); bookcase(mood, -9.4, 0.4, 0, 5.4, 5.4, 5); bookcase(mood, -3.8, 0.4, 0, 5.4, 5.4, 5, 0, '#F4D6B8'); bookcase(mood, 1.8, 0.4, 0, 5.4, 5.4, 5); bookcase(mood, 7.4, 0.4, 0, 5.4, 5.4, 5, 0, '#F4D6B8');
+  { const mT = tex(512, 96, (c, w, h) => { c.fillStyle = '#FFD6E5'; rr(c, 4, 4, w - 8, h - 8, 40); c.fill(); c.lineWidth = 6; c.strokeStyle = '#FFFFFF'; rr(c, 12, 12, w - 24, h - 24, 32); c.stroke(); c.fillStyle = '#C2577E'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 54px ${RF}`; c.fillText('💗 心情選書', w / 2, h / 2 + 3); }); Bx(mood, 8.4, 1.6, 0.2, '#FF9EC4', -1.0, 6.4, 0.45, 0.15); Pl(mood, 8.0, 1.45, mT, -1.0, 6.4, 0.57); }
+  hot('xiner', mood, 7.6, '心情選書', '💗', '#FFD6E5', { inside: true });
   // 地毯
   const rug = mesh(new THREE.CircleGeometry(2.8, 40), MAT('#FFD6E5'), 5.2, 0.45, -1.2, false); rug.rotation.x = -Math.PI / 2; L.add(rug); const rug2 = mesh(new THREE.RingGeometry(2.2, 2.45, 40), MAT('#FFFFFF'), 5.2, 0.46, -1.2, false); rug2.rotation.x = -Math.PI / 2; L.add(rug2);
   plant(L, HW - 1.0, -4.0, 0.9, 0.4, '#8FD3FF'); plant(L, -HW + 1.0, BK + 1.0, 0.8, FH + 0.25, '#BBA8FF');
 
   // 櫃檯＋DeDe
-  const desk = G(L, -5.6, 0.4, 1.2);
+  const desk = G(L, -8.6, 0.4, 1.2);
   Bx(desk, 5.0, 1.8, 1.6, '#FFB48F', 0, 0.9, 0, 0.3); Bx(desk, 5.4, 0.25, 1.9, '#FFFFFF', 0, 1.9, 0, 0.12);
   for (let i = 0; i < 4; i++) Sp(desk, 0.22, ['#FFE07A', '#8EDDC0', '#8FD3FF', '#BBA8FF'][i], -1.8 + i * 1.2, 0.9, 0.82, 1, 1, 0.3);
   const bell = G(desk, 1.9, 2.05, 0.3); Cy(bell, 0.28, 0.32, 0.08, '#C9A57C', 0, 0, 0); Sp(bell, 0.22, '#FFD54F', 0, 0.12, 0, 1, 0.9, 1);
@@ -1161,14 +1478,7 @@ function buildScene() {
   // 閱讀角＋心兒
   const nook = G(L, 5.2, 0.4, -1.2);
   const bean = Sp(nook, 1.25, '#FF9EC4', 0, 0.75, 0, 1.15, 0.6, 1.1); Sp(nook, 1.0, '#FF9EC4', 0, 1.2, -0.75, 1.1, 0.75, 0.6);
-  const xr = chibi({ hair: 'bob', clip: 'heart' }); xr.g.position.set(0, 0.95, 0.15); xr.g.scale.setScalar(0.92); nook.add(xr.g); CHARS.xiner = xr;
-  xr.legs.forEach(l => { l.rotation.x = -1.35; }); xr.body.position.y = -0.55;
-  xr.arms.forEach((a, k) => { a.rotation.x = -0.9; a.rotation.z = (k ? -1 : 1) * 0.5; });
-  const ob = G(xr.body, 0, 1.75, 0.85); ob.rotation.x = -0.6; [-1, 1].forEach(k => { const p = Bx(ob, 0.55, 0.75, 0.06, '#FFFFFF', k * 0.28, 0, 0, 0.03); p.rotation.y = k * 0.25; }); Bx(ob, 1.1, 0.8, 0.04, '#E8444B', 0, 0, -0.06, 0.02);
   const lampN = G(nook, -2.1, 0, 0.6); Cy(lampN, 0.4, 0.5, 0.2, '#FFE07A', 0, 0.1, 0); Cy(lampN, 0.06, 0.06, 2.6, '#FFFFFF', 0, 1.4, 0, 8); const shade = Co(lampN, 0.7, 0.8, '#FFF3C4', 0, 2.9, 0, 20); shade.material = MAT('#FFF3C4', { emissive: 0xFFE3A0, emissiveIntensity: 0.5 });
-  const hearts = []; for (let i = 0; i < 3; i++) { const h = G(nook, 0, 3, 0.3); Sp(h, 0.12, '#FF8FB8', -0.08, 0, 0); Sp(h, 0.12, '#FF8FB8', 0.08, 0, 0); const c = Co(h, 0.16, 0.2, '#FF8FB8', 0, -0.12, 0, 12); c.rotation.z = Math.PI; hearts.push(h); }
-  ANIM.push(t => hearts.forEach((h, i) => { const u = (t * 0.35 + i / 3) % 1; h.position.set(0.5 + Math.sin(u * 6 + i) * 0.3, 2.8 + u * 2.2, 0.4); h.scale.setScalar(Math.sin(u * Math.PI) * 1.2); }));
-  hot('xiner', nook, 3.9, '心情選書', '💗', '#FFD6E5', { inside: true });
 
   // ===== 二樓 =====
   bookcase(L, -9.0, FH + 0.25, BK + 0.9, 5.6, 4.6, 4, 0, '#F4D6B8'); bookcase(L, 8.4, FH + 0.25, BK + 0.9, 6.0, 4.6, 4);
@@ -1215,6 +1525,8 @@ function buildScene() {
   [-2.6, 2.6].forEach(x => { const sp = G(av, x, 0, -5.0); Bx(sp, 0.8, 1.8, 0.8, '#FFFFFF', 0, 0.9, 0, 0.2); [0.55, 1.3].forEach((y, i) => { const r = mesh(new THREE.CircleGeometry(0.22 + i * 0.05, 24), MAT('#BBA8FF'), 0, y, 0.41, false); sp.add(r); }); });
   [[-1.3, -2.2, '#FF9EC4'], [1.3, -2.2, '#FFE07A']].forEach(([x, z, c]) => { const s = G(av, x, 0, z); Sp(s, 0.95, c, 0, 0.55, 0, 1.1, 0.6, 1.05); Sp(s, 0.75, c, 0, 1.0, -0.6, 1.05, 0.75, 0.5);
     const hp = G(s, 0, 1.25, 0.1); hp.rotation.x = -0.9; To(hp, 0.32, 0.06, '#5B4636', 0, 0, 0, Math.PI); [-1, 1].forEach(k => Cy(hp, 0.14, 0.14, 0.12, '#8FD3FF', k * 0.32, 0, 0, 16).rotation.z = Math.PI / 2); });
+  { const xr = chibi({ hair: 'bob', clip: 'heart' }); xr.g.position.set(-1.3, 0.5, -1.95); xr.g.rotation.y = Math.PI * 0.84; xr.g.scale.setScalar(0.85); av.add(xr.g); CHARS.xiner = xr; xr.legs.forEach(l => { l.rotation.x = -1.35; }); xr.body.position.y = -0.5; xr.arms.forEach((a, k) => { a.rotation.x = -0.5; a.rotation.z = (k ? -1 : 1) * 0.25; }); }
+  hot('youtube', av, 4.6, '四維 YT 頻道', '▶️', '#FFE0E0', { inside: true });
   const avNotes = []; for (let i = 0; i < 2; i++) { const n = G(av, (i ? 1 : -1) * 2.3, 3.4 + i * 0.6, -4.6); n.scale.setScalar(0.8); Sp(n, 0.14, ['#FF9EC4', '#8FD3FF'][i], 0, 0, 0, 1.2, 0.9, 0.9); Cy(n, 0.03, 0.03, 0.45, ['#FF9EC4', '#8FD3FF'][i], 0.14, 0.22, 0, 6); avNotes.push(n); }
   ANIM.push(t => avNotes.forEach((n, i) => { const u = (t * 0.35 + i / 2) % 1; n.position.set((i ? 1 : -1) * (2.0 + u * 0.6), 2.0 + u * 2.2, -4.6); n.scale.setScalar(Math.sin(u * Math.PI)); }));
   // 電腦檢索區（中）
@@ -1291,7 +1603,7 @@ function buildScene() {
   loft.add(mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(fairy.map(b => b.position.clone().add(new THREE.Vector3(0, 0.18, 0)))), 60, 0.025, 5), MAT('#FFFFFF'), 0, 0, 0, false));
   ANIM.push(t => fairy.forEach((b, i) => { b.rotation.y = t + i; }));
   // 閣樓小畫廊：前後山牆內側掛上 5 幅畫
-  const PY = FH * 3 + 1.9, gallery = G(L, 0, PY, MZ);
+  const PY = FH * 3 + 2.45, gallery = G(L, 0, PY, MZ);
   const paint = (img, w, h, x, y, z, ry) => { const g = G(gallery, x, y - PY, z - MZ); g.rotation.y = ry; Bx(g, w + 0.4, h + 0.4, 0.14, '#B98457', 0, 0, 0, 0.06); Bx(g, w + 0.14, h + 0.14, 0.16, '#FFF4E4', 0, 0, 0.02, 0.03); const m = new THREE.MeshStandardMaterial({ roughness: 0.85 }); const p = mesh(new THREE.PlaneGeometry(w, h), m, 0, 0, 0.12, false); g.add(p); new THREE.TextureLoader().load(img, tx => { tx.encoding = THREE.sRGBEncoding; tx.anisotropy = 4; m.map = tx; m.needsUpdate = true; }); const lampP = G(g, 0, h / 2 + 0.45, 0.25); Bx(lampP, 0.9, 0.12, 0.2, '#FFE07A', 0, 0, 0, 0.05); return g; };
   paint(PAINTINGS[1], 2.4, 2.0, -4.5, PY, BK + 0.28, 0); paint(PAINTINGS[0], 3.0, 2.4, 0, PY + 0.1, BK + 0.28, 0); paint(PAINTINGS[2], 1.9, 2.4, 4.4, PY, BK + 0.28, 0);
   paint(PAINTINGS[3], 2.0, 2.42, -3.3, PY, FR - 0.5, Math.PI); paint(PAINTINGS[4], 2.0, 2.38, 3.3, PY, FR - 0.5, Math.PI);
@@ -1389,13 +1701,20 @@ function buildScene() {
   const ball = G(bb, 3.2, 0.62, 2.6); Sp(ball, 0.42, '#FF8A3D', 0, 0, 0); To(ball, 0.42, 0.025, '#5B3324', 0, 0, 0); To(ball, 0.42, 0.025, '#5B3324', 0, 0, 0).rotation.y = Math.PI / 2; To(ball, 0.42, 0.025, '#5B3324', 0, 0, 0).rotation.x = Math.PI / 2;
   ANIM.push(t => { ball.position.y = 0.62 + Math.abs(Math.sin(t * 3)) * 1.3; ball.rotation.z = -t * 2; });
   // 排球場
-  const VW = 20, VD = 11;
-  const vb = courtBase(15, -28, VW, VD, (c, w, h) => { const s = w / VW; c.fillStyle = '#8EDDC0'; c.fillRect(0, 0, w, h); c.fillStyle = '#FFE9A8'; c.fillRect(10, 10, w - 20, h - 20); c.strokeStyle = '#FFFFFF'; c.lineWidth = 7; c.strokeRect(10, 10, w - 20, h - 20); c.beginPath(); c.moveTo(w / 2, 10); c.lineTo(w / 2, h - 10); c.stroke(); [-1, 1].forEach(k => { c.beginPath(); c.moveTo(w / 2 + k * 3.3 * s, 10); c.lineTo(w / 2 + k * 3.3 * s, h - 10); c.stroke(); }); });
-  [-1, 1].forEach(k => { Cy(vb, 0.14, 0.18, 4.4, '#FFFFFF', 0, 2.5, k * (VD / 2 + 0.8), 10); Sp(vb, 0.2, '#FF8FB8', 0, 4.75, k * (VD / 2 + 0.8)); });
-  const netT = tex(256, 64, (c, w, h) => { c.clearRect(0, 0, w, h); c.strokeStyle = '#FFFFFF'; c.lineWidth = 2; for (let x = 0; x <= w; x += 10) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, h); c.stroke(); } for (let y = 0; y <= h; y += 10) { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); } c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, w, 7); });
-  const vnet = mesh(new THREE.PlaneGeometry(VD + 1.6, 1.3), new THREE.MeshStandardMaterial({ map: netT, transparent: true, alphaTest: 0.3, side: THREE.DoubleSide }), 0, 3.85, 0, false); vnet.rotation.y = Math.PI / 2; vb.add(vnet);
-  const vball = G(vb, -4, 3.2, -1.5); Sp(vball, 0.4, '#FFFFFF', 0, 0, 0); [['#FFE07A', 0], ['#8FD3FF', Math.PI / 3], ['#FF9EC4', -Math.PI / 3]].forEach(([c, r]) => { const b = To(vball, 0.4, 0.07, c, 0, 0, 0); b.rotation.set(Math.PI / 2, r, 0); });
-  ANIM.push(t => { const u = (t * 0.45) % 2, d = u < 1 ? u : 2 - u; vball.position.set(-5 + d * 10, 2.2 + Math.sin(d * Math.PI) * 4.5, -1.5 + Math.sin(t) * 0.8); vball.rotation.x = t * 3; });
+  // 遊戲區：🚁 無人機任務、🏎️ 瘋狂賽車
+  const arc = G(W, 15, 0, -28); Bx(arc, 22, 0.3, 13, '#EFE6D8', 0, 0.12, 0, 0.2);
+  const signT = (txt, col) => tex(384, 96, (c, w, h) => { c.fillStyle = col; rr(c, 4, 4, w - 8, h - 8, 40); c.fill(); c.fillStyle = '#FFFFFF'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 46px ${RF}`; c.fillText(txt, w / 2, h / 2 + 2); });
+  const dp = G(arc, -5.2, 0.3, 0); Cy(dp, 4, 4.2, 0.2, '#3E4A5A', 0, 0.1, 0, 40); To(dp, 3.4, 0.12, '#FFD95A', 0, 0.22, 0).rotation.x = Math.PI / 2;
+  const hT2 = tex(128, 128, (c, w) => { c.fillStyle = '#3E4A5A'; c.fillRect(0, 0, w, w); c.fillStyle = '#FFFFFF'; c.font = '900 80px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('H', 64, 70); }); const hpl = Pl(dp, 5, 5, hT2, 0, 0.22, 0); hpl.rotation.x = -Math.PI / 2;
+  const idr = makeDrone(); idr.scale.setScalar(1.2); dp.add(idr); ANIM.push(t => { idr.position.set(Math.sin(t * 0.7) * 0.8, 3.2 + Math.sin(t * 1.6) * 0.4, 0); idr.rotation.y = t * 0.3; idr.userData.props.forEach((p, i) => p.rotation.y = t * 30 * (i % 2 ? 1 : -1)); });
+  const ds = G(dp, 0, 0, 4.6); [-1.6, 1.6].forEach(x => Cy(ds, 0.07, 0.07, 1.6, '#FFFFFF', x, 0.8, 0, 6)); Bx(ds, 4.2, 1.1, 0.16, '#5AB8F0', 0, 1.9, 0, 0.1); Pl(ds, 4.0, 1.0, signT('🚁 無人機任務', '#5AB8F0'), 0, 1.9, 0.09);
+  hot('drone', dp, 6.2, '無人機任務', '🚁', '#DDF1FF');
+  const rc = G(arc, 5.2, 0.3, 0); const rring = mesh(new THREE.RingGeometry(2.0, 3.9, 48), MAT('#4A4E54'), 0, 0.2, 0, false); rring.rotation.x = -Math.PI / 2; rc.add(rring);
+  [2.0, 3.9].forEach(r => { const cb = mesh(new THREE.TorusGeometry(r, 0.12, 6, 48), MAT('#E8443C'), 0, 0.24, 0, false); cb.rotation.x = Math.PI / 2; rc.add(cb); });
+  const minis = ['#FF5A7A', '#5AB8F0', '#FFC93D'].map(c => { const m = makeCar(c); m.scale.setScalar(0.32); rc.add(m); return m; });
+  ANIM.push(t => minis.forEach((m, i) => { const a = t * (1.1 + i * 0.12) + i * 2.1, r = 2.95 + (i - 1) * 0.45; m.position.set(Math.cos(a) * r, 0.22, Math.sin(a) * r); m.rotation.y = -a; }));
+  const rs = G(rc, 0, 0, 4.6); [-1.6, 1.6].forEach(x => Cy(rs, 0.07, 0.07, 1.6, '#FFFFFF', x, 0.8, 0, 6)); Bx(rs, 4.2, 1.1, 0.16, '#E8443C', 0, 1.9, 0, 0.1); Pl(rs, 4.0, 1.0, signT('🏎️ 瘋狂賽車', '#E8443C'), 0, 1.9, 0.09);
+  hot('race', rc, 4.8, '瘋狂賽車', '🏎️', '#FFE1D0');
   // 球場旁的休息長椅與樹
   const sideBench = (x, z, ry) => { const b = G(W, x, 0, z); b.rotation.y = ry; for (let k = 0; k < 3; k++) Bx(b, 3.2, 0.16, 0.34, '#8FD3FF', 0, 0.75, -0.36 + k * 0.36, 0.06); [-1, 1].forEach(k => Bx(b, 0.16, 0.75, 1.0, '#FFFFFF', k * 1.4, 0.37, 0, 0.05)); };
   sideBench(-14, -19.6, Math.PI); sideBench(15, -20.6, Math.PI);
@@ -1460,20 +1779,6 @@ function buildScene() {
     const su = (t % 6) / 6; wspout.forEach((s, i) => { const u = (su * 3 - i * 0.06); if (u > 0 && u < 1 && ju < 0) { s.position.set(1.2 + Math.sin(i) * 0.3 * u, 1.4 + u * 3.6, Math.cos(i * 2) * 0.6 * u); s.scale.setScalar(0.25 + u * 0.45); s.material.opacity = 0.85 * (1 - u); } else s.material.opacity = 0; }); });
   };
   makeWhale(0, 108, 2.2, 0); makeWhale(0.11, 118, 1.6, 7); makeWhale(-0.1, 99, 1.25, 13);
-  // 海盜船
-  const pship = G(scene), psh = G(pship); psh.scale.setScalar(1.6);
-  const phullS = new THREE.Shape(); phullS.moveTo(-5.5, 1.4); phullS.lineTo(5.8, 1.4); phullS.quadraticCurveTo(5.2, -0.8, 3.6, -1.4); phullS.lineTo(-4.4, -1.4); phullS.quadraticCurveTo(-5.6, -0.6, -5.5, 1.4);
-  const phull = mesh(new THREE.ExtrudeGeometry(phullS, { depth: 3.4, bevelEnabled: true, bevelThickness: 0.25, bevelSize: 0.2, bevelSegments: 3 }), MAT('#9B6A44'), 0, 0, -1.7); psh.add(phull);
-  Bx(psh, 11.0, 0.3, 3.6, '#7A4F30', 0.1, 1.1, 0, 0.1); Bx(psh, 11.2, 0.28, 0.25, '#FFE07A', 0.1, 0.7, 1.95, 0.08); Bx(psh, 11.2, 0.28, 0.25, '#FFE07A', 0.1, 0.7, -1.95, 0.08);
-  for (let i = 0; i < 4; i++) [-1, 1].forEach(k => { Sp(psh, 0.26, '#2B2230', -2.4 + i * 1.6, 0.1, k * 1.98, 1, 1, 0.3); });
-  Bx(psh, 2.6, 1.8, 3.2, '#B88457', -4.0, 2.1, 0, 0.2); Bx(psh, 2.8, 0.25, 3.4, '#7A4F30', -4.0, 3.1, 0, 0.1);
-  [[-0.4, 7.4], [3.0, 5.8]].forEach(([x, h], m) => { Cy(psh, 0.16, 0.2, h, '#6B4528', x, 1.2 + h / 2, 0, 10);
-    const psail = new THREE.PlaneGeometry(1, 1, 6, 6), sp = psail.attributes.position; for (let i = 0; i < sp.count; i++) sp.setZ(i, (0.25 - sp.getX(i) * sp.getX(i)) * 0.6); psail.computeVertexNormals();
-    const s1 = mesh(psail, new THREE.MeshStandardMaterial({ color: '#FFF6E6', side: THREE.DoubleSide, roughness: 0.9 }), x + 0.35, 1.6 + h * 0.55, 0, false); s1.scale.set(3.6 - m, h * 0.62, 1); s1.rotation.y = Math.PI / 2; psh.add(s1);
-    Cy(psh, 0.08, 0.08, 4.2 - m, '#6B4528', x + 0.2, 1.6 + h * 0.86, 0, 6).rotation.x = Math.PI / 2; });
-  const pflagT = tex(128, 80, (c, w, h) => { c.fillStyle = '#2B2230'; c.fillRect(0, 0, w, h); c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(w / 2, 34, 15, 0, 7); c.fill(); c.fillRect(w / 2 - 9, 42, 18, 10); c.fillStyle = '#2B2230'; c.beginPath(); c.arc(w / 2 - 6, 33, 4, 0, 7); c.arc(w / 2 + 6, 33, 4, 0, 7); c.fill(); c.strokeStyle = '#FFFFFF'; c.lineWidth = 5; c.beginPath(); c.moveTo(34, 56); c.lineTo(94, 74); c.moveTo(94, 56); c.lineTo(34, 74); c.stroke(); });
-  const pflag = mesh(new THREE.PlaneGeometry(1.8, 1.1, 6, 1), new THREE.MeshStandardMaterial({ map: pflagT, side: THREE.DoubleSide }), -0.4 + 0.95, 9.3, 0, false); pflag.rotation.y = Math.PI / 2; psh.add(pflag);
-  ANIM.push(t => { const a = -t * 0.032 + 2.2, R = 132; pship.position.set(Math.cos(a) * R, SEA_Y + 0.6 + Math.sin(t * 1.3) * 0.3, Math.sin(a) * R * 0.85); pship.rotation.y = -a + Math.PI; psh.rotation.x = Math.sin(t * 1.1) * 0.06; psh.rotation.z = Math.sin(t * 0.8) * 0.04; pflag.rotation.x = Math.sin(t * 5) * 0.15; });
   // 海怪恐龍（原創角色）
   const dn0 = G(scene), dn = G(dn0); dn0.userData.tag = 'dino'; dn.scale.setScalar(4.4);
   const DG = '#424A4C', DB = '#5E6668', DP = '#D8DCD6';
@@ -1489,11 +1794,15 @@ function buildScene() {
   const dmouth = G(dhead, 2.3, -0.4, 0); const fireL = new THREE.PointLight(0xFF9A3C, 0, 60, 2); dmouth.add(fireL);
   const fls = []; for (let i = 0; i < 40; i++) { const f = mesh(new THREE.IcosahedronGeometry(1, 0), new THREE.MeshBasicMaterial({ color: ['#FF5A2E', '#FF8A2E', '#FFB13B', '#FF6A3D'][i % 4], transparent: true, opacity: 0, depthWrite: false, toneMapped: false }), 0, 0, 0, false); dn0.add(f); fls.push({ f, ph: i / 40, sp: (Math.random() - 0.5) * 0.35, sv: (Math.random() - 0.5) * 0.25 }); }
   let fireT = -20; const mw = new THREE.Vector3(), fwd = new THREE.Vector3();
-  ANIM.push(t => { const a = -2.25 + Math.sin(t * 0.03) * 0.55, R = 218, x = Math.cos(a) * R, z = Math.sin(a) * R * 0.9; const dir = Math.cos(t * 0.035) > 0 ? 1 : -1;
-    dn0.position.set(x, SEA_Y - 7 + Math.abs(Math.sin(t * 1.4)) * 0.8, z); dn0.rotation.y = -a + (dir > 0 ? Math.PI : 0);
-    dlegs.forEach((l, k) => { l.rotation.z = Math.sin(t * 1.4 + k * Math.PI) * 0.35; }); darms.forEach((r, k) => { r.rotation.z = Math.sin(t * 1.4 + k) * 0.3; }); dtail.rotation.y = Math.sin(t * 1.1) * 0.25;
+  const DW = { a: -2.2, r: 84, ta: -1.6, tr: 84, lt: 0, h: 0, pause: 0 }; ENV.dinoFire = () => { fireT = clock.getElapsedTime(); }; hot('dino', dn0, 34, '海怪恐龍', '🦖', '#D9E0DC', { noPin: true });
+  ANIM.push(t => { const ddt = Math.min(0.1, t - DW.lt); DW.lt = t; let da = Math.atan2(Math.sin(DW.ta - DW.a), Math.cos(DW.ta - DW.a));
+    if (DW.pause > 0) DW.pause -= ddt; else if (Math.abs(da) < 0.02 && Math.abs(DW.tr - DW.r) < 0.6) { DW.ta = DW.a + (Math.random() < 0.5 ? -1 : 1) * (0.4 + Math.random() * 1.1); DW.tr = 70 + Math.random() * 26; DW.pause = Math.random() < 0.4 ? 2 + Math.random() * 3 : 0; }
+    else { const st = 4.5 * ddt / DW.r; DW.a += Math.max(-st, Math.min(st, da)); DW.r += Math.max(-3 * ddt, Math.min(3 * ddt, DW.tr - DW.r)); }
+    const x = Math.cos(DW.a) * DW.r, z = Math.sin(DW.a) * DW.r * 0.82, mvx = x - dn0.position.x, mvz = z - dn0.position.z; if (Math.hypot(mvx, mvz) > 0.002) { const hh = -Math.atan2(mvz, mvx); let dh = Math.atan2(Math.sin(hh - DW.h), Math.cos(hh - DW.h)); DW.h += dh * Math.min(1, ddt * 2); }
+    const walking = DW.pause <= 0 ? 1 : 0.15; dn0.position.set(x, SEA_Y - 7 + Math.abs(Math.sin(t * 1.4)) * 0.8 * walking, z); dn0.rotation.y = DW.h;
+    dlegs.forEach((l, k) => { l.rotation.z = Math.sin(t * 1.4 + k * Math.PI) * 0.35 * walking; }); darms.forEach((r, k) => { r.rotation.z = Math.sin(t * 1.4 + k) * 0.3; }); dtail.rotation.y = Math.sin(t * 1.1) * 0.25;
     const fu = t - fireT; dneck.rotation.z = fu < 3.2 ? 0.25 : Math.sin(t * 0.7) * 0.08; dhead.rotation.z = fu < 3.2 ? -0.35 : 0;
-    if (fu > 9 + Math.random() * 0.02) fireT = t;
+    if (fu > 14 + Math.random() * 0.02) fireT = t;
     dn0.updateMatrixWorld(); dmouth.getWorldPosition(mw); fwd.set(1, -0.35, 0).applyQuaternion(dn0.quaternion).normalize();
     const on = fu < 2.6 ? Math.min(1, fu * 4) * Math.min(1, (2.6 - fu) * 3) : 0; fireL.intensity = on * 3.5;
     fls.forEach(o => { const u = (t * 1.6 + o.ph) % 1, d = u * 42; dn0.worldToLocal(o.f.position.copy(mw).addScaledVector(fwd, d).add(new THREE.Vector3(o.sv * d, o.sp * d * 0.6 + u * u * 6, o.sp * d))); o.f.scale.setScalar((0.6 + u * 2.6) / 1); o.f.material.opacity = on * (1 - u * u) * 0.85; o.f.rotation.set(t * 3 + o.ph * 9, t * 2, 0); }); });
@@ -1524,11 +1833,11 @@ function stepFlight() {
   camTarget.lerpVectors(F.t, T.t, e); cam.dist = cam.tDist = F.dist + (T.dist - F.dist) * e; cam.pitch = cam.tPitch = F.pitch + (T.pitch - F.pitch) * e; cam.yaw = cam.tYaw = F.yaw + (T.yaw - F.yaw) * e;
   if (u >= 1) { const d = FLIGHT.done; FLIGHT = null; d && d(); }
 }
-const FLY_D = { pod: 46, portal: 42, gacha: 30, dede: 28, gallery: 26 };
+const FLY_D = { dino: 120, drone: 30, race: 30, pod: 46, portal: 42, gacha: 30, dede: 28, gallery: 26 };
 function flyToHot(id, done) {
   const h = HOTS[id]; const p = h.g.getWorldPosition(new THREE.Vector3()); p.y += h.ay * 0.45;
-  let yaw = cam.yaw; const w = Math.atan2(Math.sin(yaw), Math.cos(yaw)); if (h.inside && Math.abs(w) > 0.6) yaw = cam.yaw - w + Math.sign(w) * 0.35;
-  flyTo({ t: p, dist: FLY_D[id] || 30, pitch: id === 'gallery' ? 0.75 : 0.24, yaw }, done);
+  let yaw = cam.yaw; const w = Math.atan2(Math.sin(yaw), Math.cos(yaw)); if (id === 'dino') { const want = Math.atan2(p.x, p.z), dy = Math.atan2(Math.sin(want - yaw), Math.cos(want - yaw)); yaw += dy; } if (h.inside && Math.abs(w) > 0.6) yaw = cam.yaw - w + Math.sign(w) * 0.35;
+  flyTo({ t: p, dist: FLY_D[id] || 30, pitch: id === 'gallery' ? 0.75 : id === 'dino' ? 0.08 : 0.24, yaw }, done);
 }
 const _ft = new THREE.Vector3();
 function updateCam(t) {
@@ -1586,14 +1895,14 @@ function bubble(id, text) {
 
 // 點到熱點：角色反應 → 開彈窗
 const REACT = {
-  dede: ['汪汪！', 'woof', ['dede']], xiner: ['想看什麼書呢？', 'giggle', ['xiner']], xiaosi: ['一起來自學吧！', 'tap', ['xiaosi']],
+  dede: ['汪汪！', 'woof', ['dede']], xiner: ['想看什麼書呢？', 'giggle', []], youtube: ['一起來看四維頻道！', 'giggle', ['xiner']], dino: ['吼～～～！', 'roar', []], drone: ['無人機待命中！', 'whoosh', []], race: ['引擎發動！', 'tap', []], xiaosi: ['一起來自學吧！', 'tap', ['xiaosi']],
   expo: ['新書展開幕囉！', 'giggle', ['sisi', 'juanmao']], opac: ['嗶！查詢機啟動', 'tap', []], portal: ['咻～傳送中！', 'whoosh', []],
   pod: ['3、2、1，夢想啟航！', 'whoosh', []], board1: ['📌 一樓公告欄', 'pop', []], gallery: ['🖼️ 閣樓小畫廊', 'sparkle', []], board2: ['📌 二樓公告欄', 'pop', []], board3: ['📌 三樓公告欄', 'pop', []], radio: ['ON AIR 📻', 'radio', []], gacha: ['今天的運氣如何？', 'pop', []]
 };
 let busy = false;
 function poke(id) {
   if (busy || $('#dlg').open) return; const r = REACT[id]; if (!r) return;
-  busy = true; SFX[r[1]](); $('#hint').style.opacity = 0;
+  busy = true; SFX[r[1]](); $('#hint').style.opacity = 0; if (id === 'dino' && ENV.dinoFire) ENV.dinoFire();
   (WALK.on ? (f => f()) : (f => flyToHot(id, f)))(() => { bubble(id, r[0]); const t = clock.getElapsedTime(); r[2].forEach(k => CHARS[k] && (CHARS[k].jump = t)); bounceHot(id, t); setTimeout(() => { busy = false; openPanel(id); }, reduceMotion ? 100 : 420); });
 }
 const bounces = {};
@@ -1688,6 +1997,8 @@ const PANELS = {
       <div class="sec"><h3>📗 推薦新書 ${demoTag(CONFIG.expoDemo)}</h3><div class="nb">${E.newBooks.map(b => `<article class="nbk"><div class="cv" style="background:${b.c}">${b.e}</div><div><b>《${esc(b.t)}》</b><dl><dt>作者</dt><dd>${esc(b.a)}</dd><dt>出版</dt><dd>${esc(b.pub)}・${esc(b.y)}</dd><dt>類別</dt><dd>${esc(b.cat)}</dd><dt>適合</dt><dd>${esc(b.who)}</dd></dl><p>${esc(b.intro)}</p></div></article>`).join('')}</div></div>` });
   },
   radio() { renderRadio(0); },
+  drone() { gameLobby('drone'); }, race() { gameLobby('race'); },
+  youtube() { frame({ hc: '#FFE0E0', av: IMG.xiner, tag: '▶️ 三樓視聽區', title: '四維 YouTube 頻道', say: '心兒：我正在看四維的影片！校園活動、成果發表、好書介紹都在這裡，一起來看吧 ❤️', body: `<div class="sec"><a class="card" href="${CONFIG.yt}" target="_blank" rel="noopener" style="background:#FFF1F1;display:flex;gap:12px;align-items:center"><span class="ic" style="font-size:38px">▶️</span><span><b>前往「四維YT」頻道</b><span>在新分頁開啟 YouTube，記得按下訂閱喔！</span></span></a></div><p class="row"><a class="btn" href="${CONFIG.yt}" target="_blank" rel="noopener">▶️ 立即觀看</a></p>` }); },
   gallery() { frame({ hc: '#FFE9C7', av: '🖼️', tag: '🔭 三樓上方・小閣樓', title: '閣樓小畫廊', say: '在星空下的閣樓裡，掛著五幅溫暖的油畫，點畫作可以看大圖！', body: `<div class="sec posters">${PAINTINGS.map((s, i) => `<a class="poster" href="${s}" target="_blank" rel="noopener"><img src="${s}" alt="閣樓畫作 ${i + 1}"><b>${['金色林蔭道', '山野玫瑰', '櫻花天鵝', '海岸百合', '午後巷口'][i]}</b></a>`).join('')}</div>` }); },
   board1() { boardPanel(0); }, board2() { boardPanel(1); }, board3() { boardPanel(2); },
   gacha() { gachaPanel(); }
@@ -1773,10 +2084,12 @@ let gachaAnim = null;
 // =====================================================================
 //  主迴圈
 // =====================================================================
-const clock = new THREE.Clock(); let envTick = 0;
+const clock = new THREE.Clock(); let envTick = 0; let INTRO_ON = true;
 function loop() {
   requestAnimationFrame(loop);
   const t = clock.getElapsedTime();
+  if (INTRO_ON) return;
+  const gdt = Math.min(0.05, t - (GAME.lt || t)); GAME.lt = t; if (GAME.act) { GAME.act.update(gdt, t); renderer.render(GAME.act.S, GAME.cam); return; }
   if (!reduceMotion) ANIM.forEach(f => f(t));
   // 角色呼吸＋跳躍
   Object.values(CHARS).forEach(c => { if (!c.body) return; const j = t - c.jump; const jy = j < 0.6 ? Math.sin(j / 0.6 * Math.PI) * 0.9 : 0;
@@ -1799,7 +2112,7 @@ document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { SFX.pop()
 $('#cface').onclick = () => { SFX.pop(); clockRun = !clockRun; updateClock(); toast(clockRun ? '時間繼續走 ▶' : '時間暫停 ⏸'); };
 updateClock();
 document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = ICON(e.dataset.ic, +(e.dataset.s || 22)); });
-const bs = $('#bSound'); const syncSound = () => { bs.classList.toggle('off', !SFX.on); bs.innerHTML = `${ICON(SFX.on ? 'music' : 'mute', 18)}<span>音樂</span>`; }; syncSound();
+const bs = $('#bSound'); const syncSound = () => { bs.classList.toggle('off', !SFX.on); bs.innerHTML = `${ICON(SFX.on ? 'wave' : 'mute', 18)}<span>海浪</span>`; }; syncSound();
 $('#bWalk').innerHTML = `${ICON('walk', 18)}<span>漫步</span>`;
 $('#bWalk').onclick = () => { SFX.pop(); if (WALK.g) setWalk(!WALK.on); };
 $('#bMe').onclick = () => { SFX.pop(); if (WALK.g) { if (WALK.on) setWalk(false); openSetup(); } };
@@ -1809,20 +2122,24 @@ $('#nm').addEventListener('keydown', e => { if (e.key === 'Enter') closeSetup(tr
 addEventListener('pointerdown', e => { if (!e.target.closest('#bSound')) SFX.music(); }, { once: false, passive: true });
 bs.onclick = () => { SFX.toggle(); syncSound(); };
 $('#bView').onclick = () => { SFX.pop(); preset(true); };
-addEventListener('resize', () => { if (!renderer) return; renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; preset(); });
+addEventListener('resize', () => { if (!renderer) return; GAME.cam.aspect = innerWidth / innerHeight; GAME.cam.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; preset(); });
 function start() {
   $('#ips').innerHTML = [['xiner', '心兒', '#FF9EC4'], ['xiaosi', '小四', '#8EDDC0'], ['sisi', '思思', '#BBA8FF'], ['juanmao', '捲毛', '#8FD3FF'], ['dede', 'DeDe', '#FFD95A']].map(([k, n, c], i) => `<div class="ip" style="--i:${i};--c:${c}"><b style="background-image:url(${IMG[k]})"></b>${n}</div>`).join('');
   if (!renderer) { $('#intro').remove(); $('#stage').innerHTML = '<div class="nogl">😢 你的瀏覽器不支援 3D 顯示<br>請用下方按鈕使用圖書館的各項功能！</div>'; return; }
+  $('#ititle').innerHTML = [...'SWSH 閱讀基地'].map((c, i) => c === ' ' ? '<span class="sp"> </span>' : `<span style="--i:${i}">${c}</span>`).join('');
+  (async () => { const lines = [['tw1', '這裡是四維高中的立體閱讀小島。'], ['tw2', '點點場景裡的物件與小夥伴，聽一集廣播、找一本好書，給自己十分鐘的靈感充電時光吧！']], wait = ms => new Promise(r => setTimeout(r, reduceMotion ? 0 : ms));
+    await wait(900); for (const [id, s] of lines) { const el = $('#' + id); if (!el) return; el.classList.add('typing'); for (const ch of s) { if (!el.isConnected) return; el.textContent += ch; await wait('，。！、'.includes(ch) ? 260 : 55); } el.classList.remove('typing'); await wait(250); }
+    if (!$('#tw2')) return; $('#tw2').innerHTML = $('#tw2').textContent.replace('聽一集廣播', '<mark>聽一集廣播</mark>').replace('找一本好書', '<mark>找一本好書</mark>').replace('十分鐘', '<mark>十分鐘</mark>'); const it = $('#intro'); if (it) it.classList.add('typed'); })();
   const prog = $('#prog'), pst = $('#pst'); prog.style.width = '18%';
   requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(() => {
-    buildScene(); buildPins(); setupControls(); setupWalkInput(); buildPlayer(); buildPlay(); preset();
+    buildScene(); buildPins(); setupControls(); setupWalkInput(); setupGameInput(); buildPlayer(); buildPlay(); preset();
     cam.yaw = cam.tYaw + 0.9; cam.pitch = cam.tPitch + 0.4; cam.dist = cam.tDist * 1.7; requestAnimationFrame(loop);
     prog.style.width = '100%'; pst.textContent = '小島搭建完成！'; setTimeout(() => $('#intro').classList.add('ready'), 450);
   }, 120)));
-  $('#go').onclick = () => { SFX.sparkle(); SFX.music(); const it = $('#intro'); it.classList.add('out'); setTimeout(() => it.remove(), 950); openSetup(); };
+  $('#go').onclick = () => { INTRO_ON = false; SFX.sparkle(); SFX.music(); const it = $('#intro'); it.classList.add('out'); setTimeout(() => it.remove(), 950); openSetup(); };
 }
 (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]) : Promise.resolve()).then(start);
-window.__lib = { scene, cam, camera, poke, HOTS, CHARS, target: camTarget, goFloor, WALK, setWalk, openSetup, closeSetup, BALL, action };
+window.__lib = { GAME, startGame, exitGame, scene, cam, camera, poke, HOTS, CHARS, target: camTarget, goFloor, WALK, setWalk, openSetup, closeSetup, BALL, action };
 </script>
 </body>
 </html>
