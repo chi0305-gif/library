@@ -184,6 +184,87 @@ details.script { background: #fff; border-radius: 14px; padding: 10px 14px; } de
   .quiz .opts { grid-template-columns: 1fr; } .wall { grid-template-columns: repeat(2, 1fr); }
   .hint { font-size: 12px; bottom: calc(84px + env(safe-area-inset-bottom)); }
 }
+/* ===== 介面質感優化：柔霧玻璃、細緻陰影 ===== */
+:root { --glass: rgba(255, 252, 245, .78); --glass-b: rgba(255, 255, 255, .9); --soft: 0 1px 0 rgba(255, 255, 255, .9) inset, 0 12px 32px -8px rgba(110, 70, 40, .28), 0 2px 6px rgba(110, 70, 40, .08); }
+.brand, .tbtn, .dock { background: var(--glass); -webkit-backdrop-filter: blur(16px) saturate(1.5); backdrop-filter: blur(16px) saturate(1.5); border: 1.5px solid var(--glass-b); box-shadow: var(--soft); transition: background .6s, color .6s, border-color .6s; }
+.brand { padding: 5px 18px 5px 5px; }
+.brand .logo { background: linear-gradient(135deg, #FFD6E5, #FFF3C4 45%, #D7F5EA); box-shadow: inset 0 0 0 3px #fff, 0 3px 8px rgba(255, 143, 184, .35); }
+.brand h1 { background: linear-gradient(90deg, #6B4A36, #C2577E 60%, #6B4A36); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tbtn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px 7px 9px; font-size: 13.5px; }
+.tbtn:hover { transform: translateY(-2px); box-shadow: 0 1px 0 #fff inset, 0 16px 30px -10px rgba(110, 70, 40, .35); }
+.brand h1 { white-space: nowrap; } .tbtn i { display: contents; }
+@media (max-width: 640px) { .brand h1 { font-size: 15px; } .brand small { display: none; } .tbtn { padding: 7px 9px; } .top { gap: 6px; } .tools { gap: 5px; } }
+.svgi { display: block; flex: 0 0 auto; overflow: visible; }
+.dock { gap: 1px; padding: 5px 7px; border-radius: 24px; }
+.dock .ic { width: 30px; height: 30px; border-radius: 11px; display: grid; place-items: center; background: var(--tile, #FFF3E6); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .06), inset 0 1px 0 rgba(255, 255, 255, .9); transition: transform .25s cubic-bezier(.3, 1.6, .5, 1); }
+.dock button:hover { background: transparent; } .dock button:hover .ic { transform: translateY(-3px) scale(1.08) rotate(-4deg); }
+.dock button:active .ic { transform: scale(.92); }
+.dock .tb.on { background: transparent; } .dock .tb.on .ic { box-shadow: 0 0 0 2.5px #FFD95A, inset 0 -2px 0 rgba(0, 0, 0, .06); }
+.pin { background: rgba(255, 252, 245, .92); border: 1.5px solid #fff; box-shadow: 0 6px 14px -4px rgba(110, 70, 40, .35); }
+.sheet { border: 1.5px solid #fff; background: linear-gradient(#FFFDF7, #FFF8EC); box-shadow: 0 30px 80px -20px rgba(80, 50, 30, .5), 0 0 0 6px rgba(255, 255, 255, .35); }
+.sh-head { background: linear-gradient(135deg, var(--hc, #FFD6E5), #FFFFFF 140%); }
+.card, .book, .nbk, .poster { box-shadow: 0 6px 16px -10px rgba(110, 70, 40, .35); }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #FF8FB8; outline-offset: 2px; }
+/* 夜晚介面 */
+body.night .brand, body.night .tbtn, body.night .dock { background: rgba(32, 38, 74, .66); border-color: rgba(255, 255, 255, .16); color: #EEE9FF; box-shadow: 0 12px 32px -8px rgba(0, 0, 20, .55); }
+body.night .brand small, body.night .dock button, body.night .ctxt small { color: #C9C2EA; } body.night .ctxt b, body.night .dock .tb b { color: #FFF6DA; }
+body.night .brand h1 { background: linear-gradient(90deg, #FFF3C4, #FFC2DA); -webkit-background-clip: text; background-clip: text; }
+body.night .pin { background: rgba(40, 46, 86, .85); color: #F4F0FF; border-color: rgba(255, 255, 255, .25); }
+body.night .dsep { background: rgba(255, 255, 255, .15); }
+/* 名牌、搖桿 */
+.ntag { position: fixed; left: 0; top: 0; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #FF8FB8, #FFB48F); color: #fff; font: 700 12px var(--font); padding: 3px 10px; border-radius: 999px; box-shadow: 0 4px 10px rgba(200, 80, 120, .35); white-space: nowrap; transition: opacity .2s; }
+.ntag.mate { background: rgba(255, 252, 245, .92); color: var(--ink); box-shadow: 0 3px 8px rgba(110, 70, 40, .25); font-size: 11px; }
+.bubble.sm { font-size: 14px; padding: 5px 11px; }
+#joy, #act { position: fixed; z-index: 5; display: none; touch-action: none; }
+body.walking #joy, body.walking #act { display: grid; }
+#joy { left: 22px; bottom: calc(96px + env(safe-area-inset-bottom)); width: 112px; height: 112px; border-radius: 50%; place-items: center; background: rgba(255, 252, 245, .55); border: 2px solid rgba(255, 255, 255, .9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: var(--soft); }
+#joy i { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #FFB7CF, #FF8FB8); box-shadow: 0 4px 0 #E0679A, inset 0 2px 0 rgba(255, 255, 255, .6); transition: transform .05s; }
+#act { right: 22px; bottom: calc(104px + env(safe-area-inset-bottom)); width: 78px; height: 78px; border-radius: 50%; border: 3px solid #fff; place-items: center; background: linear-gradient(135deg, #FFE07A, #FFB48F); box-shadow: 0 5px 0 #E59A62, var(--soft); font: 900 13px var(--font); color: #6B4A36; line-height: 1.15; text-align: center; }
+#act:active { transform: translateY(3px); box-shadow: 0 2px 0 #E59A62; }
+@media (pointer: fine) { #joy { display: none !important; } #act { width: 66px; height: 66px; font-size: 12px; } }
+/* ===== 開場畫面 ===== */
+#intro { position: fixed; inset: 0; z-index: 70; overflow: hidden; display: grid; place-items: center; background: linear-gradient(170deg, #8ED1FC 0%, #BDE6FF 35%, #FFE3EC 72%, #FFF4D6 100%); transition: opacity .9s, transform .9s; }
+#intro.out { opacity: 0; transform: scale(1.06); pointer-events: none; }
+#intro .cl { position: absolute; width: 220px; height: 70px; border-radius: 999px; background: #fff; opacity: .9; filter: drop-shadow(0 8px 14px rgba(120, 150, 190, .25)); animation: drift linear infinite; }
+#intro .cl::before, #intro .cl::after { content: ""; position: absolute; background: #fff; border-radius: 50%; }
+#intro .cl::before { width: 96px; height: 96px; left: 34px; top: -48px; } #intro .cl::after { width: 70px; height: 70px; left: 112px; top: -30px; }
+@keyframes drift { from { transform: translateX(-30vw) scale(var(--s, 1)); } to { transform: translateX(130vw) scale(var(--s, 1)); } }
+#intro .isl { position: absolute; left: 50%; bottom: -12vh; width: min(120vw, 1100px); height: 38vh; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(ellipse at 50% 20%, #B9ECA6, #8FD88A 55%, #77C27A); box-shadow: 0 -10px 40px rgba(255, 255, 255, .5) inset; }
+#intro .float { position: absolute; font-size: 34px; animation: bob 4s ease-in-out infinite; filter: drop-shadow(0 6px 8px rgba(110, 70, 40, .18)); }
+@keyframes bob { 50% { transform: translateY(-16px) rotate(6deg); } }
+#intro .spark { position: absolute; width: 10px; height: 10px; background: #fff; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: tw 2.4s ease-in-out infinite; }
+@keyframes tw { 50% { transform: scale(.3) rotate(45deg); opacity: .3; } }
+#intro .hero { position: relative; text-align: center; padding: 30px 26px 26px; width: min(560px, 92vw); border-radius: 36px; background: rgba(255, 252, 245, .62); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); border: 1.5px solid rgba(255, 255, 255, .95); box-shadow: 0 40px 90px -30px rgba(110, 70, 40, .45); animation: rise 1s cubic-bezier(.2, 1.3, .4, 1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(40px) scale(.94); } }
+#intro .kick { display: inline-flex; align-items: center; gap: 8px; font: 900 11.5px var(--font); letter-spacing: .28em; color: #C2577E; background: #fff; padding: 5px 14px; border-radius: 999px; box-shadow: 0 4px 10px rgba(194, 87, 126, .15); }
+#intro h2 { margin: 14px 0 4px; font: 400 clamp(36px, 8.5vw, 60px)/1.15 var(--round); letter-spacing: .06em; color: #6B4A36; }
+#intro h2 span { display: inline-block; animation: hop 2.8s ease-in-out infinite; animation-delay: calc(var(--i) * .12s); text-shadow: 0 4px 0 #FFD6E5, 0 8px 18px rgba(255, 143, 184, .35); }
+@keyframes hop { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-12px) rotate(-3deg); } }
+#intro .sub { margin: 0 0 18px; font-weight: 700; color: #8A7260; font-size: 15px; letter-spacing: .08em; }
+#intro .ips { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+#intro .ip { width: 62px; text-align: center; font: 700 11.5px var(--font); color: #8A7260; animation: bob 3.2s ease-in-out infinite; animation-delay: calc(var(--i) * .3s); }
+#intro .ip b { display: block; width: 58px; height: 58px; margin: 0 auto 4px; border-radius: 50%; background: #fff center/cover; border: 3px solid #fff; box-shadow: 0 6px 14px -4px rgba(110, 70, 40, .35), 0 0 0 3px var(--c); }
+#intro .bar { height: 12px; border-radius: 99px; background: rgba(255, 255, 255, .8); overflow: hidden; box-shadow: inset 0 2px 4px rgba(110, 70, 40, .12); }
+#intro .bar i { display: block; height: 100%; width: 0; border-radius: 99px; background: linear-gradient(90deg, #FF9EC4, #FFD95A, #8EDDC0, #8FD3FF); background-size: 200% 100%; animation: flow 2s linear infinite; transition: width .4s; }
+@keyframes flow { to { background-position: -200% 0; } }
+#intro .status { margin: 8px 0 0; font-size: 12.5px; font-weight: 700; color: #8A7260; }
+#intro .go { margin-top: 4px; display: none; font: 900 18px var(--font); color: #fff; border: 0; padding: 15px 38px; border-radius: 999px; background: linear-gradient(135deg, #FF8FB8, #FFB48F); box-shadow: 0 6px 0 #E0679A, 0 16px 30px -10px rgba(224, 103, 154, .6); animation: pulse 1.8s ease-in-out infinite; }
+#intro .go:active { transform: translateY(4px); box-shadow: 0 2px 0 #E0679A; }
+@keyframes pulse { 50% { transform: scale(1.05); } }
+#intro.ready .go { display: inline-flex; } #intro.ready .loadbox { display: none; }
+/* ===== 建立角色 ===== */
+#setup { position: fixed; z-index: 40; right: 4vw; top: 50%; transform: translate(30px, -50%); opacity: 0; pointer-events: none; width: min(380px, 92vw); padding: 22px 20px 20px; border-radius: 30px; background: rgba(255, 252, 245, .86); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); border: 1.5px solid #fff; box-shadow: 0 30px 80px -24px rgba(80, 50, 30, .5); transition: opacity .5s, transform .5s cubic-bezier(.2, 1.3, .4, 1); }
+#setup.show { opacity: 1; transform: translate(0, -50%); pointer-events: auto; }
+#setup h3 { margin: 0; font: 400 24px var(--round); } #setup p.s { margin: 4px 0 14px; font-size: 13px; font-weight: 700; color: var(--ink2); }
+#setup label { display: block; font: 900 12px var(--font); color: var(--ink2); letter-spacing: .08em; margin: 0 0 6px; }
+#setup input { width: 100%; font: 700 17px var(--font); color: var(--ink); padding: 11px 14px; border-radius: 16px; border: 2px solid var(--line); background: #fff; outline: none; } #setup input:focus { border-color: #FF8FB8; }
+#looks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0 16px; }
+.look { border: 2px solid var(--line); background: #fff; border-radius: 18px; padding: 6px 4px 5px; font: 700 11px var(--font); color: var(--ink2); transition: transform .15s; }
+.look svg { width: 46px; height: 46px; display: block; margin: 0 auto 2px; } .look:hover { transform: translateY(-2px); }
+.look.on { border-color: #FF8FB8; background: #FFF1F6; color: var(--ink); box-shadow: 0 0 0 3px rgba(255, 143, 184, .25); }
+#setup .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } #setup .row2 .btn { justify-content: center; }
+@media (max-width: 640px) { #setup { left: 0; right: 0; top: auto; bottom: 0; width: 100%; border-radius: 26px 26px 0 0; transform: translateY(40px); padding-bottom: calc(18px + env(safe-area-inset-bottom)); } #setup.show { transform: none; } #looks { grid-template-columns: repeat(6, 1fr); gap: 5px; } .look span { display: none; } .look svg { width: 38px; height: 38px; } #intro .ip { width: 50px; } #intro .ip b { width: 46px; height: 46px; } }
+
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
@@ -193,34 +274,51 @@ details.script { background: #fff; border-radius: 14px; padding: 10px 14px; } de
 <div id="flash"></div>
 
 <header class="top">
-  <div class="brand"><div class="logo">📚</div><div><h1>四維立體圖書館</h1><small>SWSH LIBRARY ISLAND<b>・花蓮四維高中圖資中心</b></small></div></div>
+  <div class="brand"><div class="logo" data-ic="book" data-s="28"></div><div><h1>四維立體圖書館</h1><small>SWSH LIBRARY ISLAND<b>・花蓮四維高中圖資中心</b></small></div></div>
   <div class="tools">
-    <button class="tbtn" id="bSound" type="button" aria-label="音樂開關">🎵<span>音樂</span></button>
-    <button class="tbtn" id="bView" type="button" aria-label="重設視角">🎥<span>視角</span></button>
+    <button class="tbtn" id="bWalk" type="button" aria-label="漫步或導覽模式"></button>
+    <button class="tbtn" id="bMe" type="button" aria-label="我的角色"><i data-ic="me" data-s="18"></i><span>角色</span></button>
+    <button class="tbtn" id="bSound" type="button" aria-label="音樂開關"></button>
+    <button class="tbtn" id="bView" type="button" aria-label="重設視角"><i data-ic="cam" data-s="18"></i><span>視角</span></button>
   </div>
 </header>
 
 <nav class="dock" aria-label="圖書館功能">
   <div class="clockbox"><button type="button" class="cface" id="cface" title="暫停／繼續時間" aria-label="暫停或繼續時間"><i class="hh"></i><i class="mm"></i></button><div class="ctxt"><small id="ctag">島嶼時間</small><b id="ctime">--:--</b><small id="cper"></small></div></div>
-  <button type="button" class="tb" data-t="12"><b>12</b>白天</button>
-  <button type="button" class="tb" data-t="16"><b>16</b>雷雨</button>
-  <button type="button" class="tb" data-t="21"><b>21</b>夜晚</button>
+  <button type="button" class="tb" data-t="12"><i class="ic" style="--tile:#FFF6D6" data-ic="sun"></i>白天</button>
+  <button type="button" class="tb" data-t="21"><i class="ic" style="--tile:#ECE6FF" data-ic="moon"></i>夜晚</button>
   <span class="dsep"></span>
-  <button type="button" data-open="dede"><b>🐶</b>開館時間</button>
-  <button type="button" data-open="opac"><b>🔍</b>館藏查詢</button>
-  <button type="button" data-open="xiner"><b>💗</b>心情選書</button>
-  <button type="button" data-open="xiaosi"><b>📱</b>數位閱讀</button>
-  <button type="button" data-open="portal"><b>🌀</b>數位資源</button>
-  <button type="button" data-open="pod"><b>🚀</b>夢想艙</button>
-  <button type="button" data-open="expo"><b>🎨</b>主題書展</button>
-  <button type="button" data-open="radio"><b>📻</b>廣播電台</button>
-  <button type="button" data-open="gacha"><b>🎁</b>幸運書籤</button>
+  <button type="button" data-open="dede"><i class="ic" style="--tile:#FFF3C4" data-ic="dede"></i>開館時間</button>
+  <button type="button" data-open="opac"><i class="ic" style="--tile:#DDF1FF" data-ic="opac"></i>館藏查詢</button>
+  <button type="button" data-open="xiner"><i class="ic" style="--tile:#FFE4EE" data-ic="xiner"></i>心情選書</button>
+  <button type="button" data-open="xiaosi"><i class="ic" style="--tile:#DDF7EE" data-ic="xiaosi"></i>數位閱讀</button>
+  <button type="button" data-open="portal"><i class="ic" style="--tile:#EEE8FF" data-ic="portal"></i>數位資源</button>
+  <button type="button" data-open="pod"><i class="ic" style="--tile:#FFF0F5" data-ic="pod"></i>夢想艙</button>
+  <button type="button" data-open="expo"><i class="ic" style="--tile:#FFF6DA" data-ic="expo"></i>主題書展</button>
+  <button type="button" data-open="radio"><i class="ic" style="--tile:#FFEDE3" data-ic="radio"></i>廣播電台</button>
+  <button type="button" data-open="gacha"><i class="ic" style="--tile:#FFE9F1" data-ic="gacha"></i>幸運書籤</button>
 </nav>
 <div class="hint" id="hint">👆 點點看角色和物件！拖曳旋轉・雙指縮放</div>
 
 <dialog id="dlg"><div class="sheet" id="sheet"></div></dialog>
 
-<div id="loading"><div class="card"><div class="logo">📚</div><h2>四維立體圖書館</h2><p>小島正在搭建中⋯⋯</p></div></div>
+<div id="intro" aria-label="開場畫面">
+  <div class="cl" style="top:9%;animation-duration:46s;animation-delay:-8s;--s:1.1"></div><div class="cl" style="top:24%;animation-duration:62s;animation-delay:-30s;--s:.7"></div><div class="cl" style="top:58%;animation-duration:54s;animation-delay:-18s;--s:.85"></div><div class="cl" style="top:4%;animation-duration:70s;animation-delay:-50s;--s:.55"></div>
+  <div class="isl"></div>
+  <span class="float" style="left:8%;top:22%">📚</span><span class="float" style="right:9%;top:18%;animation-delay:-1s">🎈</span><span class="float" style="left:14%;bottom:20%;animation-delay:-2s">✏️</span><span class="float" style="right:13%;bottom:24%;animation-delay:-3s">🌸</span><span class="float" style="left:46%;top:6%;animation-delay:-1.6s;font-size:26px">⭐</span>
+  <i class="spark" style="left:22%;top:12%"></i><i class="spark" style="left:78%;top:34%;animation-delay:-.8s"></i><i class="spark" style="left:30%;top:70%;animation-delay:-1.4s"></i><i class="spark" style="left:66%;top:10%;animation-delay:-2s"></i><i class="spark" style="left:88%;top:62%;animation-delay:-.4s"></i>
+  <div class="hero">
+    <span class="kick"><span data-ic="book" data-s="16"></span>SWSH LIBRARY ISLAND</span>
+    <h2><span style="--i:0">四</span><span style="--i:1">維</span><span style="--i:2">立</span><span style="--i:3">體</span><span style="--i:4">圖</span><span style="--i:5">書</span><span style="--i:6">館</span></h2>
+    <p class="sub">花蓮四維高中・一座會呼吸的微縮圖書館小島</p>
+    <div class="ips" id="ips"></div>
+    <div class="loadbox"><div class="bar"><i id="prog"></i></div><p class="status" id="pst">小島搭建中⋯</p></div>
+    <button class="go" id="go" type="button">✨ 進入小島</button>
+  </div>
+</div>
+<section id="setup" aria-label="建立角色"><h3>建立你的小島角色</h3><p class="s">取個名字、選個造型，就能在小島上散步、和同學踢球！</p><label for="nm">我的名字</label><input id="nm" maxlength="8" placeholder="例如：小維" autocomplete="off"><div id="looks"></div><div class="row2"><button class="btn" id="sWalk" type="button">🚶 開始漫步</button><button class="btn alt" id="sTour" type="button">🗺️ 自由參觀</button></div></section>
+<div id="joy" aria-label="移動搖桿"><i></i></div><button id="act" type="button" aria-label="踢球、投籃或跳">⚽<br>踢球・跳</button>
+<div class="ntag" id="ntag"></div>
 
 <script>__THREE_JS__</script>
 <script>const AUDIO = { ep01: '__AUDIO_ep01__' };</script>
@@ -524,23 +622,23 @@ function applyEnv(m, time) {
   const k = sampleKF(m), s = sstep(955, 965, m) * (1 - sstep(1015, 1025, m)), n = Math.max(k.night, s * 0.7);
   ENV.f = { night: k.night, storm: s };
   const dir = sunDir(m);
-  const U = ENV.sky.uniforms; U.uTop.value.copy(k.top).lerp(STORM_TOP, s * 0.85); U.uHorizon.value.copy(k.hor).lerp(STORM_HOR, s * 0.85); U.uSun.value.copy(k.sun).multiplyScalar(1 - s); U.uSunDir.value.copy(dir); U.uNight.value = k.night * (1 - s); U.uTime.value = time;
+  const U = ENV.sky.uniforms; U.uTop.value.copy(k.top).multiplyScalar(1 - 0.42 * k.night).lerp(STORM_TOP, s * 0.85); U.uHorizon.value.copy(k.hor).multiplyScalar(1 - 0.48 * k.night).lerp(STORM_HOR, s * 0.85); U.uSun.value.copy(k.sun).multiplyScalar(1 - s); U.uSunDir.value.copy(dir); U.uNight.value = k.night * (1 - s); U.uTime.value = time;
   scene.fog.color.copy(U.uHorizon.value);
-  ENV.water.uniforms.uLight.value.copy(k.water); ENV.water.uniforms.uDeep.value.copy(k.water).multiply(_c.setRGB(0.68, 0.8, 0.86)); ENV.water.uniforms.uTime.value = time;
-  ENV.sun.color.copy(k.sun); ENV.sun.intensity = k.sunI * SUN_K * (1 - 0.55 * s); ENV.sun.position.copy(dir).multiplyScalar(100);
-  ENV.hemi.color.copy(k.hs); ENV.hemi.groundColor.copy(k.hg); ENV.hemiBase = k.hI * HEMI_K * (1 - 0.25 * s);
+  ENV.water.uniforms.uLight.value.copy(k.water).multiplyScalar(1 - 0.42 * k.night); ENV.water.uniforms.uDeep.value.copy(k.water).multiply(_c.setRGB(0.68, 0.8, 0.86)); ENV.water.uniforms.uTime.value = time;
+  ENV.sun.color.copy(k.sun); ENV.sun.intensity = k.sunI * SUN_K * (1 - 0.55 * s) * (1 - 0.55 * k.night); renderer.toneMappingExposure = 0.92 - 0.3 * k.night; if ((k.night > 0.5) !== ENV.nightUI) { ENV.nightUI = k.night > 0.5; document.body.classList.toggle('night', ENV.nightUI); } ENV.sun.position.copy(dir).multiplyScalar(100);
+  ENV.hemi.color.copy(k.hs); ENV.hemi.groundColor.copy(k.hg); ENV.hemiBase = k.hI * HEMI_K * (1 - 0.25 * s) * (1 - 0.5 * k.night);
   ENV.fill.intensity = 0.1 + 0.2 * (1 - k.night);
-  ENV.warm.forEach((l, i) => { l.intensity = ENV.warmBase[i] * (1 + 1.8 * n); });
-  ENV.lampLights.forEach(l => { l.intensity = 1.3 * n; }); ENV.front.intensity = 0.9 * n;
-  ENV.glass.emissiveIntensity = n * 3.2; ENV.glass.opacity = 0.16 + 0.3 * n;
-  ENV.bulbs.forEach(b => { b.emissiveIntensity = 0.4 + n * 3.2; });
-  if (ENV.rimMat) ENV.rimMat.emissiveIntensity = 0.15 + n * 3.2;
-  if (ENV.poolMat) ENV.poolMat.opacity = 0.85 * n;
-  ENV.spills.forEach(sp => { sp.opacity = 0.6 * n; });
-  ENV.glows.forEach(g => { g.m.emissiveIntensity = g.base * (1 + 1.4 * n); });
+  ENV.warm.forEach((l, i) => { l.intensity = ENV.warmBase[i] * (1 + 0.6 * n); });
+  ENV.lampLights.forEach(l => { l.intensity = 0.6 * n; }); ENV.front.intensity = 0.3 * n;
+  ENV.glass.emissiveIntensity = n * 1.3; ENV.glass.opacity = 0.16 + 0.12 * n;
+  ENV.bulbs.forEach(b => { b.emissiveIntensity = 0.3 + n * 1.4; });
+  if (ENV.rimMat) ENV.rimMat.emissiveIntensity = 0.1 + n * 1.1;
+  if (ENV.poolMat) ENV.poolMat.opacity = 0.45 * n;
+  ENV.spills.forEach(sp => { sp.opacity = 0.28 * n; });
+  ENV.glows.forEach(g => { g.m.emissiveIntensity = g.base * (1 + 0.35 * n); });
   ENV.mtn.forEach(o => o.m.color.copy(o.base).lerp(ENV.mtnNight, k.night * 0.7));
   CLOUD_MATS.forEach(c => { c.color.copy(ENV.cloudW).lerp(ENV.cloudNight, k.night * 0.8).lerp(ENV.cloudStorm, s); c.emissiveIntensity = 0.12 * (1 - k.night * 0.8); });
-  ENV.moon.material.opacity = k.night * (1 - s); ENV.moonGlow.material.opacity = 0.18 * k.night * (1 - s);
+  ENV.moon.material.opacity = k.night * (1 - s); if (ENV.sunD) ENV.sunD.visible = k.night < 0.6; ENV.moonGlow.material.opacity = 0.18 * k.night * (1 - s);
   ENV.stormMat.opacity = 0.92 * s; ENV.stormG.visible = s > 0.01;
 }
 let nextStrike = 0, boltT = -9, lastWT = 0;
@@ -569,9 +667,157 @@ function updateClock() {
   document.querySelectorAll('[data-t]').forEach(b => b.classList.toggle('on', Math.abs(((h - +b.dataset.t) + 36) % 24 - 12) < 0.5));
 }
 
+// ---- 原創可愛圖示（SVG） ----
+const IC_SVG = {
+  dede: '<circle cx="9" cy="9" r="4.5" fill="#C98A4E"/><circle cx="23" cy="9" r="4.5" fill="#C98A4E"/><circle cx="16" cy="17.5" r="10.5" fill="#FFE9A8"/><circle cx="16" cy="17.5" r="7.6" fill="#FFFDF4"/><path d="M16 12.5v5l3.4 2.2" fill="none" stroke-width="2.2"/><circle cx="16" cy="17.5" r="1.3" fill="#5B4636" stroke="none"/><circle cx="10.6" cy="21" r="1.3" fill="#FFA9B8" stroke="none"/><circle cx="21.4" cy="21" r="1.3" fill="#FFA9B8" stroke="none"/>',
+  opac: '<rect x="4" y="6" width="14" height="19" rx="3" fill="#FFB7CF"/><path d="M8 11h6M8 15h4" stroke-width="1.8"/><circle cx="19.5" cy="17.5" r="6.2" fill="#DDF1FF"/><path d="M24 22l4.5 4.5" stroke-width="3"/><path d="M17 15.5a3 3 0 0 1 3-2" fill="none" stroke="#FFFFFF" stroke-width="1.6"/>',
+  xiner: '<path d="M16 27C8 21 4.5 17 4.5 12A5.8 5.8 0 0 1 16 9.6 5.8 5.8 0 0 1 27.5 12c0 5-3.5 9-11.5 15z" fill="#FF9EC4"/><circle cx="12.4" cy="14.5" r="1.3" fill="#5B4636" stroke="none"/><circle cx="19.6" cy="14.5" r="1.3" fill="#5B4636" stroke="none"/><path d="M14.3 17.6q1.7 1.6 3.4 0" fill="none" stroke-width="1.6"/><path d="M9 10.6a3 3 0 0 1 3-1.6" fill="none" stroke="#FFFFFF" stroke-width="1.6"/>',
+  xiaosi: '<rect x="6" y="4" width="20" height="25" rx="4" fill="#8EDDC0"/><rect x="9" y="7.5" width="14" height="16" rx="2" fill="#F4FFFA"/><path d="M16 11l1.3 2.7 3 .4-2.2 2 .6 2.9L16 17.6 13.3 19l.6-2.9-2.2-2 3-.4z" fill="#FFE07A" stroke-width="1.2"/><circle cx="16" cy="26.3" r="1" fill="#5B4636" stroke="none"/>',
+  portal: '<circle cx="16" cy="16" r="11.5" fill="#D9CCFF"/><path d="M16 16m-6 0a6 6 0 1 1 6 6 3.5 3.5 0 1 1-3.5-3.5 1.6 1.6 0 1 1 1.6 1.6" fill="none" stroke="#7C64C9" stroke-width="2"/><path d="M25.5 5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" fill="#FFE07A" stroke-width="1"/>',
+  pod: '<rect x="3.5" y="9" width="25" height="14" rx="7" fill="#FFFFFF"/><path d="M10.5 9a7 7 0 0 0 0 14z" fill="#FF9EC4"/><path d="M21.5 9a7 7 0 0 1 0 14z" fill="#8EDDC0"/><circle cx="16" cy="16" r="3.4" fill="#BEE9FF" stroke-width="1.8"/><path d="M12 25.5l-2 3M20 25.5l2 3" stroke-width="2"/>',
+  expo: '<path d="M16 4.5C8.5 4.5 4 9.6 4 15.6c0 6.4 5.5 11 11 11 2.4 0 2.6-1.8 1.6-3-.9-1.1-.4-2.9 1.4-2.9h3.4c3.8 0 6.6-2.6 6.6-6.2 0-5.4-5.5-10-12-10z" fill="#FFE9A8"/><circle cx="10.5" cy="14" r="2" fill="#FF8FB8" stroke="none"/><circle cx="14.5" cy="9.5" r="2" fill="#8FD3FF" stroke="none"/><circle cx="20.5" cy="10" r="2" fill="#8EDDC0" stroke="none"/><circle cx="10.5" cy="20" r="2" fill="#BBA8FF" stroke="none"/>',
+  radio: '<path d="M10 9l12-5" stroke-width="2"/><circle cx="22.5" cy="3.8" r="1.6" fill="#FF8FB8" stroke-width="1.2"/><rect x="3.5" y="9" width="25" height="18" rx="5" fill="#FFC6A8"/><circle cx="11.5" cy="18" r="5" fill="#FFF3DA"/><circle cx="11.5" cy="18" r="2" fill="#E9B88C" stroke="none"/><rect x="19" y="13" width="6.5" height="4" rx="1.5" fill="#FFF3DA" stroke-width="1.6"/><circle cx="20.5" cy="22" r="1.4" fill="#FFE07A" stroke-width="1.2"/><circle cx="24.5" cy="22" r="1.4" fill="#FFE07A" stroke-width="1.2"/>',
+  gacha: '<circle cx="16" cy="11.5" r="8.5" fill="#EAF7FF"/><circle cx="12.5" cy="12" r="2.6" fill="#FFE07A" stroke-width="1.2"/><circle cx="18.5" cy="9.5" r="2.6" fill="#8FD3FF" stroke-width="1.2"/><circle cx="18" cy="15" r="2.6" fill="#FF9EC4" stroke-width="1.2"/><rect x="7" y="18" width="18" height="10" rx="3" fill="#FF8FB8"/><circle cx="16" cy="22.5" r="2.2" fill="#FFE07A" stroke-width="1.4"/>',
+  sun: '<circle cx="16" cy="16" r="7" fill="#FFD95A"/><g stroke="#F2B33D" stroke-width="2.4"><path d="M16 3v3M16 26v3M3 16h3M26 16h3M6.8 6.8l2 2M23.2 23.2l2 2M6.8 25.2l2-2M23.2 8.8l2-2"/></g><circle cx="13.6" cy="15.2" r="1" fill="#5B4636" stroke="none"/><circle cx="18.4" cy="15.2" r="1" fill="#5B4636" stroke="none"/><path d="M14.4 18.2q1.6 1.3 3.2 0" fill="none" stroke-width="1.4"/>',
+  moon: '<path d="M21.5 5.5A10.5 10.5 0 1 0 26.5 22 8.5 8.5 0 0 1 21.5 5.5z" fill="#D4C8FF"/><circle cx="14" cy="17" r="1" fill="#5B4636" stroke="none"/><path d="M15.6 20.6q1.4 1 2.8 0" fill="none" stroke-width="1.4"/><path d="M25 6l.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7z" fill="#FFE07A" stroke-width="1"/>',
+  walk: '<circle cx="17" cy="6" r="3.2" fill="#FFE1CC"/><path d="M15 10.5l-3.5 6.5 4.5 2-2 9M15.5 11l5 3.5 3.5-1M16 19l5 3.5-1 6" fill="none" stroke-width="2.4"/>',
+  map: '<path d="M4 8l7-3 10 3 7-3v19l-7 3-10-3-7 3z" fill="#FFF3C4"/><path d="M11 5v19M21 8v19" stroke-width="1.6"/><circle cx="16" cy="14" r="2.4" fill="#FF8FB8" stroke-width="1.4"/>',
+  me: '<circle cx="16" cy="12" r="6.5" fill="#FFE1CC"/><path d="M9.5 11c0-5 3-7.5 6.5-7.5S22.5 6 22.5 11c-4-1.6-9-1.6-13 0z" fill="#5B4636"/><path d="M6 29c0-6 4.5-9.5 10-9.5S26 23 26 29z" fill="#8FD3FF"/>',
+  music: '<path d="M12 23V8l13-3v15" fill="none" stroke-width="2.4"/><ellipse cx="9" cy="23.5" rx="3.6" ry="2.8" fill="#FF9EC4"/><ellipse cx="22" cy="20.5" rx="3.6" ry="2.8" fill="#8FD3FF"/>',
+  mute: '<path d="M5 12h5l6-5v18l-6-5H5z" fill="#E9E2D6"/><path d="M21 12l6 8M27 12l-6 8" stroke-width="2.4"/>',
+  cam: '<rect x="4" y="9" width="18" height="14" rx="4" fill="#BBA8FF"/><path d="M22 14l6-3.5v11L22 18z" fill="#D9CCFF"/><circle cx="10" cy="16" r="2.4" fill="#FFFFFF" stroke-width="1.4"/>',
+  book: '<path d="M5 7c4-1.5 8-1 11 1.5C19 6 23 5.5 27 7v18c-4-1.5-8-1-11 1.5C13 24 9 23.5 5 25z" fill="#FFFFFF"/><path d="M16 8.5v18" stroke-width="1.8"/><path d="M8.5 11.5c2-.4 3.6-.2 5 .5M8.5 15.5c2-.4 3.6-.2 5 .5M18.5 12c1.4-.7 3-.9 5-.5" stroke-width="1.4"/>'
+};
+const ICON = (k, s = 22) => `<svg class="svgi" width="${s}" height="${s}" viewBox="0 0 32 32" fill="none" stroke="#5B4636" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC_SVG[k] || ''}</svg>`;
+
+// =====================================================================
+//  學生角色：設定名字外型、在小島上漫步、和同學踢球、投籃
+// =====================================================================
+const LOOKS = [
+  { n: '制服・短髮', hair: 'boy', hc: '#3B2B25', shirt: '#FFFFFF', pants: '#2F2F3C' },
+  { n: '制服・鮑伯頭', hair: 'bob', hc: '#4A3226', shirt: '#FFFFFF', pants: '#2F2F3C', clip: 'pink' },
+  { n: '制服・長髮', hair: 'long', hc: '#2B1F1A', shirt: '#FFFFFF', pants: '#2F2F3C', glasses: true },
+  { n: '運動服・捲髮', hair: 'curly', hc: '#5A3A28', shirt: '#8FD3FF', pants: '#3E5A9E' },
+  { n: '運動服・短髮', hair: 'boy', hc: '#2B1F1A', shirt: '#FFB48F', pants: '#3E5A9E' },
+  { n: '運動服・鮑伯頭', hair: 'bob', hc: '#7A4A2A', shirt: '#8EDDC0', pants: '#3E5A9E', clip: 'heart' }
+];
+const avatarSVG = L => `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 48c0-9 6-14 14-14s14 5 14 14z" fill="${L.shirt}" stroke="#5B4636" stroke-width="2"/><circle cx="24" cy="21" r="12" fill="#FFE1CC" stroke="#5B4636" stroke-width="2"/>${L.hair === 'long' ? `<path d="M11 21c0-9 6-14 13-14s13 5 13 14v14h-5V20H16v15h-5z" fill="${L.hc}"/>` : L.hair === 'curly' ? `<g fill="${L.hc}">${[[14, 13], [19, 9], [25, 8], [31, 10], [35, 15], [12, 19], [36, 20]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5"/>`).join('')}</g>` : L.hair === 'bob' ? `<path d="M11 24c0-11 6-16 13-16s13 5 13 16l-3 3v-9c-6 2-14 2-20 0v9z" fill="${L.hc}"/>` : `<path d="M12 19c1-8 6-11 12-11s11 3 12 11c-7-3-17-3-24 0z" fill="${L.hc}"/>`}<circle cx="20" cy="22" r="1.6" fill="#2B2230"/><circle cx="28" cy="22" r="1.6" fill="#2B2230"/><circle cx="16.5" cy="26" r="2" fill="#FFA9B8"/><circle cx="31.5" cy="26" r="2" fill="#FFA9B8"/><path d="M22 27q2 2 4 0" fill="none" stroke="#7A3B3B" stroke-width="1.6" stroke-linecap="round"/>${L.glasses ? '<g fill="none" stroke="#E9A0B8" stroke-width="1.5"><circle cx="20" cy="22" r="3.4"/><circle cx="28" cy="22" r="3.4"/></g>' : ''}</svg>`;
+const ME = Object.assign({ name: '', look: 0 }, (store.get().me || {}));
+const WALK = { on: false, W: null, isle: null, g: null, c: null, pos: new THREE.Vector3(0, 0, 12.5), face: Math.PI, keys: {}, joy: { x: 0, y: 0 }, moving: 0, ph: 0, vy: 0, y: 0, trees: [], score: 0 };
+const PSCALE = 1.15;
+// 碰撞：牆（矩形）與物件（圓）
+const SOLIDS = [[-17.7, -16.2, -12.9, 6.9], [16.2, 17.7, -12.9, 6.9], [-17.7, 17.7, -12.9, -11.5], [-16, 16, -12, -9.7], [-10.9, -3.7, -1.4, 1.3]];
+const CIRCS = [[-0.78, 2.82, 1.7], [6.76, -3.16, 2.5], [11.05, 3.86, 3.0], [-15.0, 4.12, 1.6], [-27.5, 0.5, 4.4], [28.5, 1, 6.4], [-20.5, 12, 2.1], [14.5, 10.8, 2.7], [-4.6, 14.2, 0.5], [4.6, 14.2, 0.5], [-17.5, 6.5, 0.5], [-3.6, 21.6, 1.9], [4.4, 20.6, 0.8], [-26.6, -28, 0.6], [-1.4, -28, 0.6], [15, -34.3, 0.5], [15, -21.7, 0.5], [-10.5, 18.8, 1.4], [-19, 9.5, 1.4]];
+function collide(p, r) {
+  const ex = 47.5, ez = 36.5, q = (p.x / ex) ** 2 + (p.z / ez) ** 2; if (q > 1) { const s = 1 / Math.sqrt(q); p.x *= s; p.z *= s; }
+  SOLIDS.forEach(([x0, x1, z0, z1]) => { if (p.x > x0 - r && p.x < x1 + r && p.z > z0 - r && p.z < z1 + r) { const dl = p.x - (x0 - r), dr = (x1 + r) - p.x, dn = p.z - (z0 - r), df = (z1 + r) - p.z, m = Math.min(dl, dr, dn, df); if (m === dl) p.x = x0 - r; else if (m === dr) p.x = x1 + r; else if (m === dn) p.z = z0 - r; else p.z = z1 + r; } });
+  const push = (cx, cz, cr) => { const dx = p.x - cx, dz = p.z - cz, d = Math.hypot(dx, dz), m = cr + r; if (d < m && d > 1e-4) { p.x = cx + dx / d * m; p.z = cz + dz / d * m; } };
+  CIRCS.forEach(c => push(...c)); WALK.trees.forEach(([x, z]) => push(x, z, 1.0));
+}
+const inLib = p => p.x > -16.3 && p.x < 16.3 && p.z > -11.6 && p.z < 6.5;
+function buildPlayer() {
+  if (!WALK.W) return; if (WALK.g) WALK.W.remove(WALK.g);
+  const c = chibi(LOOKS[ME.look] || LOOKS[0]); c.g.scale.setScalar(PSCALE); linearize(c.g); WALK.W.add(c.g); WALK.g = c.g; WALK.c = c; c.g.position.copy(WALK.pos); c.g.rotation.y = WALK.face;
+  const sh = mesh(new THREE.CircleGeometry(0.9, 24), new THREE.MeshBasicMaterial({ color: '#000000', transparent: true, opacity: 0.16, depthWrite: false }), 0, 0.04, 0, false); sh.rotation.x = -Math.PI / 2; c.g.add(sh);
+  $('#ntag').textContent = ME.name || '小島訪客';
+}
+// ---- 足球與同學 ----
+const BALL = { g: null, pos: new THREE.Vector3(7, 0, 28), vel: new THREE.Vector3(), y: 0, vy: 0, R: 0.62 };
+const MATES = [];
+function buildPlay() {
+  const W = WALK.W, b = G(W); BALL.g = b; const bm = new THREE.MeshStandardMaterial({ map: tex(256, 128, (c, w, h) => { c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, w, h); c.fillStyle = '#5B4636'; [[40, 30], [120, 64], [200, 30], [80, 100], [168, 104], [240, 90], [10, 90]].forEach(([x, y]) => { c.beginPath(); for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2 - Math.PI / 2; c.lineTo(x + Math.cos(a) * 15, y + Math.sin(a) * 15); } c.fill(); }); }), roughness: 0.6 });
+  b.add(mesh(new THREE.SphereGeometry(BALL.R, 24, 16), bm, 0, 0, 0)); b.position.copy(BALL.pos);
+  [{ n: '小安', look: 4, home: [-11, 28] }, { n: '阿哲', look: 3, home: [13, 29] }, { n: '小晴', look: 5, home: [3, 34] }].forEach((m, i) => {
+    const c = chibi(LOOKS[m.look]); c.g.scale.setScalar(PSCALE); linearize(c.g); W.add(c.g); const pos = new THREE.Vector3(m.home[0], 0, m.home[1]); c.g.position.copy(pos);
+    const tag = document.createElement('div'); tag.className = 'ntag mate'; tag.textContent = m.n; document.body.appendChild(tag);
+    MATES.push({ c, pos, home: new THREE.Vector3(m.home[0], 0, m.home[1]), face: 0, ph: i * 2, wander: new THREE.Vector3(m.home[0], 0, m.home[1]), wt: 0, cool: 0, tag, n: m.n }); });
+}
+const SAYS = ['傳給你！', '接住喔～', '好球！', '換你踢！', '一起玩！'];
+function sayAt(obj, text) { obj.getWorldPosition(v3); v3.y += 5.6; v3.project(camera); const b = document.createElement('div'); b.className = 'bubble sm'; b.textContent = text; b.style.left = (v3.x * 0.5 + 0.5) * innerWidth + 'px'; b.style.top = (-v3.y * 0.5 + 0.5) * innerHeight + 'px'; document.body.appendChild(b); setTimeout(() => b.remove(), 1200); }
+function kickBall(dir, power, lift = 4) { BALL.vel.set(dir.x, 0, dir.z).normalize().multiplyScalar(power); BALL.vy = lift; SFX.tap(); }
+function animLegs(c, moving, ph) { const sw = Math.sin(ph) * 0.7 * moving; c.legs[0].rotation.x = sw; c.legs[1].rotation.x = -sw; c.arms[0].rotation.x = -sw * 0.8; c.arms[1].rotation.x = sw * 0.8; }
+const HOOPS = [new THREE.Vector3(-24.7, 4.8 * 1, -28), new THREE.Vector3(-3.3, 4.8, -28)];
+let shot = null;
+function action() {
+  if (!WALK.on || shot) return; const p = WALK.pos;
+  const hoop = HOOPS.find(h => Math.hypot(h.x - p.x, h.z - p.z) < 10);
+  if (hoop) { const d = Math.hypot(hoop.x - p.x, hoop.z - p.z), ok = Math.random() < Math.max(0.35, 0.95 - d * 0.06); WALK.face = Math.atan2(hoop.x - p.x, hoop.z - p.z);
+    const bg = G(WALK.W); Sp(bg, 0.45, '#FF8A3D', 0, 0, 0); linearize(bg); shot = { bg, from: p.clone().setY(3.2), to: hoop.clone().add(new THREE.Vector3(ok ? 0 : (Math.random() < 0.5 ? -1 : 1) * 0.9, 0.3, 0)), t0: clock.getElapsedTime(), ok }; SFX.pop(); return; }
+  const d = Math.hypot(BALL.pos.x - p.x, BALL.pos.z - p.z);
+  if (d < 3.2) { kickBall(new THREE.Vector3(Math.sin(WALK.face), 0, Math.cos(WALK.face)), 30, 7); return; }
+  if (WALK.y === 0) { WALK.vy = 9; SFX.pop(); }
+}
+const _mv = new THREE.Vector3();
+function stepPlay(t, dt) {
+  if (!WALK.g) return;
+  // 玩家
+  if (WALK.on && !$('#dlg').open && !$('#setup').classList.contains('show')) {
+    const K = WALK.keys; let ix = (K.d || K.arrowright ? 1 : 0) - (K.a || K.arrowleft ? 1 : 0) + WALK.joy.x, iy = (K.w || K.arrowup ? 1 : 0) - (K.s || K.arrowdown ? 1 : 0) + WALK.joy.y;
+    const m = Math.min(1, Math.hypot(ix, iy)); if (m > 0.05) { const fx = -Math.sin(cam.yaw), fz = -Math.cos(cam.yaw); _mv.set(fx * iy - fz * ix, 0, fz * iy + fx * ix).normalize().multiplyScalar(m); WALK.pos.addScaledVector(_mv, dt * 11 * (K.shift ? 1.5 : 1)); WALK.face = Math.atan2(_mv.x, _mv.z); WALK.ph += dt * 11; }
+    WALK.moving += ((m > 0.05 ? 1 : 0) - WALK.moving) * Math.min(1, dt * 10); collide(WALK.pos, 0.8);
+    // 帶球
+    const bd = Math.hypot(BALL.pos.x - WALK.pos.x, BALL.pos.z - WALK.pos.z); if (bd < 1.7 && m > 0.05 && BALL.y < 1) { BALL.vel.set(_mv.x, 0, _mv.z).multiplyScalar(17); }
+  } else WALK.moving *= 0.8;
+  WALK.vy -= 28 * dt; WALK.y = Math.max(0, WALK.y + WALK.vy * dt); if (WALK.y === 0) WALK.vy = 0;
+  const g = WALK.g; g.position.set(WALK.pos.x, WALK.y + (inLib(WALK.pos) ? 0.55 : 0) + Math.abs(Math.sin(WALK.ph)) * 0.12 * WALK.moving, WALK.pos.z);
+  let dr = WALK.face - g.rotation.y; dr = Math.atan2(Math.sin(dr), Math.cos(dr)); g.rotation.y += dr * Math.min(1, dt * 12); animLegs(WALK.c, WALK.moving, WALK.ph);
+  // 足球
+  BALL.pos.addScaledVector(BALL.vel, dt); BALL.vel.multiplyScalar(Math.exp(-1.1 * dt)); BALL.vy -= 26 * dt; BALL.y += BALL.vy * dt; if (BALL.y < 0) { BALL.y = 0; BALL.vy = Math.abs(BALL.vy) > 3 ? -BALL.vy * 0.45 : 0; }
+  const bp = BALL.pos.clone(); collide(BALL.pos, BALL.R); if (bp.distanceTo(BALL.pos) > 1e-3) { const n = bp.sub(BALL.pos).normalize(); BALL.vel.addScaledVector(n, -1.7 * BALL.vel.dot(n)); }
+  BALL.g.position.set(BALL.pos.x, BALL.R + BALL.y + (inLib(BALL.pos) ? 0.55 : 0), BALL.pos.z); const sp = BALL.vel.length(); if (sp > 0.05) BALL.g.rotateOnWorldAxis(new THREE.Vector3(BALL.vel.z, 0, -BALL.vel.x).normalize(), sp * dt / BALL.R);
+  // 同學
+  MATES.forEach(M => { M.cool -= dt; const toB = Math.hypot(BALL.pos.x - M.pos.x, BALL.pos.z - M.pos.z); let tgt = M.wander, spd = 3.5;
+    if (toB < 16 && BALL.vel.length() < 14 && M.cool < 0) { tgt = BALL.pos; spd = 8; }
+    else if (M.pos.distanceTo(M.wander) < 1 || (M.wt -= dt) < 0) { M.wander.set(M.home.x + (Math.random() - 0.5) * 12, 0, M.home.z + (Math.random() - 0.5) * 8); M.wt = 4 + Math.random() * 4; }
+    const dx = tgt.x - M.pos.x, dz = tgt.z - M.pos.z, d = Math.hypot(dx, dz); let mv = 0;
+    if (d > 1.2) { M.pos.x += dx / d * spd * dt; M.pos.z += dz / d * spd * dt; M.face = Math.atan2(dx, dz); mv = 1; M.ph += dt * spd * 1.3; }
+    collide(M.pos, 0.8);
+    if (toB < 1.8 && M.cool < 0) { const aim = WALK.on && Math.random() < 0.7 ? WALK.pos : MATES[(MATES.indexOf(M) + 1) % MATES.length].pos; const dir = new THREE.Vector3(aim.x - M.pos.x, 0, aim.z - M.pos.z); kickBall(dir, 13 + Math.min(14, dir.length() * 0.7), 3); M.cool = 2.2; if (Math.random() < 0.6) sayAt(M.c.g, SAYS[Math.random() * SAYS.length | 0]); }
+    M.c.g.position.set(M.pos.x, Math.abs(Math.sin(M.ph)) * 0.12 * mv, M.pos.z); let r = M.face - M.c.g.rotation.y; r = Math.atan2(Math.sin(r), Math.cos(r)); M.c.g.rotation.y += r * Math.min(1, dt * 8); animLegs(M.c, mv, M.ph); });
+  // 投籃
+  if (shot) { const u = Math.min(1, (t - shot.t0) / 1.0); shot.bg.position.lerpVectors(shot.from, shot.to, u); shot.bg.position.y += Math.sin(u * Math.PI) * 6;
+    if (u >= 1) { WALK.W.remove(shot.bg); if (shot.ok) { WALK.score++; SFX.sparkle(); toast(`🏀 進球！ ${ME.name || '你'} 已經投進 ${WALK.score} 球`); } else { SFX.hmm(); toast('差一點點！再試一次 💪'); } shot = null; } }
+}
+function placeTags() {
+  const show = (el, obj, h) => { obj.getWorldPosition(v3); v3.y += h; v3.project(camera); if (v3.z > 1) { el.style.opacity = 0; return; } el.style.opacity = 1; el.style.transform = `translate(${(v3.x * 0.5 + 0.5) * innerWidth}px, ${(-v3.y * 0.5 + 0.5) * innerHeight}px) translate(-50%, -100%)`; };
+  if (WALK.g) show($('#ntag'), WALK.g, 5.4);
+  MATES.forEach(M => show(M.tag, M.c.g, 5.4));
+}
+function setWalk(on) {
+  WALK.on = on; document.body.classList.toggle('walking', on);
+  $('#bWalk').innerHTML = on ? `${ICON('map', 18)}<span>導覽</span>` : `${ICON('walk', 18)}<span>漫步</span>`;
+  if (on) { const p = WALK.g.getWorldPosition(new THREE.Vector3()); p.y += 2.8; const w = Math.atan2(Math.sin(cam.yaw), Math.cos(cam.yaw)); flyTo({ t: p, dist: 24, pitch: 0.34, yaw: cam.yaw - w + WALK.face + Math.PI }); $('#hint').innerHTML = matchMedia('(pointer:coarse)').matches ? '🕹️ 用左下搖桿走路・右下按鈕踢球／投籃／跳' : '⌨️ WASD／方向鍵走路・Shift 跑步・空白鍵踢球／投籃／跳'; $('#hint').style.opacity = 1; setTimeout(() => $('#hint').style.opacity = 0, 6000); }
+  else preset(true);
+}
+function setupWalkInput() {
+  addEventListener('keydown', e => { if (e.target.closest('input,textarea,select')) return; const k = e.key.toLowerCase(); if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'shift', ' '].includes(k) && WALK.on) { e.preventDefault(); WALK.keys[k] = true; if (k === ' ' && !e.repeat) action(); } });
+  addEventListener('keyup', e => { WALK.keys[e.key.toLowerCase()] = false; });
+  addEventListener('blur', () => { WALK.keys = {}; });
+  const joy = $('#joy'), knob = joy.querySelector('i'); let jid = null, cx = 0, cy = 0;
+  joy.addEventListener('pointerdown', e => { jid = e.pointerId; joy.setPointerCapture(jid); const r = joy.getBoundingClientRect(); cx = r.left + r.width / 2; cy = r.top + r.height / 2; mv(e); });
+  const mv = e => { if (e.pointerId !== jid) return; let dx = e.clientX - cx, dy = e.clientY - cy; const d = Math.hypot(dx, dy), R = 38; if (d > R) { dx *= R / d; dy *= R / d; } knob.style.transform = `translate(${dx}px, ${dy}px)`; WALK.joy.x = dx / R; WALK.joy.y = -dy / R; };
+  joy.addEventListener('pointermove', mv);
+  const end = e => { if (e.pointerId !== jid) return; jid = null; knob.style.transform = ''; WALK.joy.x = WALK.joy.y = 0; };
+  joy.addEventListener('pointerup', end); joy.addEventListener('pointercancel', end);
+  $('#act').onclick = action;
+}
+// ---- 進場：開場畫面 → 建立角色 ----
+function openSetup() {
+  const s = $('#setup'); $('#nm').value = ME.name; s.classList.add('show');
+  $('#looks').innerHTML = LOOKS.map((L, i) => `<button type="button" class="look ${i === ME.look ? 'on' : ''}" data-i="${i}" aria-label="${L.n}">${avatarSVG(L)}<span>${L.n}</span></button>`).join('');
+  $('#looks').querySelectorAll('.look').forEach(b => b.onclick = () => { SFX.pop(); ME.look = +b.dataset.i; $('#looks').querySelectorAll('.look').forEach(x => x.classList.toggle('on', x === b)); buildPlayer(); WALK.c.jump = clock.getElapsedTime(); });
+  const p = WALK.g.getWorldPosition(new THREE.Vector3()); p.y += 2.6; const w = Math.atan2(Math.sin(cam.yaw), Math.cos(cam.yaw));
+  WALK.face = 0; WALK.g.rotation.y = 0; flyTo({ t: p.add(new THREE.Vector3(portrait() ? 0 : 4.2, portrait() ? -3.4 : 0.4, 0)), dist: portrait() ? 26 : 22, pitch: 0.2, yaw: cam.yaw - w });
+}
+function closeSetup(walk) {
+  ME.name = $('#nm').value.trim().slice(0, 8); store.set({ me: { name: ME.name, look: ME.look } }); $('#ntag').textContent = ME.name || '小島訪客';
+  $('#setup').classList.remove('show'); SFX.sparkle(); toast(`歡迎來到四維立體圖書館，${ME.name || '小島訪客'}！`);
+  WALK.face = Math.PI; if (walk) setWalk(true); else { WALK.on = false; document.body.classList.remove('walking'); preset(true); }
+}
+
 // ---------- 角色：四維 IP（黏土小人） ----------
 function chibi(o) {
-  const SK = '#FFE1CC', HAIR = '#3B2B25', SHIRT = '#FFFFFF', PANTS = '#2F2F3C';
+  const SK = '#FFE1CC', HAIR = o.hc || '#3B2B25', SHIRT = o.shirt || '#FFFFFF', PANTS = o.pants || '#2F2F3C';
   const g = new THREE.Group(), body = G(g);
   const s = o.tall || 1;
   const legs = [-1, 1].map(k => { const p = G(body, k * 0.27, 1.0 * s, 0); Cy(p, 0.21, 0.19, 0.85 * s, PANTS, 0, -0.42 * s, 0, 14); Sp(p, 0.25, '#FFFFFF', 0, -0.9 * s, 0.07, 1, 0.6, 1.35); return p; });
@@ -687,7 +933,7 @@ function buildScene() {
   const soil = mesh(new THREE.CylinderGeometry(52.2, 48, 3.2, 96), MAT('#F2CFA0'), 0, -3.0, 0); soil.scale.z = 0.78; isle.add(soil);
   const rock = mesh(new THREE.ConeGeometry(46, 26, 9), new THREE.MeshStandardMaterial({ color: '#D9B48A', roughness: 1, flatShading: true }), 0, -17.6, 0); rock.rotation.x = Math.PI; rock.scale.z = 0.78; isle.add(rock);
   for (let i = 0; i < 46; i++) { const a = i / 46 * Math.PI * 2; Sp(isle, 0.5 + (i % 3) * 0.25, ['#FFD6E5', '#FFFFFF', '#FFE07A', '#D7F5EA'][i % 4], Math.cos(a) * 51.6, -0.05, Math.sin(a) * 51.6 * 0.78, 1, 0.6, 1); }
-  { ENV.rimMat = new THREE.MeshStandardMaterial({ color: '#FFE9B8', emissive: new THREE.Color('#ffc777'), emissiveIntensity: 0.15, roughness: 0.4 }); const NB = 84, bulbs = new THREE.InstancedMesh(new THREE.SphereGeometry(0.22, 10, 8), ENV.rimMat, NB), poles = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.05, 0.05, 0.9, 6), MAT('#FFFFFF'), NB), d = new THREE.Object3D();
+  { ENV.rimMat = new THREE.MeshStandardMaterial({ color: '#FFE9B8', emissive: new THREE.Color('#ffc777'), emissiveIntensity: 0.15, roughness: 0.4 }); const NB = 48, bulbs = new THREE.InstancedMesh(new THREE.SphereGeometry(0.22, 10, 8), ENV.rimMat, NB), poles = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.05, 0.05, 0.9, 6), MAT('#FFFFFF'), NB), d = new THREE.Object3D();
     for (let i = 0; i < NB; i++) { const a = i / NB * Math.PI * 2, x = Math.cos(a) * 50.4, z = Math.sin(a) * 50.4 * 0.78; d.position.set(x, 0.45, z); d.updateMatrix(); poles.setMatrixAt(i, d.matrix); d.position.y = 1.0; d.updateMatrix(); bulbs.setMatrixAt(i, d.matrix); } isle.add(poles); isle.add(bulbs); }
   ANIM.push(t => { isle.position.y = Math.sin(t * 0.6) * 0.12; });
   const W = G(isle); // 地面上的所有東西
@@ -768,7 +1014,7 @@ function buildScene() {
   ANIM.push(t => bunt.forEach((f, i) => { f.rotation.z = Math.sin(t * 2 + i * 0.7) * 0.12; }));
   // 屋頂上的花蓮藍天白雲小裝飾
   const deco = G(roof, 0, RISE - 0.3, MZ);
-  const sunD = G(deco, -6.5, 2.6, 0); sunD.scale.setScalar(1.3); Sp(sunD, 0.75, '#FFD54F', 0, 0, 0, 1, 1, 0.5); for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, r = Co(sunD, 0.16, 0.42, '#FFB13B', Math.cos(a) * 1.05, Math.sin(a) * 1.05, 0, 8); r.rotation.z = a - Math.PI / 2; } [-1, 1].forEach(k => Sp(sunD, 0.07, '#5B4636', k * 0.25, 0.1, 0.36)); ANIM.push(t => { sunD.rotation.z = Math.sin(t) * 0.15; sunD.position.y = 2.6 + Math.sin(t * 0.8) * 0.35; sunD.position.x = -6.5 + Math.sin(t * 0.2) * 1.5; });
+  const sunD = G(deco, -6.5, 2.6, 0); ENV.sunD = sunD; sunD.scale.setScalar(1.3); Sp(sunD, 0.75, '#FFD54F', 0, 0, 0, 1, 1, 0.5); for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, r = Co(sunD, 0.16, 0.42, '#FFB13B', Math.cos(a) * 1.05, Math.sin(a) * 1.05, 0, 8); r.rotation.z = a - Math.PI / 2; } [-1, 1].forEach(k => Sp(sunD, 0.07, '#5B4636', k * 0.25, 0.1, 0.36)); ANIM.push(t => { sunD.rotation.z = Math.sin(t) * 0.15; sunD.position.y = 2.6 + Math.sin(t * 0.8) * 0.35; sunD.position.x = -6.5 + Math.sin(t * 0.2) * 1.5; });
   const c1 = G(deco, 6.2, 2.3, 0.4); cloud(c1, 0, 0, 0, 0.55); ANIM.push(t => { c1.position.y = 2.6 + Math.sin(t * 1.1) * 0.3; c1.position.x = 6.2 + Math.sin(t * 0.25) * 3.5; });
   const c2 = cloud(L, -17.5, 27.5, 2, 1.0), c3 = cloud(L, 17.5, 28.5, -2, 1.2); ANIM.push(t => { c2.position.x = -17.5 + Math.sin(t * 0.2) * 5; c3.position.x = 17.5 + Math.sin(t * 0.17 + 1) * 5; c2.position.y = 27.5 + Math.sin(t * 0.9) * 0.4; c3.position.y = 28.5 + Math.sin(t * 0.8 + 1) * 0.4; });
   // 旗子
@@ -1104,6 +1350,64 @@ function buildScene() {
   // 小島浮動時書也要跟著動：書放在 isle 的座標系
   scene.remove(im); const isleInv = new THREE.Matrix4().copy(isle.matrixWorld).invert(); for (let i = 0; i < BOOKS.length; i++) { im.getMatrixAt(i, mtx); mtx.premultiply(isleInv); im.setMatrixAt(i, mtx); } isle.add(im);
 
+  // ===== 海上生物：鯨魚、海盜船、海怪恐龍 =====
+  const SEA_Y = -26;
+  const SPL = [];
+  const doSplash = (x, z, s = 1) => { const g = G(scene, x, SEA_Y + 0.2, z); const ring = mesh(new THREE.RingGeometry(0.6, 1.2, 32), new THREE.MeshBasicMaterial({ color: '#FFFFFF', transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false }), 0, 0, 0, false); ring.rotation.x = -Math.PI / 2; g.add(ring);
+    const drops = []; for (let i = 0; i < 18; i++) { const d = mesh(SPH, new THREE.MeshBasicMaterial({ color: '#EAF8FF', transparent: true, opacity: 0.95 }), 0, 0, 0, false); d.scale.setScalar(0.35 + Math.random() * 0.35); g.add(d); const a = Math.random() * Math.PI * 2, sp = 2 + Math.random() * 4; drops.push({ d, vx: Math.cos(a) * sp, vz: Math.sin(a) * sp, vy: 7 + Math.random() * 7 }); }
+    g.scale.setScalar(s); SPL.push({ g, ring, drops, t0: -1 }); };
+  ANIM.push(t => { for (let i = SPL.length - 1; i >= 0; i--) { const S = SPL[i]; if (S.t0 < 0) S.t0 = t; const u = t - S.t0; S.ring.scale.setScalar(1 + u * 9); S.ring.material.opacity = Math.max(0, 0.9 - u * 0.6); S.drops.forEach(o => { o.d.position.set(o.vx * u, o.vy * u - 6 * u * u, o.vz * u); o.d.material.opacity = Math.max(0, 1 - u * 0.7); }); if (u > 1.6) { scene.remove(S.g); SPL.splice(i, 1); } } });
+  // 鯨魚
+  const wh = G(scene), wb = G(wh); wh.userData.tag = 'whale'; wb.scale.setScalar(2.2);
+  Sp(wb, 1, '#7C9FD6', 0, 0, 0, 3.4, 1.55, 1.7); Sp(wb, 1, '#EAF4FF', 0.4, -0.55, 0, 2.9, 1.0, 1.45);
+  for (let i = 0; i < 6; i++) Bx(wb, 2.6, 0.06, 0.12, '#C9D8EE', 0.6, -1.05, -0.9 + i * 0.36, 0.03);
+  [-1, 1].forEach(k => { Sp(wb, 0.2, '#2B2230', 2.2, 0.15, k * 1.25, 1, 1, 0.5); Sp(wb, 0.07, '#FFFFFF', 2.26, 0.22, k * 1.33); Sp(wb, 0.28, '#FFB2C8', 2.4, -0.25, k * 1.18, 1, 0.6, 0.4); const f = Sp(wb, 1, '#6B8FC6', 0.6, -0.8, k * 1.6, 1.0, 0.18, 0.55); f.rotation.set(k * 0.5, 0, -0.4); });
+  const wtail = G(wb, -3.2, 0.2, 0); Sp(wtail, 1, '#7C9FD6', -0.6, 0, 0, 1.4, 0.65, 0.7); [-1, 1].forEach(k => { const fl = Sp(wtail, 1, '#6B8FC6', -1.9, 0.15, k * 0.9, 0.7, 0.16, 1.1); fl.rotation.y = k * 0.5; });
+  const wspout = []; for (let i = 0; i < 10; i++) { const s = mesh(SPH, new THREE.MeshBasicMaterial({ color: '#F2FBFF', transparent: true, opacity: 0 }), 0, 0, 0, false); wb.add(s); wspout.push(s); }
+  let wJump = 6, wSpl = false;
+  ANIM.push(t => { const a = t * 0.045, R = 112; const x = Math.cos(a) * R, z = Math.sin(a) * R * 0.9; wh.position.set(x, SEA_Y - 1.2 + Math.sin(t * 0.9) * 0.4, z); wh.rotation.y = -a - Math.PI / 2 + Math.PI;
+    wtail.rotation.z = Math.sin(t * 2.2) * 0.35; let pitch = Math.sin(t * 0.9) * 0.05;
+    const ju = (t - wJump) / 2.6; if (ju >= 0 && ju <= 1) { wh.position.y = SEA_Y - 2 + Math.sin(ju * Math.PI) * 16; pitch = Math.cos(ju * Math.PI) * 0.85; if (!wSpl && ju > 0.05) { doSplash(x, z, 2); wSpl = true; } }
+    if (ju > 1) { doSplash(x, z, 2.6); wJump = t + 14 + Math.random() * 10; wSpl = false; }
+    wb.rotation.z = pitch;
+    const su = (t % 6) / 6; wspout.forEach((s, i) => { const u = (su * 3 - i * 0.06); if (u > 0 && u < 1 && ju < 0) { s.position.set(1.2 + Math.sin(i) * 0.3 * u, 1.4 + u * 3.6, Math.cos(i * 2) * 0.6 * u); s.scale.setScalar(0.25 + u * 0.45); s.material.opacity = 0.85 * (1 - u); } else s.material.opacity = 0; }); });
+  // 海盜船
+  const pship = G(scene), psh = G(pship); psh.scale.setScalar(1.6);
+  const phullS = new THREE.Shape(); phullS.moveTo(-5.5, 1.4); phullS.lineTo(5.8, 1.4); phullS.quadraticCurveTo(5.2, -0.8, 3.6, -1.4); phullS.lineTo(-4.4, -1.4); phullS.quadraticCurveTo(-5.6, -0.6, -5.5, 1.4);
+  const phull = mesh(new THREE.ExtrudeGeometry(phullS, { depth: 3.4, bevelEnabled: true, bevelThickness: 0.25, bevelSize: 0.2, bevelSegments: 3 }), MAT('#9B6A44'), 0, 0, -1.7); psh.add(phull);
+  Bx(psh, 11.0, 0.3, 3.6, '#7A4F30', 0.1, 1.1, 0, 0.1); Bx(psh, 11.2, 0.28, 0.25, '#FFE07A', 0.1, 0.7, 1.95, 0.08); Bx(psh, 11.2, 0.28, 0.25, '#FFE07A', 0.1, 0.7, -1.95, 0.08);
+  for (let i = 0; i < 4; i++) [-1, 1].forEach(k => { Sp(psh, 0.26, '#2B2230', -2.4 + i * 1.6, 0.1, k * 1.98, 1, 1, 0.3); });
+  Bx(psh, 2.6, 1.8, 3.2, '#B88457', -4.0, 2.1, 0, 0.2); Bx(psh, 2.8, 0.25, 3.4, '#7A4F30', -4.0, 3.1, 0, 0.1);
+  [[-0.4, 7.4], [3.0, 5.8]].forEach(([x, h], m) => { Cy(psh, 0.16, 0.2, h, '#6B4528', x, 1.2 + h / 2, 0, 10);
+    const psail = new THREE.PlaneGeometry(1, 1, 6, 6), sp = psail.attributes.position; for (let i = 0; i < sp.count; i++) sp.setZ(i, (0.25 - sp.getX(i) * sp.getX(i)) * 0.6); psail.computeVertexNormals();
+    const s1 = mesh(psail, new THREE.MeshStandardMaterial({ color: '#FFF6E6', side: THREE.DoubleSide, roughness: 0.9 }), x + 0.35, 1.6 + h * 0.55, 0, false); s1.scale.set(3.6 - m, h * 0.62, 1); s1.rotation.y = Math.PI / 2; psh.add(s1);
+    Cy(psh, 0.08, 0.08, 4.2 - m, '#6B4528', x + 0.2, 1.6 + h * 0.86, 0, 6).rotation.x = Math.PI / 2; });
+  const pflagT = tex(128, 80, (c, w, h) => { c.fillStyle = '#2B2230'; c.fillRect(0, 0, w, h); c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(w / 2, 34, 15, 0, 7); c.fill(); c.fillRect(w / 2 - 9, 42, 18, 10); c.fillStyle = '#2B2230'; c.beginPath(); c.arc(w / 2 - 6, 33, 4, 0, 7); c.arc(w / 2 + 6, 33, 4, 0, 7); c.fill(); c.strokeStyle = '#FFFFFF'; c.lineWidth = 5; c.beginPath(); c.moveTo(34, 56); c.lineTo(94, 74); c.moveTo(94, 56); c.lineTo(34, 74); c.stroke(); });
+  const pflag = mesh(new THREE.PlaneGeometry(1.8, 1.1, 6, 1), new THREE.MeshStandardMaterial({ map: pflagT, side: THREE.DoubleSide }), -0.4 + 0.95, 9.3, 0, false); pflag.rotation.y = Math.PI / 2; psh.add(pflag);
+  ANIM.push(t => { const a = -t * 0.032 + 2.2, R = 132; pship.position.set(Math.cos(a) * R, SEA_Y + 0.6 + Math.sin(t * 1.3) * 0.3, Math.sin(a) * R * 0.85); pship.rotation.y = -a + Math.PI; psh.rotation.x = Math.sin(t * 1.1) * 0.06; psh.rotation.z = Math.sin(t * 0.8) * 0.04; pflag.rotation.x = Math.sin(t * 5) * 0.15; });
+  // 海怪恐龍（原創角色）
+  const dn0 = G(scene), dn = G(dn0); dn0.userData.tag = 'dino'; dn.scale.setScalar(3.2);
+  const DG = '#7FCB9A', DB = '#EAF7D8', DP = '#C7A8FF';
+  Sp(dn, 1, DG, 0, 3.2, 0, 1.9, 2.3, 1.7); Sp(dn, 1, DB, 0.6, 3.0, 0, 1.5, 1.9, 1.3);
+  const dlegs = [-1, 1].map(k => { const l = G(dn, -0.2, 1.6, k * 0.95); Sp(l, 1, DG, 0, -0.6, 0, 0.8, 1.3, 0.8); Sp(l, 1, DG, 0.3, -1.7, 0, 0.9, 0.45, 0.8); return l; });
+  const darms = [-1, 1].map(k => { const a = G(dn, 1.4, 4.2, k * 1.0); Sp(a, 1, DG, 0.4, -0.3, 0, 0.6, 0.28, 0.28); return a; });
+  const dneck = G(dn, 0.8, 5.0, 0), dhead = G(dneck, 0.4, 1.3, 0);
+  Sp(dneck, 1, DG, 0, 0.5, 0, 0.9, 1.2, 0.9); Sp(dhead, 1, DG, 0, 0, 0, 1.3, 1.05, 1.05); Sp(dhead, 1, DG, 1.2, -0.25, 0, 1.0, 0.65, 0.85); Sp(dhead, 1, DB, 1.2, -0.55, 0, 0.9, 0.3, 0.75);
+  [-1, 1].forEach(k => { Sp(dhead, 0.28, '#FFFFFF', 0.55, 0.35, k * 0.72); Sp(dhead, 0.17, '#2B2230', 0.68, 0.38, k * 0.84); Sp(dhead, 0.06, '#FFFFFF', 0.74, 0.46, k * 0.9); Sp(dhead, 0.2, '#FFA9B8', 0.9, -0.2, k * 0.78, 1, 0.6, 0.4); Sp(dhead, 0.07, '#2B6B4A', 2.1, 0.0, k * 0.3); });
+  const dtail = G(dn, -1.6, 2.4, 0); [[0, 1.2], [-1.4, 0.9], [-2.6, 0.65], [-3.6, 0.42]].forEach(([x, r], i) => Sp(dtail, r, DG, x, -i * 0.35, 0));
+  for (let i = 0; i < 7; i++) { const sp = Co(dn, 0.42 - Math.abs(i - 2) * 0.04, 0.9, DP, 0.9 - i * 0.75, 5.6 - Math.abs(i - 1) * 0.5 - (i > 3 ? (i - 3) * 0.35 : 0), 0, 4); sp.rotation.z = 0.35 + i * 0.08; sp.scale.z = 0.4; }
+  const dmouth = G(dhead, 2.3, -0.4, 0); const fireL = new THREE.PointLight(0xFF9A3C, 0, 60, 2); dmouth.add(fireL);
+  const fls = []; for (let i = 0; i < 40; i++) { const f = mesh(new THREE.IcosahedronGeometry(1, 0), new THREE.MeshBasicMaterial({ color: ['#FF5A2E', '#FF8A2E', '#FFB13B', '#FF6A3D'][i % 4], transparent: true, opacity: 0, depthWrite: false, toneMapped: false }), 0, 0, 0, false); dn0.add(f); fls.push({ f, ph: i / 40, sp: (Math.random() - 0.5) * 0.35, sv: (Math.random() - 0.5) * 0.25 }); }
+  let fireT = -20; const mw = new THREE.Vector3(), fwd = new THREE.Vector3();
+  ANIM.push(t => { const a = -2.25 + Math.sin(t * 0.035) * 0.55, R = 165, x = Math.cos(a) * R, z = Math.sin(a) * R * 0.9; const dir = Math.cos(t * 0.035) > 0 ? 1 : -1;
+    dn0.position.set(x, SEA_Y - 5 + Math.abs(Math.sin(t * 1.4)) * 0.8, z); dn0.rotation.y = -a + (dir > 0 ? Math.PI : 0);
+    dlegs.forEach((l, k) => { l.rotation.z = Math.sin(t * 1.4 + k * Math.PI) * 0.35; }); darms.forEach((r, k) => { r.rotation.z = Math.sin(t * 1.4 + k) * 0.3; }); dtail.rotation.y = Math.sin(t * 1.1) * 0.25;
+    const fu = t - fireT; dneck.rotation.z = fu < 3.2 ? 0.25 : Math.sin(t * 0.7) * 0.08; dhead.rotation.z = fu < 3.2 ? -0.35 : 0;
+    if (fu > 9 + Math.random() * 0.02) fireT = t;
+    dn0.updateMatrixWorld(); dmouth.getWorldPosition(mw); fwd.set(1, -0.35, 0).applyQuaternion(dn0.quaternion).normalize();
+    const on = fu < 2.6 ? Math.min(1, fu * 4) * Math.min(1, (2.6 - fu) * 3) : 0; fireL.intensity = on * 3.5;
+    fls.forEach(o => { const u = (t * 1.6 + o.ph) % 1, d = u * 30; dn0.worldToLocal(o.f.position.copy(mw).addScaledVector(fwd, d).add(new THREE.Vector3(o.sv * d, o.sp * d * 0.6 + u * u * 6, o.sp * d))); o.f.scale.setScalar((0.6 + u * 2.6) / 1); o.f.material.opacity = on * (1 - u * u) * 0.85; o.f.rotation.set(t * 3 + o.ph * 9, t * 2, 0); }); });
+  WALK.W = W; WALK.isle = isle; WALK.trees = placed.slice();
   linearize(scene);
   envSetup(); applyEnv(simMin, 0);
 }
@@ -1136,8 +1440,10 @@ function flyToHot(id, done) {
   let yaw = cam.yaw; const w = Math.atan2(Math.sin(yaw), Math.cos(yaw)); if (h.inside && Math.abs(w) > 0.6) yaw = cam.yaw - w + Math.sign(w) * 0.35;
   flyTo({ t: p, dist: FLY_D[id] || 30, pitch: id === 'gallery' ? 0.75 : 0.24, yaw }, done);
 }
+const _ft = new THREE.Vector3();
 function updateCam(t) {
   stepFlight();
+  if (WALK.on && !FLIGHT && WALK.g) { WALK.g.getWorldPosition(_ft); _ft.y += 2.8; camTarget.lerp(_ft, 0.14); }
   const k = reduceMotion ? 1 : 0.08;
   cam.yaw += (cam.tYaw - cam.yaw) * k; cam.pitch += (cam.tPitch - cam.pitch) * k; cam.dist += (cam.tDist - cam.dist) * k;
   const breathe = reduceMotion ? 0 : Math.sin(t * 0.35) * 0.02;
@@ -1157,14 +1463,14 @@ function setupControls() {
   cv.addEventListener('pointermove', e => {
     if (!ptrs.has(e.pointerId)) { if (e.pointerType === 'mouse') { const id = pickAt(e.clientX, e.clientY); cv.classList.toggle('hover', !!id); hoverId = id; } return; }
     const pr = ptrs.get(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch) cam.tDist = THREE.MathUtils.clamp(cam.tDist * pinch / d, 30, 280); pinch = d; return; }
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch) cam.tDist = THREE.MathUtils.clamp(cam.tDist * pinch / d, 12, 280); pinch = d; return; }
     if (!moved && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) moved = true;
     if (moved) { cam.tYaw = cam.tYaw - (e.clientX - pr.x) * 0.006; cam.tPitch = THREE.MathUtils.clamp(cam.tPitch + (e.clientY - pr.y) * 0.004, 0.08, 1.35); }
   });
   const up = e => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = 0; if (!ptrs.size && !moved && e.type === 'pointerup') { const id = pickAt(e.clientX, e.clientY); if (id) poke(id); } };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('pointerleave', () => { hoverId = null; cv.classList.remove('hover'); });
-  cv.addEventListener('wheel', e => { e.preventDefault(); cam.tDist = THREE.MathUtils.clamp(cam.tDist * (e.deltaY > 0 ? 1.1 : 0.9), 30, 280); }, { passive: false });
+  cv.addEventListener('wheel', e => { e.preventDefault(); cam.tDist = THREE.MathUtils.clamp(cam.tDist * (e.deltaY > 0 ? 1.1 : 0.9), 12, 280); }, { passive: false });
 }
 let hoverId = null;
 
@@ -1196,7 +1502,7 @@ let busy = false;
 function poke(id) {
   if (busy || $('#dlg').open) return; const r = REACT[id]; if (!r) return;
   busy = true; SFX[r[1]](); $('#hint').style.opacity = 0;
-  flyToHot(id, () => { bubble(id, r[0]); const t = clock.getElapsedTime(); r[2].forEach(k => CHARS[k] && (CHARS[k].jump = t)); bounceHot(id, t); setTimeout(() => { busy = false; openPanel(id); }, reduceMotion ? 100 : 420); });
+  (WALK.on ? (f => f()) : (f => flyToHot(id, f)))(() => { bubble(id, r[0]); const t = clock.getElapsedTime(); r[2].forEach(k => CHARS[k] && (CHARS[k].jump = t)); bounceHot(id, t); setTimeout(() => { busy = false; openPanel(id); }, reduceMotion ? 100 : 420); });
 }
 const bounces = {};
 function bounceHot(id, t) { bounces[id] = t; }
@@ -1389,7 +1695,8 @@ function loop() {
   Object.entries(HOTS).forEach(([id, h]) => { const b = t - (bounces[id] ?? -9); const s0 = h.g.userData.s0 ?? (h.g.userData.s0 = h.g.scale.x); let s = s0 * (hoverId === id ? 1.04 : 1); if (b < 0.5) s *= 1 + Math.sin(b / 0.5 * Math.PI) * 0.08; h.g.scale.setScalar(h.g.scale.x + (s - h.g.scale.x) * 0.3); });
   if (gachaAnim) gachaAnim(t);
   if (ENV.sky) { const dtC = Math.min(0.25, t - (ENV.lt ?? t)); ENV.lt = t; if (clockRun) simMin = (simMin + dtC * 10) % 1440; applyEnv(simMin, t); weather(t); if ((ENV.ct = (ENV.ct || 0) + dtC) > 0.2) { ENV.ct = 0; updateClock(); } }
-  updateCam(t); renderer.render(scene, camera); updatePins();
+  const dtP = Math.min(0.05, t - (WALK.lt ?? t)); WALK.lt = t; stepPlay(t, dtP);
+  updateCam(t); renderer.render(scene, camera); updatePins(); placeTags();
 }
 
 // =====================================================================
@@ -1399,20 +1706,31 @@ document.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { SFX.po
 document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { SFX.pop(); simMin = +b.dataset.t * 60; updateClock(); });
 $('#cface').onclick = () => { SFX.pop(); clockRun = !clockRun; updateClock(); toast(clockRun ? '時間繼續走 ▶' : '時間暫停 ⏸'); };
 updateClock();
-const bs = $('#bSound'); const syncSound = () => { bs.classList.toggle('off', !SFX.on); bs.firstChild.textContent = SFX.on ? '🎵' : '🔇'; }; syncSound();
+document.querySelectorAll('[data-ic]').forEach(e => { e.innerHTML = ICON(e.dataset.ic, +(e.dataset.s || 22)); });
+const bs = $('#bSound'); const syncSound = () => { bs.classList.toggle('off', !SFX.on); bs.innerHTML = `${ICON(SFX.on ? 'music' : 'mute', 18)}<span>音樂</span>`; }; syncSound();
+$('#bWalk').innerHTML = `${ICON('walk', 18)}<span>漫步</span>`;
+$('#bWalk').onclick = () => { SFX.pop(); if (WALK.g) setWalk(!WALK.on); };
+$('#bMe').onclick = () => { SFX.pop(); if (WALK.g) { if (WALK.on) setWalk(false); openSetup(); } };
+$('#sWalk').onclick = () => closeSetup(true); $('#sTour').onclick = () => closeSetup(false);
+$('#nm').addEventListener('keydown', e => { if (e.key === 'Enter') closeSetup(true); });
 // 瀏覽器規定要有互動後才能播放聲音：第一次點擊畫面時開始播放音樂
 addEventListener('pointerdown', e => { if (!e.target.closest('#bSound')) SFX.music(); }, { once: false, passive: true });
 bs.onclick = () => { SFX.toggle(); syncSound(); };
 $('#bView').onclick = () => { SFX.pop(); preset(true); };
 addEventListener('resize', () => { if (!renderer) return; renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; preset(); });
 function start() {
-  if (!renderer) { $('#loading').remove(); $('#stage').innerHTML = '<div class="nogl">😢 你的瀏覽器不支援 3D 顯示<br>請用下方按鈕使用圖書館的各項功能！</div>'; return; }
-  buildScene(); buildPins(); setupControls(); preset(); cam.yaw = cam.tYaw + 0.5; cam.pitch = cam.tPitch + 0.25; cam.dist = cam.tDist * 1.35; requestAnimationFrame(loop);
-  setTimeout(() => { const l = $('#loading'); l.style.opacity = 0; setTimeout(() => l.remove(), 700); }, 400);
-  setTimeout(() => { $('#hint').style.opacity = 0; }, 9000);
+  $('#ips').innerHTML = [['xiner', '心兒', '#FF9EC4'], ['xiaosi', '小四', '#8EDDC0'], ['sisi', '思思', '#BBA8FF'], ['juanmao', '捲毛', '#8FD3FF'], ['dede', 'DeDe', '#FFD95A']].map(([k, n, c], i) => `<div class="ip" style="--i:${i};--c:${c}"><b style="background-image:url(${IMG[k]})"></b>${n}</div>`).join('');
+  if (!renderer) { $('#intro').remove(); $('#stage').innerHTML = '<div class="nogl">😢 你的瀏覽器不支援 3D 顯示<br>請用下方按鈕使用圖書館的各項功能！</div>'; return; }
+  const prog = $('#prog'), pst = $('#pst'); prog.style.width = '18%';
+  requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(() => {
+    buildScene(); buildPins(); setupControls(); setupWalkInput(); buildPlayer(); buildPlay(); preset();
+    cam.yaw = cam.tYaw + 0.9; cam.pitch = cam.tPitch + 0.4; cam.dist = cam.tDist * 1.7; requestAnimationFrame(loop);
+    prog.style.width = '100%'; pst.textContent = '小島搭建完成！'; setTimeout(() => $('#intro').classList.add('ready'), 450);
+  }, 120)));
+  $('#go').onclick = () => { SFX.sparkle(); SFX.music(); const it = $('#intro'); it.classList.add('out'); setTimeout(() => it.remove(), 950); openSetup(); };
 }
 (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]) : Promise.resolve()).then(start);
-window.__lib = { scene, cam, camera, poke, HOTS, CHARS, target: camTarget };
+window.__lib = { scene, cam, camera, poke, HOTS, CHARS, target: camTarget, WALK, setWalk, openSetup, closeSetup, BALL, action };
 </script>
 </body>
 </html>
