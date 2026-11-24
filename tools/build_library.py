@@ -10,6 +10,8 @@ html = html.replace('__AUDIO_ep01__', 'data:audio/mpeg;base64,' + base64.b64enco
 assert '__AUDIO_' not in html
 for k in range(1, 6):
     html = html.replace(f'__IMG_p{k}__', 'data:image/jpeg;base64,' + base64.b64encode((root / f'images/paintings/p{k}.jpg').read_bytes()).decode())
+for k in range(1, 5):
+    html = html.replace(f'__IMG_moon{k}__', 'data:image/jpeg;base64,' + base64.b64encode((root / f'images/posters/moon{k}.jpg').read_bytes()).decode())
 assert '__THREE_JS__' not in html and '__IMG_' not in html
 for ext in ('html', 'txt'):
     (root / f'swsh-library.{ext}').write_text(html, encoding='utf-8')
