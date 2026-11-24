@@ -217,10 +217,16 @@ body.night .dsep { background: rgba(255, 255, 255, .15); }
 .bubble.sm { font-size: 14px; padding: 5px 11px; }
 #joy, #act { position: fixed; z-index: 5; display: none; touch-action: none; }
 body.walking #joy, body.walking #act { display: grid; }
-#joy { left: 22px; bottom: calc(96px + env(safe-area-inset-bottom)); width: 112px; height: 112px; border-radius: 50%; place-items: center; background: rgba(255, 252, 245, .55); border: 2px solid rgba(255, 255, 255, .9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: var(--soft); }
-#joy i { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #FFB7CF, #FF8FB8); box-shadow: 0 4px 0 #E0679A, inset 0 2px 0 rgba(255, 255, 255, .6); transition: transform .05s; }
+#joy { left: 18px; bottom: calc(92px + env(safe-area-inset-bottom)); width: 136px; height: 136px; border-radius: 50%; place-items: center; background: rgba(255, 252, 245, .55); border: 2px solid rgba(255, 255, 255, .9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: var(--soft); }
+#joy i { width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(135deg, #FFB7CF, #FF8FB8); box-shadow: 0 4px 0 #E0679A, inset 0 2px 0 rgba(255, 255, 255, .6); transition: transform .05s; }
 #act { right: 22px; bottom: calc(104px + env(safe-area-inset-bottom)); width: 78px; height: 78px; border-radius: 50%; border: 3px solid #fff; place-items: center; background: linear-gradient(135deg, #FFE07A, #FFB48F); box-shadow: 0 5px 0 #E59A62, var(--soft); font: 900 13px var(--font); color: #6B4A36; line-height: 1.15; text-align: center; }
 #act:active { transform: translateY(3px); box-shadow: 0 2px 0 #E59A62; }
+#floors { position: fixed; z-index: 6; right: 18px; bottom: calc(196px + env(safe-area-inset-bottom)); display: none; flex-direction: column-reverse; gap: 6px; padding: 8px; border-radius: 22px; background: var(--glass); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1.5px solid #fff; box-shadow: var(--soft); }
+#floors.show { display: flex; animation: bub .3s; }
+#floors button { border: 0; min-width: 76px; padding: 10px 12px; border-radius: 14px; font: 900 15px var(--font); color: var(--ink); background: #fff; box-shadow: 0 3px 0 var(--line); }
+#floors button.on { background: linear-gradient(135deg, #FFB7CF, #FF8FB8); color: #fff; box-shadow: 0 3px 0 #E0679A; }
+#act.stair { background: linear-gradient(135deg, #8EDDC0, #8FD3FF); box-shadow: 0 5px 0 #5FAFC0, var(--soft); }
+@media (pointer: fine) { #floors { bottom: calc(176px + env(safe-area-inset-bottom)); } }
 @media (pointer: fine) { #joy { display: none !important; } #act { width: 66px; height: 66px; font-size: 12px; } }
 /* ===== 開場畫面 ===== */
 #intro { position: fixed; inset: 0; z-index: 70; overflow: hidden; display: grid; place-items: center; background: linear-gradient(170deg, #8ED1FC 0%, #BDE6FF 35%, #FFE3EC 72%, #FFF4D6 100%); transition: opacity .9s, transform .9s; }
@@ -317,7 +323,7 @@ body.walking #joy, body.walking #act { display: grid; }
   </div>
 </div>
 <section id="setup" aria-label="建立角色"><h3>建立你的小島角色</h3><p class="s">取個名字、選個造型，就能在小島上散步、和同學踢球！</p><label for="nm">我的名字</label><input id="nm" maxlength="8" placeholder="例如：小維" autocomplete="off"><div id="looks"></div><div class="row2"><button class="btn" id="sWalk" type="button">🚶 開始漫步</button><button class="btn alt" id="sTour" type="button">🗺️ 自由參觀</button></div></section>
-<div id="joy" aria-label="移動搖桿"><i></i></div><button id="act" type="button" aria-label="踢球、投籃或跳">⚽<br>踢球・跳</button>
+<div id="joy" aria-label="移動搖桿"><i></i></div><div id="floors" aria-label="選擇樓層"></div><button id="act" type="button" aria-label="踢球、投籃或跳">⚽<br>踢球・跳</button>
 <div class="ntag" id="ntag"></div>
 
 <script>__THREE_JS__</script>
@@ -462,17 +468,17 @@ const SFX = (() => {
   const noise = (d, v = 0.08, f = 1200, delay = 0, q = 1.2) => { if (!on) return; const a = ctx(); if (!a) return; const t = a.currentTime + delay, n = Math.floor(a.sampleRate * d), b = a.createBuffer(1, n, a.sampleRate), ch = b.getChannelData(0); for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / n); const s = a.createBufferSource(); s.buffer = b; const fl = a.createBiquadFilter(); fl.type = 'bandpass'; fl.frequency.value = f; fl.Q.value = q; const g = a.createGain(); g.gain.value = v; s.connect(fl).connect(g).connect(a.destination); s.start(t); };
   const bark = (delay) => { if (!on) return; const a = ctx(); if (!a) return; const t = a.currentTime + delay, o = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(260, t + 0.13); f.type = 'lowpass'; f.frequency.setValueAtTime(1800, t); f.frequency.exponentialRampToValueAtTime(500, t + 0.14); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.22, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16); o.connect(f).connect(g).connect(a.destination); o.start(t); o.stop(t + 0.2); noise(0.08, 0.05, 900, delay); };
   // ---- 背景音樂：原創音樂盒小曲（C 大調，84 BPM，8 小節循環） ----
-  const mtof = m => 440 * Math.pow(2, (m - 69) / 12), E8 = 60 / 84 / 2;
-  const MEL = [[76, 0, 79, 0, 84, 79, 76, 0], [72, 0, 76, 0, 81, 0, 79, 76], [77, 0, 81, 0, 84, 0, 81, 77], [79, 0, 74, 0, 71, 74, 79, 0],
-    [84, 0, 79, 0, 76, 79, 72, 0], [71, 0, 76, 0, 79, 0, 83, 0], [81, 77, 72, 0, 74, 79, 83, 0], [84, 0, 0, 0, 72, 0, 0, 0]];
-  const CH = [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62], [60, 64, 67], [52, 55, 59], [53, 57, 60], [60, 64, 67]], BASS = [48, 45, 41, 43, 48, 40, 41, 48];
+  const mtof = m => 440 * Math.pow(2, (m - 69) / 12), E8 = 60 / 100 / 2;
+  const MEL = [[72, 0, 69, 72, 77, 0, 76, 74], [74, 0, 69, 74, 77, 0, 74, 72], [70, 74, 77, 74, 70, 0, 72, 74], [76, 0, 72, 0, 67, 72, 76, 79],
+    [77, 0, 76, 77, 72, 0, 69, 72], [76, 0, 72, 76, 81, 0, 79, 76], [74, 77, 74, 70, 72, 76, 79, 76], [77, 0, 72, 0, 65, 0, 0, 0]];
+  const CH = [[53, 57, 60], [50, 53, 57], [46, 50, 53], [48, 52, 55], [53, 57, 60], [45, 48, 52], [46, 50, 53], [53, 57, 60]], BASS = [41, 38, 34, 36, 41, 33, 34, 41];
   let bus = null, mTimer = null, mNext = 0, mStep = 0, playing = false, duck = false;
   const mBus = a => { if (bus) return bus; bus = a.createGain(); bus.gain.value = 0; const rev = a.createConvolver(), len = a.sampleRate * 1.8 | 0, ir = a.createBuffer(2, len, a.sampleRate); for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); } rev.buffer = ir; const wet = a.createGain(); wet.gain.value = 0.28; bus.connect(a.destination); bus.connect(rev).connect(wet).connect(a.destination); return bus; };
   const mNote = (a, t, f, d, type, v, att = 0.01) => { const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + att); g.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(g).connect(bus); o.start(t); o.stop(t + d + 0.05); };
   const mSched = a => { while (mNext < a.currentTime + 0.3) { const bar = Math.floor(mStep / 8) % 8, i = mStep % 8, m = MEL[bar][i];
-      if (m) { mNote(a, mNext, mtof(m), 1.2, 'triangle', 0.07); mNote(a, mNext, mtof(m + 12), 0.5, 'sine', 0.018); }
-      if (i === 0 || i === 4) mNote(a, mNext, mtof(BASS[bar]), E8 * 3.6, 'sine', 0.09, 0.02);
-      if (i === 0) CH[bar].forEach(n => mNote(a, mNext, mtof(n), E8 * 8.5, 'sine', 0.018, 0.35));
+      if (m) { mNote(a, mNext, mtof(m), 0.55, 'sine', 0.085, 0.004); mNote(a, mNext, mtof(m + 12), 0.16, 'triangle', 0.02, 0.003); mNote(a, mNext + E8 * 2, mtof(m), 0.35, 'sine', 0.018, 0.004); }
+      if (i === 0 || i === 4) mNote(a, mNext, mtof(BASS[bar] + (i === 4 ? 7 : 0)), E8 * 2.2, 'triangle', 0.075, 0.01);
+      if (i === 2 || i === 6) CH[bar].forEach((n, q) => mNote(a, mNext + q * 0.012, mtof(n + 12), 0.22, 'triangle', 0.016, 0.004)); if (i === 0) CH[bar].forEach(n => mNote(a, mNext, mtof(n), E8 * 8, 'sine', 0.012, 0.4));
       if (i % 2 === 1) mNote(a, mNext, 5200, 0.04, 'triangle', 0.004);
       mNext += E8; mStep++; } };
   const mVol = a => { if (bus) bus.gain.setTargetAtTime(playing && !duck ? 0.75 : 0, a.currentTime, 0.4); };
@@ -638,7 +644,7 @@ function applyEnv(m, time) {
   ENV.glows.forEach(g => { g.m.emissiveIntensity = g.base * (1 + 0.35 * n); });
   ENV.mtn.forEach(o => o.m.color.copy(o.base).lerp(ENV.mtnNight, k.night * 0.7));
   CLOUD_MATS.forEach(c => { c.color.copy(ENV.cloudW).lerp(ENV.cloudNight, k.night * 0.8).lerp(ENV.cloudStorm, s); c.emissiveIntensity = 0.12 * (1 - k.night * 0.8); });
-  ENV.moon.material.opacity = k.night * (1 - s); if (ENV.sunD) ENV.sunD.visible = k.night < 0.6; ENV.moonGlow.material.opacity = 0.18 * k.night * (1 - s);
+  ENV.moon.material.opacity = k.night * (1 - s); ENV.moonGlow.material.opacity = 0.18 * k.night * (1 - s);
   ENV.stormMat.opacity = 0.92 * s; ENV.stormG.visible = s > 0.01;
 }
 let nextStrike = 0, boltT = -9, lastWT = 0;
@@ -722,12 +728,13 @@ function buildPlayer() {
   $('#ntag').textContent = ME.name || '小島訪客';
 }
 // ---- 足球與同學 ----
-const BALL = { g: null, pos: new THREE.Vector3(7, 0, 28), vel: new THREE.Vector3(), y: 0, vy: 0, R: 0.62 };
+const BALL = { g: null, last: '', pos: new THREE.Vector3(-39.25, 0, 0), vel: new THREE.Vector3(), y: 0, vy: 0, R: 0.62 };
 const MATES = [];
 function buildPlay() {
+  buildField();
   const W = WALK.W, b = G(W); BALL.g = b; const bm = new THREE.MeshStandardMaterial({ map: tex(256, 128, (c, w, h) => { c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, w, h); c.fillStyle = '#5B4636'; [[40, 30], [120, 64], [200, 30], [80, 100], [168, 104], [240, 90], [10, 90]].forEach(([x, y]) => { c.beginPath(); for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2 - Math.PI / 2; c.lineTo(x + Math.cos(a) * 15, y + Math.sin(a) * 15); } c.fill(); }); }), roughness: 0.6 });
   b.add(mesh(new THREE.SphereGeometry(BALL.R, 24, 16), bm, 0, 0, 0)); b.position.copy(BALL.pos);
-  [{ n: '小安', look: 4, home: [-11, 28] }, { n: '阿哲', look: 3, home: [13, 29] }, { n: '小晴', look: 5, home: [3, 34] }].forEach((m, i) => {
+  [{ n: '小安', look: 4, home: [-41.5, -6] }, { n: '阿哲', look: 3, home: [-36.5, 5] }, { n: '小晴', look: 5, home: [-39, 8] }].forEach((m, i) => {
     const c = chibi(LOOKS[m.look]); c.g.scale.setScalar(PSCALE); linearize(c.g); W.add(c.g); const pos = new THREE.Vector3(m.home[0], 0, m.home[1]); c.g.position.copy(pos);
     const tag = document.createElement('div'); tag.className = 'ntag mate'; tag.textContent = m.n; document.body.appendChild(tag);
     MATES.push({ c, pos, home: new THREE.Vector3(m.home[0], 0, m.home[1]), face: 0, ph: i * 2, wander: new THREE.Vector3(m.home[0], 0, m.home[1]), wt: 0, cool: 0, tag, n: m.n }); });
@@ -739,40 +746,54 @@ function animLegs(c, moving, ph) { const sw = Math.sin(ph) * 0.7 * moving; c.leg
 const HOOPS = [new THREE.Vector3(-24.7, 4.8 * 1, -28), new THREE.Vector3(-3.3, 4.8, -28)];
 let shot = null;
 function action() {
-  if (!WALK.on || shot) return; const p = WALK.pos;
-  const hoop = HOOPS.find(h => Math.hypot(h.x - p.x, h.z - p.z) < 10);
+  if (!WALK.on || shot || WALK.climb) return; const p = WALK.pos;
+  if (nearStair()) { $('#floors').classList.toggle('show'); SFX.pop(); return; }
+  const hoop = WALK.floor === 0 && HOOPS.find(h => Math.hypot(h.x - p.x, h.z - p.z) < 10);
   if (hoop) { const d = Math.hypot(hoop.x - p.x, hoop.z - p.z), ok = Math.random() < Math.max(0.35, 0.95 - d * 0.06); WALK.face = Math.atan2(hoop.x - p.x, hoop.z - p.z);
     const bg = G(WALK.W); Sp(bg, 0.45, '#FF8A3D', 0, 0, 0); linearize(bg); shot = { bg, from: p.clone().setY(3.2), to: hoop.clone().add(new THREE.Vector3(ok ? 0 : (Math.random() < 0.5 ? -1 : 1) * 0.9, 0.3, 0)), t0: clock.getElapsedTime(), ok }; SFX.pop(); return; }
   const d = Math.hypot(BALL.pos.x - p.x, BALL.pos.z - p.z);
-  if (d < 3.2) { kickBall(new THREE.Vector3(Math.sin(WALK.face), 0, Math.cos(WALK.face)), 30, 7); return; }
+  if (d < 3.2 && WALK.floor === 0) { kickBall(new THREE.Vector3(Math.sin(WALK.face), 0, Math.cos(WALK.face)), 30, 7); BALL.last = 'me'; return; }
   if (WALK.y === 0) { WALK.vy = 9; SFX.pop(); }
 }
 const _mv = new THREE.Vector3();
 function stepPlay(t, dt) {
   if (!WALK.g) return;
   // 玩家
-  if (WALK.on && !$('#dlg').open && !$('#setup').classList.contains('show')) {
+  if (WALK.climb) stepClimb(t);
+  else if (WALK.on && !$('#dlg').open && !$('#setup').classList.contains('show')) {
     const K = WALK.keys; let ix = (K.d || K.arrowright ? 1 : 0) - (K.a || K.arrowleft ? 1 : 0) + WALK.joy.x, iy = (K.w || K.arrowup ? 1 : 0) - (K.s || K.arrowdown ? 1 : 0) + WALK.joy.y;
-    const m = Math.min(1, Math.hypot(ix, iy)); if (m > 0.05) { const fx = -Math.sin(cam.yaw), fz = -Math.cos(cam.yaw); _mv.set(fx * iy - fz * ix, 0, fz * iy + fx * ix).normalize().multiplyScalar(m); WALK.pos.addScaledVector(_mv, dt * 11 * (K.shift ? 1.5 : 1)); WALK.face = Math.atan2(_mv.x, _mv.z); WALK.ph += dt * 11; }
-    WALK.moving += ((m > 0.05 ? 1 : 0) - WALK.moving) * Math.min(1, dt * 10); collide(WALK.pos, 0.8);
+    let m = Math.min(1, Math.hypot(ix, iy));
+    if (m > 0.05) { WALK.goal = null; const fx = -Math.sin(cam.yaw), fz = -Math.cos(cam.yaw); _mv.set(fx * iy - fz * ix, 0, fz * iy + fx * ix).normalize().multiplyScalar(m); }
+    else if (WALK.goal) { _mv.set(WALK.goal.x - WALK.pos.x, 0, WALK.goal.z - WALK.pos.z); const gd = _mv.length(); if (gd < 0.6 || (WALK.stuck += dt) > 6) { WALK.goal = null; m = 0; } else { _mv.normalize(); m = 1; } }
+    if (m > 0.05) { const before = WALK.pos.clone(); WALK.pos.addScaledVector(_mv, dt * 11 * (K.shift ? 1.5 : 1)); WALK.face = Math.atan2(_mv.x, _mv.z); WALK.ph += dt * 11; collideF(WALK.pos, 0.8); if (WALK.goal && before.distanceTo(WALK.pos) < dt * 2) WALK.stuck += dt * 4;
+      if ((COARSE || WALK.goal) && !FLIGHT && WALK.floor === 0) { let dy = WALK.face + Math.PI - cam.tYaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); cam.tYaw += dy * Math.min(1, dt * 1.4); } }
+    else collideF(WALK.pos, 0.8);
+    WALK.moving += ((m > 0.05 ? 1 : 0) - WALK.moving) * Math.min(1, dt * 10);
     // 帶球
-    const bd = Math.hypot(BALL.pos.x - WALK.pos.x, BALL.pos.z - WALK.pos.z); if (bd < 1.7 && m > 0.05 && BALL.y < 1) { BALL.vel.set(_mv.x, 0, _mv.z).multiplyScalar(17); }
+    const bd = Math.hypot(BALL.pos.x - WALK.pos.x, BALL.pos.z - WALK.pos.z); if (WALK.floor === 0 && bd < 1.7 && m > 0.05 && BALL.y < 1) { BALL.vel.set(_mv.x, 0, _mv.z).multiplyScalar(17); BALL.last = 'me'; }
+    if ((WALK.uiT = (WALK.uiT || 0) + dt) > 0.25) { WALK.uiT = 0; const ns = nearStair(), p = WALK.pos;
+      const lab = ns ? '🪜<br>換樓層' : (WALK.floor === 0 && HOOPS.some(h => Math.hypot(h.x - p.x, h.z - p.z) < 10)) ? '🏀<br>投籃' : (WALK.floor === 0 && Math.hypot(BALL.pos.x - p.x, BALL.pos.z - p.z) < 3.2) ? '⚽<br>踢球' : '⬆️<br>跳一下';
+      if ($('#act').innerHTML !== lab) $('#act').innerHTML = lab; $('#act').classList.toggle('stair', ns);
+      if (!ns) $('#floors').classList.remove('show'); else if (!WALK.stairShown) { $('#floors').classList.add('show'); }
+      WALK.stairShown = ns; document.querySelectorAll('#floors button').forEach((b, i) => b.classList.toggle('on', i === WALK.floor)); }
   } else WALK.moving *= 0.8;
+  if (WALK.mark && WALK.mark.visible) { const mu = t - WALK.markT; WALK.mark.scale.setScalar(1 + Math.sin(mu * 6) * 0.15); if (!WALK.goal || mu > 8) WALK.mark.visible = false; }
   WALK.vy -= 28 * dt; WALK.y = Math.max(0, WALK.y + WALK.vy * dt); if (WALK.y === 0) WALK.vy = 0;
-  const g = WALK.g; g.position.set(WALK.pos.x, WALK.y + (inLib(WALK.pos) ? 0.55 : 0) + Math.abs(Math.sin(WALK.ph)) * 0.12 * WALK.moving, WALK.pos.z);
+  const g = WALK.g; g.position.set(WALK.pos.x, WALK.y + (WALK.climb ? WALK.climbY : groundY()) + Math.abs(Math.sin(WALK.ph)) * 0.12 * WALK.moving, WALK.pos.z);
   let dr = WALK.face - g.rotation.y; dr = Math.atan2(Math.sin(dr), Math.cos(dr)); g.rotation.y += dr * Math.min(1, dt * 12); animLegs(WALK.c, WALK.moving, WALK.ph);
   // 足球
   BALL.pos.addScaledVector(BALL.vel, dt); BALL.vel.multiplyScalar(Math.exp(-1.1 * dt)); BALL.vy -= 26 * dt; BALL.y += BALL.vy * dt; if (BALL.y < 0) { BALL.y = 0; BALL.vy = Math.abs(BALL.vy) > 3 ? -BALL.vy * 0.45 : 0; }
   const bp = BALL.pos.clone(); collide(BALL.pos, BALL.R); if (bp.distanceTo(BALL.pos) > 1e-3) { const n = bp.sub(BALL.pos).normalize(); BALL.vel.addScaledVector(n, -1.7 * BALL.vel.dot(n)); }
+  fieldBall(dt);
   BALL.g.position.set(BALL.pos.x, BALL.R + BALL.y + (inLib(BALL.pos) ? 0.55 : 0), BALL.pos.z); const sp = BALL.vel.length(); if (sp > 0.05) BALL.g.rotateOnWorldAxis(new THREE.Vector3(BALL.vel.z, 0, -BALL.vel.x).normalize(), sp * dt / BALL.R);
   // 同學
   MATES.forEach(M => { M.cool -= dt; const toB = Math.hypot(BALL.pos.x - M.pos.x, BALL.pos.z - M.pos.z); let tgt = M.wander, spd = 3.5;
     if (toB < 16 && BALL.vel.length() < 14 && M.cool < 0) { tgt = BALL.pos; spd = 8; }
-    else if (M.pos.distanceTo(M.wander) < 1 || (M.wt -= dt) < 0) { M.wander.set(M.home.x + (Math.random() - 0.5) * 12, 0, M.home.z + (Math.random() - 0.5) * 8); M.wt = 4 + Math.random() * 4; }
+    else if (M.pos.distanceTo(M.wander) < 1 || (M.wt -= dt) < 0) { M.wander.set(M.home.x + (Math.random() - 0.5) * 6, 0, M.home.z + (Math.random() - 0.5) * 8); M.wt = 4 + Math.random() * 4; }
     const dx = tgt.x - M.pos.x, dz = tgt.z - M.pos.z, d = Math.hypot(dx, dz); let mv = 0;
     if (d > 1.2) { M.pos.x += dx / d * spd * dt; M.pos.z += dz / d * spd * dt; M.face = Math.atan2(dx, dz); mv = 1; M.ph += dt * spd * 1.3; }
     collide(M.pos, 0.8);
-    if (toB < 1.8 && M.cool < 0) { const aim = WALK.on && Math.random() < 0.7 ? WALK.pos : MATES[(MATES.indexOf(M) + 1) % MATES.length].pos; const dir = new THREE.Vector3(aim.x - M.pos.x, 0, aim.z - M.pos.z); kickBall(dir, 13 + Math.min(14, dir.length() * 0.7), 3); M.cool = 2.2; if (Math.random() < 0.6) sayAt(M.c.g, SAYS[Math.random() * SAYS.length | 0]); }
+    if (toB < 1.8 && M.cool < 0) { const aim = WALK.on && WALK.floor === 0 && Math.random() < 0.7 ? WALK.pos : MATES[(MATES.indexOf(M) + 1) % MATES.length].pos; const dir = new THREE.Vector3(aim.x - M.pos.x, 0, aim.z - M.pos.z); kickBall(dir, 13 + Math.min(14, dir.length() * 0.7), 3); BALL.last = 'npc'; M.cool = 2.2; if (Math.random() < 0.6) sayAt(M.c.g, SAYS[Math.random() * SAYS.length | 0]); }
     M.c.g.position.set(M.pos.x, Math.abs(Math.sin(M.ph)) * 0.12 * mv, M.pos.z); let r = M.face - M.c.g.rotation.y; r = Math.atan2(Math.sin(r), Math.cos(r)); M.c.g.rotation.y += r * Math.min(1, dt * 8); animLegs(M.c, mv, M.ph); });
   // 投籃
   if (shot) { const u = Math.min(1, (t - shot.t0) / 1.0); shot.bg.position.lerpVectors(shot.from, shot.to, u); shot.bg.position.y += Math.sin(u * Math.PI) * 6;
@@ -786,11 +807,11 @@ function placeTags() {
 function setWalk(on) {
   WALK.on = on; document.body.classList.toggle('walking', on);
   $('#bWalk').innerHTML = on ? `${ICON('map', 18)}<span>導覽</span>` : `${ICON('walk', 18)}<span>漫步</span>`;
-  if (on) { const p = WALK.g.getWorldPosition(new THREE.Vector3()); p.y += 2.8; const w = Math.atan2(Math.sin(cam.yaw), Math.cos(cam.yaw)); flyTo({ t: p, dist: 24, pitch: 0.34, yaw: cam.yaw - w + WALK.face + Math.PI }); $('#hint').innerHTML = matchMedia('(pointer:coarse)').matches ? '🕹️ 用左下搖桿走路・右下按鈕踢球／投籃／跳' : '⌨️ WASD／方向鍵走路・Shift 跑步・空白鍵踢球／投籃／跳'; $('#hint').style.opacity = 1; setTimeout(() => $('#hint').style.opacity = 0, 6000); }
+  if (on) { const p = WALK.g.getWorldPosition(new THREE.Vector3()); p.y += 2.8; const w = Math.atan2(Math.sin(cam.yaw), Math.cos(cam.yaw)); flyTo({ t: p, dist: 24, pitch: 0.34, yaw: cam.yaw - w + WALK.face + Math.PI }); $('#hint').innerHTML = COARSE ? '👆 點地面就走過去・左下搖桿也能走・⚽ 球場在圖書館左邊' : '⌨️ WASD／方向鍵走路・點地面也能走・空白鍵踢球／投籃／換樓層・⚽ 球場在圖書館左邊'; $('#hint').style.opacity = 1; setTimeout(() => $('#hint').style.opacity = 0, 6000); }
   else preset(true);
 }
 function setupWalkInput() {
-  addEventListener('keydown', e => { if (e.target.closest('input,textarea,select')) return; const k = e.key.toLowerCase(); if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'shift', ' '].includes(k) && WALK.on) { e.preventDefault(); WALK.keys[k] = true; if (k === ' ' && !e.repeat) action(); } });
+  addEventListener('keydown', e => { if (e.target.closest('input,textarea,select')) return; const k = e.key.toLowerCase(); if (WALK.on && nearStair() && '1234'.includes(k) && k.length === 1) { goFloor(+k - 1); return; } if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'shift', ' '].includes(k) && WALK.on) { e.preventDefault(); WALK.keys[k] = true; if (k === ' ' && !e.repeat) action(); } });
   addEventListener('keyup', e => { WALK.keys[e.key.toLowerCase()] = false; });
   addEventListener('blur', () => { WALK.keys = {}; });
   const joy = $('#joy'), knob = joy.querySelector('i'); let jid = null, cx = 0, cy = 0;
@@ -800,6 +821,7 @@ function setupWalkInput() {
   const end = e => { if (e.pointerId !== jid) return; jid = null; knob.style.transform = ''; WALK.joy.x = WALK.joy.y = 0; };
   joy.addEventListener('pointerup', end); joy.addEventListener('pointercancel', end);
   $('#act').onclick = action;
+  $('#floors').innerHTML = FLOOR_N.map((n, i) => `<button type="button" data-f="${i}">${n}</button>`).join(''); $('#floors').querySelectorAll('button').forEach(b => b.onclick = () => goFloor(+b.dataset.f));
 }
 // ---- 進場：開場畫面 → 建立角色 ----
 function openSetup() {
@@ -813,6 +835,64 @@ function closeSetup(walk) {
   ME.name = $('#nm').value.trim().slice(0, 8); store.set({ me: { name: ME.name, look: ME.look } }); $('#ntag').textContent = ME.name || '小島訪客';
   $('#setup').classList.remove('show'); SFX.sparkle(); toast(`歡迎來到四維立體圖書館，${ME.name || '小島訪客'}！`);
   WALK.face = Math.PI; if (walk) setWalk(true); else { WALK.on = false; document.body.classList.remove('walking'); preset(true); }
+}
+
+const COARSE = matchMedia('(pointer: coarse)').matches;
+// ---- 樓層、樓梯、點地移動 ----
+const FLOOR_Y = [0, 9.43, 18.55, 27.74], FLOOR_N = ['1F', '2F', '3F', '閣樓'];
+const STAIR = { x: 11.05, z: 3.86 }, LAND = { x: 11.05, z: -0.6 }, EXIT0 = { x: 7.3, z: 4.4 };
+WALK.floor = 0; WALK.goal = null; WALK.climb = null;
+const groundY = () => WALK.floor === 0 ? (inLib(WALK.pos) ? 0.55 : 0) : FLOOR_Y[WALK.floor];
+const nearStair = () => { const p = WALK.pos; return WALK.floor === 0 ? Math.hypot(p.x - STAIR.x, p.z - STAIR.z) < 5.2 : Math.hypot(p.x - LAND.x, p.z - LAND.z) < 3.6; };
+function collideF(p, r) {
+  if (WALK.floor === 0) return collide(p, r);
+  const zmax = WALK.floor === 3 ? 6.0 : 0.3; p.x = Math.min(16 - r, Math.max(-16 + r, p.x)); p.z = Math.min(zmax - r, Math.max(-11.4 + r, p.z));
+  if (WALK.floor === 3 && p.x > 8.0 - r && p.x < 14.1 + r && p.z > 0.85 - r) { const dl = p.x - (8.0 - r), dr = 14.1 + r - p.x, dn = p.z - (0.85 - r), m = Math.min(dl, dr, dn); if (m === dl) p.x = 8.0 - r; else if (m === dr) p.x = 14.1 + r; else p.z = 0.85 - r; }
+}
+function goFloor(f) {
+  if (WALK.climb || f === WALK.floor || !WALK.on) return; SFX.pop(); WALK.goal = null;
+  WALK.climb = { from: WALK.floor, to: f, t0: clock.getElapsedTime(), dur: 0.7 + Math.abs(f - WALK.floor) * 0.75, y0: WALK.floor === 0 ? 0.55 : FLOOR_Y[WALK.floor] };
+  $('#floors').classList.remove('show');
+}
+function stepClimb(t) {
+  const C = WALK.climb, u = Math.min(1, (t - C.t0) / C.dur), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2, turns = (C.to - C.from), th = -Math.PI / 2 + e * turns * Math.PI * 2;
+  WALK.pos.set(STAIR.x + Math.cos(th) * 2.1, 0, STAIR.z + Math.sin(th) * 2.1); WALK.face = th + (turns > 0 ? Math.PI / 2 : -Math.PI / 2); WALK.ph += 0.35; WALK.moving = 1;
+  WALK.climbY = C.y0 + (FLOOR_Y[C.to] + (C.to === 0 ? 0.55 : 0) - C.y0) * e;
+  if (u >= 1) { WALK.floor = C.to; const L = C.to === 0 ? EXIT0 : LAND; WALK.pos.set(L.x, 0, L.z); WALK.face = C.to === 0 ? -Math.PI / 2 : Math.PI; WALK.climb = null; floorCam(C.to); toast(`🪜 來到 ${FLOOR_N[C.to]}`, 1600); }
+}
+function floorCam(f) { const w = Math.atan2(Math.sin(cam.tYaw), Math.cos(cam.tYaw)); if (f === 0) { cam.tPitch = 0.34; cam.tDist = 24; } else { cam.tYaw = cam.tYaw - w + (f === 3 ? 0.35 : 0.15); cam.tPitch = f === 3 ? 1.1 : 0.12; cam.tDist = f === 3 ? 24 : 20; } }
+const _pl = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), _hit = new THREE.Vector3();
+function tapWalk(x, y) {
+  if (!WALK.on || WALK.climb || !WALK.W) return; ndc.set(x / innerWidth * 2 - 1, -(y / innerHeight) * 2 + 1); ray.setFromCamera(ndc, camera);
+  const wy = WALK.W.localToWorld(new THREE.Vector3(0, groundY(), 0)).y; _pl.constant = -wy; if (!ray.ray.intersectPlane(_pl, _hit)) return;
+  const l = WALK.W.worldToLocal(_hit.clone()); WALK.goal = new THREE.Vector3(l.x, 0, l.z); WALK.stuck = 0;
+  if (WALK.mark) { WALK.mark.visible = true; WALK.mark.position.set(l.x, groundY() + 0.08, l.z); WALK.markT = clock.getElapsedTime(); }
+}
+// ---- 側邊小足球場 ----
+const FIELD = { x0: -45, x1: -33.5, z0: -12, z1: 12, cx: -39.25, gw: 2.2 };
+let goalsMe = 0, goalCool = 0;
+function buildField() {
+  const W = WALK.W, F = FIELD, w = F.x1 - F.x0, d = F.z1 - F.z0, g = G(W, F.cx, 0, 0);
+  const T = tex(256, 512, (c, cw, ch) => { for (let i = 0; i < 8; i++) { c.fillStyle = i % 2 ? '#8FD88A' : '#9FE09A'; c.fillRect(0, i * ch / 8, cw, ch / 8); } c.strokeStyle = '#FFFFFF'; c.lineWidth = 6; c.strokeRect(8, 8, cw - 16, ch - 16); c.beginPath(); c.moveTo(8, ch / 2); c.lineTo(cw - 8, ch / 2); c.stroke(); c.beginPath(); c.arc(cw / 2, ch / 2, 40, 0, 7); c.stroke(); [8, ch - 8].forEach((y, k) => c.strokeRect(cw / 2 - 60, k ? y - 60 : y, 120, 60)); });
+  const pl = Pl(g, w, d, T, 0, 0.06, 0); pl.rotation.x = -Math.PI / 2; pl.receiveShadow = true;
+  [[0, F.z0 - 0.4, w + 1.2, 0.4], [0, F.z1 + 0.4, w + 1.2, 0.4]].forEach(([x, z, ww, dd]) => { [-1, 1].forEach(s => Bx(g, (ww - F.gw * 2 - 1.4) / 2, 0.45, dd, '#FFFFFF', s * (F.gw + 0.7 + (ww - F.gw * 2 - 1.4) / 4), 0.23, z, 0.08)); });
+  [-w / 2 - 0.4, w / 2 + 0.4].forEach(x => Bx(g, 0.4, 0.45, d + 1.2, '#FFFFFF', x, 0.23, 0, 0.08));
+  [F.z0, F.z1].forEach((z, k) => { const gg = G(g, 0, 0, z + (k ? 0.9 : -0.9)); [-1, 1].forEach(s => Cy(gg, 0.12, 0.12, 2.2, '#FFFFFF', s * F.gw, 1.1, 0, 10)); const bar = Cy(gg, 0.12, 0.12, F.gw * 2 + 0.24, '#FFFFFF', 0, 2.2, 0, 10); bar.rotation.z = Math.PI / 2;
+    const net = mesh(new THREE.BoxGeometry(F.gw * 2, 2.1, 1.4, 8, 4, 3), new THREE.MeshBasicMaterial({ color: '#FFFFFF', wireframe: true, transparent: true, opacity: 0.7 }), 0, 1.05, k ? 0.7 : -0.7, false); gg.add(net); });
+  const sg = G(g, w / 2 + 1.6, 0, -3); sg.rotation.y = -Math.PI / 2; Cy(sg, 0.08, 0.08, 1.8, '#C9976A', -1.1, 0.9, 0, 6); Cy(sg, 0.08, 0.08, 1.8, '#C9976A', 1.1, 0.9, 0, 6); Bx(sg, 2.8, 1.0, 0.15, '#FFE07A', 0, 1.8, 0, 0.1);
+  Pl(sg, 2.6, 0.85, tex(256, 84, (c, cw, ch) => { c.fillStyle = '#FFE07A'; c.fillRect(0, 0, cw, ch); c.fillStyle = '#5B4636'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `400 40px ${RF}`; c.fillText('⚽ 小小足球場', cw / 2, ch / 2 + 2); }), 0, 1.8, 0.09);
+  linearize(g);
+  const mk = mesh(new THREE.RingGeometry(0.5, 0.8, 28), new THREE.MeshBasicMaterial({ color: '#FF8FB8', transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false }), 0, 0, 0, false); mk.rotation.x = -Math.PI / 2; mk.visible = false; W.add(mk); WALK.mark = mk;
+}
+function fieldBall(dt) {
+  const F = FIELD, P = BALL.pos, V = BALL.vel; goalCool -= dt;
+  const inMouth = Math.abs(P.x - F.cx) < F.gw - 0.3;
+  if ((P.z < F.z0 - 0.4 || P.z > F.z1 + 0.4) && inMouth && goalCool < 0 && P.x > F.x0 && P.x < F.x1) {
+    goalCool = 2.5; SFX.sparkle(); const mine = WALK.on && BALL.last === 'me'; if (mine) goalsMe++; toast(mine ? `⚽ 進球！${ME.name || '你'} 已經踢進 ${goalsMe} 球` : '⚽ 同學踢進一球！'); setTimeout(() => { P.set(F.cx, 0, 0); V.set(0, 0, 0); }, 900); return; }
+  const near = P.x > F.x0 - 3 && P.x < F.x1 + 3 && P.z > F.z0 - 3 && P.z < F.z1 + 3; if (!near) return;
+  if (P.x < F.x0 + BALL.R) { P.x = F.x0 + BALL.R; V.x = Math.abs(V.x) * 0.7; } if (P.x > F.x1 - BALL.R) { P.x = F.x1 - BALL.R; V.x = -Math.abs(V.x) * 0.7; }
+  if (!inMouth) { if (P.z < F.z0 + BALL.R) { P.z = F.z0 + BALL.R; V.z = Math.abs(V.z) * 0.7; } if (P.z > F.z1 - BALL.R) { P.z = F.z1 - BALL.R; V.z = -Math.abs(V.z) * 0.7; } }
+  else { P.z = Math.max(F.z0 - 1.6, Math.min(F.z1 + 1.6, P.z)); }
 }
 
 // ---------- 角色：四維 IP（黏土小人） ----------
@@ -1014,7 +1094,7 @@ function buildScene() {
   ANIM.push(t => bunt.forEach((f, i) => { f.rotation.z = Math.sin(t * 2 + i * 0.7) * 0.12; }));
   // 屋頂上的花蓮藍天白雲小裝飾
   const deco = G(roof, 0, RISE - 0.3, MZ);
-  const sunD = G(deco, -6.5, 2.6, 0); ENV.sunD = sunD; sunD.scale.setScalar(1.3); Sp(sunD, 0.75, '#FFD54F', 0, 0, 0, 1, 1, 0.5); for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, r = Co(sunD, 0.16, 0.42, '#FFB13B', Math.cos(a) * 1.05, Math.sin(a) * 1.05, 0, 8); r.rotation.z = a - Math.PI / 2; } [-1, 1].forEach(k => Sp(sunD, 0.07, '#5B4636', k * 0.25, 0.1, 0.36)); ANIM.push(t => { sunD.rotation.z = Math.sin(t) * 0.15; sunD.position.y = 2.6 + Math.sin(t * 0.8) * 0.35; sunD.position.x = -6.5 + Math.sin(t * 0.2) * 1.5; });
+  const sunD = G(deco, -6.5, 2.6, 0); sunD.visible = false; sunD.scale.setScalar(1.3); Sp(sunD, 0.75, '#FFD54F', 0, 0, 0, 1, 1, 0.5); for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, r = Co(sunD, 0.16, 0.42, '#FFB13B', Math.cos(a) * 1.05, Math.sin(a) * 1.05, 0, 8); r.rotation.z = a - Math.PI / 2; } [-1, 1].forEach(k => Sp(sunD, 0.07, '#5B4636', k * 0.25, 0.1, 0.36)); ANIM.push(t => { sunD.rotation.z = Math.sin(t) * 0.15; sunD.position.y = 2.6 + Math.sin(t * 0.8) * 0.35; sunD.position.x = -6.5 + Math.sin(t * 0.2) * 1.5; });
   const c1 = G(deco, 6.2, 2.3, 0.4); cloud(c1, 0, 0, 0, 0.55); ANIM.push(t => { c1.position.y = 2.6 + Math.sin(t * 1.1) * 0.3; c1.position.x = 6.2 + Math.sin(t * 0.25) * 3.5; });
   const c2 = cloud(L, -17.5, 27.5, 2, 1.0), c3 = cloud(L, 17.5, 28.5, -2, 1.2); ANIM.push(t => { c2.position.x = -17.5 + Math.sin(t * 0.2) * 5; c3.position.x = 17.5 + Math.sin(t * 0.17 + 1) * 5; c2.position.y = 27.5 + Math.sin(t * 0.9) * 0.4; c3.position.y = 28.5 + Math.sin(t * 0.8 + 1) * 0.4; });
   // 旗子
@@ -1207,7 +1287,7 @@ function buildScene() {
   // 閣樓小畫廊：前後山牆內側掛上 5 幅畫
   const PY = FH * 3 + 1.9, gallery = G(L, 0, PY, MZ);
   const paint = (img, w, h, x, y, z, ry) => { const g = G(gallery, x, y - PY, z - MZ); g.rotation.y = ry; Bx(g, w + 0.4, h + 0.4, 0.14, '#B98457', 0, 0, 0, 0.06); Bx(g, w + 0.14, h + 0.14, 0.16, '#FFF4E4', 0, 0, 0.02, 0.03); const m = new THREE.MeshStandardMaterial({ roughness: 0.85 }); const p = mesh(new THREE.PlaneGeometry(w, h), m, 0, 0, 0.12, false); g.add(p); new THREE.TextureLoader().load(img, tx => { tx.encoding = THREE.sRGBEncoding; tx.anisotropy = 4; m.map = tx; m.needsUpdate = true; }); const lampP = G(g, 0, h / 2 + 0.45, 0.25); Bx(lampP, 0.9, 0.12, 0.2, '#FFE07A', 0, 0, 0, 0.05); return g; };
-  paint(PAINTINGS[1], 2.4, 2.0, -4.5, PY, BK + 0.28, 0); paint(PAINTINGS[0], 3.6, 2.42, 0, PY + 0.1, BK + 0.28, 0); paint(PAINTINGS[2], 1.9, 2.4, 4.4, PY, BK + 0.28, 0);
+  paint(PAINTINGS[1], 2.4, 2.0, -4.5, PY, BK + 0.28, 0); paint(PAINTINGS[0], 3.0, 2.4, 0, PY + 0.1, BK + 0.28, 0); paint(PAINTINGS[2], 1.9, 2.4, 4.4, PY, BK + 0.28, 0);
   paint(PAINTINGS[3], 2.0, 2.42, -3.3, PY, FR - 0.5, Math.PI); paint(PAINTINGS[4], 2.0, 2.38, 3.3, PY, FR - 0.5, Math.PI);
   hot('gallery', gallery, 3.5, '閣樓小畫廊', '🖼️', '#FFE9C7', { noPin: true, inside: true });
   { const spillT = tex(64, 256, (c, w, h) => { const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, 'rgba(255,210,130,1)'); g.addColorStop(1, 'rgba(255,210,130,0)'); c.fillStyle = g; c.fillRect(0, 0, w, h); });
@@ -1318,7 +1398,7 @@ function buildScene() {
 
   // ===== 前院裝飾 =====
   // 樹木：自動散布在大島上，避開建築、球場、步道與各設施
-  const AVOID = [[-20, 20, -15, 8.5], [-28, 27, -37, -17.5], [-7.5, 7.5, 7, 30]], AVC = [[-27.5, 0.5, 7], [28.5, 1, 9.5], [-20.5, 12, 3.5], [14.5, 10.8, 4.5], [-10.5, 18.8, 3], [-19, 9.5, 3], [4.4, 20.6, 2], [-3.6, 21.6, 3.5], [-4.6, 14.2, 1.5], [4.6, 14.2, 1.5], [-17.5, 6.5, 1.5]];
+  const AVOID = [[-47, -31, -15, 15], [-20, 20, -15, 8.5], [-28, 27, -37, -17.5], [-7.5, 7.5, 7, 30]], AVC = [[-27.5, 0.5, 7], [28.5, 1, 9.5], [-20.5, 12, 3.5], [14.5, 10.8, 4.5], [-10.5, 18.8, 3], [-19, 9.5, 3], [4.4, 20.6, 2], [-3.6, 21.6, 3.5], [-4.6, 14.2, 1.5], [4.6, 14.2, 1.5], [-17.5, 6.5, 1.5]];
   const okAt = (x, z, m) => (x / 49.5) ** 2 + (z / 38.6) ** 2 < 1 && !AVOID.some(([a, b, c, d]) => x > a - m && x < b + m && z > c - m && z < d + m) && !AVC.some(([a, b, r]) => Math.hypot(x - a, z - b) < r + m);
   let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647; const placed = [];
   const place = (n, m, minD, fn, extra = []) => { let tries = 0, k = 0; while (k < n && tries++ < 6000) { const x = (rnd() * 2 - 1) * 50, z = (rnd() * 2 - 1) * 39; if (!okAt(x, z, m) || extra.some(([a, b, c, d]) => x > a && x < b && z > c && z < d) || placed.some(([a, b]) => Math.hypot(x - a, z - b) < minD)) continue; placed.push([x, z]); fn(x, z, k++); } };
@@ -1358,19 +1438,22 @@ function buildScene() {
     g.scale.setScalar(s); SPL.push({ g, ring, drops, t0: -1 }); };
   ANIM.push(t => { for (let i = SPL.length - 1; i >= 0; i--) { const S = SPL[i]; if (S.t0 < 0) S.t0 = t; const u = t - S.t0; S.ring.scale.setScalar(1 + u * 9); S.ring.material.opacity = Math.max(0, 0.9 - u * 0.6); S.drops.forEach(o => { o.d.position.set(o.vx * u, o.vy * u - 6 * u * u, o.vz * u); o.d.material.opacity = Math.max(0, 1 - u * 0.7); }); if (u > 1.6) { scene.remove(S.g); SPL.splice(i, 1); } } });
   // 鯨魚
-  const wh = G(scene), wb = G(wh); wh.userData.tag = 'whale'; wb.scale.setScalar(2.2);
+  const makeWhale = (A0, R, SC, OF) => {
+  const wh = G(scene), wb = G(wh); if (!A0) wh.userData.tag = 'whale'; wb.scale.setScalar(SC);
   Sp(wb, 1, '#7C9FD6', 0, 0, 0, 3.4, 1.55, 1.7); Sp(wb, 1, '#EAF4FF', 0.4, -0.55, 0, 2.9, 1.0, 1.45);
   for (let i = 0; i < 6; i++) Bx(wb, 2.6, 0.06, 0.12, '#C9D8EE', 0.6, -1.05, -0.9 + i * 0.36, 0.03);
   [-1, 1].forEach(k => { Sp(wb, 0.2, '#2B2230', 2.2, 0.15, k * 1.25, 1, 1, 0.5); Sp(wb, 0.07, '#FFFFFF', 2.26, 0.22, k * 1.33); Sp(wb, 0.28, '#FFB2C8', 2.4, -0.25, k * 1.18, 1, 0.6, 0.4); const f = Sp(wb, 1, '#6B8FC6', 0.6, -0.8, k * 1.6, 1.0, 0.18, 0.55); f.rotation.set(k * 0.5, 0, -0.4); });
   const wtail = G(wb, -3.2, 0.2, 0); Sp(wtail, 1, '#7C9FD6', -0.6, 0, 0, 1.4, 0.65, 0.7); [-1, 1].forEach(k => { const fl = Sp(wtail, 1, '#6B8FC6', -1.9, 0.15, k * 0.9, 0.7, 0.16, 1.1); fl.rotation.y = k * 0.5; });
   const wspout = []; for (let i = 0; i < 10; i++) { const s = mesh(SPH, new THREE.MeshBasicMaterial({ color: '#F2FBFF', transparent: true, opacity: 0 }), 0, 0, 0, false); wb.add(s); wspout.push(s); }
-  let wJump = 6, wSpl = false;
-  ANIM.push(t => { const a = t * 0.045, R = 112; const x = Math.cos(a) * R, z = Math.sin(a) * R * 0.9; wh.position.set(x, SEA_Y - 1.2 + Math.sin(t * 0.9) * 0.4, z); wh.rotation.y = -a - Math.PI / 2 + Math.PI;
+  let wJump = 6 + OF, wSpl = false;
+  ANIM.push(t => { const a = t * 0.045 + A0; const x = Math.cos(a) * R, z = Math.sin(a) * R * 0.9; wh.position.set(x, SEA_Y - 1.2 + Math.sin(t * 0.9) * 0.4, z); wh.rotation.y = -a - Math.PI / 2 + Math.PI;
     wtail.rotation.z = Math.sin(t * 2.2) * 0.35; let pitch = Math.sin(t * 0.9) * 0.05;
     const ju = (t - wJump) / 2.6; if (ju >= 0 && ju <= 1) { wh.position.y = SEA_Y - 2 + Math.sin(ju * Math.PI) * 16; pitch = Math.cos(ju * Math.PI) * 0.85; if (!wSpl && ju > 0.05) { doSplash(x, z, 2); wSpl = true; } }
     if (ju > 1) { doSplash(x, z, 2.6); wJump = t + 14 + Math.random() * 10; wSpl = false; }
     wb.rotation.z = pitch;
     const su = (t % 6) / 6; wspout.forEach((s, i) => { const u = (su * 3 - i * 0.06); if (u > 0 && u < 1 && ju < 0) { s.position.set(1.2 + Math.sin(i) * 0.3 * u, 1.4 + u * 3.6, Math.cos(i * 2) * 0.6 * u); s.scale.setScalar(0.25 + u * 0.45); s.material.opacity = 0.85 * (1 - u); } else s.material.opacity = 0; }); });
+  };
+  makeWhale(0, 108, 2.2, 0); makeWhale(0.11, 118, 1.6, 7); makeWhale(-0.1, 99, 1.25, 13);
   // 海盜船
   const pship = G(scene), psh = G(pship); psh.scale.setScalar(1.6);
   const phullS = new THREE.Shape(); phullS.moveTo(-5.5, 1.4); phullS.lineTo(5.8, 1.4); phullS.quadraticCurveTo(5.2, -0.8, 3.6, -1.4); phullS.lineTo(-4.4, -1.4); phullS.quadraticCurveTo(-5.6, -0.6, -5.5, 1.4);
@@ -1386,27 +1469,28 @@ function buildScene() {
   const pflag = mesh(new THREE.PlaneGeometry(1.8, 1.1, 6, 1), new THREE.MeshStandardMaterial({ map: pflagT, side: THREE.DoubleSide }), -0.4 + 0.95, 9.3, 0, false); pflag.rotation.y = Math.PI / 2; psh.add(pflag);
   ANIM.push(t => { const a = -t * 0.032 + 2.2, R = 132; pship.position.set(Math.cos(a) * R, SEA_Y + 0.6 + Math.sin(t * 1.3) * 0.3, Math.sin(a) * R * 0.85); pship.rotation.y = -a + Math.PI; psh.rotation.x = Math.sin(t * 1.1) * 0.06; psh.rotation.z = Math.sin(t * 0.8) * 0.04; pflag.rotation.x = Math.sin(t * 5) * 0.15; });
   // 海怪恐龍（原創角色）
-  const dn0 = G(scene), dn = G(dn0); dn0.userData.tag = 'dino'; dn.scale.setScalar(3.2);
-  const DG = '#7FCB9A', DB = '#EAF7D8', DP = '#C7A8FF';
+  const dn0 = G(scene), dn = G(dn0); dn0.userData.tag = 'dino'; dn.scale.setScalar(4.4);
+  const DG = '#424A4C', DB = '#5E6668', DP = '#D8DCD6';
   Sp(dn, 1, DG, 0, 3.2, 0, 1.9, 2.3, 1.7); Sp(dn, 1, DB, 0.6, 3.0, 0, 1.5, 1.9, 1.3);
   const dlegs = [-1, 1].map(k => { const l = G(dn, -0.2, 1.6, k * 0.95); Sp(l, 1, DG, 0, -0.6, 0, 0.8, 1.3, 0.8); Sp(l, 1, DG, 0.3, -1.7, 0, 0.9, 0.45, 0.8); return l; });
   const darms = [-1, 1].map(k => { const a = G(dn, 1.4, 4.2, k * 1.0); Sp(a, 1, DG, 0.4, -0.3, 0, 0.6, 0.28, 0.28); return a; });
   const dneck = G(dn, 0.8, 5.0, 0), dhead = G(dneck, 0.4, 1.3, 0);
   Sp(dneck, 1, DG, 0, 0.5, 0, 0.9, 1.2, 0.9); Sp(dhead, 1, DG, 0, 0, 0, 1.3, 1.05, 1.05); Sp(dhead, 1, DG, 1.2, -0.25, 0, 1.0, 0.65, 0.85); Sp(dhead, 1, DB, 1.2, -0.55, 0, 0.9, 0.3, 0.75);
-  [-1, 1].forEach(k => { Sp(dhead, 0.28, '#FFFFFF', 0.55, 0.35, k * 0.72); Sp(dhead, 0.17, '#2B2230', 0.68, 0.38, k * 0.84); Sp(dhead, 0.06, '#FFFFFF', 0.74, 0.46, k * 0.9); Sp(dhead, 0.2, '#FFA9B8', 0.9, -0.2, k * 0.78, 1, 0.6, 0.4); Sp(dhead, 0.07, '#2B6B4A', 2.1, 0.0, k * 0.3); });
+  [-1, 1].forEach(k => { Sp(dhead, 0.17, '#E8A040', 0.66, 0.36, k * 0.8, 1, 0.75, 0.6); Sp(dhead, 0.08, '#1A1A1A', 0.74, 0.36, k * 0.88, 0.6, 1.4, 0.5); const br = Sp(dhead, 0.5, DG, 0.55, 0.62, k * 0.62, 1.2, 0.32, 0.6); br.rotation.z = -0.2; Sp(dhead, 0.07, '#222222', 2.1, 0.0, k * 0.3); for (let q = 0; q < 4; q++) { const th = Co(dhead, 0.07, 0.22, '#F2F0E6', 1.5 + q * 0.18, -0.6, k * (0.5 - q * 0.06), 6); th.rotation.x = Math.PI; } });
+  [-1, 1].forEach(k => { for (let q = 0; q < 3; q++) { const cl = Co(dn, 0.1, 0.35, '#2E3335', 0.9, 0.05, k * 0.95 + (q - 1) * 0.28, 6); cl.rotation.z = -Math.PI / 2; } });
   const dtail = G(dn, -1.6, 2.4, 0); [[0, 1.2], [-1.4, 0.9], [-2.6, 0.65], [-3.6, 0.42]].forEach(([x, r], i) => Sp(dtail, r, DG, x, -i * 0.35, 0));
-  for (let i = 0; i < 7; i++) { const sp = Co(dn, 0.42 - Math.abs(i - 2) * 0.04, 0.9, DP, 0.9 - i * 0.75, 5.6 - Math.abs(i - 1) * 0.5 - (i > 3 ? (i - 3) * 0.35 : 0), 0, 4); sp.rotation.z = 0.35 + i * 0.08; sp.scale.z = 0.4; }
+  for (let i = 0; i < 9; i++) [-0.2, 0.2].forEach(oz => { const sp = Co(dn, 0.3 - Math.abs(i - 2) * 0.02, 0.7 + (i < 4 ? 0.3 : 0), DP, 0.9 - i * 0.7, 5.6 - Math.abs(i - 1) * 0.5 - (i > 3 ? (i - 3) * 0.32 : 0), oz, 5); sp.rotation.z = 0.35 + i * 0.08; sp.rotation.x = oz * 1.2; });
   const dmouth = G(dhead, 2.3, -0.4, 0); const fireL = new THREE.PointLight(0xFF9A3C, 0, 60, 2); dmouth.add(fireL);
   const fls = []; for (let i = 0; i < 40; i++) { const f = mesh(new THREE.IcosahedronGeometry(1, 0), new THREE.MeshBasicMaterial({ color: ['#FF5A2E', '#FF8A2E', '#FFB13B', '#FF6A3D'][i % 4], transparent: true, opacity: 0, depthWrite: false, toneMapped: false }), 0, 0, 0, false); dn0.add(f); fls.push({ f, ph: i / 40, sp: (Math.random() - 0.5) * 0.35, sv: (Math.random() - 0.5) * 0.25 }); }
   let fireT = -20; const mw = new THREE.Vector3(), fwd = new THREE.Vector3();
-  ANIM.push(t => { const a = -2.25 + Math.sin(t * 0.035) * 0.55, R = 165, x = Math.cos(a) * R, z = Math.sin(a) * R * 0.9; const dir = Math.cos(t * 0.035) > 0 ? 1 : -1;
-    dn0.position.set(x, SEA_Y - 5 + Math.abs(Math.sin(t * 1.4)) * 0.8, z); dn0.rotation.y = -a + (dir > 0 ? Math.PI : 0);
+  ANIM.push(t => { const a = -2.25 + Math.sin(t * 0.03) * 0.55, R = 218, x = Math.cos(a) * R, z = Math.sin(a) * R * 0.9; const dir = Math.cos(t * 0.035) > 0 ? 1 : -1;
+    dn0.position.set(x, SEA_Y - 7 + Math.abs(Math.sin(t * 1.4)) * 0.8, z); dn0.rotation.y = -a + (dir > 0 ? Math.PI : 0);
     dlegs.forEach((l, k) => { l.rotation.z = Math.sin(t * 1.4 + k * Math.PI) * 0.35; }); darms.forEach((r, k) => { r.rotation.z = Math.sin(t * 1.4 + k) * 0.3; }); dtail.rotation.y = Math.sin(t * 1.1) * 0.25;
     const fu = t - fireT; dneck.rotation.z = fu < 3.2 ? 0.25 : Math.sin(t * 0.7) * 0.08; dhead.rotation.z = fu < 3.2 ? -0.35 : 0;
     if (fu > 9 + Math.random() * 0.02) fireT = t;
     dn0.updateMatrixWorld(); dmouth.getWorldPosition(mw); fwd.set(1, -0.35, 0).applyQuaternion(dn0.quaternion).normalize();
     const on = fu < 2.6 ? Math.min(1, fu * 4) * Math.min(1, (2.6 - fu) * 3) : 0; fireL.intensity = on * 3.5;
-    fls.forEach(o => { const u = (t * 1.6 + o.ph) % 1, d = u * 30; dn0.worldToLocal(o.f.position.copy(mw).addScaledVector(fwd, d).add(new THREE.Vector3(o.sv * d, o.sp * d * 0.6 + u * u * 6, o.sp * d))); o.f.scale.setScalar((0.6 + u * 2.6) / 1); o.f.material.opacity = on * (1 - u * u) * 0.85; o.f.rotation.set(t * 3 + o.ph * 9, t * 2, 0); }); });
+    fls.forEach(o => { const u = (t * 1.6 + o.ph) % 1, d = u * 42; dn0.worldToLocal(o.f.position.copy(mw).addScaledVector(fwd, d).add(new THREE.Vector3(o.sv * d, o.sp * d * 0.6 + u * u * 6, o.sp * d))); o.f.scale.setScalar((0.6 + u * 2.6) / 1); o.f.material.opacity = on * (1 - u * u) * 0.85; o.f.rotation.set(t * 3 + o.ph * 9, t * 2, 0); }); });
   WALK.W = W; WALK.isle = isle; WALK.trees = placed.slice();
   linearize(scene);
   envSetup(); applyEnv(simMin, 0);
@@ -1443,12 +1527,14 @@ function flyToHot(id, done) {
 const _ft = new THREE.Vector3();
 function updateCam(t) {
   stepFlight();
-  if (WALK.on && !FLIGHT && WALK.g) { WALK.g.getWorldPosition(_ft); _ft.y += 2.8; camTarget.lerp(_ft, 0.14); }
+  if (WALK.on && !FLIGHT && WALK.g) { WALK.g.getWorldPosition(_ft); _ft.y += 2.8; camTarget.lerp(_ft, 0.2); }
   const k = reduceMotion ? 1 : 0.08;
   cam.yaw += (cam.tYaw - cam.yaw) * k; cam.pitch += (cam.tPitch - cam.pitch) * k; cam.dist += (cam.tDist - cam.dist) * k;
   const breathe = reduceMotion ? 0 : Math.sin(t * 0.35) * 0.02;
   const yaw = cam.yaw + breathe, cp = Math.cos(cam.pitch);
-  camera.position.set(camTarget.x + Math.sin(yaw) * cp * cam.dist, camTarget.y + Math.sin(cam.pitch) * cam.dist, camTarget.z + Math.cos(yaw) * cp * cam.dist);
+  let cd = cam.dist; const cdir = new THREE.Vector3(Math.sin(yaw) * cp, Math.sin(cam.pitch), Math.cos(yaw) * cp);
+  if (WALK.on && BLD_BOX && WALK.g && WALK.floor === 0 && !inLib(WALK.pos)) { occRay.set(camTarget, cdir); const hit = occRay.intersectBox(BLD_BOX, w3); if (hit) cd = Math.max(5, Math.min(cd, hit.distanceTo(camTarget) - 0.8)); }
+  camera.position.copy(camTarget).addScaledVector(cdir, cd);
   camera.lookAt(camTarget);
 }
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
@@ -1467,7 +1553,7 @@ function setupControls() {
     if (!moved && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) moved = true;
     if (moved) { cam.tYaw = cam.tYaw - (e.clientX - pr.x) * 0.006; cam.tPitch = THREE.MathUtils.clamp(cam.tPitch + (e.clientY - pr.y) * 0.004, 0.08, 1.35); }
   });
-  const up = e => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = 0; if (!ptrs.size && !moved && e.type === 'pointerup') { const id = pickAt(e.clientX, e.clientY); if (id) poke(id); } };
+  const up = e => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = 0; if (!ptrs.size && !moved && e.type === 'pointerup') { const id = pickAt(e.clientX, e.clientY); if (id) poke(id); else tapWalk(e.clientX, e.clientY); } };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('pointerleave', () => { hoverId = null; cv.classList.remove('hover'); });
   cv.addEventListener('wheel', e => { e.preventDefault(); cam.tDist = THREE.MathUtils.clamp(cam.tDist * (e.deltaY > 0 ? 1.1 : 0.9), 12, 280); }, { passive: false });
@@ -1596,7 +1682,7 @@ const PANELS = {
       <div class="sec"><h3>📗 推薦新書 ${demoTag(CONFIG.expoDemo)}</h3><div class="nb">${E.newBooks.map(b => `<article class="nbk"><div class="cv" style="background:${b.c}">${b.e}</div><div><b>《${esc(b.t)}》</b><dl><dt>作者</dt><dd>${esc(b.a)}</dd><dt>出版</dt><dd>${esc(b.pub)}・${esc(b.y)}</dd><dt>類別</dt><dd>${esc(b.cat)}</dd><dt>適合</dt><dd>${esc(b.who)}</dd></dl><p>${esc(b.intro)}</p></div></article>`).join('')}</div></div>` });
   },
   radio() { renderRadio(0); },
-  gallery() { frame({ hc: '#FFE9C7', av: '🖼️', tag: '🔭 三樓上方・小閣樓', title: '閣樓小畫廊', say: '在星空下的閣樓裡，掛著五幅溫暖的油畫，點畫作可以看大圖！', body: `<div class="sec posters">${PAINTINGS.map((s, i) => `<a class="poster" href="${s}" target="_blank" rel="noopener"><img src="${s}" alt="閣樓畫作 ${i + 1}"><b>${['花牆下的小白貓', '山野玫瑰', '櫻花天鵝', '海岸百合', '午後巷口'][i]}</b></a>`).join('')}</div>` }); },
+  gallery() { frame({ hc: '#FFE9C7', av: '🖼️', tag: '🔭 三樓上方・小閣樓', title: '閣樓小畫廊', say: '在星空下的閣樓裡，掛著五幅溫暖的油畫，點畫作可以看大圖！', body: `<div class="sec posters">${PAINTINGS.map((s, i) => `<a class="poster" href="${s}" target="_blank" rel="noopener"><img src="${s}" alt="閣樓畫作 ${i + 1}"><b>${['金色林蔭道', '山野玫瑰', '櫻花天鵝', '海岸百合', '午後巷口'][i]}</b></a>`).join('')}</div>` }); },
   board1() { boardPanel(0); }, board2() { boardPanel(1); }, board3() { boardPanel(2); },
   gacha() { gachaPanel(); }
 };
@@ -1730,7 +1816,7 @@ function start() {
   $('#go').onclick = () => { SFX.sparkle(); SFX.music(); const it = $('#intro'); it.classList.add('out'); setTimeout(() => it.remove(), 950); openSetup(); };
 }
 (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]) : Promise.resolve()).then(start);
-window.__lib = { scene, cam, camera, poke, HOTS, CHARS, target: camTarget, WALK, setWalk, openSetup, closeSetup, BALL, action };
+window.__lib = { scene, cam, camera, poke, HOTS, CHARS, target: camTarget, goFloor, WALK, setWalk, openSetup, closeSetup, BALL, action };
 </script>
 </body>
 </html>
