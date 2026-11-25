@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SWSH 數位閱讀基地</title>
+<title>SWSH 漫讀小島</title>
 <meta name="description" content="花蓮縣私立四維高級中學 圖書資訊中心：微縮立體圖書館互動網頁">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -320,6 +320,7 @@ body.walking #joy, body.walking #act { display: grid; }
 #intro .hi { margin: 12px 0 0; font: 700 16px var(--font); letter-spacing: .3em; color: #8A7260; }
 #intro h2 { margin: 2px 0 10px; min-height: 1.15em; font-size: clamp(30px, 7.6vw, 56px); white-space: nowrap; }
 #intro h2 span.sp { width: .35em; }
+#intro .isub { margin: -4px 0 10px; font: 400 clamp(15px, 3.6vw, 19px) var(--round); letter-spacing: .22em; color: #C2577E; }
 #intro .tw { margin: 0 auto; max-width: 30em; min-height: 1.6em; font: 700 16px/1.75 var(--font); color: #6B4A36; }
 #intro .tw3 { font-weight: 500; font-size: 15px; color: #7A6050; min-height: 3.5em; margin-top: 2px; margin-bottom: 14px; }
 #intro .tw.typing::after { content: "▍"; color: #FF8FB8; animation: blink .8s steps(1) infinite; margin-left: 1px; }
@@ -391,7 +392,7 @@ body.ingame .top, body.ingame .dock, body.ingame #pins, body.ingame .ntag, body.
 <div id="flash"></div>
 
 <header class="top">
-  <div class="brand"><div class="logo" data-ic="book" data-s="28"></div><div><h1>SWSH 數位閱讀基地</h1><small>SWSH DIGITAL READING HUB</small></div></div>
+  <div class="brand"><div class="logo" data-ic="book" data-s="28"></div><div><h1>SWSH 漫讀小島</h1><small>打開知識的第四維度</small></div></div>
   <div class="tools">
     <button class="tbtn" id="bWalk" type="button" aria-label="漫步或導覽模式"></button>
     <button class="tbtn" id="bMe" type="button" aria-label="我的角色"><i data-ic="me" data-s="18"></i><span>角色</span></button>
@@ -407,7 +408,7 @@ body.ingame .top, body.ingame .dock, body.ingame #pins, body.ingame .ntag, body.
   <span class="dsep"></span>
   <button type="button" data-open="opac"><i class="ic" style="--tile:#DDF1FF" data-ic="opac"></i>館藏查詢</button>
   <button type="button" data-open="xiner"><i class="ic" style="--tile:#FFE4EE" data-ic="xiner"></i>心情選書</button>
-  <button type="button" data-open="xiaosi"><i class="ic" style="--tile:#DDF7EE" data-ic="xiaosi"></i>數位閱讀</button>
+  <button type="button" data-open="xiaosi"><i class="ic" style="--tile:#DDF7EE" data-ic="xiaosi"></i>電子好書</button>
   <button type="button" data-open="portal"><i class="ic" style="--tile:#EEE8FF" data-ic="portal"></i>數位資源</button>
   <button type="button" data-open="pod"><i class="ic" style="--tile:#FFF0F5" data-ic="pod"></i>夢想艙</button>
   <button type="button" data-open="expo"><i class="ic" style="--tile:#FFF6DA" data-ic="expo"></i>主題書展</button>
@@ -433,6 +434,7 @@ body.ingame .top, body.ingame .dock, body.ingame #pins, body.ingame .ntag, body.
     <span class="kick">WELCOME ABOARD</span>
     <p class="hi">歡迎來到</p>
     <h2 id="ititle"></h2>
+    <p class="isub">✦ 打開知識的第四維度 ✦</p>
     <p class="tw" id="tw1"></p>
     <p class="tw tw3" id="tw2"></p>
     <div class="ips" id="ips"></div>
@@ -983,7 +985,7 @@ function openSetup() {
 }
 function closeSetup(walk) {
   ME.name = $('#nm').value.trim().slice(0, 8); store.set({ me: { name: ME.name, g: ME.g, role: ME.role } }); $('#ntag').textContent = tagText();
-  $('#setup').classList.remove('show'); SFX.sparkle(); toast(`歡迎來到 SWSH 數位閱讀基地，${tagText()}！`);
+  $('#setup').classList.remove('show'); SFX.sparkle(); toast(`歡迎來到 SWSH 漫讀小島，${tagText()}！`);
   WALK.face = Math.PI; if (walk) setWalk(true); else { WALK.on = false; document.body.classList.remove('walking'); panoView(); }
 }
 
@@ -1180,8 +1182,8 @@ function finishGame(kind, rows, myT) {
 }
 function shareChallenge(kind) {
   const best = (store.get().best || {})[kind], nm = ME.name || '同學', url = `${location.href.split('#')[0]}#c=${kind}:${best ? best.toFixed(1) : '0'}:${encodeURIComponent(nm)}`;
-  const text = best ? `我在「SWSH 數位閱讀基地」的${GINFO[kind].t}跑出 ${fmtT(best)}，來挑戰我吧！` : `一起來玩「SWSH 數位閱讀基地」的${GINFO[kind].t}！`;
-  if (navigator.share) navigator.share({ title: 'SWSH 數位閱讀基地揪團', text, url }).catch(() => {}); else { try { navigator.clipboard.writeText(`${text} ${url}`); toast('📨 已複製揪團連結，貼給同學就能一起挑戰！', 3200); } catch (e) { prompt('複製這個連結給同學：', url); } }
+  const text = best ? `我在「SWSH 漫讀小島」的${GINFO[kind].t}跑出 ${fmtT(best)}，來挑戰我吧！` : `一起來玩「SWSH 漫讀小島」的${GINFO[kind].t}！`;
+  if (navigator.share) navigator.share({ title: 'SWSH 漫讀小島揪團', text, url }).catch(() => {}); else { try { navigator.clipboard.writeText(`${text} ${url}`); toast('📨 已複製揪團連結，貼給同學就能一起挑戰！', 3200); } catch (e) { prompt('複製這個連結給同學：', url); } }
 }
 function gameLobby(kind) {
   const I = GINFO[kind], best = (store.get().best || {})[kind], ch = CHAL && CHAL.g === kind && CHAL.v > 0 ? CHAL : null;
@@ -1331,7 +1333,7 @@ const POOL_CH = [...new Set(IDIOMS.map(i => i[0]).join(''))];
 let WG = null;
 function wgTimer(cb) { clearInterval(WG && WG.iv); const t0 = performance.now(); WG.iv = setInterval(() => { if (!dlg.open) { clearInterval(WG.iv); return; } cb((performance.now() - t0) / 1000); }, 200); }
 function wgBest(key, val, lower = true) { const b = store.get().wbest || {}, old = b[key], better = old == null || (lower ? val < old : val > old); if (better) { b[key] = val; store.set({ wbest: b }); } return { best: better ? val : old, isNew: better }; }
-function wgShare(text) { const url = location.href.split('#')[0]; if (navigator.share) navigator.share({ title: 'SWSH 數位閱讀基地揪團', text, url }).catch(() => {}); else { try { navigator.clipboard.writeText(`${text} ${url}`); toast('📨 已複製揪團訊息，貼給同學一起挑戰！', 3000); } catch (e) {} } }
+function wgShare(text) { const url = location.href.split('#')[0]; if (navigator.share) navigator.share({ title: 'SWSH 漫讀小島揪團', text, url }).catch(() => {}); else { try { navigator.clipboard.writeText(`${text} ${url}`); toast('📨 已複製揪團訊息，貼給同學一起挑戰！', 3000); } catch (e) {} } }
 function wgEnd(title, lines, again, shareText) {
   clearInterval(WG.iv); SFX.sparkle();
   frame({ hc: '#FFF3C4', av: '🏆', tag: '🀄 成語大風吹', title, say: lines[0], body: `<div class="sec">${lines.slice(1).map(l => `<p style="margin:4px 0;font-weight:700">${l}</p>`).join('')}</div><div class="sec row"><button class="btn" id="wA" type="button">🔁 再玩一次</button><button class="btn alt" id="wS" type="button">📨 揪團挑戰</button><button class="btn ghost" id="wL" type="button">🎮 選其他遊戲</button></div>` });
@@ -1366,7 +1368,7 @@ function wgGrid() {
     if (WG.sel.length === 4) { const w = WG.sel.map(k => cells[k]).join(''), hit = words.find(x => x[0] === w) || words.find(x => [...x[0]].reverse().join('') === w);
       if (hit && !WG.found.has(hit[0])) { WG.found.add(hit[0]); WG.sel.forEach(k => btns[k].classList.add('ok')); SFX.chime(); sheet.querySelector(`[data-w="${hit[0]}"]`).classList.add('done'); $('#wN').textContent = `找到 ${WG.found.size} / 5`; toast(`✨ ${hit[0]}：${hit[1]}`, 2200);
         WG.sel.forEach(k => btns[k].classList.remove('sel')); WG.sel = [];
-        if (WG.found.size === 5) { const s = WG.s, r = wgBest('grid', s); setTimeout(() => wgEnd('全部找到了！', [`你用 ${fmtT(s)} 找出 5 個成語 🎉`, r.isNew ? '🏅 新紀錄！' : `🏅 最佳紀錄 ${fmtT(r.best)}`, `找到的成語：${words.map(w => w[0]).join('、')}`], wgGrid, `我在 SWSH 數位閱讀基地「成語連連看」用 ${fmtT(s)} 找出 5 個成語，來挑戰我！`), 700); } }
+        if (WG.found.size === 5) { const s = WG.s, r = wgBest('grid', s); setTimeout(() => wgEnd('全部找到了！', [`你用 ${fmtT(s)} 找出 5 個成語 🎉`, r.isNew ? '🏅 新紀錄！' : `🏅 最佳紀錄 ${fmtT(r.best)}`, `找到的成語：${words.map(w => w[0]).join('、')}`], wgGrid, `我在 SWSH 漫讀小島「成語連連看」用 ${fmtT(s)} 找出 5 個成語，來挑戰我！`), 700); } }
       else { SFX.hmm(); WG.sel.forEach(k => btns[k].classList.add('bad')); setTimeout(() => btns.forEach(x => x.classList.remove('bad')), 350); clear(); } } });
 }
 // ---- 成語填空 ----
@@ -1380,7 +1382,7 @@ function wgFill() {
     sheet.querySelectorAll('.wopt').forEach(b => b.onclick = () => { if (WG.lock) return; WG.lock = true; clearInterval(WG.iv); const ok = b.textContent === q.ans, sec = (performance.now() - t0) / 1000;
       sheet.querySelector('.blank').textContent = q.ans; sheet.querySelector('.blank').classList.add(ok ? 'ok' : 'bad');
       if (ok) { WG.right++; WG.score += 10 + Math.max(0, Math.round(10 - sec)); SFX.chime(); b.classList.add('ok'); } else { SFX.hmm(); b.classList.add('bad'); sheet.querySelectorAll('.wopt').forEach(x => x.textContent === q.ans && x.classList.add('ok')); }
-      setTimeout(() => { WG.lock = false; WG.i++; if (WG.i < 10) show(); else { const r = wgBest('fill', WG.score, false); wgEnd(WG.right >= 8 ? '成語小達人！' : '完成挑戰！', [`答對 ${WG.right} / 10 題，得到 ${WG.score} 分`, r.isNew ? '🏅 新紀錄！' : `🏅 最佳紀錄 ${r.best} 分`], wgFill, `我在 SWSH 數位閱讀基地「成語填空」拿到 ${WG.score} 分，來挑戰我！`); } }, 1100); }); };
+      setTimeout(() => { WG.lock = false; WG.i++; if (WG.i < 10) show(); else { const r = wgBest('fill', WG.score, false); wgEnd(WG.right >= 8 ? '成語小達人！' : '完成挑戰！', [`答對 ${WG.right} / 10 題，得到 ${WG.score} 分`, r.isNew ? '🏅 新紀錄！' : `🏅 最佳紀錄 ${r.best} 分`], wgFill, `我在 SWSH 漫讀小島「成語填空」拿到 ${WG.score} 分，來挑戰我！`); } }, 1100); }); };
   show();
 }
 // ---- 成語解謎：散落文字重新排列 ----
@@ -1393,7 +1395,7 @@ function wgScr() {
     const slots = [...sheet.querySelectorAll('#wSlots .slot')], tb = [...sheet.querySelectorAll('.wtiles button')];
     const draw = () => slots.forEach((s, k) => { s.textContent = ans[k] != null ? tiles[ans[k]] : ''; });
     tb.forEach(b => b.onclick = () => { if (ans.length >= 4 || b.disabled) return; SFX.tap(); ans.push(+b.dataset.i); b.disabled = true; draw();
-      if (ans.length === 4) { const got = ans.map(k => tiles[k]).join(''); if (got === w) { SFX.chime(); slots.forEach(s => s.classList.add('ok')); toast(`✨ ${w}：${m}`, 2000); setTimeout(() => { WG.i++; if (WG.i < qs.length) show(); else { const s = (performance.now() - T0) / 1000 + WG.miss * 5, r = wgBest('scr', s); wgEnd('謎題全破解！', [`總成績 ${fmtT(s)}（每次失誤加 5 秒）`, r.isNew ? '🏅 新紀錄！' : `🏅 最佳紀錄 ${fmtT(r.best)}`, `解開的成語：${qs.map(q => q[0]).join('、')}`], wgScr, `我在 SWSH 數位閱讀基地「成語解謎」用 ${fmtT(s)} 破解 6 個成語，來挑戰我！`); } }, 900); }
+      if (ans.length === 4) { const got = ans.map(k => tiles[k]).join(''); if (got === w) { SFX.chime(); slots.forEach(s => s.classList.add('ok')); toast(`✨ ${w}：${m}`, 2000); setTimeout(() => { WG.i++; if (WG.i < qs.length) show(); else { const s = (performance.now() - T0) / 1000 + WG.miss * 5, r = wgBest('scr', s); wgEnd('謎題全破解！', [`總成績 ${fmtT(s)}（每次失誤加 5 秒）`, r.isNew ? '🏅 新紀錄！' : `🏅 最佳紀錄 ${fmtT(r.best)}`, `解開的成語：${qs.map(q => q[0]).join('、')}`], wgScr, `我在 SWSH 漫讀小島「成語解謎」用 ${fmtT(s)} 破解 6 個成語，來挑戰我！`); } }, 900); }
         else { WG.miss++; SFX.hmm(); slots.forEach(s => s.classList.add('bad')); setTimeout(() => { ans = []; tb.forEach(x => x.disabled = false); slots.forEach(s => s.classList.remove('bad')); draw(); }, 600); } } });
     $('#wClr').onclick = () => { ans = []; tb.forEach(x => x.disabled = false); draw(); };
     $('#wHint').onclick = () => { WG.miss++; toast(`💡 第一個字是「${w[0]}」，意思是：${m}`, 2600); }; };
@@ -1413,11 +1415,11 @@ function memoPlay(lv) {
   frame({ hc: '#D7F5EA', av: '🃏', tag: `🃏 記憶翻翻樂・${L.n}`, title: '找出配對的卡牌', say: '書名配上它的作者、人物或名句。翻錯會蓋回去，記住位置喔！',
     body: `<div class="sec wstat"><span id="wT">⏳ ${L.time}s</span><span id="wF">翻牌 0 次</span><span id="wN">配對 0 / ${L.pairs}</span></div><div class="mgrid" style="--c:${L.cols}">${cards.map((c, i) => `<button type="button" class="mcard" data-i="${i}"><i class="b">📚</i><i class="f">${c.t}</i></button>`).join('')}</div><p class="wback"><button class="chip" id="wL" type="button">← 選難度</button></p>` }); $('#wL').onclick = memoLobby;
   const els = [...sheet.querySelectorAll('.mcard')];
-  wgTimer(s => { const left = Math.max(0, L.time - s), e = $('#wT'); if (e) { e.textContent = `⏳ ${Math.ceil(left)}s`; e.classList.toggle('hurry', left < 15); } if (left <= 0 && !WG.over) { WG.over = true; clearInterval(WG.iv); SFX.hmm(); wgEnd('時間到！', [`配對了 ${WG.done} / ${L.pairs} 組，再試一次吧！`, `翻牌 ${WG.flips} 次`], () => memoPlay(lv), `一起來玩 SWSH 數位閱讀基地的「記憶翻翻樂」！`); } });
+  wgTimer(s => { const left = Math.max(0, L.time - s), e = $('#wT'); if (e) { e.textContent = `⏳ ${Math.ceil(left)}s`; e.classList.toggle('hurry', left < 15); } if (left <= 0 && !WG.over) { WG.over = true; clearInterval(WG.iv); SFX.hmm(); wgEnd('時間到！', [`配對了 ${WG.done} / ${L.pairs} 組，再試一次吧！`, `翻牌 ${WG.flips} 次`], () => memoPlay(lv), `一起來玩 SWSH 漫讀小島的「記憶翻翻樂」！`); } });
   els.forEach(el => el.onclick = () => { const i = +el.dataset.i; if (WG.lock || WG.over || el.classList.contains('up')) return; el.classList.add('up'); WG.open.push(i); WG.flips++; $('#wF').textContent = `翻牌 ${WG.flips} 次`; SFX.tap();
     if (WG.open.length === 2) { const [a, b] = WG.open; WG.open = [];
       if (cards[a].k === cards[b].k) { WG.done++; SFX.chime(); [a, b].forEach(k => els[k].classList.add('ok')); $('#wN').textContent = `配對 ${WG.done} / ${L.pairs}`;
-        if (WG.done === L.pairs) { WG.over = true; clearInterval(WG.iv); const r = wgBest('memo' + lv, WG.flips); setTimeout(() => wgEnd('全部配對成功！', [`${L.n}難度・翻牌 ${WG.flips} 次完成 🎉`, r.isNew ? '🏅 新紀錄！翻牌次數最少' : `🏅 最佳紀錄 ${r.best} 次`], () => memoPlay(lv), `我在 SWSH 數位閱讀基地「記憶翻翻樂（${L.n}）」只翻了 ${WG.flips} 次，來挑戰我！`), 600); } }
+        if (WG.done === L.pairs) { WG.over = true; clearInterval(WG.iv); const r = wgBest('memo' + lv, WG.flips); setTimeout(() => wgEnd('全部配對成功！', [`${L.n}難度・翻牌 ${WG.flips} 次完成 🎉`, r.isNew ? '🏅 新紀錄！翻牌次數最少' : `🏅 最佳紀錄 ${r.best} 次`], () => memoPlay(lv), `我在 SWSH 漫讀小島「記憶翻翻樂（${L.n}）」只翻了 ${WG.flips} 次，來挑戰我！`), 600); } }
       else { WG.lock = true; setTimeout(() => { [a, b].forEach(k => els[k].classList.remove('up')); WG.lock = false; }, 850); } } });
 }
 
@@ -1456,7 +1458,7 @@ function buildArena() {
   const d = new THREE.Object3D(), crowd = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 8, 6), new THREE.MeshStandardMaterial({ roughness: 0.8 }), 900); let q = 0;
   [-1, 1].forEach(s => { for (let r = 0; r < 7; r++) { Bx(S, AW + 4, 1, 2.2, ['#2C3450', '#343D5C'][r % 2], 0, 0.5 + r, s * (AD / 2 + 4 + r * 2.2), 0.06); for (let i = 0; i < 64 && q < 900; i++) { d.position.set(-AW / 2 + 1 + i * (AW - 2) / 63 + (Math.random() - 0.5) * 0.4, 1.5 + r + 0.4, s * (AD / 2 + 4 + r * 2.2)); d.updateMatrix(); crowd.setMatrixAt(q, d.matrix); crowd.setColorAt(q, new THREE.Color(['#FF8FB8', '#5AB8F0', '#FFD95A', '#8EDDC0', '#FFFFFF', '#B48BE6'][q % 6]).convertSRGBToLinear()); q++; } } });
   crowd.count = q; S.add(crowd);
-  const ledT = tex(1024, 64, (c, w, h) => { c.fillStyle = '#0A0F26'; c.fillRect(0, 0, w, h); c.font = `900 40px ${FONT}`; c.textBaseline = 'middle'; ['SWSH DRONE CUP', '四維無人機足球賽', '⚽ GO GO GO!', 'SWSH 數位閱讀基地'].forEach((s, i) => { c.fillStyle = ['#5FE3FF', '#FF7FC8', '#FFD95A', '#8EDDC0'][i]; c.fillText(s, 20 + i * 256, h / 2); }); }); ledT.wrapS = THREE.RepeatWrapping;
+  const ledT = tex(1024, 64, (c, w, h) => { c.fillStyle = '#0A0F26'; c.fillRect(0, 0, w, h); c.font = `900 40px ${FONT}`; c.textBaseline = 'middle'; ['SWSH DRONE CUP', '四維無人機足球賽', '⚽ GO GO GO!', 'SWSH 漫讀小島'].forEach((s, i) => { c.fillStyle = ['#5FE3FF', '#FF7FC8', '#FFD95A', '#8EDDC0'][i]; c.fillText(s, 20 + i * 256, h / 2); }); }); ledT.wrapS = THREE.RepeatWrapping;
   const ledM = new THREE.MeshBasicMaterial({ map: ledT, toneMapped: false }); [-1, 1].forEach(s => { const b = mesh(new THREE.PlaneGeometry(AW, 1.6), ledM, 0, 1.2, s * (AD / 2 + 0.25), false); b.rotation.y = s > 0 ? Math.PI : 0; S.add(b); });
   // 球
   const ball = G(S, 0, 7, 0); const bm = mesh(new THREE.SphereGeometry(1.3, 28, 20), new THREE.MeshStandardMaterial({ color: '#FFFFFF', emissive: new THREE.Color('#FFE68A'), emissiveIntensity: 0.45, roughness: 0.3 }), 0, 0, 0); ball.add(bm);
@@ -1526,7 +1528,7 @@ function updSoccer(dt, t) {
   if (left <= 0 && go && !A.over) { A.over = true; const [a, o] = A.sc, win = a > o; $('#gbig').textContent = '🏁 比賽結束'; SFX[win ? 'sparkle' : 'hmm']();
     if (win && droneCleared() < 4) store.set({ droneLv: 4 });
     const A0 = A; setTimeout(() => { if (GAME.act !== A0) return; $('#gbig').textContent = ''; $('#gres').innerHTML = `<h3>${win ? '🏆 恭喜獲勝！' : a === o ? '🤝 平手！' : '💪 差一點點！'}</h3><p style="margin:0;font-weight:900;font-size:22px">我隊 ${a} : ${o} 對手</p><p style="margin:6px 0 0;font-weight:700;color:var(--ink2)">${win ? '🎖️ 你通過了全部四個關卡，是 SWSH 無人機足球冠軍！' : '再挑戰一次，把球撞進對面的藍色光環吧！'}</p><div class="row" style="justify-content:center;margin-top:14px"><button class="btn" id="gAgain" type="button">🔁 再踢一場</button><button class="btn alt" id="gShare" type="button">📨 揪團挑戰</button><button class="btn ghost" id="gBack" type="button">🏝️ 回到小島</button></div>`; $('#gres').hidden = false;
-      $('#gAgain').onclick = () => startGame('drone', A0.crew, 4); $('#gBack').onclick = exitGame; $('#gShare').onclick = () => wgShare(`我在 SWSH 數位閱讀基地的無人機足球賽踢出 ${a}:${o}，來跟我比一場！`); }, 1300); }
+      $('#gAgain').onclick = () => startGame('drone', A0.crew, 4); $('#gBack').onclick = exitGame; $('#gShare').onclick = () => wgShare(`我在 SWSH 漫讀小島的無人機足球賽踢出 ${a}:${o}，來跟我比一場！`); }, 1300); }
 }
 // ---- 球場小遊戲共用 ----
 function courtGame(kind) {
@@ -1543,7 +1545,7 @@ GAME.prevBtn = {};
 function courtEnd(A, title, lines, key, val) {
   A.over = true; const best = store.get().best || {}, isNew = !best[key] || val > best[key]; if (isNew) { best[key] = val; store.set({ best }); } SFX.sparkle();
   $('#gres').innerHTML = `<h3>${title}</h3>${lines.map(l => `<p style="margin:4px 0;font-weight:700">${l}</p>`).join('')}<p style="margin:6px 0 0;font-weight:900;color:#E0679A">${isNew ? '🎉 新紀錄！' : `🏅 最佳紀錄 ${best[key]}`}</p><div class="row" style="justify-content:center;margin-top:12px"><button class="btn" id="gAgain" type="button">🔁 再玩一次</button><button class="btn alt" id="gShare" type="button">📨 揪團挑戰</button><button class="btn ghost" id="gBack" type="button">🏝️ 回到小島</button></div>`;
-  $('#gres').hidden = false; $('#gAgain').onclick = () => { exitGame(); (A.kind === 'bball' ? startBball : startVball)(); }; $('#gBack').onclick = exitGame; $('#gShare').onclick = () => wgShare(`我在 SWSH 數位閱讀基地的${A.kind === 'bball' ? '投籃大賽' : '排球對打'}拿到 ${val} 分，來挑戰我！`);
+  $('#gres').hidden = false; $('#gAgain').onclick = () => { exitGame(); (A.kind === 'bball' ? startBball : startVball)(); }; $('#gBack').onclick = exitGame; $('#gShare').onclick = () => wgShare(`我在 SWSH 漫讀小島的${A.kind === 'bball' ? '投籃大賽' : '排球對打'}拿到 ${val} 分，來挑戰我！`);
 }
 // ---- 🏀 投籃大賽 ----
 const HOOP_L = new THREE.Vector3(-24.7, 4.8, -24);
@@ -1865,7 +1867,7 @@ function buildScene() {
   xs.arms.forEach((a, k) => { a.rotation.x = -1.0; a.rotation.z = (k ? -1 : 1) * 0.45; });
   const tab = G(xs.body, 0, 1.75, 0.78); tab.rotation.x = -0.35; Bx(tab, 1.05, 0.75, 0.08, '#4A4560', 0, 0, 0, 0.06); const tsc = mesh(rbox(0.9, 0.6, 0.02, 0.01), MAT('#9EE6FF', { emissive: 0x9EE6FF, emissiveIntensity: 0.6 }), 0, 0, 0.05); tab.add(tsc);
   ANIM.push(t => { tsc.material.emissiveIntensity = 0.45 + Math.sin(t * 3) * 0.2; });
-  hot('xiaosi', xs.g, 4.3, '數位閱讀', '📱', '#8EDDC0', { inside: true });
+  hot('xiaosi', xs.g, 4.3, '電子好書', '📱', '#8EDDC0', { inside: true });
 
   // 閱讀角＋心兒
   const nook = G(L, 5.2, 0.4, -1.2);
@@ -2428,7 +2430,7 @@ const PANELS = {
   },
   xiaosi() {
     const steps = [['📲', '下載閱讀 App', '依平台指示安裝閱讀器，手機、平板、電腦都能用。'], ['📚', '登入借書', '一次可借好幾本，到期會自動歸還，不怕逾期！']];
-    frame({ hc: '#D7F5EA', av: IMG.xiaosi, tag: '📱 小四的平板', title: '數位閱讀', say: '書包太重？平板裡就有一整座圖書館！跟著兩步驟開始借電子書吧 ⭐',
+    frame({ hc: '#D7F5EA', av: IMG.xiaosi, tag: '📱 小四的平板', title: '電子好書', say: '書包太重？平板裡就有一整座圖書館！跟著兩步驟開始借電子書吧 ⭐',
       body: `<div class="sec"><h3>📲 借電子書 2 步驟</h3><div class="timeline">${steps.map((s, i) => `<div class="st"><div class="n" style="background:${['#D7F5EA', '#DDF1FF', '#FFF3C4'][i]}">${s[0]}</div><div><small>STEP ${i + 1}</small><b>${s[1]}</b><p>${s[2]}</p></div></div>`).join('')}</div></div>
       <div class="sec"><h3>📖 免費電子書平台</h3><div class="grid res">${EBOOKS.map(r => `<a class="card" href="${r.u}" target="_blank" rel="noopener"><span class="ic" style="background:${r.c}">${r.e}</span><span><b>${esc(r.n)}</b><span>${esc(r.d)}</span></span></a>`).join('')}</div></div>
       <div class="sec"><h3>🧭 想去更多地方</h3><div class="chips"><button class="chip" type="button" id="goPod">🚀 自主學習夢想艙</button><button class="chip" type="button" id="goPortal">🌀 數位資源傳送門</button></div></div>` });
@@ -2587,7 +2589,7 @@ addEventListener('resize', () => { if (!renderer) return; GAME.cam.aspect = inne
 function start() {
   $('#ips').innerHTML = [['xiner', '心兒', '#FF9EC4'], ['xiaosi', '小四', '#8EDDC0'], ['sisi', '思思', '#BBA8FF'], ['juanmao', '捲毛', '#8FD3FF'], ['dede', 'DeDe', '#FFD95A']].map(([k, n, c], i) => `<div class="ip" style="--i:${i};--c:${c}"><b style="background-image:url(${IMG[k]})"></b>${n}</div>`).join('');
   if (!renderer) { $('#intro').remove(); $('#stage').innerHTML = '<div class="nogl">😢 你的瀏覽器不支援 3D 顯示<br>請用下方按鈕使用圖書館的各項功能！</div>'; return; }
-  $('#ititle').innerHTML = [...'SWSH 數位閱讀基地'].map((c, i) => c === ' ' ? '<span class="sp"> </span>' : `<span style="--i:${i}">${c}</span>`).join('');
+  $('#ititle').innerHTML = [...'SWSH 漫讀小島'].map((c, i) => c === ' ' ? '<span class="sp"> </span>' : `<span style="--i:${i}">${c}</span>`).join('');
   (async () => { const lines = [['tw1', '這裡是四維高中的立體閱讀小島。'], ['tw2', '點點場景裡的物件與小夥伴，聽一集廣播、找一本好書，給自己十分鐘的靈感充電時光吧！']], wait = ms => new Promise(r => setTimeout(r, reduceMotion ? 0 : ms));
     await wait(900); for (const [id, s] of lines) { const el = $('#' + id); if (!el) return; el.classList.add('typing'); for (const ch of s) { if (!el.isConnected) return; el.textContent += ch; await wait('，。！、'.includes(ch) ? 260 : 55); } el.classList.remove('typing'); await wait(250); }
     if (!$('#tw2')) return; $('#tw2').innerHTML = $('#tw2').textContent.replace('聽一集廣播', '<mark>聽一集廣播</mark>').replace('找一本好書', '<mark>找一本好書</mark>').replace('十分鐘', '<mark>十分鐘</mark>'); const it = $('#intro'); if (it) it.classList.add('typed'); })();
